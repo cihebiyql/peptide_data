@@ -1,0 +1,316 @@
+{
+  "assertions": {
+    "all_context_json_objects": true,
+    "all_rows_have_task": true,
+    "bbb_strict_binary_rows_zero": true,
+    "bbb_weak_task_contains_both_classes": true,
+    "binary_research_rows_have_identity_and_qc": true,
+    "censored_rows_not_point_train_eligible": true,
+    "cycpept_minus_10_sentinel_not_strict": true,
+    "duplicate_keys_reference_final_observations": true,
+    "duplicate_member_lineage_complete": true,
+    "input_hash_unchanged": true,
+    "literature_direct_training_zero": true,
+    "literature_rows_1560": true,
+    "modified_projection_never_uses_bare_sequence": true,
+    "no_selected_identity_sentinels": true,
+    "normalized_keys_unique": true,
+    "peplife_missing_identity_total_898": true,
+    "peplife_na_identity_blocked": true,
+    "pk_conditions_preserve_dose_and_timepoint": true,
+    "row_conservation": true,
+    "solubility_binary_has_seven_solvent_tasks_without_conflict": true,
+    "strict_numeric_exact_only": true,
+    "strict_numeric_has_valid_representation": true,
+    "strict_numeric_upstream_qc_eligible": true,
+    "task_semantic_signature_one_to_one": true,
+    "weak_binary_tasks_never_strict_modelable": true
+  },
+  "counts": {
+    "binary_by_endpoint": {
+      "BBB": 844,
+      "T1/2": 918,
+      "solubility": 2168
+    },
+    "binary_by_evidence": {
+      "database_positive_membership": 421,
+      "rule_constructed_negative": 423,
+      "source_defined_binary": 2168,
+      "threshold_derived_from_numeric": 918
+    },
+    "binary_by_use_tier": {
+      "derived_binary_research": 918,
+      "rough_solvent_conditioned_benchmark": 2168,
+      "weak_benchmark_reproduction_only": 844
+    },
+    "binary_catalog_rows": 3930,
+    "censored_by_endpoint": {
+      "F": 3,
+      "PPB": 7,
+      "T1/2": 195,
+      "permeability": 25
+    },
+    "censored_rows": 230,
+    "collapsed_duplicate_members": 73,
+    "condition_variability_groups": 743,
+    "hard_condition_conflict_groups": 734,
+    "input_scope_rows": 20052,
+    "partition_by_endpoint": {
+      "BBB": {
+        "binary_evidence_catalog": 844,
+        "positive_unlabeled": 136
+      },
+      "CL": {
+        "identity_review": 17,
+        "normalization_review": 11,
+        "semantic_review": 16,
+        "strict_numeric": 49
+      },
+      "F": {
+        "censored_numeric": 3,
+        "identity_review": 6,
+        "semantic_review": 23,
+        "strict_numeric": 12
+      },
+      "LogD": {
+        "identity_review": 69,
+        "normalization_review": 3,
+        "strict_numeric": 79
+      },
+      "PPB": {
+        "censored_numeric": 7,
+        "identity_review": 19,
+        "normalization_review": 7,
+        "semantic_review": 4,
+        "strict_numeric": 103
+      },
+      "T1/2": {
+        "binary_evidence_catalog": 918,
+        "censored_numeric": 195,
+        "identity_review": 964,
+        "normalization_review": 69,
+        "semantic_review": 1394,
+        "strict_numeric": 1392
+      },
+      "Vd": {
+        "identity_review": 6,
+        "semantic_review": 14,
+        "strict_numeric": 38
+      },
+      "cell_penetration": {
+        "positive_unlabeled": 784
+      },
+      "permeability": {
+        "censored_numeric": 25,
+        "normalization_review": 16,
+        "semantic_review": 439,
+        "strict_numeric": 9829
+      },
+      "solubility": {
+        "binary_evidence_catalog": 2168,
+        "semantic_review": 231,
+        "strict_numeric": 89
+      }
+    },
+    "partition_rows": {
+      "binary_evidence_catalog": 3930,
+      "censored_numeric": 230,
+      "identity_review": 1081,
+      "normalization_review": 106,
+      "positive_unlabeled": 920,
+      "semantic_review": 2121,
+      "strict_numeric": 11591
+    },
+    "positive_unlabeled_by_endpoint": {
+      "BBB": 136,
+      "cell_penetration": 784
+    },
+    "positive_unlabeled_rows": 920,
+    "representative_by_endpoint": {
+      "BBB": 980,
+      "CL": 93,
+      "F": 44,
+      "LogD": 151,
+      "PPB": 140,
+      "T1/2": 4932,
+      "Vd": 58,
+      "cell_penetration": 784,
+      "permeability": 10309,
+      "solubility": 2488
+    },
+    "representative_rows": 19979,
+    "research_modelable_tasks": 19,
+    "review_reasons": {
+      "binary_label_not_0_or_1": 9,
+      "blank_relation_not_assumed_exact": 16,
+      "hard_condition_conflict": 2137,
+      "logd_requires_dimensionless_numeric_value": 3,
+      "missing_valid_exact_identity": 1081,
+      "no_valid_model_representation": 1081,
+      "noncomparable_t1_semantics:brain_homogenate": 40,
+      "noncomparable_t1_semantics:brain_homogenates": 10,
+      "noncomparable_t1_semantics:brain_homogenize": 1,
+      "noncomparable_t1_semantics:contact_lenses": 4,
+      "noncomparable_t1_semantics:retention_half_life": 1,
+      "noncomparable_t1_semantics:vitreous": 6,
+      "semantic_or_source_evidence_review": 23,
+      "source_derived_weak_or_regulatory_evidence": 23,
+      "unsupported_cl_unit_or_scale": 2,
+      "unsupported_or_ambiguous_time_unit": 19,
+      "unsupported_or_direction_ambiguous_ppb_unit": 7
+    },
+    "review_rows": 3308,
+    "strict_modelable_tasks": 13,
+    "strict_numeric_by_endpoint": {
+      "CL": 49,
+      "F": 12,
+      "LogD": 79,
+      "PPB": 103,
+      "T1/2": 1392,
+      "Vd": 38,
+      "permeability": 9829,
+      "solubility": 89
+    },
+    "strict_numeric_rows": 11591,
+    "tasks": 1067,
+    "tasks_by_endpoint": {
+      "BBB": 2,
+      "CL": 49,
+      "F": 18,
+      "LogD": 9,
+      "PPB": 52,
+      "T1/2": 775,
+      "Vd": 45,
+      "cell_penetration": 1,
+      "permeability": 27,
+      "solubility": 89
+    }
+  },
+  "implementation": {
+    "conversion_version": "ml_unit_normalization_v1",
+    "script": "scripts/build_peptide_ml_cleaning_v1.py",
+    "script_sha256": "7a26077b1a7420aa1d6bbc17b7db174cf23039e411da9644a8982a2580893147"
+  },
+  "inputs": {
+    "literature_staging": {
+      "bytes": 1490964,
+      "path": "data/literature_data_v15_integration_audit_v1/normalized_candidates.tsv",
+      "rows": 1560,
+      "sha256": "09eb3e02439972e36d1240f209256766e5819905762e119034da8527eb60b24c"
+    },
+    "v15_training_deduplicated": {
+      "bytes": 381508083,
+      "path": "data/peptide_property_expansion_v15/peptide_property_training_deduplicated_v15.tsv",
+      "rows": 215568,
+      "sha256": "5eaf343f91d20807feec5eb7c1069c100284b2df0d05148ef62bc414a76aca51"
+    }
+  },
+  "outputs": {
+    "README.md": {
+      "bytes": 946,
+      "path": "data/peptide_ml_cleaning_v1/README.md",
+      "sha256": "e8db0c73849841cf57d48971a4f0e36638d925846526d6cf89213141f034cac1"
+    },
+    "binary_evidence_catalog.tsv": {
+      "bytes": 20517319,
+      "path": "data/peptide_ml_cleaning_v1/binary_evidence_catalog.tsv",
+      "rows": 3930,
+      "sha256": "530aac80fe7a913d2e94e5565e625d58677c61a334639165e47948e886e8ef9f"
+    },
+    "censored_observations.tsv": {
+      "bytes": 991219,
+      "path": "data/peptide_ml_cleaning_v1/censored_observations.tsv",
+      "rows": 230,
+      "sha256": "276b9dc7d735141ee238e9d8f94e4182ca712fed89df6e088e4411dc40049146"
+    },
+    "condition_conflicts.tsv": {
+      "bytes": 220321,
+      "path": "data/peptide_ml_cleaning_v1/condition_conflicts.tsv",
+      "rows": 743,
+      "sha256": "4e9f0fb7379365c31c218217a32d202f06113627cf0247fd6278ac2fdbbe98ab"
+    },
+    "exact_duplicates.tsv": {
+      "bytes": 167082,
+      "path": "data/peptide_ml_cleaning_v1/exact_duplicates.tsv",
+      "rows": 67,
+      "sha256": "f28d333d1e1302cea2a2602de3d783d618c68f8b7a319299cc97bec8437bcabb"
+    },
+    "exclusion_summary.tsv": {
+      "bytes": 687,
+      "path": "data/peptide_ml_cleaning_v1/exclusion_summary.tsv",
+      "rows": 17,
+      "sha256": "f742575a5ab7ba6abbcdbfe7547faafbd348880b07dc79824829b161c02b9751"
+    },
+    "literature_review_cleaned.tsv": {
+      "bytes": 1190512,
+      "path": "data/peptide_ml_cleaning_v1/literature_review_cleaned.tsv",
+      "rows": 1560,
+      "sha256": "194988bfcc532b351029cbcdccd23b9456806152e020b010e802b9066d0491aa"
+    },
+    "normalized_observations.tsv": {
+      "bytes": 88052280,
+      "path": "data/peptide_ml_cleaning_v1/normalized_observations.tsv",
+      "rows": 19979,
+      "sha256": "1039f01ec90a2244b6ab94d2db7a6085db1f19f3a4efca2fd1383ad7f9424ab9"
+    },
+    "positive_unlabeled.tsv": {
+      "bytes": 4126288,
+      "path": "data/peptide_ml_cleaning_v1/positive_unlabeled.tsv",
+      "rows": 920,
+      "sha256": "5ac80dd4476e0d6116255b1c0eacd57d85d991140e0d6ca781ad01588fb42e8f"
+    },
+    "review_observations.tsv": {
+      "bytes": 13829884,
+      "path": "data/peptide_ml_cleaning_v1/review_observations.tsv",
+      "rows": 3308,
+      "sha256": "b62edeab420aace8ddbee7ae3fd7c9a965708c392f4ad9de00028d0445c44481"
+    },
+    "strict_numeric.tsv": {
+      "bytes": 48592886,
+      "path": "data/peptide_ml_cleaning_v1/strict_numeric.tsv",
+      "rows": 11591,
+      "sha256": "408edbc4dfae7218068cda49a9cfb7f41cea6459f7310b91b34b8a7e583a3906"
+    },
+    "task_registry.tsv": {
+      "bytes": 706243,
+      "path": "data/peptide_ml_cleaning_v1/task_registry.tsv",
+      "rows": 1067,
+      "sha256": "920ba509c009e32c09f9f49af382f626a608b8ca3903d236a7d23442a604bf7d"
+    }
+  },
+  "schema_version": "peptide_ml_cleaning_v1",
+  "scope": {
+    "provenance_license_gate_completed": false,
+    "raw_endpoint_to_family": {
+      "BBB": "BBB",
+      "CL": "CL",
+      "F": "F",
+      "Kp": "Kp",
+      "LogD": "LogD",
+      "LogD7.4": "LogD",
+      "PPB": "PPB",
+      "T1/2": "T1/2",
+      "Vd": "Vd",
+      "bbb_penetration": "BBB",
+      "cell_penetration": "cell_penetration",
+      "clearance": "CL",
+      "efflux_ratio": "permeability",
+      "half_life": "T1/2",
+      "logd": "LogD",
+      "membrane_retention": "permeability",
+      "permeability": "permeability",
+      "solubility": "solubility",
+      "stability_half_life": "T1/2",
+      "volume_distribution": "Vd"
+    },
+    "splits_created": false,
+    "steps_implemented": [
+      "semantic_task_definition",
+      "normalized_observation_deduplication",
+      "identity_and_model_representation_qc",
+      "unit_normalization",
+      "censoring_preservation",
+      "binary_evidence_lanes"
+    ]
+  }
+}

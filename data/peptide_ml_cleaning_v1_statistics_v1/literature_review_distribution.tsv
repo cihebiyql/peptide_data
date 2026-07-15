@@ -1,0 +1,8 @@
+data_layer	endpoint	endpoint_detail	rows	training_rows
+literature_review	BBB_binary_benchmark	B3Pdb_positive_membership	269	0
+literature_review	BBB_evidence	brainpeps_literature_membership_direction_unresolved	357	0
+literature_review	BBB_subfunction	blood_brain_barrier	185	0
+literature_review	GI_stability_classification	Gastric	46	0
+literature_review	GI_stability_classification	Intestinal	63	0
+literature_review	T1/2	official_PEPlife2_half_life_repair	5	0
+literature_review	T1/2	reported_blood_or_serum_stability_half_life	635	0
