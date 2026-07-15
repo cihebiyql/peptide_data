@@ -1,0 +1,830 @@
+scope	group_id	endpoint_family	normalized_unit	n	bin_index	lower_inclusive	upper	upper_inclusive	count	assay_family	parameter_basis	parameter_semantics	target_transform
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	0	-0.3	0.163333333333	false	1				
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	1	0.163333333333	0.626666666667	false	1				
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	2	0.626666666667	1.09	false	2				
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	3	1.09	1.55333333333	false	4				
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	4	1.55333333333	2.01666666667	false	1				
+task	mlv1.logd.regression.distribution_coefficient.1558a57c60fcd2e3	LogD	dimensionless_log10	10	5	2.01666666667	2.48	true	1				
+task	mlv1.logd.regression.distribution_coefficient.603df9b277220d51	LogD	dimensionless_log10	12	0	0.52	0.894	false	3				
+task	mlv1.logd.regression.distribution_coefficient.603df9b277220d51	LogD	dimensionless_log10	12	1	0.894	1.268	false	1				
+task	mlv1.logd.regression.distribution_coefficient.603df9b277220d51	LogD	dimensionless_log10	12	2	1.268	1.642	false	2				
+task	mlv1.logd.regression.distribution_coefficient.603df9b277220d51	LogD	dimensionless_log10	12	3	1.642	2.016	false	4				
+task	mlv1.logd.regression.distribution_coefficient.603df9b277220d51	LogD	dimensionless_log10	12	4	2.016	2.39	true	2				
+task	mlv1.logd.regression.distribution_coefficient.836ba5db7277b020	LogD	dimensionless_log10	22	0	-1.7	-0.782	false	2				
+task	mlv1.logd.regression.distribution_coefficient.836ba5db7277b020	LogD	dimensionless_log10	22	1	-0.782	0.136	false	4				
+task	mlv1.logd.regression.distribution_coefficient.836ba5db7277b020	LogD	dimensionless_log10	22	2	0.136	1.054	false	2				
+task	mlv1.logd.regression.distribution_coefficient.836ba5db7277b020	LogD	dimensionless_log10	22	3	1.054	1.972	false	8				
+task	mlv1.logd.regression.distribution_coefficient.836ba5db7277b020	LogD	dimensionless_log10	22	4	1.972	2.89	true	6				
+task	mlv1.logd.regression.distribution_coefficient.cdbf79e0ea00f795	LogD	dimensionless_log10	17	0	2.19	2.578	false	2				
+task	mlv1.logd.regression.distribution_coefficient.cdbf79e0ea00f795	LogD	dimensionless_log10	17	1	2.578	2.966	false	6				
+task	mlv1.logd.regression.distribution_coefficient.cdbf79e0ea00f795	LogD	dimensionless_log10	17	2	2.966	3.354	false	3				
+task	mlv1.logd.regression.distribution_coefficient.cdbf79e0ea00f795	LogD	dimensionless_log10	17	3	3.354	3.742	false	3				
+task	mlv1.logd.regression.distribution_coefficient.cdbf79e0ea00f795	LogD	dimensionless_log10	17	4	3.742	4.13	true	3				
+task	mlv1.permeability.regression.apparent_permeability.149a41dd3a3f8502	permeability	log10(cm/s)	25	0	-7.114	-6.6354	false	5				
+task	mlv1.permeability.regression.apparent_permeability.149a41dd3a3f8502	permeability	log10(cm/s)	25	1	-6.6354	-6.1568	false	3				
+task	mlv1.permeability.regression.apparent_permeability.149a41dd3a3f8502	permeability	log10(cm/s)	25	2	-6.1568	-5.6782	false	2				
+task	mlv1.permeability.regression.apparent_permeability.149a41dd3a3f8502	permeability	log10(cm/s)	25	3	-5.6782	-5.1996	false	11				
+task	mlv1.permeability.regression.apparent_permeability.149a41dd3a3f8502	permeability	log10(cm/s)	25	4	-5.1996	-4.721	true	4				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	0	-6.77	-6.53166666667	false	1				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	1	-6.53166666667	-6.29333333333	false	0				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	2	-6.29333333333	-6.055	false	0				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	3	-6.055	-5.81666666667	false	0				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	4	-5.81666666667	-5.57833333333	false	1				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	5	-5.57833333333	-5.34	false	0				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	6	-5.34	-5.10166666667	false	5				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	7	-5.10166666667	-4.86333333333	false	10				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	8	-4.86333333333	-4.625	false	7				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	9	-4.625	-4.38666666667	false	21				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	10	-4.38666666667	-4.14833333333	false	22				
+task	mlv1.permeability.regression.apparent_permeability.1e3e8fcc2ac5351b	permeability	log10(cm/s)	69	11	-4.14833333333	-3.91	true	2				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	0	-8.04	-7.81411764706	false	24				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	1	-7.81411764706	-7.58823529412	false	44				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	2	-7.58823529412	-7.36235294118	false	79				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	3	-7.36235294118	-7.13647058824	false	108				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	4	-7.13647058824	-6.91058823529	false	121				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	5	-6.91058823529	-6.68470588235	false	112				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	6	-6.68470588235	-6.45882352941	false	97				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	7	-6.45882352941	-6.23294117647	false	72				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	8	-6.23294117647	-6.00705882353	false	50				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	9	-6.00705882353	-5.78117647059	false	51				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	10	-5.78117647059	-5.55529411765	false	43				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	11	-5.55529411765	-5.32941176471	false	36				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	12	-5.32941176471	-5.10352941176	false	26				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	13	-5.10352941176	-4.87764705882	false	14				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	14	-4.87764705882	-4.65176470588	false	18				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	15	-4.65176470588	-4.42588235294	false	19				
+task	mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b	permeability	log10(cm/s)	920	16	-4.42588235294	-4.2	true	6				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	0	-8.523	-7.9045	false	9				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	1	-7.9045	-7.286	false	5				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	2	-7.286	-6.6675	false	16				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	3	-6.6675	-6.049	false	21				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	4	-6.049	-5.4305	false	19				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	5	-5.4305	-4.812	false	24				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	6	-4.812	-4.1935	false	16				
+task	mlv1.permeability.regression.apparent_permeability.52d9ab33f01c98e3	permeability	log10(cm/s)	113	7	-4.1935	-3.575	true	3				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	0	-8.06	-7.84095238095	false	6				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	1	-7.84095238095	-7.6219047619	false	15				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	2	-7.6219047619	-7.40285714286	false	48				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	3	-7.40285714286	-7.18380952381	false	75				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	4	-7.18380952381	-6.96476190476	false	113				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	5	-6.96476190476	-6.74571428571	false	100				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	6	-6.74571428571	-6.52666666667	false	89				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	7	-6.52666666667	-6.30761904762	false	73				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	8	-6.30761904762	-6.08857142857	false	83				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	9	-6.08857142857	-5.86952380952	false	162				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	10	-5.86952380952	-5.65047619048	false	156				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	11	-5.65047619048	-5.43142857143	false	122				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	12	-5.43142857143	-5.21238095238	false	67				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	13	-5.21238095238	-4.99333333333	false	33				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	14	-4.99333333333	-4.77428571429	false	39				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	15	-4.77428571429	-4.55523809524	false	24				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	16	-4.55523809524	-4.33619047619	false	9				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	17	-4.33619047619	-4.11714285714	false	6				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	18	-4.11714285714	-3.8980952381	false	2				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	19	-3.8980952381	-3.67904761905	false	4				
+task	mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f	permeability	source_log10_permeability	1229	20	-3.67904761905	-3.46	true	3				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	0	-7	-6.57	false	5				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	1	-6.57	-6.14	false	5				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	2	-6.14	-5.71	false	12				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	3	-5.71	-5.28	false	10				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	4	-5.28	-4.85	false	17				
+task	mlv1.permeability.regression.apparent_permeability.a4fc3b865f1b6514	permeability	log10(cm/s)	65	5	-4.85	-4.42	true	16				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	0	-8.699	-8.25254545455	false	2				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	1	-8.25254545455	-7.80609090909	false	0				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	2	-7.80609090909	-7.35963636364	false	0				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	3	-7.35963636364	-6.91318181818	false	6				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	4	-6.91318181818	-6.46672727273	false	10				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	5	-6.46672727273	-6.02027272727	false	6				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	6	-6.02027272727	-5.57381818182	false	11				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	7	-5.57381818182	-5.12736363636	false	22				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	8	-5.12736363636	-4.68090909091	false	29				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	9	-4.68090909091	-4.23445454545	false	15				
+task	mlv1.permeability.regression.apparent_permeability.c027ffe6efc11251	permeability	log10(cm/s)	110	10	-4.23445454545	-3.788	true	9				
+task	mlv1.permeability.regression.apparent_permeability.c9ffe4d3ac9e61dc	permeability	log10(cm/s)	25	0	-5.578	-5.3698	false	1				
+task	mlv1.permeability.regression.apparent_permeability.c9ffe4d3ac9e61dc	permeability	log10(cm/s)	25	1	-5.3698	-5.1616	false	4				
+task	mlv1.permeability.regression.apparent_permeability.c9ffe4d3ac9e61dc	permeability	log10(cm/s)	25	2	-5.1616	-4.9534	false	5				
+task	mlv1.permeability.regression.apparent_permeability.c9ffe4d3ac9e61dc	permeability	log10(cm/s)	25	3	-4.9534	-4.7452	false	7				
+task	mlv1.permeability.regression.apparent_permeability.c9ffe4d3ac9e61dc	permeability	log10(cm/s)	25	4	-4.7452	-4.537	true	8				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	0	-6.9	-6.46466666667	false	1				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	1	-6.46466666667	-6.02933333333	false	3				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	2	-6.02933333333	-5.594	false	7				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	3	-5.594	-5.15866666667	false	8				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	4	-5.15866666667	-4.72333333333	false	6				
+task	mlv1.permeability.regression.apparent_permeability.d4399de5ff028981	permeability	log10(cm/s)	32	5	-4.72333333333	-4.288	true	7				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	0	-6.96	-6.65125	false	9				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	1	-6.65125	-6.3425	false	10				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	2	-6.3425	-6.03375	false	24				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	3	-6.03375	-5.725	false	22				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	4	-5.725	-5.41625	false	25				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	5	-5.41625	-5.1075	false	33				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	6	-5.1075	-4.79875	false	18				
+task	mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce	permeability	source_log10_permeability	159	7	-4.79875	-4.49	true	18				
+task	mlv1.permeability.regression.apparent_permeability.d64f3cadc91549b9	permeability	log10(cm/s)	12	0	-6.71219827007	-6.27204847276	false	5				
+task	mlv1.permeability.regression.apparent_permeability.d64f3cadc91549b9	permeability	log10(cm/s)	12	1	-6.27204847276	-5.83189867544	false	3				
+task	mlv1.permeability.regression.apparent_permeability.d64f3cadc91549b9	permeability	log10(cm/s)	12	2	-5.83189867544	-5.39174887813	false	0				
+task	mlv1.permeability.regression.apparent_permeability.d64f3cadc91549b9	permeability	log10(cm/s)	12	3	-5.39174887813	-4.95159908081	false	0				
+task	mlv1.permeability.regression.apparent_permeability.d64f3cadc91549b9	permeability	log10(cm/s)	12	4	-4.95159908081	-4.5114492835	true	4				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	0	-9.46	-9.3488	false	3				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	1	-9.3488	-9.2376	false	2				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	2	-9.2376	-9.1264	false	0				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	3	-9.1264	-9.0152	false	3				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	4	-9.0152	-8.904	false	9				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	5	-8.904	-8.7928	false	6				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	6	-8.7928	-8.6816	false	6				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	7	-8.6816	-8.5704	false	2				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	8	-8.5704	-8.4592	false	10				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	9	-8.4592	-8.348	false	9				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	10	-8.348	-8.2368	false	12				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	11	-8.2368	-8.1256	false	9				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	12	-8.1256	-8.0144	false	14				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	13	-8.0144	-7.9032	false	27				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	14	-7.9032	-7.792	false	23				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	15	-7.792	-7.6808	false	20				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	16	-7.6808	-7.5696	false	26				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	17	-7.5696	-7.4584	false	31				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	18	-7.4584	-7.3472	false	34				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	19	-7.3472	-7.236	false	52				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	20	-7.236	-7.1248	false	60				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	21	-7.1248	-7.0136	false	54				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	22	-7.0136	-6.9024	false	82				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	23	-6.9024	-6.7912	false	117				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	24	-6.7912	-6.68	false	129				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	25	-6.68	-6.5688	false	168				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	26	-6.5688	-6.4576	false	156				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	27	-6.4576	-6.3464	false	190				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	28	-6.3464	-6.2352	false	241				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	29	-6.2352	-6.124	false	244				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	30	-6.124	-6.0128	false	291				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	31	-6.0128	-5.9016	false	363				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	32	-5.9016	-5.7904	false	431				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	33	-5.7904	-5.6792	false	485				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	34	-5.6792	-5.568	false	426				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	35	-5.568	-5.4568	false	439				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	36	-5.4568	-5.3456	false	417				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	37	-5.3456	-5.2344	false	470				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	38	-5.2344	-5.1232	false	414				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	39	-5.1232	-5.012	false	315				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	40	-5.012	-4.9008	false	225				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	41	-4.9008	-4.7896	false	186				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	42	-4.7896	-4.6784	false	129				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	43	-4.6784	-4.5672	false	147				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	44	-4.5672	-4.456	false	166				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	45	-4.456	-4.3448	false	82				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	46	-4.3448	-4.2336	false	67				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	47	-4.2336	-4.1224	false	18				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	48	-4.1224	-4.0112	false	1				
+task	mlv1.permeability.regression.apparent_permeability.e74490767e77cabe	permeability	source_log10_permeability	6814	49	-4.0112	-3.9	true	3				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	0	-7.698970004	-7.14914167	false	3				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	1	-7.14914167	-6.599313336	false	0				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	2	-6.599313336	-6.049485002	false	16				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	3	-6.049485002	-5.499656668	false	11				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	4	-5.499656668	-4.949828334	false	20				
+task	mlv1.permeability.regression.apparent_permeability.f80512c0944f2575	permeability	source_log10_permeability	63	5	-4.949828334	-4.4	true	13				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	0	-0.619788758288	-0.264280718854	false	7				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	1	-0.264280718854	0.0912273205804	false	16				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	2	0.0912273205804	0.446735360015	false	16				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	3	0.446735360015	0.802243399449	false	23				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	4	0.802243399449	1.15775143888	false	13				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	5	1.15775143888	1.51325947832	false	4				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	6	1.51325947832	1.86876751775	false	2				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	7	1.86876751775	2.22427555719	false	2				
+task	mlv1.permeability.regression.efflux_ratio.526cdaa652237f71	permeability	log10(ratio)	94	8	2.22427555719	2.57978359662	true	11				
+task	mlv1.permeability.regression.efflux_ratio.c5fda8ad3cf0884c	permeability	log10(ratio)	26	0	-0.585026652029	-0.241954567923	false	4				
+task	mlv1.permeability.regression.efflux_ratio.c5fda8ad3cf0884c	permeability	log10(ratio)	26	1	-0.241954567923	0.101117516183	false	7				
+task	mlv1.permeability.regression.efflux_ratio.c5fda8ad3cf0884c	permeability	log10(ratio)	26	2	0.101117516183	0.444189600288	false	7				
+task	mlv1.permeability.regression.efflux_ratio.c5fda8ad3cf0884c	permeability	log10(ratio)	26	3	0.444189600288	0.787261684394	false	2				
+task	mlv1.permeability.regression.efflux_ratio.c5fda8ad3cf0884c	permeability	log10(ratio)	26	4	0.787261684394	1.1303337685	true	6				
+task	mlv1.permeability.regression.efflux_ratio.ddd098215c693bdf	permeability	log10(ratio)	21	0	0	0.246089784276	false	10				
+task	mlv1.permeability.regression.efflux_ratio.ddd098215c693bdf	permeability	log10(ratio)	21	1	0.246089784276	0.492179568552	false	5				
+task	mlv1.permeability.regression.efflux_ratio.ddd098215c693bdf	permeability	log10(ratio)	21	2	0.492179568552	0.738269352828	false	4				
+task	mlv1.permeability.regression.efflux_ratio.ddd098215c693bdf	permeability	log10(ratio)	21	3	0.738269352828	0.984359137104	false	0				
+task	mlv1.permeability.regression.efflux_ratio.ddd098215c693bdf	permeability	log10(ratio)	21	4	0.984359137104	1.23044892138	true	2				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	0	0	0.0942857142857	false	6				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	1	0.0942857142857	0.188571428571	false	3				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	2	0.188571428571	0.282857142857	false	1				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	3	0.282857142857	0.377142857143	false	0				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	4	0.377142857143	0.471428571429	false	0				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	5	0.471428571429	0.565714285714	false	1				
+task	mlv1.permeability.regression.membrane_retention.fb7e525ae9b37b5a	permeability	fraction_retained	12	6	0.565714285714	0.66	true	1				
+task	mlv1.ppb.regression.fraction_bound.8355e556c58889c5	PPB	fraction_bound	12	0	0.05	0.238	false	1				
+task	mlv1.ppb.regression.fraction_bound.8355e556c58889c5	PPB	fraction_bound	12	1	0.238	0.426	false	2				
+task	mlv1.ppb.regression.fraction_bound.8355e556c58889c5	PPB	fraction_bound	12	2	0.426	0.614	false	2				
+task	mlv1.ppb.regression.fraction_bound.8355e556c58889c5	PPB	fraction_bound	12	3	0.614	0.802	false	0				
+task	mlv1.ppb.regression.fraction_bound.8355e556c58889c5	PPB	fraction_bound	12	4	0.802	0.99	true	7				
+task	mlv1.ppb.regression.fraction_bound.94f9f387c68bfeb1	PPB	fraction_bound	10	0	0.21	0.366	false	2				
+task	mlv1.ppb.regression.fraction_bound.94f9f387c68bfeb1	PPB	fraction_bound	10	1	0.366	0.522	false	0				
+task	mlv1.ppb.regression.fraction_bound.94f9f387c68bfeb1	PPB	fraction_bound	10	2	0.522	0.678	false	1				
+task	mlv1.ppb.regression.fraction_bound.94f9f387c68bfeb1	PPB	fraction_bound	10	3	0.678	0.834	false	3				
+task	mlv1.ppb.regression.fraction_bound.94f9f387c68bfeb1	PPB	fraction_bound	10	4	0.834	0.99	true	4				
+task	mlv1.ppb.regression.fraction_bound.adb8582b48bd5ab6	PPB	fraction_bound	16	0	0	0.171	false	9				
+task	mlv1.ppb.regression.fraction_bound.adb8582b48bd5ab6	PPB	fraction_bound	16	1	0.171	0.342	false	2				
+task	mlv1.ppb.regression.fraction_bound.adb8582b48bd5ab6	PPB	fraction_bound	16	2	0.342	0.513	false	2				
+task	mlv1.ppb.regression.fraction_bound.adb8582b48bd5ab6	PPB	fraction_bound	16	3	0.513	0.684	false	1				
+task	mlv1.ppb.regression.fraction_bound.adb8582b48bd5ab6	PPB	fraction_bound	16	4	0.684	0.855	true	2				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	0	-3.73754891027	-3.64894581539	false	1				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	1	-3.64894581539	-3.56034272052	false	1				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	2	-3.56034272052	-3.47173962564	false	0				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	3	-3.47173962564	-3.38313653077	false	1				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	4	-3.38313653077	-3.29453343589	false	1				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	5	-3.29453343589	-3.20593034101	false	3				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	6	-3.20593034101	-3.11732724614	false	5				
+task	mlv1.solubility.regression.solubility.3839e8cf154e37a6	solubility	log10(mol/L)	17	7	-3.11732724614	-3.02872415126	true	5				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	0	-3.34008379993	-3.29999804495	false	1				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	1	-3.29999804495	-3.25991228997	false	0				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	2	-3.25991228997	-3.21982653499	false	0				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	3	-3.21982653499	-3.17974078001	false	2				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	4	-3.17974078001	-3.13965502503	false	5				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	5	-3.13965502503	-3.09956927005	false	2				
+task	mlv1.solubility.regression.solubility.d1e291939e2097b2	solubility	log10(mol/L)	12	6	-3.09956927005	-3.05948351507	true	2				
+task	mlv1.t1_2.regression.other_context.2e6b249344b37c4b	T1/2	log10(h)	11	0	-2.09691001301	-1.67192226569	false	2				
+task	mlv1.t1_2.regression.other_context.2e6b249344b37c4b	T1/2	log10(h)	11	1	-1.67192226569	-1.24693451837	false	4				
+task	mlv1.t1_2.regression.other_context.2e6b249344b37c4b	T1/2	log10(h)	11	2	-1.24693451837	-0.821946771044	false	0				
+task	mlv1.t1_2.regression.other_context.2e6b249344b37c4b	T1/2	log10(h)	11	3	-0.821946771044	-0.396959023722	false	3				
+task	mlv1.t1_2.regression.other_context.2e6b249344b37c4b	T1/2	log10(h)	11	4	-0.396959023722	0.0280287236002	true	2				
+task	mlv1.t1_2.regression.plasma_serum_stability.5e3b7e7d9f53550b	T1/2	log10(h)	16	0	-0.52287874528	-0.108502343818	false	1				
+task	mlv1.t1_2.regression.plasma_serum_stability.5e3b7e7d9f53550b	T1/2	log10(h)	16	1	-0.108502343818	0.305874057644	false	2				
+task	mlv1.t1_2.regression.plasma_serum_stability.5e3b7e7d9f53550b	T1/2	log10(h)	16	2	0.305874057644	0.720250459106	false	2				
+task	mlv1.t1_2.regression.plasma_serum_stability.5e3b7e7d9f53550b	T1/2	log10(h)	16	3	0.720250459106	1.13462686057	false	5				
+task	mlv1.t1_2.regression.plasma_serum_stability.5e3b7e7d9f53550b	T1/2	log10(h)	16	4	1.13462686057	1.54900326203	true	6				
+task	mlv1.t1_2.regression.plasma_serum_stability.8e13e9ff5fd2c559	T1/2	log10(h)	27	0	-1.38021124171	-0.74026020626	false	6				
+task	mlv1.t1_2.regression.plasma_serum_stability.8e13e9ff5fd2c559	T1/2	log10(h)	27	1	-0.74026020626	-0.10030917081	false	7				
+task	mlv1.t1_2.regression.plasma_serum_stability.8e13e9ff5fd2c559	T1/2	log10(h)	27	2	-0.10030917081	0.53964186464	false	3				
+task	mlv1.t1_2.regression.plasma_serum_stability.8e13e9ff5fd2c559	T1/2	log10(h)	27	3	0.53964186464	1.17959290009	false	8				
+task	mlv1.t1_2.regression.plasma_serum_stability.8e13e9ff5fd2c559	T1/2	log10(h)	27	4	1.17959290009	1.81954393554	true	3				
+task	mlv1.t1_2.regression.plasma_serum_stability.a7ea702eec3f3d2a	T1/2	log10(h)	13	0	-1.65757731918	-1.050019607	false	1				
+task	mlv1.t1_2.regression.plasma_serum_stability.a7ea702eec3f3d2a	T1/2	log10(h)	13	1	-1.050019607	-0.442461894824	false	0				
+task	mlv1.t1_2.regression.plasma_serum_stability.a7ea702eec3f3d2a	T1/2	log10(h)	13	2	-0.442461894824	0.165095817354	false	3				
+task	mlv1.t1_2.regression.plasma_serum_stability.a7ea702eec3f3d2a	T1/2	log10(h)	13	3	0.165095817354	0.772653529532	false	5				
+task	mlv1.t1_2.regression.plasma_serum_stability.a7ea702eec3f3d2a	T1/2	log10(h)	13	4	0.772653529532	1.38021124171	true	4				
+task	mlv1.t1_2.regression.plasma_serum_stability.bc0f6ea6a5ffc132	T1/2	log10(h)	15	0	-1.27300127206	-0.83778302025	false	2				
+task	mlv1.t1_2.regression.plasma_serum_stability.bc0f6ea6a5ffc132	T1/2	log10(h)	15	1	-0.83778302025	-0.402564768439	false	1				
+task	mlv1.t1_2.regression.plasma_serum_stability.bc0f6ea6a5ffc132	T1/2	log10(h)	15	2	-0.402564768439	0.0326534833712	false	2				
+task	mlv1.t1_2.regression.plasma_serum_stability.bc0f6ea6a5ffc132	T1/2	log10(h)	15	3	0.0326534833712	0.467871735182	false	4				
+task	mlv1.t1_2.regression.plasma_serum_stability.bc0f6ea6a5ffc132	T1/2	log10(h)	15	4	0.467871735182	0.903089986992	true	6				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	0	-6.65321251378	-6.33985419086	false	13				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	1	-6.33985419086	-6.02649586793	false	29				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	2	-6.02649586793	-5.71313754501	false	54				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	3	-5.71313754501	-5.39977922209	false	56				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	4	-5.39977922209	-5.08642089916	false	47				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	5	-5.08642089916	-4.77306257624	false	52				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	6	-4.77306257624	-4.45970425332	false	41				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	7	-4.45970425332	-4.14634593039	false	30				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	8	-4.14634593039	-3.83298760747	false	12				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	9	-3.83298760747	-3.51962928455	false	10				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	10	-3.51962928455	-3.20627096162	false	8				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	11	-3.20627096162	-2.8929126387	false	9				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	12	-2.8929126387	-2.57955431578	false	7				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	13	-2.57955431578	-2.26619599285	false	4				
+task	mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992	T1/2	log10(h)	375	14	-2.26619599285	-1.95283766993	true	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.19f9440b099488f9	T1/2	log10(h)	10	0	-0.221848749616	0.180408937221	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.19f9440b099488f9	T1/2	log10(h)	10	1	0.180408937221	0.582666624058	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.19f9440b099488f9	T1/2	log10(h)	10	2	0.582666624058	0.984924310896	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.19f9440b099488f9	T1/2	log10(h)	10	3	0.984924310896	1.38718199773	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.19f9440b099488f9	T1/2	log10(h)	10	4	1.38718199773	1.78943968457	true	5				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	0	-1.87506126339	-1.59404491618	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	1	-1.59404491618	-1.31302856896	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	2	-1.31302856896	-1.03201222175	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	3	-1.03201222175	-0.750995874538	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	4	-0.750995874538	-0.469979527325	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	5	-0.469979527325	-0.188963180112	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	6	-0.188963180112	0.0920531671015	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	7	0.0920531671015	0.373069514315	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	8	0.373069514315	0.654085861528	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	9	0.654085861528	0.935102208741	false	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	10	0.935102208741	1.21611855595	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	11	1.21611855595	1.49713490317	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.25170c6344b8887c	T1/2	log10(h)	11	12	1.49713490317	1.77815125038	true	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.2a1c378178fb4998	T1/2	log10(h)	12	0	-0.301029995664	0.303702787975	false	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.2a1c378178fb4998	T1/2	log10(h)	12	1	0.303702787975	0.908435571614	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.2a1c378178fb4998	T1/2	log10(h)	12	2	0.908435571614	1.51316835525	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.2a1c378178fb4998	T1/2	log10(h)	12	3	1.51316835525	2.11790113889	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.2a1c378178fb4998	T1/2	log10(h)	12	4	2.11790113889	2.72263392253	true	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.3efba457bde962a2	T1/2	log10(h)	18	0	-1.625862906	-0.95063494177	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.3efba457bde962a2	T1/2	log10(h)	18	1	-0.95063494177	-0.27540697754	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.3efba457bde962a2	T1/2	log10(h)	18	2	-0.27540697754	0.39982098669	false	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.3efba457bde962a2	T1/2	log10(h)	18	3	0.39982098669	1.07504895092	false	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.3efba457bde962a2	T1/2	log10(h)	18	4	1.07504895092	1.75027691515	true	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.4e4d6b19a222e9c4	T1/2	log10(h)	16	0	-1.47712125472	-0.673881784018	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.4e4d6b19a222e9c4	T1/2	log10(h)	16	1	-0.673881784018	0.129357686684	false	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.4e4d6b19a222e9c4	T1/2	log10(h)	16	2	0.129357686684	0.932597157386	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.4e4d6b19a222e9c4	T1/2	log10(h)	16	3	0.932597157386	1.73583662809	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.4e4d6b19a222e9c4	T1/2	log10(h)	16	4	1.73583662809	2.53907609879	true	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5945156a0873df24	T1/2	log10(h)	11	0	-0.778151250383	-0.288657624192	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5945156a0873df24	T1/2	log10(h)	11	1	-0.288657624192	0.200836001998	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5945156a0873df24	T1/2	log10(h)	11	2	0.200836001998	0.690329628189	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5945156a0873df24	T1/2	log10(h)	11	3	0.690329628189	1.17982325438	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5945156a0873df24	T1/2	log10(h)	11	4	1.17982325438	1.66931688057	true	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5c601e123555fa49	T1/2	log10(h)	15	0	-0.886056647693	-0.41001439935	false	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5c601e123555fa49	T1/2	log10(h)	15	1	-0.41001439935	0.0660278489922	false	5				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5c601e123555fa49	T1/2	log10(h)	15	2	0.0660278489922	0.542070097335	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5c601e123555fa49	T1/2	log10(h)	15	3	0.542070097335	1.01811234568	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.5c601e123555fa49	T1/2	log10(h)	15	4	1.01811234568	1.49415459402	true	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	0	-1.69897000434	-1.46645053969	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	1	-1.46645053969	-1.23393107504	false	5				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	2	-1.23393107504	-1.00141161039	false	7				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	3	-1.00141161039	-0.768892145737	false	13				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	4	-0.768892145737	-0.536372681086	false	13				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	5	-0.536372681086	-0.303853216436	false	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	6	-0.303853216436	-0.071333751785	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	7	-0.071333751785	0.161185712866	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	8	0.161185712866	0.393705177516	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	9	0.393705177516	0.626224642167	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	10	0.626224642167	0.858744106818	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	11	0.858744106818	1.09126357147	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	12	1.09126357147	1.32378303612	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.6435655520be0a2c	T1/2	log10(h)	53	13	1.32378303612	1.55630250077	true	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	0	-1.87506126339	-1.66994601115	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	1	-1.66994601115	-1.4648307589	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	2	-1.4648307589	-1.25971550666	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	3	-1.25971550666	-1.05460025441	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	4	-1.05460025441	-0.849485002167	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	5	-0.849485002167	-0.644369749922	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	6	-0.644369749922	-0.439254497678	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	7	-0.439254497678	-0.234139245433	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	8	-0.234139245433	-0.0290239931886	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.76dde038011fe41c	T1/2	log10(h)	10	9	-0.0290239931886	0.176091259056	true	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.78cc9f7f7d1f2e3f	T1/2	log10(h)	15	0	-1.39794000867	-1.26034508466	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.78cc9f7f7d1f2e3f	T1/2	log10(h)	15	1	-1.26034508466	-1.12275016066	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.78cc9f7f7d1f2e3f	T1/2	log10(h)	15	2	-1.12275016066	-0.98515523665	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.78cc9f7f7d1f2e3f	T1/2	log10(h)	15	3	-0.98515523665	-0.847560312644	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.78cc9f7f7d1f2e3f	T1/2	log10(h)	15	4	-0.847560312644	-0.709965388637	true	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.93977e2909d900c2	T1/2	log10(h)	10	0	-0.863279432844	-0.261273943549	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.93977e2909d900c2	T1/2	log10(h)	10	1	-0.261273943549	0.340731545746	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.93977e2909d900c2	T1/2	log10(h)	10	2	0.340731545746	0.94273703504	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.93977e2909d900c2	T1/2	log10(h)	10	3	0.94273703504	1.54474252434	false	5				
+task	mlv1.t1_2.regression.systemic_terminal_pk.93977e2909d900c2	T1/2	log10(h)	10	4	1.54474252434	2.14674801363	true	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	0	-0.52287874528	-0.177565077395	false	1				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	1	-0.177565077395	0.16774859049	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	2	0.16774859049	0.513062258375	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	3	0.513062258375	0.85837592626	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	4	0.85837592626	1.20368959415	false	6				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b4142f647c1958e3	T1/2	log10(h)	17	5	1.20368959415	1.54900326203	true	5				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b72e7aed79bcd415	T1/2	log10(h)	12	0	-0.9719712764	-0.582032300062	false	4				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b72e7aed79bcd415	T1/2	log10(h)	12	1	-0.582032300062	-0.192093323724	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b72e7aed79bcd415	T1/2	log10(h)	12	2	-0.192093323724	0.197845652613	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b72e7aed79bcd415	T1/2	log10(h)	12	3	0.197845652613	0.587784628951	false	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.b72e7aed79bcd415	T1/2	log10(h)	12	4	0.587784628951	0.977723605289	true	3				
+task	mlv1.t1_2.regression.systemic_terminal_pk.be68d2df85b217bb	T1/2	log10(h)	11	0	-1.20215563018	-0.644632358242	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.be68d2df85b217bb	T1/2	log10(h)	11	1	-0.644632358242	-0.087109086304	false	0				
+task	mlv1.t1_2.regression.systemic_terminal_pk.be68d2df85b217bb	T1/2	log10(h)	11	2	-0.087109086304	0.470414185634	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.be68d2df85b217bb	T1/2	log10(h)	11	3	0.470414185634	1.02793745757	false	2				
+task	mlv1.t1_2.regression.systemic_terminal_pk.be68d2df85b217bb	T1/2	log10(h)	11	4	1.02793745757	1.58546072951	true	5				
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:47ec3b4de73f58043aaa	CL	L/h	11	0	0.629	92.4232	false	6	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:47ec3b4de73f58043aaa	CL	L/h	11	1	92.4232	184.2174	false	0	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:47ec3b4de73f58043aaa	CL	L/h	11	2	184.2174	276.0116	false	0	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:47ec3b4de73f58043aaa	CL	L/h	11	3	276.0116	367.8058	false	0	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:47ec3b4de73f58043aaa	CL	L/h	11	4	367.8058	459.6	true	5	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:2ac3c992065c653ad562	CL	mL/min/kg	8	0	47.9833333333	59.1866666667	false	4	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:2ac3c992065c653ad562	CL	mL/min/kg	8	1	59.1866666667	70.39	false	0	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:2ac3c992065c653ad562	CL	mL/min/kg	8	2	70.39	81.5933333333	false	1	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:2ac3c992065c653ad562	CL	mL/min/kg	8	3	81.5933333333	92.7966666667	false	2	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:2ac3c992065c653ad562	CL	mL/min/kg	8	4	92.7966666667	104	true	1	noncompartmental_analysis	apparent_over_f	apparent_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:380a3c16c8a78469e95e	CL	uL/min/mg protein	7	0	10	72.6	false	3	in_vitro_clearance_assay	intrinsic	intrinsic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:380a3c16c8a78469e95e	CL	uL/min/mg protein	7	1	72.6	135.2	false	0	in_vitro_clearance_assay	intrinsic	intrinsic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:380a3c16c8a78469e95e	CL	uL/min/mg protein	7	2	135.2	197.8	false	2	in_vitro_clearance_assay	intrinsic	intrinsic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:380a3c16c8a78469e95e	CL	uL/min/mg protein	7	3	197.8	260.4	false	1	in_vitro_clearance_assay	intrinsic	intrinsic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:380a3c16c8a78469e95e	CL	uL/min/mg protein	7	4	260.4	323	true	1	in_vitro_clearance_assay	intrinsic	intrinsic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3b27c95fa0ae60ac6f44	CL	L/h	1	0	2.56	2.56	true	1	population_pk	component	nonrenal_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:08245e8554730cf377ef	CL	L/h	1	0	4.32	4.32	true	1	population_pk	component	renal_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aef9f21346972d036578	CL	L/h	2	0	1052.4	1125.22	false	1	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aef9f21346972d036578	CL	L/h	2	1	1125.22	1198.04	false	0	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aef9f21346972d036578	CL	L/h	2	2	1198.04	1270.86	false	0	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aef9f21346972d036578	CL	L/h	2	3	1270.86	1343.68	false	0	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aef9f21346972d036578	CL	L/h	2	4	1343.68	1416.5	true	1	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:226b726e2f2bd7bcaf8a	CL	mL/min/kg	15	0	1.59666666667	14.8873333333	false	6	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:226b726e2f2bd7bcaf8a	CL	mL/min/kg	15	1	14.8873333333	28.178	false	3	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:226b726e2f2bd7bcaf8a	CL	mL/min/kg	15	2	28.178	41.4686666667	false	4	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:226b726e2f2bd7bcaf8a	CL	mL/min/kg	15	3	41.4686666667	54.7593333333	false	0	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:226b726e2f2bd7bcaf8a	CL	mL/min/kg	15	4	54.7593333333	68.05	true	2	noncompartmental_analysis	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:541985bc83b63016e4ad	CL	mL/min/kg	4	0	22.4	36.58	false	2	source_reported_pk	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:541985bc83b63016e4ad	CL	mL/min/kg	4	1	36.58	50.76	false	1	source_reported_pk	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:541985bc83b63016e4ad	CL	mL/min/kg	4	2	50.76	64.94	false	0	source_reported_pk	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:541985bc83b63016e4ad	CL	mL/min/kg	4	3	64.94	79.12	false	0	source_reported_pk	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:541985bc83b63016e4ad	CL	mL/min/kg	4	4	79.12	93.3	true	1	source_reported_pk	absolute	systemic_clearance	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	0	0.007	0.0917777777778	false	4	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	1	0.0917777777778	0.176555555556	false	1	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	2	0.176555555556	0.261333333333	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	3	0.261333333333	0.346111111111	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	4	0.346111111111	0.430888888889	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	5	0.430888888889	0.515666666667	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	6	0.515666666667	0.600444444444	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	7	0.600444444444	0.685222222222	false	0	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:17ebe43e76ee224af320	F	fraction	6	8	0.685222222222	0.77	true	1	exposure_ratio	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f56bfcc13b25ed6da087	F	fraction	3	0	0.48807	0.495536	false	1	noncompartmental_analysis	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f56bfcc13b25ed6da087	F	fraction	3	1	0.495536	0.503002	false	0	noncompartmental_analysis	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f56bfcc13b25ed6da087	F	fraction	3	2	0.503002	0.510468	false	1	noncompartmental_analysis	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f56bfcc13b25ed6da087	F	fraction	3	3	0.510468	0.517934	false	0	noncompartmental_analysis	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f56bfcc13b25ed6da087	F	fraction	3	4	0.517934	0.5254	true	1	noncompartmental_analysis	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f8b30b41126e4293f900	F	fraction	3	0	0.062	0.0948	false	1	source_reported_pk	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f8b30b41126e4293f900	F	fraction	3	1	0.0948	0.1276	false	0	source_reported_pk	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f8b30b41126e4293f900	F	fraction	3	2	0.1276	0.1604	false	0	source_reported_pk	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f8b30b41126e4293f900	F	fraction	3	3	0.1604	0.1932	false	1	source_reported_pk	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:f8b30b41126e4293f900	F	fraction	3	4	0.1932	0.226	true	1	source_reported_pk	absolute	absolute_bioavailability	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	0	-0.3	0.494285714286	false	2	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	1	0.494285714286	1.28857142857	false	8	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	2	1.28857142857	2.08285714286	false	16	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	3	2.08285714286	2.87714285714	false	15	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	4	2.87714285714	3.67142857143	false	6	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	5	3.67142857143	4.46571428571	false	6	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:03c5cad5b53a896fc6b5	LogD	dimensionless_log10	57	6	4.46571428571	5.26	true	4	chi_hplc	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8aa17ed1c3d224a38f46	LogD	dimensionless_log10	22	0	-1.7	-0.782	false	2	source_reported_method_unknown	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8aa17ed1c3d224a38f46	LogD	dimensionless_log10	22	1	-0.782	0.136	false	4	source_reported_method_unknown	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8aa17ed1c3d224a38f46	LogD	dimensionless_log10	22	2	0.136	1.054	false	2	source_reported_method_unknown	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8aa17ed1c3d224a38f46	LogD	dimensionless_log10	22	3	1.054	1.972	false	8	source_reported_method_unknown	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8aa17ed1c3d224a38f46	LogD	dimensionless_log10	22	4	1.972	2.89	true	6	source_reported_method_unknown	pH_7.4	distribution_coefficient	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	0	0	0.1665	false	14	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	1	0.1665	0.333	false	7	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	2	0.333	0.4995	false	3	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	3	0.4995	0.666	false	7	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	4	0.666	0.8325	false	11	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:5e432ed969a8c29c85a0	PPB	fraction_bound	103	5	0.8325	0.999	true	61	ppb	plasma_or_serum_protein_binding	fraction_bound	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	0	-2.38021124171	-1.87679943458	false	3	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	1	-1.87679943458	-1.37338762744	false	17	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	2	-1.37338762744	-0.869975820305	false	19	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	3	-0.869975820305	-0.36656401317	false	25	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	4	-0.36656401317	0.136847793965	false	30	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	5	0.136847793965	0.6402596011	false	32	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	6	0.6402596011	1.14367140823	false	15	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	7	1.14367140823	1.64708321537	false	13	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	8	1.64708321537	2.15049502251	false	7	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:aa3d0d0188b15fe89eac	T1/2	log10(h)	166	9	2.15049502251	2.65390682964	true	5	other_context	elapsed_time	other_context	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	0	-2.21387981995	-1.73809474421	false	2	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	1	-1.73809474421	-1.26230966846	false	15	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	2	-1.26230966846	-0.786524592717	false	27	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	3	-0.786524592717	-0.310739516972	false	24	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	4	-0.310739516972	0.165045558772	false	44	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	5	0.165045558772	0.640830634517	false	33	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	6	0.640830634517	1.11661571026	false	37	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	7	1.11661571026	1.59240078601	false	24	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:3649a82445ade304603a	T1/2	log10(h)	213	8	1.59240078601	2.06818586175	true	7	plasma_serum_stability	elapsed_time	plasma_serum_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	0	-6.65321251378	-6.31941470708	false	14	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	1	-6.31941470708	-5.98561690038	false	35	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	2	-5.98561690038	-5.65181909368	false	58	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	3	-5.65181909368	-5.31802128698	false	54	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	4	-5.31802128698	-4.98422348028	false	56	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	5	-4.98422348028	-4.65042567358	false	50	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	6	-4.65042567358	-4.31662786689	false	43	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	7	-4.31662786689	-3.98283006019	false	20	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	8	-3.98283006019	-3.64903225349	false	11	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	9	-3.64903225349	-3.31523444679	false	10	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	10	-3.31523444679	-2.98143664009	false	4	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	11	-2.98143664009	-2.64763883339	false	12	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	12	-2.64763883339	-2.31384102669	false	3	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	13	-2.31384102669	-1.98004321999	false	4	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	14	-1.98004321999	-1.64624541329	false	1	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	15	-1.64624541329	-1.31244760659	false	1	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	16	-1.31244760659	-0.978649799894	false	3	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	17	-0.978649799894	-0.644851993195	false	2	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	18	-0.644851993195	-0.311054186496	false	2	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	19	-0.311054186496	0.0227436202033	false	0	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	20	0.0227436202033	0.356541426903	false	2	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	21	0.356541426903	0.690339233602	false	1	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	22	0.690339233602	1.0241370403	false	2	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9c538666dfcc3a1ee78e	T1/2	log10(h)	393	23	1.0241370403	1.357934847	true	5	protease_intestinal_stability	elapsed_time	protease_intestinal_stability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	0	-2.32330639038	-1.98691036952	false	6	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	1	-1.98691036952	-1.65051434866	false	10	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	2	-1.65051434866	-1.3141183278	false	27	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	3	-1.3141183278	-0.977722306937	false	48	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	4	-0.977722306937	-0.641326286077	false	55	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	5	-0.641326286077	-0.304930265216	false	58	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	6	-0.304930265216	0.0314657556447	false	66	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	7	0.0314657556447	0.367861776505	false	75	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	8	0.367861776505	0.704257797366	false	64	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	9	0.704257797366	1.04065381823	false	79	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	10	1.04065381823	1.37704983909	false	45	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	11	1.37704983909	1.71344585995	false	47	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	12	1.71344585995	2.04984188081	false	27	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	13	2.04984188081	2.38623790167	false	9	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:930e19205c9a767b688f	T1/2	log10(h)	620	14	2.38623790167	2.72263392253	true	4	systemic_terminal_pk	elapsed_time	systemic_terminal_pk	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:74b3b1e15029e95f856e	Vd	L	11	0	18.2	94.934	false	5	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:74b3b1e15029e95f856e	Vd	L	11	1	94.934	171.668	false	1	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:74b3b1e15029e95f856e	Vd	L	11	2	171.668	248.402	false	0	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:74b3b1e15029e95f856e	Vd	L	11	3	248.402	325.136	false	2	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:74b3b1e15029e95f856e	Vd	L	11	4	325.136	401.87	true	3	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:acd43269fd159bd30367	Vd	L/kg	8	0	1.83	4.0116	false	5	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:acd43269fd159bd30367	Vd	L/kg	8	1	4.0116	6.1932	false	0	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:acd43269fd159bd30367	Vd	L/kg	8	2	6.1932	8.3748	false	0	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:acd43269fd159bd30367	Vd	L/kg	8	3	8.3748	10.5564	false	0	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:acd43269fd159bd30367	Vd	L/kg	8	4	10.5564	12.738	true	3	noncompartmental_analysis	apparent_over_f	apparent_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:70bcf5e9d73295ffb36f	Vd	L	2	0	5.87	6.756	false	1	population_pk	absolute	compartment_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:70bcf5e9d73295ffb36f	Vd	L	2	1	6.756	7.642	false	0	population_pk	absolute	compartment_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:70bcf5e9d73295ffb36f	Vd	L	2	2	7.642	8.528	false	0	population_pk	absolute	compartment_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:70bcf5e9d73295ffb36f	Vd	L	2	3	8.528	9.414	false	0	population_pk	absolute	compartment_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:70bcf5e9d73295ffb36f	Vd	L	2	4	9.414	10.3	true	1	population_pk	absolute	compartment_volume	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:189455e05ac4ea755872	Vd	L	2	0	437.6	469.18	false	1	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:189455e05ac4ea755872	Vd	L	2	1	469.18	500.76	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:189455e05ac4ea755872	Vd	L	2	2	500.76	532.34	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:189455e05ac4ea755872	Vd	L	2	3	532.34	563.92	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:189455e05ac4ea755872	Vd	L	2	4	563.92	595.5	true	1	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	0	0.162	0.457125	false	7	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	1	0.457125	0.75225	false	1	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	2	0.75225	1.047375	false	1	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	3	1.047375	1.3425	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	4	1.3425	1.637625	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	5	1.637625	1.93275	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	6	1.93275	2.227875	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	7	2.227875	2.523	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	8	2.523	2.818125	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	9	2.818125	3.11325	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	10	3.11325	3.408375	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	11	3.408375	3.7035	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	12	3.7035	3.998625	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	13	3.998625	4.29375	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	14	4.29375	4.588875	false	0	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ab23f45a4142ce23d5fc	Vd	L/kg	10	15	4.588875	4.884	true	1	noncompartmental_analysis	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:55f06a8a907ae1572c17	Vd	L/kg	5	0	1.1	2.26	false	2	source_reported_pk	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:55f06a8a907ae1572c17	Vd	L/kg	5	1	2.26	3.42	false	2	source_reported_pk	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:55f06a8a907ae1572c17	Vd	L/kg	5	2	3.42	4.58	false	0	source_reported_pk	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:55f06a8a907ae1572c17	Vd	L/kg	5	3	4.58	5.74	false	0	source_reported_pk	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:55f06a8a907ae1572c17	Vd	L/kg	5	4	5.74	6.9	true	1	source_reported_pk	absolute	volume_of_distribution	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	0	-8.06	-7.84095238095	false	6	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	1	-7.84095238095	-7.6219047619	false	15	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	2	-7.6219047619	-7.40285714286	false	48	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	3	-7.40285714286	-7.18380952381	false	75	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	4	-7.18380952381	-6.96476190476	false	113	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	5	-6.96476190476	-6.74571428571	false	100	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	6	-6.74571428571	-6.52666666667	false	89	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	7	-6.52666666667	-6.30761904762	false	73	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	8	-6.30761904762	-6.08857142857	false	83	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	9	-6.08857142857	-5.86952380952	false	162	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	10	-5.86952380952	-5.65047619048	false	156	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	11	-5.65047619048	-5.43142857143	false	122	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	12	-5.43142857143	-5.21238095238	false	67	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	13	-5.21238095238	-4.99333333333	false	33	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	14	-4.99333333333	-4.77428571429	false	39	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	15	-4.77428571429	-4.55523809524	false	24	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	16	-4.55523809524	-4.33619047619	false	9	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	17	-4.33619047619	-4.11714285714	false	6	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	18	-4.11714285714	-3.8980952381	false	2	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	19	-3.8980952381	-3.67904761905	false	4	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9524c72754bc8de629fc	permeability	source_log10_permeability	1229	20	-3.67904761905	-3.46	true	3	caco2	caco2	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:97163042099a3f960bc8	permeability	log10(cm/s)	12	0	-6.71219827007	-6.27204847276	false	5	caco2	caco2_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:97163042099a3f960bc8	permeability	log10(cm/s)	12	1	-6.27204847276	-5.83189867544	false	3	caco2	caco2_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:97163042099a3f960bc8	permeability	log10(cm/s)	12	2	-5.83189867544	-5.39174887813	false	0	caco2	caco2_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:97163042099a3f960bc8	permeability	log10(cm/s)	12	3	-5.39174887813	-4.95159908081	false	0	caco2	caco2_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:97163042099a3f960bc8	permeability	log10(cm/s)	12	4	-4.95159908081	-4.5114492835	true	4	caco2	caco2_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	0	-7	-6.57	false	5	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	1	-6.57	-6.14	false	5	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	2	-6.14	-5.71	false	12	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	3	-5.71	-5.28	false	10	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	4	-5.28	-4.85	false	17	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:eb45a509b827440017cc	permeability	log10(cm/s)	65	5	-4.85	-4.42	true	16	caco2	caco_2_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	0	-8.699	-8.25254545455	false	2	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	1	-8.25254545455	-7.80609090909	false	0	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	2	-7.80609090909	-7.35963636364	false	0	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	3	-7.35963636364	-6.91318181818	false	6	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	4	-6.91318181818	-6.46672727273	false	10	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	5	-6.46672727273	-6.02027272727	false	6	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	6	-6.02027272727	-5.57381818182	false	11	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	7	-5.57381818182	-5.12736363636	false	22	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	8	-5.12736363636	-4.68090909091	false	29	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	9	-4.68090909091	-4.23445454545	false	15	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9ea8a8db2d99dad4e56e	permeability	log10(cm/s)	110	10	-4.23445454545	-3.788	true	9	caco2	caco_2_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	0	-6.9	-6.46466666667	false	1	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	1	-6.46466666667	-6.02933333333	false	3	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	2	-6.02933333333	-5.594	false	7	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	3	-5.594	-5.15866666667	false	8	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	4	-5.15866666667	-4.72333333333	false	6	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:cb3678ccae521746bea8	permeability	log10(cm/s)	32	5	-4.72333333333	-4.288	true	7	caco2	caco_2_log_papp_ab_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	0	-6.77	-6.53166666667	false	1	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	1	-6.53166666667	-6.29333333333	false	0	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	2	-6.29333333333	-6.055	false	0	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	3	-6.055	-5.81666666667	false	0	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	4	-5.81666666667	-5.57833333333	false	1	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	5	-5.57833333333	-5.34	false	0	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	6	-5.34	-5.10166666667	false	5	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	7	-5.10166666667	-4.86333333333	false	10	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	8	-4.86333333333	-4.625	false	7	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	9	-4.625	-4.38666666667	false	21	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	10	-4.38666666667	-4.14833333333	false	22	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:60de0a19f803bc462874	permeability	log10(cm/s)	69	11	-4.14833333333	-3.91	true	2	caco2	caco_2_log_papp_ba	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9e6316f4cb574323b71b	permeability	log10(cm/s)	25	0	-5.578	-5.3698	false	1	caco2	caco_2_log_papp_ba_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9e6316f4cb574323b71b	permeability	log10(cm/s)	25	1	-5.3698	-5.1616	false	4	caco2	caco_2_log_papp_ba_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9e6316f4cb574323b71b	permeability	log10(cm/s)	25	2	-5.1616	-4.9534	false	5	caco2	caco_2_log_papp_ba_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9e6316f4cb574323b71b	permeability	log10(cm/s)	25	3	-4.9534	-4.7452	false	7	caco2	caco_2_log_papp_ba_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9e6316f4cb574323b71b	permeability	log10(cm/s)	25	4	-4.7452	-4.537	true	8	caco2	caco_2_log_papp_ba_with_inhibitor	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	0	-7.698970004	-7.14914167	false	3	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	1	-7.14914167	-6.599313336	false	0	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	2	-6.599313336	-6.049485002	false	16	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	3	-6.049485002	-5.499656668	false	11	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	4	-5.499656668	-4.949828334	false	20	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:149db902383cd97d173c	permeability	source_log10_permeability	63	5	-4.949828334	-4.4	true	13	mdck	mdck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e8092dc5fc0300bd9009	permeability	log10(cm/s)	5	0	-7	-6.7076	false	2	mdck	mdck_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e8092dc5fc0300bd9009	permeability	log10(cm/s)	5	1	-6.7076	-6.4152	false	0	mdck	mdck_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e8092dc5fc0300bd9009	permeability	log10(cm/s)	5	2	-6.4152	-6.1228	false	0	mdck	mdck_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e8092dc5fc0300bd9009	permeability	log10(cm/s)	5	3	-6.1228	-5.8304	false	1	mdck	mdck_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e8092dc5fc0300bd9009	permeability	log10(cm/s)	5	4	-5.8304	-5.538	true	2	mdck	mdck_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9572eb6112fe6ac6f800	permeability	log10(cm/s)	5	0	-7	-6.8194	false	1	mdck	mdck_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9572eb6112fe6ac6f800	permeability	log10(cm/s)	5	1	-6.8194	-6.6388	false	0	mdck	mdck_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9572eb6112fe6ac6f800	permeability	log10(cm/s)	5	2	-6.6388	-6.4582	false	1	mdck	mdck_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9572eb6112fe6ac6f800	permeability	log10(cm/s)	5	3	-6.4582	-6.2776	false	1	mdck	mdck_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:9572eb6112fe6ac6f800	permeability	log10(cm/s)	5	4	-6.2776	-6.097	true	2	mdck	mdck_log_papp_ab	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:a8d63e89be87cd50fd7c	permeability	log10(cm/s)	2	0	-6.34678748622	-6.3217997389	false	1	mdck	mdck_mdr1_papp_group_dn_ht	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:a8d63e89be87cd50fd7c	permeability	log10(cm/s)	2	1	-6.3217997389	-6.29681199158	false	0	mdck	mdck_mdr1_papp_group_dn_ht	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:a8d63e89be87cd50fd7c	permeability	log10(cm/s)	2	2	-6.29681199158	-6.27182424426	false	0	mdck	mdck_mdr1_papp_group_dn_ht	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:a8d63e89be87cd50fd7c	permeability	log10(cm/s)	2	3	-6.27182424426	-6.24683649694	false	0	mdck	mdck_mdr1_papp_group_dn_ht	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:a8d63e89be87cd50fd7c	permeability	log10(cm/s)	2	4	-6.24683649694	-6.22184874962	true	1	mdck	mdck_mdr1_papp_group_dn_ht	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:4bdb1aaec9608d182927	permeability	log10(cm/s)	2	0	-6.52287874528	-6.33497489476	false	1	mdck	mdck_mdr1_papp_group_dn_te	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:4bdb1aaec9608d182927	permeability	log10(cm/s)	2	1	-6.33497489476	-6.14707104423	false	0	mdck	mdck_mdr1_papp_group_dn_te	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:4bdb1aaec9608d182927	permeability	log10(cm/s)	2	2	-6.14707104423	-5.95916719371	false	0	mdck	mdck_mdr1_papp_group_dn_te	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:4bdb1aaec9608d182927	permeability	log10(cm/s)	2	3	-5.95916719371	-5.77126334318	false	0	mdck	mdck_mdr1_papp_group_dn_te	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:4bdb1aaec9608d182927	permeability	log10(cm/s)	2	4	-5.77126334318	-5.58335949266	true	1	mdck	mdck_mdr1_papp_group_dn_te	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e7f4a62dc9deceaff5ad	permeability	log10(cm/s)	1	0	-5.76195389687	-5.76195389687	true	1	mdck	mdck_mdr1_papp_group_mod_ss	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:d14feee60a3ad8231ba4	permeability	log10(cm/s)	25	0	-7.114	-6.6354	false	5	others_log_papp	others_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:d14feee60a3ad8231ba4	permeability	log10(cm/s)	25	1	-6.6354	-6.1568	false	3	others_log_papp	others_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:d14feee60a3ad8231ba4	permeability	log10(cm/s)	25	2	-6.1568	-5.6782	false	2	others_log_papp	others_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:d14feee60a3ad8231ba4	permeability	log10(cm/s)	25	3	-5.6782	-5.1996	false	11	others_log_papp	others_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:d14feee60a3ad8231ba4	permeability	log10(cm/s)	25	4	-5.1996	-4.721	true	4	others_log_papp	others_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	0	-9.46	-9.3488	false	3	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	1	-9.3488	-9.2376	false	2	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	2	-9.2376	-9.1264	false	0	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	3	-9.1264	-9.0152	false	3	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	4	-9.0152	-8.904	false	9	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	5	-8.904	-8.7928	false	6	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	6	-8.7928	-8.6816	false	6	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	7	-8.6816	-8.5704	false	2	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	8	-8.5704	-8.4592	false	10	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	9	-8.4592	-8.348	false	9	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	10	-8.348	-8.2368	false	12	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	11	-8.2368	-8.1256	false	9	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	12	-8.1256	-8.0144	false	14	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	13	-8.0144	-7.9032	false	27	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	14	-7.9032	-7.792	false	23	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	15	-7.792	-7.6808	false	20	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	16	-7.6808	-7.5696	false	26	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	17	-7.5696	-7.4584	false	31	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	18	-7.4584	-7.3472	false	34	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	19	-7.3472	-7.236	false	52	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	20	-7.236	-7.1248	false	60	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	21	-7.1248	-7.0136	false	54	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	22	-7.0136	-6.9024	false	82	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	23	-6.9024	-6.7912	false	117	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	24	-6.7912	-6.68	false	129	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	25	-6.68	-6.5688	false	168	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	26	-6.5688	-6.4576	false	156	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	27	-6.4576	-6.3464	false	190	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	28	-6.3464	-6.2352	false	241	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	29	-6.2352	-6.124	false	244	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	30	-6.124	-6.0128	false	291	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	31	-6.0128	-5.9016	false	363	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	32	-5.9016	-5.7904	false	431	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	33	-5.7904	-5.6792	false	485	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	34	-5.6792	-5.568	false	426	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	35	-5.568	-5.4568	false	439	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	36	-5.4568	-5.3456	false	417	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	37	-5.3456	-5.2344	false	470	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	38	-5.2344	-5.1232	false	414	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	39	-5.1232	-5.012	false	315	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	40	-5.012	-4.9008	false	225	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	41	-4.9008	-4.7896	false	186	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	42	-4.7896	-4.6784	false	129	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	43	-4.6784	-4.5672	false	147	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	44	-4.5672	-4.456	false	166	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	45	-4.456	-4.3448	false	82	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	46	-4.3448	-4.2336	false	67	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	47	-4.2336	-4.1224	false	18	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	48	-4.1224	-4.0112	false	1	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e10f07d4941012b5199	permeability	source_log10_permeability	6814	49	-4.0112	-3.9	true	3	pampa	pampa	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	0	-8.523	-7.9045	false	9	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	1	-7.9045	-7.286	false	5	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	2	-7.286	-6.6675	false	16	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	3	-6.6675	-6.049	false	21	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	4	-6.049	-5.4305	false	19	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	5	-5.4305	-4.812	false	24	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	6	-4.812	-4.1935	false	16	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:02bb3f43bedca9581c29	permeability	log10(cm/s)	113	7	-4.1935	-3.575	true	3	pampa	pampa_log_papp	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	0	-8.04	-7.81411764706	false	24	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	1	-7.81411764706	-7.58823529412	false	44	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	2	-7.58823529412	-7.36235294118	false	79	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	3	-7.36235294118	-7.13647058824	false	108	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	4	-7.13647058824	-6.91058823529	false	121	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	5	-6.91058823529	-6.68470588235	false	112	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	6	-6.68470588235	-6.45882352941	false	97	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	7	-6.45882352941	-6.23294117647	false	72	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	8	-6.23294117647	-6.00705882353	false	50	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	9	-6.00705882353	-5.78117647059	false	51	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	10	-5.78117647059	-5.55529411765	false	43	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	11	-5.55529411765	-5.32941176471	false	36	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	12	-5.32941176471	-5.10352941176	false	26	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	13	-5.10352941176	-4.87764705882	false	14	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	14	-4.87764705882	-4.65176470588	false	18	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	15	-4.65176470588	-4.42588235294	false	19	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b4fc7be3597e011e0cbd	permeability	log10(cm/s)	920	16	-4.42588235294	-4.2	true	6	pampa	pampa_log_peff	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7d189ae10fcf0e62583b	permeability	log10(cm/s)	8	0	-5.70114692359	-5.59622269304	false	2	pampa	pampa_permeability_25c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7d189ae10fcf0e62583b	permeability	log10(cm/s)	8	1	-5.59622269304	-5.49129846249	false	0	pampa	pampa_permeability_25c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7d189ae10fcf0e62583b	permeability	log10(cm/s)	8	2	-5.49129846249	-5.38637423193	false	2	pampa	pampa_permeability_25c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7d189ae10fcf0e62583b	permeability	log10(cm/s)	8	3	-5.38637423193	-5.28145000138	false	1	pampa	pampa_permeability_25c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7d189ae10fcf0e62583b	permeability	log10(cm/s)	8	4	-5.28145000138	-5.17652577083	true	3	pampa	pampa_permeability_25c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:186504c52f9f5359f6a7	permeability	log10(cm/s)	8	0	-5.1739251973	-5.10508781476	false	2	pampa	pampa_permeability_37c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:186504c52f9f5359f6a7	permeability	log10(cm/s)	8	1	-5.10508781476	-5.03625043222	false	2	pampa	pampa_permeability_37c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:186504c52f9f5359f6a7	permeability	log10(cm/s)	8	2	-5.03625043222	-4.96741304969	false	0	pampa	pampa_permeability_37c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:186504c52f9f5359f6a7	permeability	log10(cm/s)	8	3	-4.96741304969	-4.89857566715	false	3	pampa	pampa_permeability_37c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:186504c52f9f5359f6a7	permeability	log10(cm/s)	8	4	-4.89857566715	-4.82973828461	true	1	pampa	pampa_permeability_37c	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	0	-6.96	-6.65125	false	9	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	1	-6.65125	-6.3425	false	10	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	2	-6.3425	-6.03375	false	24	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	3	-6.03375	-5.725	false	22	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	4	-5.725	-5.41625	false	25	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	5	-5.41625	-5.1075	false	33	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	6	-5.1075	-4.79875	false	18	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:c52d7bcc5a40e55b1d74	permeability	source_log10_permeability	159	7	-4.79875	-4.49	true	18	rrck	rrck	apparent_permeability	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e119447d3b9a4799ac21	permeability	log10(ratio)	7	0	0.146128035678	0.405084244956	false	2	caco2	caco2_efflux_ratio	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e119447d3b9a4799ac21	permeability	log10(ratio)	7	1	0.405084244956	0.664040454235	false	0	caco2	caco2_efflux_ratio	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e119447d3b9a4799ac21	permeability	log10(ratio)	7	2	0.664040454235	0.922996663513	false	2	caco2	caco2_efflux_ratio	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e119447d3b9a4799ac21	permeability	log10(ratio)	7	3	0.922996663513	1.18195287279	false	1	caco2	caco2_efflux_ratio	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:e119447d3b9a4799ac21	permeability	log10(ratio)	7	4	1.18195287279	1.44090908207	true	2	caco2	caco2_efflux_ratio	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	0	-0.619788758288	-0.264280718854	false	7	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	1	-0.264280718854	0.0912273205804	false	16	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	2	0.0912273205804	0.446735360015	false	16	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	3	0.446735360015	0.802243399449	false	23	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	4	0.802243399449	1.15775143888	false	13	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	5	1.15775143888	1.51325947832	false	4	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	6	1.51325947832	1.86876751775	false	2	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	7	1.86876751775	2.22427555719	false	2	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:fefa1c655f5adaaea982	permeability	log10(ratio)	94	8	2.22427555719	2.57978359662	true	11	caco2	caco_2_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b68adf7560c9270af5a5	permeability	log10(ratio)	26	0	-0.585026652029	-0.241954567923	false	4	caco2	caco_2_er_with_inhibitor	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b68adf7560c9270af5a5	permeability	log10(ratio)	26	1	-0.241954567923	0.101117516183	false	7	caco2	caco_2_er_with_inhibitor	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b68adf7560c9270af5a5	permeability	log10(ratio)	26	2	0.101117516183	0.444189600288	false	7	caco2	caco_2_er_with_inhibitor	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b68adf7560c9270af5a5	permeability	log10(ratio)	26	3	0.444189600288	0.787261684394	false	2	caco2	caco_2_er_with_inhibitor	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:b68adf7560c9270af5a5	permeability	log10(ratio)	26	4	0.787261684394	1.1303337685	true	6	caco2	caco_2_er_with_inhibitor	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ba29d92e2d3c7f6eef40	permeability	log10(ratio)	2	0	0.9731278536	1.01372053469	false	1	mdck	mdck_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ba29d92e2d3c7f6eef40	permeability	log10(ratio)	2	1	1.01372053469	1.05431321578	false	0	mdck	mdck_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ba29d92e2d3c7f6eef40	permeability	log10(ratio)	2	2	1.05431321578	1.09490589688	false	0	mdck	mdck_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ba29d92e2d3c7f6eef40	permeability	log10(ratio)	2	3	1.09490589688	1.13549857797	false	0	mdck	mdck_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:ba29d92e2d3c7f6eef40	permeability	log10(ratio)	2	4	1.13549857797	1.17609125906	true	1	mdck	mdck_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1c5d9195fb118bcb57ab	permeability	log10(ratio)	21	0	0	0.246089784276	false	10	others_er	others_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1c5d9195fb118bcb57ab	permeability	log10(ratio)	21	1	0.246089784276	0.492179568552	false	5	others_er	others_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1c5d9195fb118bcb57ab	permeability	log10(ratio)	21	2	0.492179568552	0.738269352828	false	4	others_er	others_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1c5d9195fb118bcb57ab	permeability	log10(ratio)	21	3	0.738269352828	0.984359137104	false	0	others_er	others_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1c5d9195fb118bcb57ab	permeability	log10(ratio)	21	4	0.984359137104	1.23044892138	true	2	others_er	others_er	efflux_ratio	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	0	0	0.0942857142857	false	6	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	1	0.0942857142857	0.188571428571	false	3	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	2	0.188571428571	0.282857142857	false	1	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	3	0.282857142857	0.377142857143	false	0	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	4	0.377142857143	0.471428571429	false	0	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	5	0.471428571429	0.565714285714	false	1	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:8255512a50a6d3030ca6	permeability	fraction_retained	12	6	0.565714285714	0.66	true	1	pampa	pampa_membrane_retention	membrane_retention	identity
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:408b53088a908b2f69a2	solubility	log10(mass_concentration_kg_m3)	5	0	-0.221848749616	0.283203414427	false	2	gravimetric_analysis	mass_concentration_kg_m3	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:408b53088a908b2f69a2	solubility	log10(mass_concentration_kg_m3)	5	1	0.283203414427	0.78825557847	false	1	gravimetric_analysis	mass_concentration_kg_m3	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:408b53088a908b2f69a2	solubility	log10(mass_concentration_kg_m3)	5	2	0.78825557847	1.29330774251	false	0	gravimetric_analysis	mass_concentration_kg_m3	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:408b53088a908b2f69a2	solubility	log10(mass_concentration_kg_m3)	5	3	1.29330774251	1.79835990656	false	0	gravimetric_analysis	mass_concentration_kg_m3	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:408b53088a908b2f69a2	solubility	log10(mass_concentration_kg_m3)	5	4	1.79835990656	2.3034120706	true	2	gravimetric_analysis	mass_concentration_kg_m3	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:159cc9806f9049a4bcfd	solubility	log10(mass_fraction)	1	0	-1.77469071827	-1.77469071827	true	1	uv_vis_spectrophotometry	mass_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1b2473b24555a16fcb6f	solubility	log10(mass_ratio_of_solute_to_solvent)	3	0	-2.40340290437	-2.0513260433	false	1	determined_from_density_measurements	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1b2473b24555a16fcb6f	solubility	log10(mass_ratio_of_solute_to_solvent)	3	1	-2.0513260433	-1.69924918222	false	0	determined_from_density_measurements	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1b2473b24555a16fcb6f	solubility	log10(mass_ratio_of_solute_to_solvent)	3	2	-1.69924918222	-1.34717232115	false	0	determined_from_density_measurements	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1b2473b24555a16fcb6f	solubility	log10(mass_ratio_of_solute_to_solvent)	3	3	-1.34717232115	-0.99509546008	false	1	determined_from_density_measurements	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:1b2473b24555a16fcb6f	solubility	log10(mass_ratio_of_solute_to_solvent)	3	4	-0.99509546008	-0.643018599007	true	1	determined_from_density_measurements	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:490506e62c71a9db62fa	solubility	log10(mass_ratio_of_solute_to_solvent)	3	0	-2.40893539297	-2.16577670847	false	1	from_the_density_plateau	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:490506e62c71a9db62fa	solubility	log10(mass_ratio_of_solute_to_solvent)	3	1	-2.16577670847	-1.92261802397	false	0	from_the_density_plateau	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:490506e62c71a9db62fa	solubility	log10(mass_ratio_of_solute_to_solvent)	3	2	-1.92261802397	-1.67945933948	false	1	from_the_density_plateau	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:490506e62c71a9db62fa	solubility	log10(mass_ratio_of_solute_to_solvent)	3	3	-1.67945933948	-1.43630065498	false	0	from_the_density_plateau	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:490506e62c71a9db62fa	solubility	log10(mass_ratio_of_solute_to_solvent)	3	4	-1.43630065498	-1.19314197048	true	1	from_the_density_plateau	mass_ratio_of_solute_to_solvent	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	0	-4.50031291738	-4.17731554702	false	3	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	1	-4.17731554702	-3.85431817666	false	2	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	2	-3.85431817666	-3.5313208063	false	4	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	3	-3.5313208063	-3.20832343595	false	9	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	4	-3.20832343595	-2.88532606559	false	10	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:7e63523969fc30695ace	solubility	log10(mole_fraction)	36	5	-2.88532606559	-2.56232869523	true	8	uv_spectra	mole_fraction	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:db2b989f1e83abea4248	solubility	log10(mol/L)	6	0	-5.55284196866	-5.23672213399	false	1	kinetic_solubility_1_5_h_ro_c006261d	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:db2b989f1e83abea4248	solubility	log10(mol/L)	6	1	-5.23672213399	-4.92060229932	false	1	kinetic_solubility_1_5_h_ro_c006261d	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:db2b989f1e83abea4248	solubility	log10(mol/L)	6	2	-4.92060229932	-4.60448246465	false	1	kinetic_solubility_1_5_h_ro_c006261d	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:db2b989f1e83abea4248	solubility	log10(mol/L)	6	3	-4.60448246465	-4.28836262998	false	2	kinetic_solubility_1_5_h_ro_c006261d	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:db2b989f1e83abea4248	solubility	log10(mol/L)	6	4	-4.28836262998	-3.97224279531	true	1	kinetic_solubility_1_5_h_ro_c006261d	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	0	-5.39794000867	-5.33390714766	false	1	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	1	-5.33390714766	-5.26987428665	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	2	-5.26987428665	-5.20584142564	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	3	-5.20584142564	-5.14180856463	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	4	-5.14180856463	-5.07777570361	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	5	-5.07777570361	-5.0137428426	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	6	-5.0137428426	-4.94970998159	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	7	-4.94970998159	-4.88567712058	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	8	-4.88567712058	-4.82164425957	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	9	-4.82164425957	-4.75761139856	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	10	-4.75761139856	-4.69357853755	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	11	-4.69357853755	-4.62954567654	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	12	-4.62954567654	-4.56551281553	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	13	-4.56551281553	-4.50147995451	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	14	-4.50147995451	-4.4374470935	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	15	-4.4374470935	-4.37341423249	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	16	-4.37341423249	-4.30938137148	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	17	-4.30938137148	-4.24534851047	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	18	-4.24534851047	-4.18131564946	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	19	-4.18131564946	-4.11728278845	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	20	-4.11728278845	-4.05324992744	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	21	-4.05324992744	-3.98921706643	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	22	-3.98921706643	-3.92518420542	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	23	-3.92518420542	-3.8611513444	false	1	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	24	-3.8611513444	-3.79711848339	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	25	-3.79711848339	-3.73308562238	false	1	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	26	-3.73308562238	-3.66905276137	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	27	-3.66905276137	-3.60501990036	false	1	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	28	-3.60501990036	-3.54098703935	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	29	-3.54098703935	-3.47695417834	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	30	-3.47695417834	-3.41292131733	false	0	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	31	-3.41292131733	-3.34888845632	false	1	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	32	-3.34888845632	-3.2848555953	false	2	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	33	-3.2848555953	-3.22082273429	false	2	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	34	-3.22082273429	-3.15678987328	false	11	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	35	-3.15678987328	-3.09275701227	false	9	maximum_concentration_at_wh_7567adfa	um	solubility	log10
+endpoint_semantics_unit_descriptive	ENDPOINTUNIT1:82de212abdad1f91c334	solubility	log10(mol/L)	35	36	-3.09275701227	-3.02872415126	true	6	maximum_concentration_at_wh_7567adfa	um	solubility	log10

@@ -1,0 +1,5 @@
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.tsv text eol=lf -diff
+SHA256SUMS text eol=lf

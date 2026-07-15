@@ -1,0 +1,229 @@
+{
+  "assertions": {
+    "binary_not_mixed_into_numeric": true,
+    "clean_partition_conservation": true,
+    "clean_representatives_19979": true,
+    "kp_zero_rows_explicit": true,
+    "literature_rows_1560_review_only": true,
+    "missing_identity_not_counted_as_identity": true,
+    "sequence_representation_prefixes_valid": true,
+    "strict_numeric_11591": true,
+    "strict_numeric_all_finite": true,
+    "strict_numeric_no_hard_conflict": true,
+    "strict_task_unit_transform_invariant": true,
+    "v15_raw_endpoints_50": true,
+    "v15_rows_215568": true
+  },
+  "counts": {
+    "anomaly_rows": 444,
+    "anomaly_rules": {
+      "extreme_total_body_clearance_value_gt_100_L_h": 7,
+      "standard_sequence_gt_100_aa_in_strict_numeric": 94,
+      "subsecond_protease_half_life": 343
+    },
+    "anomaly_unique_records": 444,
+    "clean_declared_endpoint_families": 11,
+    "clean_nonzero_endpoint_families": 10,
+    "clean_representatives": 19979,
+    "literature_review_rows": 1560,
+    "partitions": {
+      "binary_evidence_catalog": 3930,
+      "censored_numeric": 230,
+      "identity_review": 1081,
+      "normalization_review": 106,
+      "positive_unlabeled": 920,
+      "semantic_review": 2121,
+      "strict_numeric": 11591
+    },
+    "representation_types": {
+      "helm": 14435,
+      "missing": 1081,
+      "sequence": 2053,
+      "smiles": 2410
+    },
+    "sequence_model_eligible_rows": 2053,
+    "strict_numeric_by_endpoint": {
+      "CL": 49,
+      "F": 12,
+      "LogD": 79,
+      "PPB": 103,
+      "T1/2": 1392,
+      "Vd": 38,
+      "permeability": 9829,
+      "solubility": 89
+    },
+    "strict_numeric_tasks": 620,
+    "strict_task_size_bins": {
+      "1": 413,
+      "10-29": 33,
+      "100-999": 5,
+      "2-4": 116,
+      "30-99": 6,
+      "5-9": 45,
+      ">=1000": 2
+    },
+    "structure_model_eligible_rows": 16845,
+    "tasks": 1067,
+    "unique_identity_groups": 14374,
+    "unique_selected_representations": 14869,
+    "v15_raw_endpoints": 50,
+    "v15_rows": 215568
+  },
+  "implementation": {
+    "script": "scripts/summarize_peptide_ml_cleaning_v1.py",
+    "script_sha256": "e2ea969d8c7dd4d48662bf8f3b87ffbda410076b66aa3697417499c4b7609a54"
+  },
+  "inputs": {
+    "cleaning_manifest": {
+      "bytes": 10099,
+      "path": "data/peptide_ml_cleaning_v1/manifest.json",
+      "sha256": "b26ace138c1445779c89a1d4c673cd4f050ec69b719bef03209e6547830e6ac0"
+    },
+    "literature_review": {
+      "bytes": 1190512,
+      "path": "data/peptide_ml_cleaning_v1/literature_review_cleaned.tsv",
+      "rows": 1560,
+      "sha256": "194988bfcc532b351029cbcdccd23b9456806152e020b010e802b9066d0491aa"
+    },
+    "ml_clean_normalized": {
+      "bytes": 88052280,
+      "path": "data/peptide_ml_cleaning_v1/normalized_observations.tsv",
+      "rows": 19979,
+      "sha256": "1039f01ec90a2244b6ab94d2db7a6085db1f19f3a4efca2fd1383ad7f9424ab9"
+    },
+    "ml_clean_task_registry": {
+      "bytes": 706243,
+      "path": "data/peptide_ml_cleaning_v1/task_registry.tsv",
+      "rows": 1067,
+      "sha256": "920ba509c009e32c09f9f49af382f626a608b8ca3903d236a7d23442a604bf7d"
+    },
+    "v15_training_deduplicated": {
+      "bytes": 381508083,
+      "path": "data/peptide_property_expansion_v15/peptide_property_training_deduplicated_v15.tsv",
+      "rows": 215568,
+      "sha256": "5eaf343f91d20807feec5eb7c1069c100284b2df0d05148ef62bc414a76aca51"
+    }
+  },
+  "outputs": {
+    "README.md": {
+      "bytes": 728,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/README.md",
+      "sha256": "af6d554740cd9a223d55e7831222ce2b3ca78b96978ef3ff04e0ab38eba81441"
+    },
+    "amino_acid_composition.tsv": {
+      "bytes": 116708,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/amino_acid_composition.tsv",
+      "rows": 1240,
+      "sha256": "183814202daf458dab3e1c2cccda62bd736aea6e76bc208c4bb25109b318b872"
+    },
+    "binary_task_distribution.tsv": {
+      "bytes": 3247,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/binary_task_distribution.tsv",
+      "rows": 11,
+      "sha256": "acf78561002c6c568463ad9cbeb513c90b213dae6de2f0f594e5b4d273827a8d"
+    },
+    "censoring_distribution.tsv": {
+      "bytes": 33557,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/censoring_distribution.tsv",
+      "rows": 130,
+      "sha256": "0427771d4b70e56871383db89bda865971c9fb40b7a65413471b619cb17daf50"
+    },
+    "clean_endpoint_inventory.tsv": {
+      "bytes": 2569,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/clean_endpoint_inventory.tsv",
+      "rows": 11,
+      "sha256": "bc4af24170a5b25f4f87f1ba5eb7455ba6c92b61196c12d18bc159d3f1ba8e9f"
+    },
+    "field_missingness.tsv": {
+      "bytes": 25472,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/field_missingness.tsv",
+      "rows": 560,
+      "sha256": "3b851421bb1074ce67e629c91711c0db34de99dc620069f0ee6935258651f71c"
+    },
+    "identity_multiplicity_distribution.tsv": {
+      "bytes": 5140,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/identity_multiplicity_distribution.tsv",
+      "rows": 46,
+      "sha256": "28253aa988dc7f4d5d234ada33b0d19db2627ab70399a1b390d11939269ee9d0"
+    },
+    "literature_review_distribution.tsv": {
+      "bytes": 532,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/literature_review_distribution.tsv",
+      "rows": 7,
+      "sha256": "afd5b33751e664559c627ffa97905f223bc3230f08fcc3811626856f4a732a54"
+    },
+    "row_anomalies.tsv": {
+      "bytes": 761969,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/row_anomalies.tsv",
+      "rows": 444,
+      "sha256": "b4e9c03dfc1c33944f2180d2181003ae49119289f9e4f786e06c85bb6bba175a"
+    },
+    "selected_representation_distribution.tsv": {
+      "bytes": 16476,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/selected_representation_distribution.tsv",
+      "rows": 88,
+      "sha256": "f0372ce903b2665e82ae66f767a0a1336b10daac0d316a5acbbc9afd8e9259d4"
+    },
+    "sequence_length_histogram.tsv": {
+      "bytes": 265291,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/sequence_length_histogram.tsv",
+      "rows": 3088,
+      "sha256": "a6bd26ef6bf01ac4248a8bc218da4c7bc52ed1b9b8e2bffa7ce783025f60f52b"
+    },
+    "sequence_representation_summary.tsv": {
+      "bytes": 33007,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/sequence_representation_summary.tsv",
+      "rows": 97,
+      "sha256": "569e0623b3de042047ccf0918953e9a8225228a36babc227188e7cc8acff864e"
+    },
+    "strict_numeric_endpoint_unit_distribution.tsv": {
+      "bytes": 14510,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/strict_numeric_endpoint_unit_distribution.tsv",
+      "rows": 57,
+      "sha256": "c4dae85dd2b8850dd57230906c7a5c5c59f7216833a98c06ed4eee75374b1749"
+    },
+    "strict_numeric_histograms.tsv": {
+      "bytes": 135867,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/strict_numeric_histograms.tsv",
+      "rows": 829,
+      "sha256": "7aa6b6ffbce319e1b2a66e29319f754a01f0acc45af3d2f80075d8f2e2bc1e3e"
+    },
+    "strict_numeric_task_distribution.tsv": {
+      "bytes": 507106,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/strict_numeric_task_distribution.tsv",
+      "rows": 620,
+      "sha256": "c9bb7647657c71229eace96338bfa2efaa20dbb0ab590397e92b1ad8c4f27efc"
+    },
+    "task_size_viability.tsv": {
+      "bytes": 748162,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/task_size_viability.tsv",
+      "rows": 1067,
+      "sha256": "a30d8c2d674a53726b16022591c35f4131c98fa0006826055453d6d187cce261"
+    },
+    "v15_label_distribution.tsv": {
+      "bytes": 1012,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/v15_label_distribution.tsv",
+      "rows": 23,
+      "sha256": "c3f7c4c21aee4b6a9999188ab68e43a536741f8e88ce434e8ce25e7c8d22421e"
+    },
+    "v15_raw_endpoint_inventory.tsv": {
+      "bytes": 8471,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/v15_raw_endpoint_inventory.tsv",
+      "rows": 50,
+      "sha256": "8bc75a531ac36a9f6fbd61b39a92a9e571d6ef7d7f81b06312a9de417cad4416"
+    },
+    "v15_raw_numeric_distribution.tsv": {
+      "bytes": 24086,
+      "path": "data/peptide_ml_cleaning_v1_statistics_v1/v15_raw_numeric_distribution.tsv",
+      "rows": 174,
+      "sha256": "5068f45c213656f1057045b8cac37ace63ecc22e24f262ce814c04fa9fe82411"
+    }
+  },
+  "schema_version": "peptide_ml_cleaning_v1_statistics_v1",
+  "scope_notes": {
+    "binary": "Weak, derived, and positive-unlabeled tasks are never mixed with continuous numeric statistics.",
+    "literature": "The 1,560 literature rows are a separate review layer and are not added to ML-clean training counts.",
+    "numeric": "Strict values are summarized by task and compatible endpoint/semantics/unit/transform groups only.",
+    "sequence": "Raw sequence projections, selected model representations, and identity groups are distinct denominators."
+  }
+}

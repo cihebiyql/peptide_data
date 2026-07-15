@@ -1,0 +1,12 @@
+endpoint_family	input_member_rows	representative_rows	unique_identity_groups	tasks	declared_in_cleaning_scope	hard_condition_conflict_rows	missing_identity_rows	partition_binary_evidence_catalog	partition_censored_numeric	partition_identity_review	partition_normalization_review	partition_positive_unlabeled	partition_semantic_review	partition_strict_numeric	production_train_status	raw_endpoints_json	raw_modified_or_nonstandard_rows	raw_sequence_missing_rows	raw_standard_20aa_rows	representation_types_json	research_modelable_tasks	research_train_eligible_rows	sequence_model_eligible_rows	strict_modelable_tasks	structure_model_eligible_rows	unique_selected_representations	unique_source_groups	unique_sources
+LogD	151	151	82	9	true	0	69	0	0	69	3	0	0	79	not_assessed_step7	"[""LogD7.4"",""logd""]"	47	22	82	"{""helm"":3,""missing"":69,""smiles"":79}"	0	79	0	0	82	82	4	4
+solubility	2488	2488	1386	89	true	231	0	2168	0	0	0	0	231	89	not_assessed_step7	"[""solubility""]"	35	6	2447	"{""helm"":2188,""sequence"":259,""smiles"":41}"	4	2257	259	0	2229	1386	17	4
+F	44	44	30	18	true	2	6	0	3	6	0	0	23	12	not_assessed_step7	"[""F""]"	20	10	14	"{""missing"":6,""sequence"":3,""smiles"":35}"	0	12	3	0	35	30	11	5
+T1/2	4964	4932	2225	775	true	1511	964	918	195	964	69	0	1394	1392	not_assessed_step7	"[""T1/2"",""half_life"",""stability_half_life""]"	1031	89	3812	"{""helm"":2804,""missing"":964,""sequence"":939,""smiles"":225}"	3	2310	939	2	3029	2234	784	9
+PPB	140	140	80	52	true	4	19	0	7	19	7	0	4	103	not_assessed_step7	"[""PPB""]"	87	15	38	"{""helm"":35,""missing"":19,""smiles"":86}"	0	103	0	0	121	81	19	6
+CL	93	93	24	49	true	16	17	0	0	17	11	0	16	49	not_assessed_step7	"[""CL"",""clearance""]"	1	30	62	"{""helm"":37,""missing"":17,""sequence"":4,""smiles"":35}"	0	49	4	0	72	24	12	7
+Vd	58	58	11	45	true	14	6	0	0	6	0	0	14	38	not_assessed_step7	"[""Vd"",""volume_distribution""]"	0	9	49	"{""helm"":34,""missing"":6,""sequence"":4,""smiles"":14}"	0	38	4	0	48	11	11	5
+BBB	980	980	980	2	true	0	0	844	0	0	0	136	0	0	not_assessed_step7	"[""BBB"",""bbb_penetration""]"	69	0	911	"{""helm"":136,""sequence"":844}"	1	844	844	0	136	980	117	2
+Kp	0	0	0	0	true	0	0	0	0	0	0	0	0	0	not_assessed_step7	[]	0	0	0	{}	0	0	0	0	0	0	0	0
+permeability	10350	10309	8943	27	true	439	0	0	25	0	16	0	439	9829	not_assessed_step7	"[""efflux_ratio"",""membrane_retention"",""permeability""]"	8419	1890	0	"{""helm"":8414,""smiles"":1895}"	11	9829	0	11	10309	9426	58	7
+cell_penetration	784	784	784	1	true	0	0	0	0	0	0	784	0	0	not_assessed_step7	"[""cell_penetration""]"	47	0	737	"{""helm"":784}"	0	0	0	0	784	784	198	1

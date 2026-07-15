@@ -1,0 +1,24 @@
+raw_endpoint	task_type	label	rows
+BBB	binary	0	423
+BBB	binary	1	421
+T1/2	binary	0	634
+T1/2	binary	1	284
+bbb_penetration	source_defined_function_multilabel_classification	1	136
+cell_penetration	source_defined_function_multilabel_classification	1	784
+clearance	multiclass_classification	high	6
+clearance	multiclass_classification	low	1
+clearance	multiclass_classification	medium	2
+cytotoxicity	binary	0	891
+cytotoxicity_source_defined_binary	source_defined_binary_classification	0	20
+drug_delivery	source_defined_function_multilabel_classification	1	1578
+general toxicity	binary	0	5518
+general toxicity	binary	1	5518
+hemolysis	binary	0	5736
+hemolysis	binary	1	1677
+hemolysis	binary_classification	0	1035
+hemolysis	binary_classification	1	891
+hemolysis_source_defined_binary	source_defined_binary_classification	0	32
+solubility	binary	0	835
+solubility	binary	1	1333
+therapeutic_function	source_defined_function_multilabel_classification	1	141921
+tumor_homing	source_defined_function_multilabel_classification	1	659

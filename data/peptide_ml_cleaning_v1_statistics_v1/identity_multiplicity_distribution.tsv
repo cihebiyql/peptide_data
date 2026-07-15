@@ -1,0 +1,47 @@
+endpoint_family	partition	identity_groups	missing_identity_rows	singleton_identities	identities_with_2_to_4_rows	identities_with_5_or_more_rows	observations_per_identity_iqr	observations_per_identity_mad	observations_per_identity_max	observations_per_identity_mean	observations_per_identity_median	observations_per_identity_min	observations_per_identity_n	observations_per_identity_negative_count	observations_per_identity_p01	observations_per_identity_p05	observations_per_identity_p25	observations_per_identity_p75	observations_per_identity_p95	observations_per_identity_p99	observations_per_identity_positive_count	observations_per_identity_sd	observations_per_identity_top_value_fraction	observations_per_identity_tukey_outlier_count	observations_per_identity_unique_values	observations_per_identity_zero_count
+BBB	all	980	0	980	0	0	0	0	1	1	1	1	980	0	1	1	1	1	1	1	980	0	1	0	1	0
+BBB	binary_evidence_catalog	844	0	844	0	0	0	0	1	1	1	1	844	0	1	1	1	1	1	1	844	0	1	0	1	0
+BBB	positive_unlabeled	136	0	136	0	0	0	0	1	1	1	1	136	0	1	1	1	1	1	1	136	0	1	0	1	0
+CL	all	24	17	9	10	5	3	1	17	3.16666666667	2	1	24	0	1	1	1	4	5.85	14.47	24	3.3708038864	0.375	1	7	0
+CL	identity_review	0	17	0	0	0							0												0	
+CL	normalization_review	11	0	11	0	0	0	0	1	1	1	1	11	0	1	1	1	1	1	1	11	0	1	0	1	0
+CL	semantic_review	3	0	0	2	1	5	0	12	5.33333333333	2	2	3	0	2	2	2	7	11	11.8	3	5.7735026919	0.666666666667	0	2	0
+CL	strict_numeric	20	0	11	4	5	3.25	0	6	2.45	1	1	20	0	1	1	1	4.25	5.05	5.81	20	1.87714789256	0.55	0	5	0
+F	all	30	6	27	2	1	0	0	5	1.26666666667	1	1	30	0	1	1	1	1	3	4.42	30	0.868344970911	0.9	3	3	0
+F	censored_numeric	3	0	3	0	0	0	0	1	1	1	1	3	0	1	1	1	1	1	1	3	0	1	0	1	0
+F	identity_review	0	6	0	0	0							0												0	
+F	semantic_review	22	0	21	1	0	0	0	2	1.04545454545	1	1	22	0	1	1	1	1	1	1.79	22	0.213200716356	0.954545454545	1	2	0
+F	strict_numeric	6	0	3	3	0	2	1	3	2	2	1	6	0	1	1	1	3	3	3	6	1.09544511501	0.5	0	2	0
+LogD	all	82	69	82	0	0	0	0	1	1	1	1	82	0	1	1	1	1	1	1	82	0	1	0	1	0
+LogD	identity_review	0	69	0	0	0							0												0	
+LogD	normalization_review	3	0	3	0	0	0	0	1	1	1	1	3	0	1	1	1	1	1	1	3	0	1	0	1	0
+LogD	strict_numeric	79	0	79	0	0	0	0	1	1	1	1	79	0	1	1	1	1	1	1	79	0	1	0	1	0
+PPB	all	80	19	69	9	2	0	0	25	1.5125	1	1	80	0	1	1	1	1	2	11.57	80	2.79236640264	0.8625	11	5	0
+PPB	censored_numeric	7	0	7	0	0	0	0	1	1	1	1	7	0	1	1	1	1	1	1	7	0	1	0	1	0
+PPB	identity_review	0	19	0	0	0							0												0	
+PPB	normalization_review	6	0	5	1	0	0	0	2	1.16666666667	1	1	6	0	1	1	1	1	1.75	1.95	6	0.408248290464	0.833333333333	1	2	0
+PPB	semantic_review	2	0	0	2	0	0	0	2	2	2	2	2	0	2	2	2	2	2	2	2	0	1	0	1	0
+PPB	strict_numeric	69	0	61	6	2	0	0	24	1.49275362319	1	1	69	0	1	1	1	1	2	11.76	69	2.82646728374	0.884057971014	8	4	0
+T1/2	all	2225	964	1792	320	113	0	0	108	1.78337078652	1	1	2225	0	1	1	1	1	5	14.76	2225	4.02116616192	0.805393258427	433	29	0
+T1/2	binary_evidence_catalog	918	0	918	0	0	0	0	1	1	1	1	918	0	1	1	1	1	1	1	918	0	1	0	1	0
+T1/2	censored_numeric	122	0	88	30	4	1	0	15	1.59836065574	1	1	122	0	1	1	1	2	4	7.58	122	1.62450163275	0.72131147541	8	8	0
+T1/2	identity_review	0	964	0	0	0							0												0	
+T1/2	normalization_review	25	0	12	10	3	1	1	15	2.76	2	1	25	0	1	1	1	2	9	13.56	25	3.36996538063	0.48	5	5	0
+T1/2	semantic_review	288	0	14	195	79	3	1	67	4.84027777778	3	1	288	0	1	2	2	5	14	37	288	6.90872618386	0.420138888889	29	24	0
+T1/2	strict_numeric	1058	0	923	119	16	0	0	31	1.3156899811	1	1	1058	0	1	1	1	1	3	6	1058	1.61724374726	0.872400756144	135	13	0
+Vd	all	11	6	1	5	5	3	2	16	4.72727272727	4	1	11	0	1.1	1.5	2	5	11	15	11	4.07654042273	0.272727272727	1	6	0
+Vd	identity_review	0	6	0	0	0							0												0	
+Vd	semantic_review	3	0	0	2	1	4	0	10	4.66666666667	2	2	3	0	2	2	2	6	9.2	9.84	3	4.61880215352	0.666666666667	0	2	0
+Vd	strict_numeric	9	0	1	3	5	1	1	6	4.22222222222	5	1	9	0	1.08	1.4	4	5	6	6	9	1.71593835683	0.333333333333	2	5	0
+__ALL__	all	14374	1081	11980	2194	200	0	0	156	1.31473493808	1	1	14374	0	1	1	1	1	2	5.27	14374	2.22988529893	0.833449283428	2394	34	0
+cell_penetration	all	784	0	784	0	0	0	0	1	1	1	1	784	0	1	1	1	1	1	1	784	0	1	0	1	0
+cell_penetration	positive_unlabeled	784	0	784	0	0	0	0	1	1	1	1	784	0	1	1	1	1	1	1	784	0	1	0	1	0
+permeability	all	8943	0	7949	924	70	0	0	13	1.15274516382	1	1	8943	0	1	1	1	1	2	3	8943	0.578384026113	0.888851615789	994	10	0
+permeability	censored_numeric	25	0	25	0	0	0	0	1	1	1	1	25	0	1	1	1	1	1	1	25	0	1	0	1	0
+permeability	normalization_review	16	0	16	0	0	0	0	1	1	1	1	16	0	1	1	1	1	1	1	16	0	1	0	1	0
+permeability	semantic_review	187	0	0	180	7	0	0	12	2.34759358289	2	2	187	0	2	2	2	2	2	12	187	1.74196529895	0.951871657754	9	5	0
+permeability	strict_numeric	8758	0	7955	755	48	0	0	6	1.12228819365	1	1	8758	0	1	1	1	1	2	3	8758	0.471165771775	0.908312400091	803	6	0
+solubility	all	1386	0	547	831	8	1	0	156	1.79509379509	2	1	1386	0	1	1	1	2	2	2	1386	4.3470232678	0.599567099567	8	8	0
+solubility	binary_evidence_catalog	1337	0	506	831	0	1	0	2	1.6215407629	2	1	1337	0	1	1	1	2	2	2	1337	0.485184409991	0.621540762902	0	2	0
+solubility	semantic_review	8	0	0	0	8	4.75	1	120	28.875	19.5	7	8	0	7	7	15.25	20	85	113	8	37.2498801532	0.375	3	5	0
+solubility	strict_numeric	48	0	43	4	1	0	0	36	1.85416666667	1	1	48	0	1	1	1	1	2.65	20.49	48	5.05286766413	0.895833333333	5	4	0

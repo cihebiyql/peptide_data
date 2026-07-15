@@ -1,0 +1,41 @@
+# Release Notes
+
+## peptide_ml_cleaning_v1
+
+### Implemented Cleaning Steps
+
+1. Endpoint and task semantic separation;
+2. Unit-aware normalized observation deduplication;
+3. Safe identity and model-representation filtering;
+4. Numeric and unit normalization;
+5. Censoring preservation;
+6. Binary evidence quality lanes.
+
+### Important Fixes Included
+
+- Blocked 896 PEPlife2 `N.A./NA` pseudo-SMILES identities;
+- Prevented modified/cyclic residue projections from silently becoming plain sequence identities;
+- Preserved all DOI/URL/license/source groups when duplicate observations were collapsed;
+- Included PK dose and timepoint in condition semantics;
+- Recomputed multi-source condition keys after lineage aggregation;
+- Kept BBB positive and rule-negative rows in one weak benchmark task without calling them experimental;
+- Split solubility weak labels by seven solvent conditions;
+- Separated `strict_modelable` from `research_modelable`.
+
+### Reproducibility
+
+- `sum(member_count) = 20,052`;
+- 19,979 representative observations;
+- 67 duplicate groups / 73 collapsed extra members;
+- No hard condition conflicts in strict numeric;
+- All cleaning/statistical manifest assertions pass;
+- All TSV outputs are deterministic under two independent rebuilds.
+
+### Known Limitations
+
+- No leakage-safe train/validation/test split is published;
+- Production license/provenance gate is not complete;
+- 444 strict rows are flagged for entity-scope or physiological plausibility review;
+- Kp has zero rows;
+- Most F/CL/Vd tasks are too small for independent modeling;
+- Binary endpoints are weak, derived, source-defined or positive-unlabeled, not strict experimental binary.
