@@ -1,0 +1,15 @@
+endpoint_id	rows	sequence_eligible_rows	status	note
+CL	21	11	staged	
+HC50	1926	1926	staged	
+Kp	3	0	staged	
+cell_penetration	784	779	staged	
+cytotoxicity	312	224	staged	
+degradation_site_probability	0	0	data_gap	blocked: no residue-level peptide labels
+hemolysis	2025	2025	staged	
+human_plasma_stability	65	61	staged	
+immunogenicity_risk	0	0	data_gap	blocked: no therapeutic-peptide immunogenicity labels
+intestinal_stability	393	393	staged	
+membrane_retention	12	0	staged	
+mouse_plasma_stability	45	37	staged	
+overall_peptide_toxicity	11036	11036	staged	
+protease_stability	0	0	data_gap	blocked: 375 observations overlap intestinal_stability

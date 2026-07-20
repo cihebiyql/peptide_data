@@ -1,0 +1,208 @@
+{
+  "generated_at": "2026-07-12T08:09:00.642089+00:00",
+  "script": "scripts/build_peptide_admet_weak_labels.py",
+  "inputs": {
+    "tdc_normalized": "data/tdc_admet_supplement/tdc_admet_normalized.tsv",
+    "peptide_master": "data/chembl_peptide_master/chembl_peptide_master.tsv"
+  },
+  "config": {
+    "endpoints": [
+      {
+        "endpoint": "LogD7.4",
+        "label_type": "regression",
+        "source_datasets": [
+          "lipophilicity_astrazeneca"
+        ],
+        "target_unit": "source_logD_value"
+      },
+      {
+        "endpoint": "solubility",
+        "label_type": "regression",
+        "source_datasets": [
+          "solubility_aqsoldb"
+        ],
+        "target_unit": "logS_mol_per_liter"
+      },
+      {
+        "endpoint": "permeability",
+        "label_type": "regression",
+        "source_datasets": [
+          "caco2_wang"
+        ],
+        "target_unit": "source_log_permeability"
+      },
+      {
+        "endpoint": "PPB",
+        "label_type": "regression",
+        "source_datasets": [
+          "ppbr_az"
+        ],
+        "target_unit": "source_specific_ppbr"
+      },
+      {
+        "endpoint": "CL",
+        "label_type": "regression",
+        "source_datasets": [
+          "clearance_hepatocyte_az",
+          "clearance_microsome_az"
+        ],
+        "target_unit": "mixed_source_specific_clearance"
+      },
+      {
+        "endpoint": "Vd",
+        "label_type": "regression",
+        "source_datasets": [
+          "vdss_lombardo"
+        ],
+        "target_unit": "source_specific_vdss"
+      },
+      {
+        "endpoint": "T1/2",
+        "label_type": "regression",
+        "source_datasets": [
+          "half_life_obach"
+        ],
+        "target_unit": "source_specific_half_life"
+      },
+      {
+        "endpoint": "F",
+        "label_type": "classification",
+        "source_datasets": [
+          "bioavailability_ma"
+        ],
+        "target_unit": "positive_class_probability"
+      },
+      {
+        "endpoint": "BBB",
+        "label_type": "classification",
+        "source_datasets": [
+          "bbb_martins"
+        ],
+        "target_unit": "positive_class_probability"
+      }
+    ],
+    "fingerprint": {
+      "type": "Morgan",
+      "radius": 2,
+      "bits": 2048
+    },
+    "model": "RandomForest ensemble",
+    "n_estimators": 96,
+    "evaluation_split": "scaffold-held-out GroupShuffleSplit",
+    "test_fraction": 0.2,
+    "seed": 20260712,
+    "applicability_domain_thresholds": {
+      "in_domain": 0.5,
+      "borderline": 0.3
+    }
+  },
+  "counts": {
+    "tdc_input_rows": 24673,
+    "master_input_rows": 21965,
+    "master_valid_structures": 21965,
+    "master_invalid_structures": 0,
+    "endpoints": 9,
+    "expected_predictions_if_all_valid": 197685,
+    "prediction_rows": 197685
+  },
+  "endpoint_prediction_counts": {
+    "LogD7.4": 21965,
+    "solubility": 21965,
+    "permeability": 21965,
+    "PPB": 21965,
+    "CL": 21965,
+    "Vd": 21965,
+    "T1/2": 21965,
+    "F": 21965,
+    "BBB": 21965
+  },
+  "endpoint_training_overlap_counts": {
+    "LogD7.4": 3,
+    "solubility": 2,
+    "permeability": 6,
+    "PPB": 6,
+    "CL": 2,
+    "Vd": 1,
+    "T1/2": 3,
+    "F": 0,
+    "BBB": 0
+  },
+  "endpoint_applicability_domain_counts": {
+    "LogD7.4": {
+      "out_of_domain": 10801,
+      "borderline": 10937,
+      "in_domain": 227
+    },
+    "solubility": {
+      "borderline": 13555,
+      "out_of_domain": 6390,
+      "in_domain": 2020
+    },
+    "permeability": {
+      "borderline": 14687,
+      "in_domain": 5516,
+      "out_of_domain": 1762
+    },
+    "PPB": {
+      "borderline": 14523,
+      "out_of_domain": 5881,
+      "in_domain": 1561
+    },
+    "CL": {
+      "borderline": 12564,
+      "out_of_domain": 8379,
+      "in_domain": 1022
+    },
+    "Vd": {
+      "borderline": 16827,
+      "out_of_domain": 1938,
+      "in_domain": 3200
+    },
+    "T1/2": {
+      "out_of_domain": 4575,
+      "borderline": 15814,
+      "in_domain": 1576
+    },
+    "F": {
+      "out_of_domain": 12984,
+      "borderline": 8349,
+      "in_domain": 632
+    },
+    "BBB": {
+      "out_of_domain": 5364,
+      "in_domain": 1486,
+      "borderline": 15115
+    }
+  },
+  "model_cards": {
+    "LogD7.4": "data/peptide_admet_weak_labels/model_cards/logd7_4.json",
+    "solubility": "data/peptide_admet_weak_labels/model_cards/solubility.json",
+    "permeability": "data/peptide_admet_weak_labels/model_cards/permeability.json",
+    "PPB": "data/peptide_admet_weak_labels/model_cards/ppb.json",
+    "CL": "data/peptide_admet_weak_labels/model_cards/cl.json",
+    "Vd": "data/peptide_admet_weak_labels/model_cards/vd.json",
+    "T1/2": "data/peptide_admet_weak_labels/model_cards/t1_2.json",
+    "F": "data/peptide_admet_weak_labels/model_cards/f.json",
+    "BBB": "data/peptide_admet_weak_labels/model_cards/bbb.json"
+  },
+  "outputs": {
+    "weak_labels": "data/peptide_admet_weak_labels/peptide_admet_weak_labels.tsv",
+    "model_summary": "data/peptide_admet_weak_labels/weak_label_model_summary.tsv",
+    "invalid_structures": "data/peptide_admet_weak_labels/invalid_peptide_structures.tsv",
+    "model_cards_directory": "data/peptide_admet_weak_labels/model_cards"
+  },
+  "invariants": {
+    "value_origin": "model_predicted",
+    "is_measured": false,
+    "train_target_eligible": false,
+    "training_overlap_flagged": true,
+    "scaffold_heldout_evaluation": true
+  },
+  "elapsed_seconds": 194.88,
+  "notes": [
+    "These are weak model predictions, not experimental measurements or PBPK parameters.",
+    "The small-molecule TDC training domain differs materially from peptide and cyclic-peptide structures.",
+    "CL deliberately pools hepatocyte and microsome source-specific values only to satisfy a rough nine-endpoint screen.",
+    "Every prediction is permanently excluded from measured-label training targets."
+  ]
+}

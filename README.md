@@ -197,6 +197,17 @@ python scripts/summarize_peptide_ml_cleaning_v1.py
 - 文献包整合审计：`docs/literature-data-v15-integration-audit-v1.md`
 - Mozi数据整合审计：`docs/mozi-v15-integration-audit-v1.md`
 
+## V2.8 Research Panel Addendum
+
+本仓库同步了 V2.8 的 39 端点研究版代码、端点/来源注册表、测试和 provenance 清单。
+其所有输出都必须显示为 `research_only=true`、`low_confidence=true`；并未将任何结果提升为已验证模型或正式服务。
+
+为避免公开再分发未经逐来源许可审计的原始数据和研究权重，本次只发布代码与紧凑元数据；
+TDC 原始下载、归一化 observation 表、`*.joblib` 权重和预测输出均未上传。详情见
+[`V28_RESEARCH_PUBLIC_NOTICE.md`](V28_RESEARCH_PUBLIC_NOTICE.md) 和
+[`docs/peptide_omnipanel_v28_research_coverage_20260719.md`](docs/peptide_omnipanel_v28_research_coverage_20260719.md)。
+
+
 ## Citation
 
 如使用本仓库，请同时引用具体数据行中的原始 DOI/PMID/数据库来源，并记录所用commit hash、`task_id`、过滤规则和数据分区。

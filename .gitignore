@@ -4,3 +4,10 @@ __pycache__/
 .ruff_cache/
 .DS_Store
 Thumbs.db
+
+# V2.8 research-only local inputs, derived labels, and model weights.
+data/peptide_omnipanel_v28_extended_tdc_*/raw/
+data/peptide_omnipanel_v28_extended_tdc_*/observations.tsv
+data/peptide_omnipanel_v28_research_data_*/observations.tsv
+data/peptide_omnipanel_v28_research_bundle_*/
+!data/peptide_omnipanel_v28_research_bundle_*/README.md

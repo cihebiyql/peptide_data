@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-07-12T08:37:03.164605+00:00",
+  "script": "scripts/build_peptide_kp_observations.py",
+  "inputs": [
+    {
+      "path": "data/chembl_peptide_admet_raw/chembl_peptide_admet_rows.tsv",
+      "sha256": "4f72a9c161b8641c452cd8838f48537429521bc852a0c480c0d575617c3ff661",
+      "rows": 2834,
+      "kp_candidate_rows": 3
+    }
+  ],
+  "peptide_master": {
+    "path": "data/chembl_peptide_master/chembl_peptide_master.tsv",
+    "sha256": "a4a154dad59cc2e67661a1bc172ad605f981fc3b52c6d35503bb188f7d579cc0",
+    "rows": 21965
+  },
+  "selection": {
+    "identity_join": "exact peptide/ChEMBL identifier or full InChIKey; names are never used",
+    "endpoint_scope": [
+      "Kp",
+      "Kp,brain",
+      "Kp,uu",
+      "Kp,uu,brain",
+      "tissue/plasma ratios"
+    ],
+    "coordinates": "one observation is peptide x tissue x species x source experiment",
+    "unit_policy": "Kp is dimensionless; original source units are retained and incompatible units are flagged",
+    "origin_policy": "model-derived and computed values are never is_measured=true; experimental ratios are computed_from_experimental_measurements",
+    "training_policy": "quality-eligible rows also require an explicit confirmed/reviewed curation status",
+    "normalization_policy": "no value imputation and no inverse-ratio conversion"
+  },
+  "counts": {
+    "input_rows": 2834,
+    "kp_candidate_rows": 3,
+    "ignored_non_kp_rows": 2831,
+    "rows_before_deduplication": 3,
+    "deduplicated_rows_removed": 0,
+    "output_rows": 3,
+    "unique_peptides": 3,
+    "unique_peptide_tissue_species": 3,
+    "numeric_rows": 3,
+    "measured_rows": 0,
+    "experimentally_derived_rows": 3,
+    "model_derived_rows": 0,
+    "train_target_eligible_rows": 0,
+    "quarantine_rows": 0
+  },
+  "endpoint_counts": {
+    "Kp": 3
+  },
+  "kp_variant_counts": {
+    "Kp,brain": 3
+  },
+  "tissue_counts": {
+    "brain": 3
+  },
+  "value_origin_counts": {
+    "computed_from_experimental_measurements": 3
+  },
+  "quarantine_reason_counts": {},
+  "outputs": {
+    "observations": "data/peptide_kp_endpoints/peptide_kp_observations.tsv",
+    "summary": "data/peptide_kp_endpoints/peptide_kp_summary.tsv",
+    "quarantine": "data/peptide_kp_endpoints/peptide_kp_observations_quarantine.tsv"
+  },
+  "notes": [
+    "Rows are source observations and remain pending human confirmation.",
+    "Brain/plasma AUC ratios remain distinguishable through ratio_basis=AUC.",
+    "Computed/model-derived values are not counted as measured.",
+    "Pending-human-confirmation rows are never train_target_eligible."
+  ]
+}

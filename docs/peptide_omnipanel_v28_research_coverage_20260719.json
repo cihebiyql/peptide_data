@@ -1,0 +1,154 @@
+{
+  "active_service_changed": false,
+  "display_contract": {
+    "A_or_B_endpoints": [],
+    "C_local_fitted_sequence_models": [
+      "AMES",
+      "CYP1A2_inhibition",
+      "CYP2C19_inhibition",
+      "CYP2C9_inhibition",
+      "CYP2C9_substrate",
+      "CYP2D6_inhibition",
+      "CYP2D6_substrate",
+      "CYP3A4_inhibition",
+      "CYP3A4_substrate",
+      "ClinTox",
+      "DILI",
+      "HC50",
+      "HIA",
+      "LD50",
+      "Pgp_inhibition",
+      "carcinogenicity",
+      "cell_penetration",
+      "cytotoxicity",
+      "hERG",
+      "hemolysis",
+      "human_plasma_stability",
+      "intestinal_stability",
+      "mouse_plasma_stability",
+      "overall_peptide_toxicity",
+      "skin_reaction"
+    ],
+    "E_transparent_prior_endpoints": [
+      "LogD7.4",
+      "solubility",
+      "F",
+      "T1/2",
+      "PPB",
+      "CL",
+      "Vd",
+      "BBB",
+      "permeability",
+      "Kp",
+      "membrane_retention",
+      "protease_stability",
+      "degradation_site_probability",
+      "immunogenicity_risk"
+    ],
+    "all_outputs_low_confidence": true,
+    "all_outputs_research_only": true,
+    "all_valid_inputs_return_value": true,
+    "registered_endpoint_count": 39,
+    "tier_counts": {
+      "C": 25,
+      "E": 14
+    }
+  },
+  "generated_at": "2026-07-19T22:44:00+08:00",
+  "input_contract": {
+    "interpretation": "natural_L_linear_free_termini_assumed",
+    "requires_canonical_amino_acids": "ACDEFGHIKLMNPQRSTVWY",
+    "supported_formats": [
+      "plain",
+      "fasta"
+    ],
+    "unsupported_without_a_future_parser": [
+      "HELM",
+      "PIR",
+      "noncanonical_or_modified_monomers"
+    ]
+  },
+  "remaining_29_contract": {
+    "C_local_fitted_count": 25,
+    "E_endpoint_gaps": {
+      "degradation_site_probability": {
+        "available_rows": 0,
+        "current_route": "E_rule_vector_length_equals_input_sequence",
+        "reason": "no residue-level peptide labels"
+      },
+      "immunogenicity_risk": {
+        "available_rows": 0,
+        "current_route": "E_transparent_sequence_prior",
+        "reason": "no therapeutic-peptide immunogenicity labels"
+      },
+      "membrane_retention": {
+        "available_rows": 12,
+        "current_route": "E_transparent_sequence_prior",
+        "reason": "all rows lack a usable standard-amino-acid sequence; not sequence-model eligible"
+      },
+      "protease_stability": {
+        "available_rows": 0,
+        "current_route": "E_transparent_sequence_prior",
+        "reason": "375 candidate rows overlap intestinal_stability and cannot be duplicated as an independent task"
+      }
+    },
+    "E_no_honest_supervised_sequence_model_count": 4
+  },
+  "research_bundle": {
+    "local_peptide_model_count": 8,
+    "manifest_path": "data/peptide_omnipanel_v28_research_bundle_20260719_run1/research_bundle_manifest.json",
+    "manifest_sha256": "4feef813aa5c09a6c28150bb28c18eecac1112db1f616dd3d5cab562beef2d27",
+    "model_count": 25,
+    "tdc_transfer_model_count": 17
+  },
+  "schema_version": "peptide-omnipanel-v28-research-coverage-1",
+  "scope": "internal_research_only",
+  "training_data": {
+    "local_peptide_staging": {
+      "counts": {
+        "endpoint_counts": {
+          "CL": 21,
+          "HC50": 1926,
+          "Kp": 3,
+          "cell_penetration": 784,
+          "cytotoxicity": 312,
+          "hemolysis": 2025,
+          "human_plasma_stability": 65,
+          "intestinal_stability": 393,
+          "membrane_retention": 12,
+          "mouse_plasma_stability": 45,
+          "overall_peptide_toxicity": 11036
+        },
+        "endpoints_with_rows": 11,
+        "observations": 16622,
+        "quarantine": 0
+      },
+      "manifest_path": "data/peptide_omnipanel_v28_research_data_20260719_run1/dataset_manifest.json",
+      "manifest_sha256": "f961ddcc3761829552d90d40b4d4df5dd4571a52603763a668de09d2b8223933",
+      "observations_sha256": "94b4837be4f10ee7cb1a51d38272cc353e9c98ccbabb928235adb73ebee42c9a"
+    },
+    "tdc_small_molecule_transfer": {
+      "counts": {
+        "classification_rows": 89957,
+        "endpoints": 17,
+        "observations": 97342,
+        "regression_rows": 7385
+      },
+      "manifest_path": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/dataset_manifest.json",
+      "manifest_sha256": "aec70c4266d6234f55264772715e471fd63a36ec78882b4e36cc3b14441d5e18",
+      "observations_sha256": "2d5535c648f33853af08489c44b7d19641b6523cd6f58a0a9498dc0daeba2e07",
+      "warning": "small-molecule source -> local teacher -> peptide pseudo-label sequence student; not measured peptide labels"
+    }
+  },
+  "validation": {
+    "registry_validation": "pass",
+    "smoke_endpoint_count": 39,
+    "smoke_sequence": "ACDEFGHIK",
+    "smoke_tier_counts": {
+      "C": 25,
+      "E": 14
+    },
+    "targeted_test_command": ".venv/bin/python -m pytest -q tests/test_peptide_omnipanel_v28_*.py tests/test_collect_peptide_omnipanel_v28_extended_tdc.py",
+    "targeted_test_result": "24 passed, 13 subtests passed"
+  }
+}

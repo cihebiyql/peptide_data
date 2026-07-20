@@ -1,0 +1,419 @@
+{
+  "active_service_changed": false,
+  "artifacts": [
+    {
+      "bytes": 14124271,
+      "path": "task_01_ea22d83158d69df5.joblib",
+      "sha256": "ef7c1dd186b0e62f6bb3767869650a228dd1f39c5c8e8a9930c57600dd5dcddc"
+    },
+    {
+      "bytes": 21287340,
+      "path": "task_02_6b44fe61c6ac57f2.joblib",
+      "sha256": "4f501d26429a3d886f2243c98faaf7efbc0c700b34da9eca2ea9a07169a7986a"
+    },
+    {
+      "bytes": 374025,
+      "path": "task_03_526f9c2b1d998ac9.joblib",
+      "sha256": "207e68f9a1967f4f2d1dd414a2c0bc04171d6d8a8ad34bbf9307cf3ee2e5c5da"
+    },
+    {
+      "bytes": 175086,
+      "path": "task_04_8fc50989961f9037.joblib",
+      "sha256": "def656167b0f41868aee21f00fffbd70d93b7652b6616a49e5c535e3c9f4fbe1"
+    },
+    {
+      "bytes": 3202801,
+      "path": "task_05_52e2891b96118708.joblib",
+      "sha256": "c658565cecbcac378a584e695f38c7b4b3954832aaf8d29c06a5788d482cb544"
+    },
+    {
+      "bytes": 717416,
+      "path": "task_06_856162eb7bc2909b.joblib",
+      "sha256": "371b01f932fe38619cd4b798de37df2a455bcf78a331095d8a69e5c443c588d7"
+    },
+    {
+      "bytes": 534854,
+      "path": "task_07_d8b8b4b023830716.joblib",
+      "sha256": "ceef38c7750e969a5ecfbe2e4cefbb8aa8d8b3e965cdae543c0795d22caf0e75"
+    },
+    {
+      "bytes": 717718,
+      "path": "task_08_67215851d4892d4b.joblib",
+      "sha256": "c594c8563743774363237d03591e39302004a72c5df94268b33a7e7e66fef869"
+    },
+    {
+      "bytes": 281825,
+      "path": "task_09_7bc75cc2a6249362.joblib",
+      "sha256": "fb6c997386ff1a092919e03af2e4185ed748c88e7dc74cccef79aa6be3af9c1e"
+    },
+    {
+      "bytes": 13346539,
+      "path": "task_10_d80ac451ef4655fd.joblib",
+      "sha256": "23d4b5329e9cbc9f00eaec3674d7cdc663a8826c4185f933d0428dcbbd0d37b7"
+    },
+    {
+      "bytes": 588229,
+      "path": "task_11_0eae8755422c5d7a.joblib",
+      "sha256": "8d5e33287b9433e1f04affc34e8659d35ea4d0226e3d817be3a396902a521161"
+    }
+  ],
+  "calibration_loaded": false,
+  "champion_table": {
+    "bytes": 7088,
+    "path": "models/peptide_omnipanel_v21/benchmark_summary_final_20260716/cohort_champions.tsv",
+    "rows": 11,
+    "sha256": "6f1a7de942f6083cd16a62c66fab0540e45135005b281d83468429c0d6ab4070"
+  },
+  "created_at": "2026-07-16T16:59:11.107940+00:00",
+  "development_evidence": {
+    "development_artifacts": [
+      {
+        "bytes": 34463218,
+        "path": "/data/qlyu/projects/peptide_omnipanel_v2/data/peptide_omnipanel_v21/views/development/strict_numeric.tsv",
+        "rows": 8106,
+        "sha256": "0fc0e2c6a13c22e489e5da620852632eb93f86ead4b3552240128415ca22d000"
+      },
+      {
+        "bytes": 14463158,
+        "path": "/data/qlyu/projects/peptide_omnipanel_v2/data/peptide_omnipanel_v21/views/development/binary_evidence_catalog.tsv",
+        "rows": 2745,
+        "sha256": "ac3a648bd9dfc32da04d349655cd66dbe068e71b2ecc37c11d2c5315114bc53c"
+      }
+    ],
+    "development_observations": 10851,
+    "views_manifest_sha256": "11d68c06c664e577e3af9cf914ddf153324c8abb7afc47bf2238cfa029a688e7"
+  },
+  "license_policy": "research_candidate",
+  "n_jobs": 12,
+  "representation_task_counts": {
+    "helm": 5,
+    "sequence": 2,
+    "structure": 4
+  },
+  "schema_version": "v26-frozen-direct-bundle-1",
+  "sealed_labels_loaded": false,
+  "seed": 20260716,
+  "selection_source": "frozen_v21_development_component_oof_champions",
+  "source_files": {
+    "/data/qlyu/projects/peptide_omnipanel_v2/scripts/materialize_peptide_omnipanel_v26_frozen_direct.py": "9ce65bda87ffbc7808efd6fd579ca76a5a83109953fbf021b5d377a9ae67fc26",
+    "/data/qlyu/projects/peptide_omnipanel_v2/src/peptide_omnipanel/datasets.py": "ce26a956a3062430b34a0ab1e88fe64fea7e52203ef76eb22796d37073ae304b",
+    "/data/qlyu/projects/peptide_omnipanel_v2/src/peptide_omnipanel/features.py": "b2916cf112f80399ebc75c83d04db4def9c9395c497bdc2b72b39a6b38fc2f24",
+    "/data/qlyu/projects/peptide_omnipanel_v2/src/peptide_omnipanel/frozen_direct.py": "3c58e90a2101c72dfddb7a247059032f68dd75c65e54e84287a79669d31d296c",
+    "/data/qlyu/projects/peptide_omnipanel_v2/src/peptide_omnipanel/optimization.py": "a5b1a9754f065b7eed773072d79aa0ba19b1011a8aca37cb02781f0665cc5ac2",
+    "/data/qlyu/projects/peptide_omnipanel_v2/src/peptide_omnipanel/representation_inference.py": "9014f5d767cc1c48b508b6e92064b17dfe01ec9235f4f1fa703c48b9aacc2019"
+  },
+  "stage": "V2.6-full-development-only-direct-materialization",
+  "status": "pass",
+  "task_count": 11,
+  "tasks": [
+    {
+      "artifact_bytes": 14124271,
+      "artifact_path": "task_01_ea22d83158d69df5.joblib",
+      "artifact_sha256": "ef7c1dd186b0e62f6bb3767869650a228dd1f39c5c8e8a9930c57600dd5dcddc",
+      "calibration_loaded": false,
+      "candidate_id": "d63c8cf17ad0e6bd5d04",
+      "candidate_name": "extra_trees_leaf1_sqrt",
+      "cohort_sha256": "058192a34988ec66ee6d22716acbc5013b9cace3e7fcf154631cb535927be26e",
+      "development_components": 529,
+      "development_rows": 570,
+      "endpoint_family": "BBB",
+      "feature_schema": "peptide_omnipanel_features_v1:sequence_char256_physchem_v21",
+      "framework": "sklearn",
+      "parameters": {
+        "max_features": "sqrt",
+        "min_samples_leaf": 1,
+        "n_estimators": 512
+      },
+      "representation": "sequence",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.bbb.binary_clas_8c2ea6bb.bbb_compiled_positive_r_9a0d991d.52d9175535b5dd80",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 21287340,
+      "artifact_path": "task_02_6b44fe61c6ac57f2.joblib",
+      "artifact_sha256": "4f501d26429a3d886f2243c98faaf7efbc0c700b34da9eca2ea9a07169a7986a",
+      "calibration_loaded": false,
+      "candidate_id": "92251de17986d51e409e",
+      "candidate_name": "extra_trees_leaf2_half",
+      "cohort_sha256": "32268c6de8937fb61c61afe7659bab8da05ee9ecebea39533d9f3f1202fecc10",
+      "development_components": 326,
+      "development_rows": 674,
+      "endpoint_family": "permeability",
+      "feature_schema": "peptide_omnipanel_features_v1:smiles_char256_morgan512_descriptors_v21",
+      "framework": "sklearn",
+      "parameters": {
+        "max_features": 0.5,
+        "min_samples_leaf": 2,
+        "n_estimators": 512
+      },
+      "representation": "structure",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.permeability.regression.apparent_permeability.32e6ae274c98b51b",
+      "task_kind": "regression",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 374025,
+      "artifact_path": "task_03_526f9c2b1d998ac9.joblib",
+      "artifact_sha256": "207e68f9a1967f4f2d1dd414a2c0bc04171d6d8a8ad34bbf9307cf3ee2e5c5da",
+      "calibration_loaded": false,
+      "candidate_id": "86f60bfa3faf917e74ce",
+      "candidate_name": "catboost_depth4_mae",
+      "cohort_sha256": "8d9dbaaf06ebdb073456385ad7521ef9856e6a4064b4284eac4f6cccaf77f915",
+      "development_components": 418,
+      "development_rows": 965,
+      "endpoint_family": "permeability",
+      "feature_schema": "peptide_omnipanel_features_v1:smiles_char256_morgan512_descriptors_v21",
+      "framework": "catboost",
+      "parameters": {
+        "depth": 4,
+        "iterations": 1000,
+        "l2_leaf_reg": 8.0,
+        "learning_rate": 0.03,
+        "loss_function": "MAE",
+        "random_strength": 0.25
+      },
+      "representation": "structure",
+      "run_name": "search_regression_tuned_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.permeability.regression.apparent_permeability.8478c8510c612f9f",
+      "task_kind": "regression",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 175086,
+      "artifact_path": "task_04_8fc50989961f9037.joblib",
+      "artifact_sha256": "def656167b0f41868aee21f00fffbd70d93b7652b6616a49e5c535e3c9f4fbe1",
+      "calibration_loaded": false,
+      "candidate_id": "9b90133aa0f6c7830e98",
+      "candidate_name": "hist_gradient_leaf15",
+      "cohort_sha256": "ec70b1888509f7a1565059b6107b82aac234ae4029752dcc3531c82aabda0fdb",
+      "development_components": 37,
+      "development_rows": 137,
+      "endpoint_family": "permeability",
+      "feature_schema": "peptide_omnipanel_features_v1:smiles_char256_morgan512_descriptors_v21",
+      "framework": "sklearn",
+      "parameters": {
+        "l2": 3.0,
+        "learning_rate": 0.05,
+        "max_iter": 300,
+        "max_leaf_nodes": 15
+      },
+      "representation": "structure",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.permeability.regression.apparent_permeability.d541eeffecfcefce",
+      "task_kind": "regression",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 3202801,
+      "artifact_path": "task_05_52e2891b96118708.joblib",
+      "artifact_sha256": "c658565cecbcac378a584e695f38c7b4b3954832aaf8d29c06a5788d482cb544",
+      "calibration_loaded": false,
+      "candidate_id": "cd44666e3e8941dd40c6",
+      "candidate_name": "catboost_depth8_mae",
+      "cohort_sha256": "7121ecb3e3f46a4f14e2d5ad5cbe79c20edbea38cca914a16f418b956be30fbc",
+      "development_components": 845,
+      "development_rows": 4585,
+      "endpoint_family": "permeability",
+      "feature_schema": "peptide_omnipanel_features_v1:smiles_char256_morgan512_descriptors_v21",
+      "framework": "catboost",
+      "parameters": {
+        "depth": 8,
+        "iterations": 750,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.025,
+        "loss_function": "MAE",
+        "random_strength": 0.5
+      },
+      "representation": "structure",
+      "run_name": "search_regression_tuned_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.permeability.regression.apparent_permeability.e74490767e77cabe",
+      "task_kind": "regression",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 717416,
+      "artifact_path": "task_06_856162eb7bc2909b.joblib",
+      "artifact_sha256": "371b01f932fe38619cd4b798de37df2a455bcf78a331095d8a69e5c443c588d7",
+      "calibration_loaded": false,
+      "candidate_id": "be47fd719c20fbacc10b",
+      "candidate_name": "lightgbm_leaf31",
+      "cohort_sha256": "2b158e9be3ad6a7f0d56e690317f2d87ef0ebf6df697d1f84e4bec0875e1dca5",
+      "development_components": 563,
+      "development_rows": 564,
+      "endpoint_family": "solubility",
+      "feature_schema": "peptide_omnipanel_features_v1:helm_char512_v21",
+      "framework": "lightgbm",
+      "parameters": {
+        "bagging_fraction": 0.8,
+        "feature_fraction": 0.7,
+        "learning_rate": 0.025,
+        "min_child_samples": 25,
+        "n_estimators": 500,
+        "num_leaves": 31
+      },
+      "representation": "helm",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.solubility.binary_clas_8c2ea6bb.source_defined_solubility.2325490a4b557ade",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 534854,
+      "artifact_path": "task_07_d8b8b4b023830716.joblib",
+      "artifact_sha256": "ceef38c7750e969a5ecfbe2e4cefbb8aa8d8b3e965cdae543c0795d22caf0e75",
+      "calibration_loaded": false,
+      "candidate_id": "506c45b34368f4a26291",
+      "candidate_name": "lightgbm_leaf15",
+      "cohort_sha256": "28f1df7c569e3fbabe8b3230fd6e96b2e2345b477bfdffeccec0a4507f4b8f03",
+      "development_components": 221,
+      "development_rows": 222,
+      "endpoint_family": "solubility",
+      "feature_schema": "peptide_omnipanel_features_v1:helm_char512_v21",
+      "framework": "lightgbm",
+      "parameters": {
+        "bagging_fraction": 0.85,
+        "feature_fraction": 0.8,
+        "learning_rate": 0.03,
+        "min_child_samples": 15,
+        "n_estimators": 500,
+        "num_leaves": 15
+      },
+      "representation": "helm",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.solubility.binary_clas_8c2ea6bb.source_defined_solubility.5ec7e706ddc9e2a2",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 717718,
+      "artifact_path": "task_08_67215851d4892d4b.joblib",
+      "artifact_sha256": "c594c8563743774363237d03591e39302004a72c5df94268b33a7e7e66fef869",
+      "calibration_loaded": false,
+      "candidate_id": "fc791ff02e3e8c7c6220",
+      "candidate_name": "xgboost_depth5_auto_balanced",
+      "cohort_sha256": "889e95b5736601791baff13ef1a563335442d0e4b3224c6e4dd9e7f73d6e23ca",
+      "development_components": 246,
+      "development_rows": 247,
+      "endpoint_family": "solubility",
+      "feature_schema": "peptide_omnipanel_features_v1:helm_char512_v21",
+      "framework": "xgboost",
+      "parameters": {
+        "auto_class_weight": true,
+        "colsample_bytree": 0.75,
+        "learning_rate": 0.025,
+        "max_depth": 5,
+        "min_child_weight": 5,
+        "n_estimators": 750,
+        "reg_lambda": 10.0,
+        "subsample": 0.8
+      },
+      "representation": "helm",
+      "run_name": "search_binary_tuned_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.solubility.binary_clas_8c2ea6bb.source_defined_solubility.65183d73293b0431",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 281825,
+      "artifact_path": "task_09_7bc75cc2a6249362.joblib",
+      "artifact_sha256": "fb6c997386ff1a092919e03af2e4185ed748c88e7dc74cccef79aa6be3af9c1e",
+      "calibration_loaded": false,
+      "candidate_id": "f29d3313e675dc6740aa",
+      "candidate_name": "catboost_depth4_balanced",
+      "cohort_sha256": "60465dfa16acb2e30987fb42327f86423c7f3f924256c077510754c99803ee7c",
+      "development_components": 421,
+      "development_rows": 422,
+      "endpoint_family": "solubility",
+      "feature_schema": "peptide_omnipanel_features_v1:helm_char512_v21",
+      "framework": "catboost",
+      "parameters": {
+        "depth": 4,
+        "iterations": 750,
+        "l2_leaf_reg": 8.0,
+        "learning_rate": 0.03,
+        "random_strength": 0.25
+      },
+      "representation": "helm",
+      "run_name": "search_binary_tuned_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.solubility.binary_clas_8c2ea6bb.source_defined_solubility.c78b2349d5993f83",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 13346539,
+      "artifact_path": "task_10_d80ac451ef4655fd.joblib",
+      "artifact_sha256": "23d4b5329e9cbc9f00eaec3674d7cdc663a8826c4185f933d0428dcbbd0d37b7",
+      "calibration_loaded": false,
+      "candidate_id": "d7f23625e10b548f9dd1",
+      "candidate_name": "extra_trees_leaf3_half_1024",
+      "cohort_sha256": "816f16ecaadd7cfc37b1702aa12e23bbf32b71cd330e4bde246c3662751e17f0",
+      "development_components": 505,
+      "development_rows": 645,
+      "endpoint_family": "T1/2",
+      "feature_schema": "peptide_omnipanel_features_v1:sequence_char256_physchem_v21",
+      "framework": "sklearn",
+      "parameters": {
+        "max_features": 0.5,
+        "min_samples_leaf": 3,
+        "n_estimators": 1024
+      },
+      "representation": "sequence",
+      "run_name": "search_binary_tuned_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.t1_2.binary_clas_8c2ea6bb.stability_threshold_1h.a990a886042c006f",
+      "task_kind": "binary_classification",
+      "training_data": "development_only"
+    },
+    {
+      "artifact_bytes": 588229,
+      "artifact_path": "task_11_0eae8755422c5d7a.joblib",
+      "artifact_sha256": "8d5e33287b9433e1f04affc34e8659d35ea4d0226e3d817be3a396902a521161",
+      "calibration_loaded": false,
+      "candidate_id": "258eb5b4a4450f9b04d8",
+      "candidate_name": "catboost_depth6",
+      "cohort_sha256": "66f4c707532907d460d8326b003f287667f4fedd5b3d4c35ec1c04e141eb249d",
+      "development_components": 241,
+      "development_rows": 244,
+      "endpoint_family": "T1/2",
+      "feature_schema": "peptide_omnipanel_features_v1:helm_char512_v21",
+      "framework": "catboost",
+      "parameters": {
+        "depth": 6,
+        "iterations": 500,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.04,
+        "random_strength": 0.5
+      },
+      "representation": "helm",
+      "run_name": "search_full_20260716",
+      "sealed_labels_loaded": false,
+      "seed": 20260716,
+      "task_id": "mlv1.t1_2.regression.protease_intestinal_stability.8964cda78967b992",
+      "task_kind": "regression",
+      "training_data": "development_only"
+    }
+  ],
+  "training_data": "development_only"
+}

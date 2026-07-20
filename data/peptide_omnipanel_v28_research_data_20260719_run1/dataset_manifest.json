@@ -1,0 +1,59 @@
+{
+  "schema_version": "peptide-omnipanel-v28-research-data-1",
+  "generated_at": "2026-07-19T14:30:29Z",
+  "script": "scripts/prepare_peptide_omnipanel_v28_research_data.py",
+  "scope": "internal_research_only",
+  "input_sha256": {
+    "strict_numeric": "408edbc4dfae7218068cda49a9cfb7f41cea6459f7310b91b34b8a7e583a3906",
+    "binary_catalog": "b4f50be4a6557ab55c8fbf3c9d98124b90d9b8dfbe85116d6126fb554494ef10",
+    "hc50": "dcc6dc67d71e1477255667e602a7dff2045372aa625cc6e2ba3068471ea9d48b",
+    "positive_unlabeled": "5ac80dd4476e0d6116255b1c0eacd57d85d991140e0d6ca781ad01588fb42e8f",
+    "kp_review": "beda02e20927fd709ed370702a8d17ddeb6c16a34413dd82246a52dd06005c03"
+  },
+  "outputs": {
+    "observations": "data/peptide_omnipanel_v28_research_data_20260719_run1/observations.tsv",
+    "observations_sha256": "94b4837be4f10ee7cb1a51d38272cc353e9c98ccbabb928235adb73ebee42c9a",
+    "quarantine": "data/peptide_omnipanel_v28_research_data_20260719_run1/quarantine.tsv",
+    "quarantine_sha256": "f01d45866daa9d60590ea0433e154017cf3fe246d6fbbb8045b05cf2ddbf05c5",
+    "endpoint_summary": "data/peptide_omnipanel_v28_research_data_20260719_run1/endpoint_summary.tsv",
+    "endpoint_summary_sha256": "b8762cfd6022516eeedebe50103ce3a7e86cf8fa393c0867a28dd90a83e2507c"
+  },
+  "counts": {
+    "observations": 16622,
+    "quarantine": 0,
+    "endpoints_with_rows": 11,
+    "endpoint_counts": {
+      "CL": 21,
+      "HC50": 1926,
+      "Kp": 3,
+      "cell_penetration": 784,
+      "cytotoxicity": 312,
+      "hemolysis": 2025,
+      "human_plasma_stability": 65,
+      "intestinal_stability": 393,
+      "membrane_retention": 12,
+      "mouse_plasma_stability": 45,
+      "overall_peptide_toxicity": 11036
+    }
+  },
+  "unresolved_endpoint_gaps": [
+    {
+      "endpoint_id": "protease_stability",
+      "reason": "blocked: 375 observations overlap intestinal_stability"
+    },
+    {
+      "endpoint_id": "degradation_site_probability",
+      "reason": "blocked: no residue-level peptide labels"
+    },
+    {
+      "endpoint_id": "immunogenicity_risk",
+      "reason": "blocked: no therapeutic-peptide immunogenicity labels"
+    }
+  ],
+  "invariants": [
+    "Censored numeric labels remain in quarantine until a censored learner is implemented.",
+    "Cell penetration is positive-unlabeled and cannot be evaluated as a binary classifier.",
+    "Protease and intestinal stability rows are not duplicated into two independent datasets.",
+    "Kp review rows are not training rows and cannot be substituted with permeability or BBB."
+  ]
+}

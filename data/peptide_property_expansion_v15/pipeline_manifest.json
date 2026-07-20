@@ -1,0 +1,176 @@
+{
+  "schema_version": "peptide_property_expansion_v15",
+  "generated_at": "2026-07-14T07:23:13.860534+00:00",
+  "script": "scripts/build_peptide_property_expansion_v15.py",
+  "inputs": [
+    {
+      "path": "data/peptide_property_expansion_v14/peptide_property_observations_v14.tsv",
+      "rows": 273397,
+      "bytes": 480683207,
+      "sha256": "04b313d2cf6cb6e62b53798b1ed37fa1b3ec43cef9b7b7220d1fcfce105a509e"
+    },
+    {
+      "path": "data/peptide_property_expansion_v15/staging/primary_ppb_kp_v15.tsv",
+      "rows": 52,
+      "bytes": 86912,
+      "sha256": "8df19cb424d30979cc47733428f4407053b74896984641fb4a58adc3c18dbb0c"
+    }
+  ],
+  "counts": {
+    "rows": 273449,
+    "v14_rows": 273397,
+    "v15_staged_rows": 52,
+    "unique_identities": 114775,
+    "unique_observations": 262182,
+    "training_ready_rows": 219783,
+    "training_ready_unique_observations": 215568,
+    "review_rows": 53666,
+    "v15_not_exactly_seen_rows": 15,
+    "duplicate_observation_groups": 5185,
+    "rows_in_duplicate_groups": 16452
+  },
+  "endpoint_rows": {
+    "BBB": 2269,
+    "CL": 501,
+    "CYP": 2,
+    "F": 272,
+    "Kp": 17,
+    "LogD": 1225,
+    "LogD7.4": 337,
+    "LogP": 34,
+    "P-gp": 16,
+    "PPB": 331,
+    "T1/2": 7473,
+    "Vd": 339,
+    "absorption": 8,
+    "acute mortality": 24,
+    "bbb_penetration": 138,
+    "cell-line cytotoxicity": 312,
+    "cell_painting_phenotype": 36,
+    "cell_penetration": 7572,
+    "cell_viability_percent": 26,
+    "chromatographic_retention": 22,
+    "clearance": 21,
+    "cytotoxicity": 7326,
+    "cytotoxicity_annotation": 1906,
+    "cytotoxicity_cc50": 339,
+    "cytotoxicity_ec50": 78,
+    "cytotoxicity_hc50": 1,
+    "cytotoxicity_ic50": 1065,
+    "cytotoxicity_lc50": 58,
+    "cytotoxicity_ld50": 1,
+    "cytotoxicity_percent": 101,
+    "cytotoxicity_proxy": 36,
+    "cytotoxicity_source_defined_binary": 102,
+    "drug_delivery": 1580,
+    "efflux_ratio": 185,
+    "exposure": 10,
+    "functional_activity_retention_duration": 9,
+    "functional_annotation": 13591,
+    "general toxicity": 11036,
+    "half_life": 613,
+    "hemolysis": 41636,
+    "hemolysis_annotation": 2860,
+    "hemolysis_cc50": 11,
+    "hemolysis_concentration_at_10_percent": 2,
+    "hemolysis_concentration_at_50_percent": 2,
+    "hemolysis_concentration_at_5_percent": 1,
+    "hemolysis_ec50": 68,
+    "hemolysis_hc50": 241,
+    "hemolysis_hd50": 37,
+    "hemolysis_ic50": 137,
+    "hemolysis_lc50": 176,
+    "hemolysis_ld50": 24,
+    "hemolysis_mhc": 175,
+    "hemolysis_mhc10": 106,
+    "hemolysis_percent": 2420,
+    "hemolysis_source_defined_binary": 238,
+    "lipophilicity_proxy": 12,
+    "logd": 22,
+    "membrane_retention": 24,
+    "permeability": 12707,
+    "permeability_recovery": 16,
+    "plasma_concentration": 53,
+    "plasma_stability": 10,
+    "solubility": 9051,
+    "stability": 28,
+    "stability_annotation": 110,
+    "stability_half_life": 62,
+    "stability_percent_degraded": 1,
+    "stability_percent_remaining": 20,
+    "therapeutic_function": 142577,
+    "tissue_distribution": 1,
+    "transporter_kinetics": 60,
+    "tumor_homing": 659,
+    "uptake_efficiency": 885,
+    "volume_distribution": 5
+  },
+  "eligibility_reason_rows": {
+    "eligible": 219783,
+    "non_numeric_value": 39,
+    "source_not_train_eligible": 53627
+  },
+  "contracts": {
+    "v14": "Frozen V14 observations are preserved row-for-row except duplicate counts and QC are recomputed against appended V15 records.",
+    "v15_staging": "Every V15 staging file must satisfy the governed 28-column staging contract.",
+    "overlap": "New rows use exact sequence, HELM, stereochemical SMILES, or InChIKey overlap against frozen V14 observations.",
+    "deduplication": "One evidence-ranked representative is retained per exact observation_key."
+  },
+  "outputs": {
+    "peptide_property_observations_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_observations_v15.tsv",
+      "bytes": 480782137,
+      "sha256": "9660cfd4e95a4777a052045864fa38a22dba6a55d7646954cd1d4539bebbf7bf"
+    },
+    "peptide_property_training_ready_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_training_ready_v15.tsv",
+      "bytes": 388429194,
+      "sha256": "7ad5ba61035b48f43ec457e1c5a7f32af3ef05309aa988840d3b337afc37d98b"
+    },
+    "peptide_property_training_deduplicated_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_training_deduplicated_v15.tsv",
+      "bytes": 381508083,
+      "sha256": "5eaf343f91d20807feec5eb7c1069c100284b2df0d05148ef62bc414a76aca51"
+    },
+    "peptide_property_review_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_review_v15.tsv",
+      "bytes": 92353347,
+      "sha256": "833d6074d5fe73b53fc15f2ab662e492d87bd1c303768edc185510049cbc41d5"
+    },
+    "peptide_property_minimal_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_minimal_v15.tsv",
+      "bytes": 194007449,
+      "sha256": "e661ac7e3131edab5483f6ca8635a0f450c858103e8d72963bbdc4991cae370e"
+    },
+    "peptide_property_minimal_training_ready_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_minimal_training_ready_v15.tsv",
+      "bytes": 154289476,
+      "sha256": "ff7c5a0a47cb7f3c4c263b44d3da456ecaced0dba2ed3b0c5494216dd9a9fdb7"
+    },
+    "peptide_property_minimal_training_deduplicated_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/peptide_property_minimal_training_deduplicated_v15.tsv",
+      "bytes": 150884365,
+      "sha256": "3ad59b6fef43b4284e52e06134ee7d5c91961720514ce8a9e6b5e195a4524929"
+    },
+    "source_summary_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/source_summary_v15.tsv",
+      "bytes": 11846,
+      "sha256": "a002a984c5b34190a0e1497e8c818607a6ae69ad640a96c85c372417fce4b908"
+    },
+    "endpoint_summary_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/endpoint_summary_v15.tsv",
+      "bytes": 9791,
+      "sha256": "8561e55ab4592d85f4c119775ac886d4bf4038a52f8feda94638a1a7034aed92"
+    },
+    "endpoint_family_summary_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/endpoint_family_summary_v15.tsv",
+      "bytes": 5369,
+      "sha256": "1d5037929e2daf2c3afdd2bc2262e73453d80a2d34f665bff765e9277f19036e"
+    },
+    "duplicate_observation_groups_v15.tsv": {
+      "path": "data/peptide_property_expansion_v15/duplicate_observation_groups_v15.tsv",
+      "bytes": 1545157,
+      "sha256": "b5a66ca11b008c894dcb37aa2d4ab9b3562a984178504e96ae01bbd8dd5c6564"
+    }
+  }
+}

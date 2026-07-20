@@ -1,0 +1,28 @@
+{
+  "schema_version": "peptide-omnipanel-v28-extended-tdc-1",
+  "generated_at": "2026-07-19T14:31:16Z",
+  "script": "scripts/collect_peptide_omnipanel_v28_extended_tdc.py",
+  "scope": "internal_research_only_small_molecule_transfer_training",
+  "source_bundle": {
+    "tdc_dataverse_doi": "10.7910/DVN/21LKWG",
+    "tdc_metadata_url": "https://raw.githubusercontent.com/mims-harvard/TDC/main/tdc/metadata.py",
+    "component_license_status": "pending_release_clearance"
+  },
+  "counts": {
+    "endpoints": 17,
+    "observations": 97342,
+    "classification_rows": 89957,
+    "regression_rows": 7385
+  },
+  "outputs": {
+    "observations": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/observations.tsv",
+    "observations_sha256": "2d5535c648f33853af08489c44b7d19641b6523cd6f58a0a9498dc0daeba2e07",
+    "source_manifest": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/source_manifest.tsv",
+    "source_manifest_sha256": "b0dc10dda874058ca87bd6f002d627873128cdaf8618be21a2140fd24d9612ec"
+  },
+  "semantic_invariants": [
+    "All TDC rows are small-molecule transfer labels, never measured peptide labels.",
+    "LD50_Zhu pLD50 is negated to the registry's log10(mol/kg) convention.",
+    "No third-party prediction API or model weight is used."
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "schema_version": "peptide-omnipanel-v28-source-registry-1",
+  "architecture_id": "V2.8-ST-Omni",
+  "ownership_contract": {
+    "third_party_prediction_api_allowed": false,
+    "third_party_model_weights_allowed_in_release": false,
+    "public_raw_data_allowed_with_license_audit": true,
+    "project_trained_artifacts_required": true,
+    "project_controlled_training_and_inference_required": true
+  },
+  "source_policy": {
+    "third_party_predictions_as_measured_labels_allowed": false,
+    "third_party_prediction_api_allowed": false,
+    "third_party_model_weights_allowed": false,
+    "pending_sources_fail_closed": true,
+    "required_before_training": [
+      "raw_file_sha256",
+      "license_audit",
+      "provenance_locator",
+      "endpoint_semantic_mapping",
+      "identity_deduplication",
+      "source_and_component_split_groups"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "local_peptide_ml_cleaning_v1",
+      "status": "local_frozen",
+      "source_kind": "project_harmonized_experimental_evidence",
+      "manifest_path": "data/peptide_ml_cleaning_v1/manifest.json",
+      "manifest_sha256": "b26ace138c1445779c89a1d4c673cd4f050ec69b719bef03209e6547830e6ac0",
+      "data_paths": [
+        "data/peptide_ml_cleaning_v1/strict_numeric.tsv",
+        "data/peptide_ml_cleaning_v1/binary_evidence_catalog.tsv",
+        "data/peptide_ml_cleaning_v1/censored_observations.tsv",
+        "data/peptide_ml_cleaning_v1/positive_unlabeled.tsv",
+        "data/peptide_ml_cleaning_v1/task_registry.tsv"
+      ],
+      "endpoint_ids": [
+        "LogD7.4",
+        "solubility",
+        "F",
+        "T1/2",
+        "PPB",
+        "CL",
+        "Vd",
+        "BBB",
+        "permeability",
+        "cell_penetration",
+        "membrane_retention",
+        "human_plasma_stability",
+        "mouse_plasma_stability",
+        "intestinal_stability",
+        "protease_stability"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "mixed_source_licenses_require_row_level_gate",
+      "provenance_status": "row_level_source_url_doi_license_and_lineage_present",
+      "usage_policy": "research_training_only_after_row_level_license_and_semantic_filter",
+      "raw_data_allowed": true,
+      "use_policy": "research_training_only_after_row_level_license_and_semantic_filter"
+    },
+    {
+      "source_id": "local_peptide_property_expansion_v15",
+      "status": "local_frozen_review_layer",
+      "source_kind": "project_harmonized_multisource_staging",
+      "manifest_path": "data/peptide_property_expansion_v15/pipeline_manifest.json",
+      "manifest_sha256": "700a1b6dbdbb91f73d218b7c2a3820b6af00723594e91bc7e7b493aafdc12431",
+      "data_paths": [
+        "data/peptide_property_expansion_v15/peptide_property_training_deduplicated_v15.tsv",
+        "data/peptide_property_expansion_v15/target_endpoint_snapshot_v15.tsv"
+      ],
+      "endpoint_ids": [
+        "LogD7.4",
+        "solubility",
+        "F",
+        "T1/2",
+        "PPB",
+        "CL",
+        "Vd",
+        "BBB",
+        "permeability",
+        "Kp",
+        "cell_penetration",
+        "membrane_retention",
+        "human_plasma_stability",
+        "mouse_plasma_stability",
+        "intestinal_stability",
+        "protease_stability",
+        "degradation_site_probability",
+        "immunogenicity_risk"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "mixed_source_licenses_require_row_level_gate",
+      "provenance_status": "manifest_and_row_level_provenance_present",
+      "usage_policy": "staging_or_rebuild_input_not_a_substitute_for_endpoint_registry_semantics",
+      "raw_data_allowed": true,
+      "use_policy": "staging_or_rebuild_input_not_a_substitute_for_endpoint_registry_semantics"
+    },
+    {
+      "source_id": "local_peptide_kp_review",
+      "status": "local_review_only",
+      "source_kind": "experimentally_derived_tissue_plasma_ratio_review",
+      "manifest_path": "data/peptide_kp_endpoints/pipeline_manifest.json",
+      "manifest_sha256": "eef4262ee791323d026cefe46146f9681229897ece834c52acf739d259fc074c",
+      "data_paths": [
+        "data/peptide_kp_endpoints/peptide_kp_observations.tsv"
+      ],
+      "endpoint_ids": [
+        "Kp"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact"
+      ],
+      "license_status": "source_specific_review_required",
+      "provenance_status": "source_records_present_but_training_gate_not_passed",
+      "usage_policy": "not_training_ready;may_only_support_manual_Kp_semantic_audit",
+      "raw_data_allowed": true,
+      "use_policy": "not_training_ready;may_only_support_manual_Kp_semantic_audit"
+    },
+    {
+      "source_id": "local_v26_frozen_direct_champions",
+      "status": "local_frozen_project_artifact",
+      "source_kind": "project_trained_model_artifacts",
+      "manifest_path": "docs/peptide_omnipanel_v26_frozen_direct_manifest.json",
+      "manifest_sha256": "57e5198707162c5822347167cf5b70ee01fbb10e97c7acf6f85cbdd4429d44ac",
+      "data_paths": [],
+      "endpoint_ids": [
+        "BBB",
+        "permeability",
+        "solubility",
+        "T1/2"
+      ],
+      "allowed_evidence_tiers": [],
+      "license_status": "internal_research_candidate",
+      "provenance_status": "project_training_manifest_and_artifact_hashes_present",
+      "usage_policy": "A_tier_reference_only;active_service_change_not_authorized",
+      "raw_data_allowed": false,
+      "use_policy": "A_tier_reference_only;active_service_change_not_authorized"
+    },
+    {
+      "source_id": "local_peptide_admet_weak_labels",
+      "status": "local_pseudo_label_layer",
+      "source_kind": "project_model_generated_pseudo_labels",
+      "manifest_path": "data/peptide_admet_weak_labels/pipeline_manifest.json",
+      "manifest_sha256": "fee440161f361a39f3c07be7fd9a806d079fceca7d50c4224247938222baa341",
+      "data_paths": [],
+      "endpoint_ids": [
+        "BBB",
+        "solubility",
+        "HIA",
+        "Pgp_inhibition",
+        "CYP2D6_inhibition",
+        "CYP3A4_inhibition"
+      ],
+      "allowed_evidence_tiers": [
+        "L5_self_model_pseudo_label"
+      ],
+      "license_status": "not_an_experimental_data_source",
+      "provenance_status": "project_pipeline_manifest_present",
+      "usage_policy": "never_count_as_measured_and_never_use_for_formal_external_evaluation",
+      "raw_data_allowed": false,
+      "use_policy": "never_count_as_measured_and_never_use_for_formal_external_evaluation"
+    },
+    {
+      "source_id": "public_tdc_raw_admet_tox",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_dataset_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "HIA",
+        "Pgp_inhibition",
+        "CYP1A2_inhibition",
+        "CYP2C19_inhibition",
+        "CYP2C9_inhibition",
+        "CYP2D6_inhibition",
+        "CYP3A4_inhibition",
+        "CYP2C9_substrate",
+        "CYP2D6_substrate",
+        "CYP3A4_substrate",
+        "hERG",
+        "AMES",
+        "DILI",
+        "ClinTox",
+        "carcinogenicity",
+        "skin_reaction",
+        "overall_peptide_toxicity",
+        "cytotoxicity",
+        "hemolysis",
+        "LD50",
+        "HC50",
+        "solubility",
+        "BBB",
+        "F",
+        "PPB",
+        "CL",
+        "Vd"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;TDC_dataset_specific_upstream_sources_and_licenses_must_be_audited",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;TDC_dataset_specific_upstream_sources_and_licenses_must_be_audited"
+    },
+    {
+      "source_id": "public_chembl_raw_assays",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_assay_records_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "LogD7.4",
+        "solubility",
+        "F",
+        "T1/2",
+        "PPB",
+        "CL",
+        "Vd",
+        "BBB",
+        "permeability",
+        "Kp",
+        "HIA",
+        "Pgp_inhibition",
+        "CYP1A2_inhibition",
+        "CYP2C19_inhibition",
+        "CYP2C9_inhibition",
+        "CYP2D6_inhibition",
+        "CYP3A4_inhibition",
+        "CYP2C9_substrate",
+        "CYP2D6_substrate",
+        "CYP3A4_substrate",
+        "hERG",
+        "AMES",
+        "DILI",
+        "ClinTox",
+        "carcinogenicity",
+        "skin_reaction",
+        "overall_peptide_toxicity",
+        "cytotoxicity",
+        "hemolysis",
+        "LD50",
+        "HC50",
+        "cell_penetration",
+        "membrane_retention",
+        "human_plasma_stability",
+        "mouse_plasma_stability",
+        "intestinal_stability",
+        "protease_stability",
+        "degradation_site_probability",
+        "immunogenicity_risk"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;ChEMBL_release_license_plus_document_and_assay_provenance_required",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;ChEMBL_release_license_plus_document_and_assay_provenance_required"
+    },
+    {
+      "source_id": "public_uniprot_raw_records",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_sequence_annotation_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "overall_peptide_toxicity",
+        "cell_penetration",
+        "degradation_site_probability",
+        "immunogenicity_risk"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;UniProt_release_and_record_provenance_required;annotations_are_not_automatically_experimental_labels",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;UniProt_release_and_record_provenance_required;annotations_are_not_automatically_experimental_labels"
+    },
+    {
+      "source_id": "public_dbaasp_raw_records",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_peptide_activity_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "overall_peptide_toxicity",
+        "cytotoxicity",
+        "hemolysis",
+        "HC50",
+        "cell_penetration"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;DBAASP_license_and_primary_evidence_fields_require_audit",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;DBAASP_license_and_primary_evidence_fields_require_audit"
+    },
+    {
+      "source_id": "public_hemolytik_raw_records",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_hemolysis_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "hemolysis",
+        "HC50"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;Hemolytik_license_primary_reference_and_condition_fields_require_audit",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;Hemolytik_license_primary_reference_and_condition_fields_require_audit"
+    },
+    {
+      "source_id": "public_literature_supplementary_information",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_primary_literature_SI_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "LogD7.4",
+        "solubility",
+        "F",
+        "T1/2",
+        "PPB",
+        "CL",
+        "Vd",
+        "BBB",
+        "permeability",
+        "Kp",
+        "HIA",
+        "Pgp_inhibition",
+        "CYP1A2_inhibition",
+        "CYP2C19_inhibition",
+        "CYP2C9_inhibition",
+        "CYP2D6_inhibition",
+        "CYP3A4_inhibition",
+        "CYP2C9_substrate",
+        "CYP2D6_substrate",
+        "CYP3A4_substrate",
+        "hERG",
+        "AMES",
+        "DILI",
+        "ClinTox",
+        "carcinogenicity",
+        "skin_reaction",
+        "overall_peptide_toxicity",
+        "cytotoxicity",
+        "hemolysis",
+        "LD50",
+        "HC50",
+        "cell_penetration",
+        "membrane_retention",
+        "human_plasma_stability",
+        "mouse_plasma_stability",
+        "intestinal_stability",
+        "protease_stability",
+        "degradation_site_probability",
+        "immunogenicity_risk"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;only_machine_recoverable_sequence_or_structure_plus_endpoint_semantics_units_and_source_locator_allowed",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;only_machine_recoverable_sequence_or_structure_plus_endpoint_semantics_units_and_source_locator_allowed"
+    },
+    {
+      "source_id": "public_cycpeptmpdb_raw_measured_records",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_raw_cyclic_peptide_measurements_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "permeability",
+        "membrane_retention",
+        "LogD7.4",
+        "solubility"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;must_deduplicate_against_local_P0_and_preserve_original_assay_conditions_and_license",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;must_deduplicate_against_local_P0_and_preserve_original_assay_conditions_and_license"
+    },
+    {
+      "source_id": "local_v28_extended_tdc_research",
+      "status": "local_frozen_research_only",
+      "source_kind": "locally_frozen_public_small_molecule_raw_data",
+      "manifest_path": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/dataset_manifest.json",
+      "manifest_sha256": "aec70c4266d6234f55264772715e471fd63a36ec78882b4e36cc3b14441d5e18",
+      "data_paths": [
+        "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/observations.tsv",
+        "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/source_manifest.tsv"
+      ],
+      "endpoint_ids": [
+        "HIA", "Pgp_inhibition", "CYP1A2_inhibition", "CYP2C19_inhibition",
+        "CYP2C9_inhibition", "CYP2D6_inhibition", "CYP3A4_inhibition",
+        "CYP2C9_substrate", "CYP2D6_substrate", "CYP3A4_substrate", "hERG",
+        "AMES", "DILI", "ClinTox", "carcinogenicity", "skin_reaction", "LD50"
+      ],
+      "allowed_evidence_tiers": ["L0_source_numeric_reexpressed", "L2_source_defined_binary"],
+      "license_status": "component_license_pending_release_clearance",
+      "provenance_status": "raw_urls_file_hashes_and_semantic_transform_frozen",
+      "usage_policy": "internal_research_only_small_molecule_transfer;not_peptide_measured;not_for_release_or_active_service",
+      "raw_data_allowed": true,
+      "use_policy": "internal_research_only_small_molecule_transfer;not_peptide_measured;not_for_release_or_active_service"
+    },
+    {
+      "source_id": "local_v28_peptide_research_staging",
+      "status": "local_frozen_research_only",
+      "source_kind": "locally_frozen_peptide_observation_staging",
+      "manifest_path": "data/peptide_omnipanel_v28_research_data_20260719_run1/dataset_manifest.json",
+      "manifest_sha256": "f961ddcc3761829552d90d40b4d4df5dd4571a52603763a668de09d2b8223933",
+      "data_paths": [
+        "data/peptide_omnipanel_v28_research_data_20260719_run1/observations.tsv",
+        "data/peptide_omnipanel_v28_research_data_20260719_run1/quarantine.tsv"
+      ],
+      "endpoint_ids": [
+        "CL", "Kp", "overall_peptide_toxicity", "cytotoxicity", "hemolysis", "HC50",
+        "cell_penetration", "membrane_retention", "human_plasma_stability",
+        "mouse_plasma_stability", "intestinal_stability", "protease_stability",
+        "degradation_site_probability", "immunogenicity_risk"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_local_frozen_numeric", "L0_direct_numeric_curated_dataset", "L2_source_defined_binary",
+        "L3_positive_unlabeled", "L5_weak_benchmark_label"
+      ],
+      "license_status": "source_specific_research_only_review_required",
+      "provenance_status": "local_input_hashes_and_row_lineage_frozen",
+      "usage_policy": "internal_research_only;do_not_upgrade_weak_or_PU_labels_to_measured;not_for_active_service",
+      "raw_data_allowed": true,
+      "use_policy": "internal_research_only;do_not_upgrade_weak_or_PU_labels_to_measured;not_for_active_service"
+    },
+    {
+      "source_id": "public_openfda_dailymed_raw_labels",
+      "status": "pending_license_provenance_and_hash_audit",
+      "source_kind": "public_regulatory_label_text_pending_audit",
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "data_paths": [],
+      "endpoint_ids": [
+        "F",
+        "T1/2",
+        "CL",
+        "Vd",
+        "PPB"
+      ],
+      "allowed_evidence_tiers": [
+        "L0_measured_exact",
+        "L1_measured_censored",
+        "L2_source_defined_binary",
+        "L3_positive_unlabeled"
+      ],
+      "license_status": "not_cleared",
+      "provenance_status": "not_frozen",
+      "usage_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;regulatory_text_is_review_evidence_until_primary_numeric_semantics_and_active_moiety_identity_are_confirmed",
+      "raw_data_allowed": true,
+      "use_policy": "blocked_from_training_until_raw_file_hash_license_provenance_dedup_and_semantic_audits_pass;regulatory_text_is_review_evidence_until_primary_numeric_semantics_and_active_moiety_identity_are_confirmed"
+    }
+  ]
+}

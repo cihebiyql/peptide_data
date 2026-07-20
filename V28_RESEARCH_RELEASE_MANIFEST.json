@@ -1,0 +1,361 @@
+{
+  "active_service_changed": false,
+  "endpoint_count": 39,
+  "excluded_assets": [
+    "raw source downloads",
+    "normalized observations",
+    "project-trained joblib weights",
+    "development prediction/OOF outputs",
+    "workspace caches"
+  ],
+  "integrity_files": [
+    {
+      "bytes": 410,
+      "path": ".gitignore",
+      "sha256": "147a4c8e1a091164810f18476f1b081e4a2831a418bd25fb4e729436a3fc1dfd"
+    },
+    {
+      "bytes": 8625,
+      "path": "README.md",
+      "sha256": "8f2f0cbb031cd0f328c34f67be6a8f8ea0690cf2bc889c209e28b754cc25c315"
+    },
+    {
+      "bytes": 1666,
+      "path": "V28_RESEARCH_PUBLIC_NOTICE.md",
+      "sha256": "d0c2ab9bee7b7da70a9069489f5d482f7adb52eb29c50bcd08326fd822515b9e"
+    },
+    {
+      "bytes": 88418,
+      "path": "configs/peptide_omnipanel_v28_endpoint_registry.json",
+      "sha256": "0c7580a1be2cb525591c1416d984c1357e4c7d38bce378b9e073ae9bf4db167a"
+    },
+    {
+      "bytes": 20506,
+      "path": "configs/peptide_omnipanel_v28_source_registry.json",
+      "sha256": "dc488c5307db0c4d56d86d4c890cbadd4057aeac41dfdb798be7c4ea9e8ceaa3"
+    },
+    {
+      "bytes": 5807,
+      "path": "data/peptide_admet_weak_labels/pipeline_manifest.json",
+      "sha256": "fee440161f361a39f3c07be7fd9a806d079fceca7d50c4224247938222baa341"
+    },
+    {
+      "bytes": 2575,
+      "path": "data/peptide_kp_endpoints/pipeline_manifest.json",
+      "sha256": "eef4262ee791323d026cefe46146f9681229897ece834c52acf739d259fc074c"
+    },
+    {
+      "bytes": 1267,
+      "path": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/dataset_manifest.json",
+      "sha256": "aec70c4266d6234f55264772715e471fd63a36ec78882b4e36cc3b14441d5e18"
+    },
+    {
+      "bytes": 6068,
+      "path": "data/peptide_omnipanel_v28_extended_tdc_20260719_run1/source_manifest.tsv",
+      "sha256": "b0dc10dda874058ca87bd6f002d627873128cdaf8618be21a2140fd24d9612ec"
+    },
+    {
+      "bytes": 2532,
+      "path": "data/peptide_omnipanel_v28_research_data_20260719_run1/dataset_manifest.json",
+      "sha256": "f961ddcc3761829552d90d40b4d4df5dd4571a52603763a668de09d2b8223933"
+    },
+    {
+      "bytes": 657,
+      "path": "data/peptide_omnipanel_v28_research_data_20260719_run1/endpoint_summary.tsv",
+      "sha256": "b8762cfd6022516eeedebe50103ce3a7e86cf8fa393c0867a28dd90a83e2507c"
+    },
+    {
+      "bytes": 228,
+      "path": "data/peptide_omnipanel_v28_research_data_20260719_run1/quarantine.tsv",
+      "sha256": "f01d45866daa9d60590ea0433e154017cf3fe246d6fbbb8045b05cf2ddbf05c5"
+    },
+    {
+      "bytes": 6552,
+      "path": "data/peptide_property_expansion_v15/pipeline_manifest.json",
+      "sha256": "700a1b6dbdbb91f73d218b7c2a3820b6af00723594e91bc7e7b493aafdc12431"
+    },
+    {
+      "bytes": 16909,
+      "path": "docs/peptide_omnipanel_v26_frozen_direct_manifest.json",
+      "sha256": "57e5198707162c5822347167cf5b70ee01fbb10e97c7acf6f85cbdd4429d44ac"
+    },
+    {
+      "bytes": 4960,
+      "path": "docs/peptide_omnipanel_v28_research_coverage_20260719.json",
+      "sha256": "d0ef633fc251942a3be0e62a8cc9add7268e8b98d9d29bdc6a40836306931666"
+    },
+    {
+      "bytes": 6311,
+      "path": "docs/peptide_omnipanel_v28_research_coverage_20260719.md",
+      "sha256": "7b4087bb9041debb95a87d433aecef4c79ab15f0bb44050be87b451a32dafb30"
+    },
+    {
+      "bytes": 16270,
+      "path": "docs/sequence-to-all-endpoints-modeling-plan-v28-self-trained.md",
+      "sha256": "bc9724197b317d50708c37862534e4c2fd317283a87e2c2cd98b75feb1af83ec"
+    },
+    {
+      "bytes": 771,
+      "path": "pyproject.toml",
+      "sha256": "bcf8e7dd48b5f44f176a443ff3c79d45d90cca2828acd363ce0fa8e828ac0635"
+    },
+    {
+      "bytes": 14366,
+      "path": "scripts/collect_peptide_omnipanel_v28_extended_tdc.py",
+      "sha256": "b3755559c20815eda43bb5ef0d40e833ab29770ae8648b83cca2f63df54f0e08"
+    },
+    {
+      "bytes": 2788,
+      "path": "scripts/predict_peptide_omnipanel_v28_research.py",
+      "sha256": "6ea0f5f1dfefb4ba7e6e452ae6a8c83af878aeddf73bc00428684be9b54e20ad"
+    },
+    {
+      "bytes": 16043,
+      "path": "scripts/prepare_peptide_omnipanel_v28_research_data.py",
+      "sha256": "1bf0d29b14800e89f2081a0ac94fcdee5a6149b83b3d942152bac18ffa677131"
+    },
+    {
+      "bytes": 20659,
+      "path": "scripts/train_peptide_omnipanel_v28_research_models.py",
+      "sha256": "20d167ef8a387c6ba912c15a70ba36bd697a4d3228e9e797cebbe6bf068fa278"
+    },
+    {
+      "bytes": 3879,
+      "path": "scripts/validate_peptide_omnipanel_v28_registry.py",
+      "sha256": "57809daababa6a5f86e0876495876eb3b2fbf3e13a2306580d516220a2e916ac"
+    },
+    {
+      "bytes": 1072,
+      "path": "src/peptide_omnipanel/__init__.py",
+      "sha256": "79ff79d548a71e3f6e4e678e419c280a09d07de336707b919e893ab633e7d18c"
+    },
+    {
+      "bytes": 1259,
+      "path": "src/peptide_omnipanel/__pycache__/__init__.cpython-311.pyc",
+      "sha256": "e5d553eef684e36e60ed915e7cade1a10e1b451528a658cb817bfcb6c5676d86"
+    },
+    {
+      "bytes": 9328,
+      "path": "src/peptide_omnipanel/__pycache__/contracts.cpython-311.pyc",
+      "sha256": "d8a2a0fe4f619f5df2fb1bb5756c8ccfcc5b4aa63852d5735b8e7d808369e690"
+    },
+    {
+      "bytes": 29004,
+      "path": "src/peptide_omnipanel/__pycache__/features.cpython-311.pyc",
+      "sha256": "403d37c51493384f90253946c5763d24d7152ebf79144eb00760f9493682aeda"
+    },
+    {
+      "bytes": 27005,
+      "path": "src/peptide_omnipanel/__pycache__/panel.cpython-311.pyc",
+      "sha256": "483a8a95d955e50ddffaacdf8b2c6e53a81b9bc4e1ad04b31d4e5791bde6626c"
+    },
+    {
+      "bytes": 23416,
+      "path": "src/peptide_omnipanel/__pycache__/pir.cpython-311.pyc",
+      "sha256": "bb8a4676f102c3453264f53eb1d64c91146ed7a7fbf1b39bab331c907cf45988"
+    },
+    {
+      "bytes": 8678,
+      "path": "src/peptide_omnipanel/__pycache__/representations.cpython-311.pyc",
+      "sha256": "3f3495d6b89df9f8cd3428c8098d682126ae9646faa327b790f1a8125a60ee4f"
+    },
+    {
+      "bytes": 2269,
+      "path": "src/peptide_omnipanel/artifacts.py",
+      "sha256": "7ca10f8541bfb01e44061b3e5a21056d10e480340899f291c5a7479488b1859f"
+    },
+    {
+      "bytes": 5298,
+      "path": "src/peptide_omnipanel/contracts.py",
+      "sha256": "b0dafc977ac6b2ffcb35e0568c47019aa369a01596005db3bd82b657c2a06ea4"
+    },
+    {
+      "bytes": 29292,
+      "path": "src/peptide_omnipanel/datasets.py",
+      "sha256": "ce26a956a3062430b34a0ab1e88fe64fea7e52203ef76eb22796d37073ae304b"
+    },
+    {
+      "bytes": 21398,
+      "path": "src/peptide_omnipanel/experiments.py",
+      "sha256": "803c2a66c8105e7d4d0cb3de7f23cbc34a1bfb0cbc90bf4c9e539b94548ed127"
+    },
+    {
+      "bytes": 6325,
+      "path": "src/peptide_omnipanel/external_validation.py",
+      "sha256": "bebbee817f970da338dc3583b6f082742fe238ad1b2a47fe100519c066e4740d"
+    },
+    {
+      "bytes": 18028,
+      "path": "src/peptide_omnipanel/features.py",
+      "sha256": "2b08d00838a13ad520a7901b0212d1239b2ee788aaf477290fe37f6983edce72"
+    },
+    {
+      "bytes": 16934,
+      "path": "src/peptide_omnipanel/frozen_direct.py",
+      "sha256": "3c58e90a2101c72dfddb7a247059032f68dd75c65e54e84287a79669d31d296c"
+    },
+    {
+      "bytes": 13248,
+      "path": "src/peptide_omnipanel/hqtp.py",
+      "sha256": "dfb46e6c98d6d1e934f067daf6b2c0b80b233b5cdc4c1461667f5133cc181258"
+    },
+    {
+      "bytes": 14623,
+      "path": "src/peptide_omnipanel/hqtp_cv.py",
+      "sha256": "db58e7e84de55a4500c29180bec4943307043851a442b3a421a9b180ac61aa0a"
+    },
+    {
+      "bytes": 3640,
+      "path": "src/peptide_omnipanel/inference.py",
+      "sha256": "13f66b451d926aa787e0758a5ce70b6d28d2536b336b564b993a0906ce5bbcb8"
+    },
+    {
+      "bytes": 5744,
+      "path": "src/peptide_omnipanel/metrics.py",
+      "sha256": "0676ea849e6e9c64c9421abe335f94b59b8086d1d7cf601f68fb39e3d364683b"
+    },
+    {
+      "bytes": 27783,
+      "path": "src/peptide_omnipanel/models.py",
+      "sha256": "7a9ef5768a5d4e4f7d7ec0710060e7fc00f320a3dcd1981b9835612d8ed0e5d4"
+    },
+    {
+      "bytes": 10017,
+      "path": "src/peptide_omnipanel/npdb.py",
+      "sha256": "f8f2d6c88f9b480f4dc6799835e90b7d8da7fc27e6eeb1f8970f7e8ca21b15e3"
+    },
+    {
+      "bytes": 22596,
+      "path": "src/peptide_omnipanel/optimization.py",
+      "sha256": "a5b1a9754f065b7eed773072d79aa0ba19b1011a8aca37cb02781f0665cc5ac2"
+    },
+    {
+      "bytes": 19334,
+      "path": "src/peptide_omnipanel/panel.py",
+      "sha256": "987bc71be745e47953e5b6fc295e97c2cde4a0c12d4414cac69dcb8a870db9d4"
+    },
+    {
+      "bytes": 13683,
+      "path": "src/peptide_omnipanel/pir.py",
+      "sha256": "065b48f7666e32f7616fa3dbf94be339849b50c49e0c78ea80cea627203fa06a"
+    },
+    {
+      "bytes": 10854,
+      "path": "src/peptide_omnipanel/representation_inference.py",
+      "sha256": "9014f5d767cc1c48b508b6e92064b17dfe01ec9235f4f1fa703c48b9aacc2019"
+    },
+    {
+      "bytes": 7134,
+      "path": "src/peptide_omnipanel/representations.py",
+      "sha256": "3fec91417ec0457230a6ebe6f76f6cb0981be39fbcad9d7c678816883cac41ca"
+    },
+    {
+      "bytes": 7717,
+      "path": "src/peptide_omnipanel/residuals.py",
+      "sha256": "4f3d6c9d0f4c030c1a53981d346f6c7d7a11907e45eb24e8f02221e9fa72d647"
+    },
+    {
+      "bytes": 2007,
+      "path": "src/peptide_omnipanel/service.py",
+      "sha256": "a89846a9a3909fb54cf2d18e58649a7c9dfe52f91fef22a0aaafafc8d6b89167"
+    },
+    {
+      "bytes": 8487,
+      "path": "src/peptide_omnipanel/source_robust.py",
+      "sha256": "bbe5e715cb6dc14a27de79183b900b8a0a948c57dbc587e56f20ab65f8ef5990"
+    },
+    {
+      "bytes": 11479,
+      "path": "src/peptide_omnipanel/splits.py",
+      "sha256": "b90b0e0d965f97ddd65cf34c2bf1b921485b2572f747220ab1e226ba17379717"
+    },
+    {
+      "bytes": 10479,
+      "path": "src/peptide_omnipanel/training.py",
+      "sha256": "d707fd675e6b991f14b568d049dd84987f5d3689b6da77aeca37e91c99bdbc40"
+    },
+    {
+      "bytes": 903,
+      "path": "src/peptide_omnipanel_v28/__init__.py",
+      "sha256": "df0f6138c5f69588286a83e2ea4ed0162b6bdfce1e218a0d675e5fe4b88bd4f1"
+    },
+    {
+      "bytes": 1099,
+      "path": "src/peptide_omnipanel_v28/__pycache__/__init__.cpython-311.pyc",
+      "sha256": "1c6fe93870350e59e9b3febe44764557143d8b162c40b63a911f344160ae0907"
+    },
+    {
+      "bytes": 15979,
+      "path": "src/peptide_omnipanel_v28/__pycache__/v28_model_artifacts.cpython-311.pyc",
+      "sha256": "a0efb45d0bde8b33ac51dc1b4625e7114bdd27328ecdc68ed9df60897a76ce73"
+    },
+    {
+      "bytes": 14549,
+      "path": "src/peptide_omnipanel_v28/__pycache__/v28_registry.cpython-311.pyc",
+      "sha256": "2d7ac86c83b1a1dd06d00ff73122cf3d5c5f2cf3988aa6b8fcf9262004712c68"
+    },
+    {
+      "bytes": 16403,
+      "path": "src/peptide_omnipanel_v28/__pycache__/v28_research_panel.cpython-311.pyc",
+      "sha256": "55357d266b9db5ef61ab6e9119ffde679ffa49e420ba10cb24555a70ed8a738b"
+    },
+    {
+      "bytes": 19848,
+      "path": "src/peptide_omnipanel_v28/__pycache__/v28_router.cpython-311.pyc",
+      "sha256": "1dcf9ceda7a33671db95f69633e38aadc98c6202e00638850d6474b8b60d4b70"
+    },
+    {
+      "bytes": 11370,
+      "path": "src/peptide_omnipanel_v28/v28_model_artifacts.py",
+      "sha256": "b33cadf2d34f00af7517805e2f454d29721953e5f2e713b231a960743f554599"
+    },
+    {
+      "bytes": 7871,
+      "path": "src/peptide_omnipanel_v28/v28_registry.py",
+      "sha256": "c8f577a5d3f7363f35c1ef415fc817f7e76e289444bb13c7643879e67433ca1a"
+    },
+    {
+      "bytes": 12163,
+      "path": "src/peptide_omnipanel_v28/v28_research_panel.py",
+      "sha256": "b214e58af216d2e8667c842ae149a1963539a8694082110e854339def0449e8b"
+    },
+    {
+      "bytes": 12719,
+      "path": "src/peptide_omnipanel_v28/v28_router.py",
+      "sha256": "46217da3b572a0de17ddd105d850ef94c0d33a76b49d40a2a75695056eee086f"
+    },
+    {
+      "bytes": 1517,
+      "path": "tests/test_collect_peptide_omnipanel_v28_extended_tdc.py",
+      "sha256": "55280a87c90548f07b2db45d54bb3bacd6868a775270550b27e47af6f58593fe"
+    },
+    {
+      "bytes": 8513,
+      "path": "tests/test_peptide_omnipanel_v28_model_artifacts.py",
+      "sha256": "daf75cf21dbdf9de59e730fc1b287940bc43952cbc262e51b5acab2906f79bfc"
+    },
+    {
+      "bytes": 6326,
+      "path": "tests/test_peptide_omnipanel_v28_registry.py",
+      "sha256": "bb7cf2e34ca025393d66576e8e88f7e6c2fc9520d2a282757e6ccd9a1f420b34"
+    },
+    {
+      "bytes": 4744,
+      "path": "tests/test_peptide_omnipanel_v28_research_panel.py",
+      "sha256": "99a61edeaf0d28736e70cd2d1edf6949d7aa991f71ae91ed7a30d83acaad5623"
+    },
+    {
+      "bytes": 7566,
+      "path": "tests/test_peptide_omnipanel_v28_router.py",
+      "sha256": "dc9403e2658c964069fe351c058e414a337ae0896ba635d645e508fa2e40ae31"
+    },
+    {
+      "bytes": 181867,
+      "path": "uv.lock",
+      "sha256": "4932f691b187c4e71947e3ec1f92dcab7d1ec72e8af371393ca10442c53d3b6c"
+    }
+  ],
+  "published_file_count": 69,
+  "schema_version": "peptide-omnipanel-v28-public-sync-1",
+  "scope": "public_code_and_provenance_only"
+}
