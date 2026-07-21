@@ -251,6 +251,6 @@ V2.6 的一个独立 Helicogenic PAMPA 单来源压力测试曾达到 22 observa
 | 25-head research bundle | `data/peptide_omnipanel_v28_research_bundle_20260719_run1/research_bundle_manifest.json` | `4feef813aa5c09a6c28150bb28c18eecac1112db1f616dd3d5cab562beef2d27` |
 | TDC training observations | `data/peptide_omnipanel_v28_extended_tdc_20260719_run1/observations.tsv` | `2d5535c648f33853af08489c44b7d19641b6523cd6f58a0a9498dc0daeba2e07` |
 | local peptide staging observations | `data/peptide_omnipanel_v28_research_data_20260719_run1/observations.tsv` | `94b4837be4f10ee7cb1a51d38272cc353e9c98ccbabb928235adb73ebee42c9a` |
-| current 25-head training inventory | `docs/peptide_omnipanel_v28_current_sequence_model_training_inventory_20260720.tsv` | `a449b3c161fbf203fb5ab27512bcc51b2d0be8215dee6f5e7a6286af7df08bc6` |
-| Phase2 detailed metrics | `docs/peptide_omnipanel_v28_phase2_development_metrics_20260720.tsv` | `ff34bb9b9817bb51b6f9f178a46bd0eeb4ef91343529b5c8895b7d19e9ef9bf3` |
-| V2.6 frozen training inventory | `docs/peptide_omnipanel_v26_frozen_direct_training_inventory_20260720.tsv` | `06ba4b89964d59362963bdf95022210c7f3a75b9cd3376d42c93198f29c4336b` |
+| current 25-head training inventory | `docs/peptide_omnipanel_v28_current_sequence_model_training_inventory_20260720.tsv` | `c4ebdd34eae46006c45e2c6fcfeaf49eb548c1bd1073d30901496b9e34312d36` |
+| Phase2 detailed metrics | `docs/peptide_omnipanel_v28_phase2_development_metrics_20260720.tsv` | `db020ce154bc6f9d5de937f289cb745e0f91328dde3f01fd1167dd3b342a139e` |
+| V2.6 frozen training inventory | `docs/peptide_omnipanel_v26_frozen_direct_training_inventory_20260720.tsv` | `4abdf88b6f959eb6a8b138cf6fe55f5be44ec6b7cf8690bffe0e5402e38db932` |
