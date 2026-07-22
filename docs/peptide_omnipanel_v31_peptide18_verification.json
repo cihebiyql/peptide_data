@@ -1,0 +1,519 @@
+{
+  "all_endpoint_predictions_deterministic": true,
+  "all_endpoint_predictions_finite": true,
+  "all_endpoints_dynamic_across_probes": true,
+  "bare_sequence_assumption": "natural_L_unmodified_linear_free_N_and_C_termini",
+  "bundle_manifest_sha256": "f270039d5cf399542fbe976fcb95fb3ecd150813751e625b9ce4d327e910f743",
+  "dataset_manifest_sha256": "22ea3f755fd3ffe7d8834d646721dfc93781387ccc35688a800853853af33627",
+  "dynamic_model_count": 18,
+  "endpoint_count": 18,
+  "endpoints": {
+    "BBB": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "fa286c16fb4d749fa304cf2737afce2ddd0e01bf14f0cf2f5c04aa1fc202c06e",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.9021108525612183,
+        "balanced_accuracy": 0.8164311023511508,
+        "roc_auc": 0.903062055333749
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.994615087659529,
+      "probe_values": [
+        0.5903458827870774,
+        0.0036336716714774186,
+        0.0031576575022197514,
+        0.9977727451617487,
+        0.981411130419771
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "CL": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "2fec8b581bb440295db9c2821be64aa76d12704c4b2c4d243040740440094d95",
+      "oof_metrics_recomputed": {
+        "mae": 21.39456889619882,
+        "r2": -0.07840743054648525,
+        "rmse": 25.1472361052898
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 2.8816631944444353,
+      "probe_values": [
+        24.749383333333267,
+        27.631046527777702,
+        27.499989583333257,
+        24.790934722222154,
+        25.069033333333266
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "F": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "4937e033207cd0fa3e084ef6fc06a80b46ad918182e373f72c621a5667ce8483",
+      "oof_metrics_recomputed": {
+        "mae": 0.19614241666666674,
+        "r2": 0.024253215158220987,
+        "rmse": 0.2446875411041259
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.08676786666666714,
+      "probe_values": [
+        0.29731886666666657,
+        0.29844566666666655,
+        0.29896233333333316,
+        0.3840867333333337,
+        0.3522392000000002
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "HC50": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "eeb9551b2f68765ad904b210d1473218ee1f5a5073c400a0871a40561cfa8a93",
+      "oof_metrics_recomputed": {
+        "mae": 0.33684282659896875,
+        "r2": 0.5094049693677822,
+        "rmse": 0.4587211862715863
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.5132312723375771,
+      "probe_values": [
+        -3.7967859121737555,
+        -3.9774028814648537,
+        -4.053379605715946,
+        -3.6505066861107607,
+        -4.163737958448338
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "LogD7.4": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "multimodal",
+      "low_confidence": true,
+      "model_sha256": "cf67a3e04b3a66586bbc6178df88b335729efd77381ccf6d1531dd1f05b91726",
+      "oof_metrics_recomputed": {
+        "mae": 0.5422316455696197,
+        "r2": 0.7412251528719057,
+        "rmse": 0.7231783045770724
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 2.241966666666665,
+      "probe_values": [
+        0.04799999999999998,
+        0.5653666666666666,
+        0.5497666666666666,
+        2.289966666666665,
+        1.8085666666666675
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "PPB": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "ef8e477bf5c1b81eb6c7d697efd6e29b362ab44b62fdbd3a00860d838e7e7386",
+      "oof_metrics_recomputed": {
+        "mae": 0.16397138376483195,
+        "r2": 0.5023149031030443,
+        "rmse": 0.240077449634149
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.15911333333333294,
+      "probe_values": [
+        0.5422380000000001,
+        0.5323713333333336,
+        0.5625146666666665,
+        0.40340133333333356,
+        0.503781333333334
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "T1/2": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": false,
+      "model_sha256": "77cc1d6df3df72a9373480779eb6968d7d72fe59e5490f116bf55eab79c160b1",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.5882856302026453,
+        "balanced_accuracy": 0.6950670902385925,
+        "roc_auc": 0.6849868929666326
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.6519055702683475,
+      "probe_values": [
+        0.7891343351059217,
+        0.5143092262692286,
+        0.5690243403044434,
+        0.30729120230450785,
+        0.13722876483757418
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "Vd": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "306af79f3ff404755eda5df4e8e6ccbc301df6e4240c362cf8a71bf667f127fd",
+      "oof_metrics_recomputed": {
+        "mae": 3.369693214814818,
+        "r2": -2.6095452965198755,
+        "rmse": 3.675887937554664
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 1.9720066666666813,
+      "probe_values": [
+        2.9117649999999946,
+        4.094864111111112,
+        4.093591222222223,
+        4.250076888888894,
+        4.883771666666676
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "cell_penetration": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "ff1563bca6ad963c5626f63e99fcadd15735079eb607c10c042433a71fe2a9df",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.9319867753589265,
+        "balanced_accuracy": 0.8971122448979592,
+        "roc_auc": 0.9782657312925169
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.9959510000061017,
+      "probe_values": [
+        0.0018953610943711844,
+        0.001156637471112609,
+        0.001556539447741376,
+        0.9971076374772143,
+        0.8439447630296518
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "cytotoxicity": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "multimodal",
+      "low_confidence": true,
+      "model_sha256": "b2a89dc2c783a72096ac98b7f850be816de20019265096f0d20f1f6f265c5648",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.5604191502015158,
+        "balanced_accuracy": 0.5816532258064516,
+        "roc_auc": 0.7885269657258063
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.2991201608848668,
+      "probe_values": [
+        0.06529914529914531,
+        0.3357013574660634,
+        0.36441930618401214,
+        0.13641025641025645,
+        0.18452991452991455
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "hemolysis": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "multimodal",
+      "low_confidence": false,
+      "model_sha256": "9d072a1240d0d8df4546053d86c281d7e9e42b2979b331df8f3c13b5bb8f4dd9",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.7394383374724104,
+        "balanced_accuracy": 0.7458055899937294,
+        "roc_auc": 0.8514819849791057
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.15556578076373892,
+      "probe_values": [
+        0.010672517366279133,
+        0.04484712514262612,
+        0.032188669228265014,
+        0.0028537785349803738,
+        0.1584195592987193
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "human_plasma_stability": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "traditional",
+      "low_confidence": true,
+      "model_sha256": "cf2e5a606ee5857b1876f7d5c1f776b8e7021ceb9c550dcbf2e7ce4a852afaf9",
+      "oof_metrics_recomputed": {
+        "mae": 0.7081961061124736,
+        "r2": 0.1556333811479087,
+        "rmse": 0.9447163899124333
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.899909456959078,
+      "probe_values": [
+        -0.2612365248142153,
+        0.11935519906947427,
+        0.07949602392073843,
+        0.6386729321448628,
+        0.030652219915383288
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "intestinal_stability": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "db3c97bebd11b00cb4ff0f9c15469112e23c8d369a2aa7153e723847008e1786",
+      "oof_metrics_recomputed": {
+        "mae": 0.42180410704639953,
+        "r2": 0.8141455454140752,
+        "rmse": 0.6106227884051537
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 1.710338683849637,
+      "probe_values": [
+        0.6470106092960924,
+        -0.017680231640493326,
+        -0.22491170353908732,
+        -1.0633280745535447,
+        -0.15434185830830377
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "membrane_retention": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "36f2f12638e1548c91913b7e4ff2ecaf4b96a77d3711b27d11fd51366052bf16",
+      "oof_metrics_recomputed": {
+        "mae": 0.1665333333333332,
+        "r2": -0.0499225904388223,
+        "rmse": 0.20402576861577856
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.01823333333333342,
+      "probe_values": [
+        0.13819999999999993,
+        0.12360000000000002,
+        0.12816666666666673,
+        0.11996666666666651,
+        0.12179999999999991
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "mouse_plasma_stability": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "c72b93f431664a5d2bf246f0499da06e2a697e098a9c23ee2d8151e95eb10d14",
+      "oof_metrics_recomputed": {
+        "mae": 0.7442776131005189,
+        "r2": 0.009883176137954641,
+        "rmse": 0.9202275021694996
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.7209751456192551,
+      "probe_values": [
+        -0.09297257004325893,
+        -0.2994075856528957,
+        -0.3223762775748784,
+        -0.5586805397461728,
+        0.16229460587308228
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "overall_peptide_toxicity": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "3922a30f0648e4f9a17054177ac35715c67235183268f72d09639d643cc410cb",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.9538704524877819,
+        "balanced_accuracy": 0.8814787966654585,
+        "roc_auc": 0.9471178118046826
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.7711505038763925,
+      "probe_values": [
+        0.15958790044980534,
+        0.9301250830750152,
+        0.9307384043261978,
+        0.6544947234762013,
+        0.8708577201577912
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "permeability": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_sha256": "6ca09db5227b22a3852f3a9b841481bb5ab9e406dedde94d904c35564152c998",
+      "oof_metrics_recomputed": {
+        "mae": 0.32515397742852103,
+        "r2": 0.6762382767551882,
+        "rmse": 0.4433184730313615
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.7784494693861479,
+      "probe_values": [
+        -6.791388218669004,
+        -6.461151911536253,
+        -6.555545376188551,
+        -6.532242255091065,
+        -6.012938749282856
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    },
+    "solubility": {
+      "deterministic_repeat": true,
+      "dynamic_input_dependent": true,
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_sha256": "85f91424265fdacdebee33f7f95198038d96e141fc8f1c9f1926570f4f23a1e3",
+      "oof_metrics_recomputed": {
+        "average_precision": 0.7107899868323673,
+        "balanced_accuracy": 0.5055927155441555,
+        "roc_auc": 0.6038196674917232
+      },
+      "probe_distinct_value_count": 5,
+      "probe_range": 0.23949922649885058,
+      "probe_values": [
+        0.6497061119182098,
+        0.7600100425811862,
+        0.7304375391859531,
+        0.8892053384170604,
+        0.6990942074166339
+      ],
+      "research_only": true,
+      "status": "pass",
+      "validation_status": "not_validated"
+    }
+  },
+  "esm_execution": {
+    "compute_dtype": "bfloat16",
+    "device": "cuda",
+    "device_memory_before": {
+      "free_bytes": 15679356928,
+      "total_bytes": 17094475776
+    },
+    "device_name": "NVIDIA GeForce RTX 5080",
+    "effective_batch_sizes": [
+      5
+    ],
+    "local_files_only": true,
+    "max_observed_tokens": 25,
+    "max_tokens_per_batch": 4096,
+    "minimum_batch_size": 1,
+    "model_max_positions": 1026,
+    "oom_fallback_count": 0,
+    "oom_fallback_events": [],
+    "output_dtype": "float32",
+    "peak_cuda_memory_allocated_bytes": 1339668480,
+    "peak_cuda_memory_reserved_bytes": 1468006400,
+    "pooling_outputs": [
+      "mean_residue",
+      "max_residue"
+    ],
+    "precision": "bf16",
+    "preflight_passed": true,
+    "preflight_tokens": 22,
+    "requested_batch_size": 5,
+    "requested_revision": "08e4846e537177426273712802403f7ba8261b6c",
+    "resolved_revision": "08e4846e537177426273712802403f7ba8261b6c",
+    "snapshot_path": "/root/.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots/08e4846e537177426273712802403f7ba8261b6c"
+  },
+  "esm_identity": {
+    "accepted_alphabet_policy": "esm2_tokenizer_v1",
+    "backend": "transformers",
+    "backend_version": "4.57.6",
+    "compute_dtype": "bfloat16",
+    "dtype": "float32",
+    "embedding_dim": 1280,
+    "encoder_config_sha256": "46a9cd5fabca5e0ca3a25ff63d6b744731b9891ffeacf0044ec7cb62308e460e",
+    "max_observed_tokens": 25,
+    "max_position_embeddings": 1026,
+    "model_name": "facebook/esm2_t33_650M_UR50D",
+    "model_revision": "08e4846e537177426273712802403f7ba8261b6c",
+    "model_weight_manifest_sha256": "2a8e713c92f3f94425e6ed2a0761bcc0829079401a99107bde094e452563052d",
+    "pooling": "mean_residue",
+    "precision_policy_version": "esm2_frozen_precision_v1",
+    "python_version": "3.11.15",
+    "requested_model_revision": "08e4846e537177426273712802403f7ba8261b6c",
+    "schema_version": "peptide_omnipanel_plm_cache_v2",
+    "sequence_count": 5,
+    "sequence_inventory_sha256": "1e5ae94bc5c01da775901967e9b0e253264c26f68281ee404f3753245f114b4d",
+    "sequence_normalization_version": "uppercase_trim_v1",
+    "special_tokens_map_sha256": "5f23c327dec5c7f9a943f7025ec113db6c20488162decb90ddea7216b4d69b8e",
+    "tokenizer_sha256": "9000a8609be6166f872406844d05a8a7321173db5f59fe0f63af9f3241a2dd0b",
+    "torch_version": "2.12.1+cu130",
+    "truncation_policy": "forbidden"
+  },
+  "probe_count": 5,
+  "probe_predictions_path": "docs/peptide_omnipanel_v31_peptide18_probe_predictions.tsv",
+  "probe_predictions_sha256": "4be1141883a14bf67a83d2f28e92b30993d68aa6931d9c592fd0f10606833226",
+  "probe_sequences": [
+    "ACDEFGHIKLMNPQRSTVWY",
+    "GIGKFLHSAKKFGKAFVGEIMNA",
+    "GIGKFLHSAKKFGKAFVGEIMNT",
+    "RRRRRRRRK",
+    "WWLFLRR"
+  ],
+  "probe_training_exact_overlap": [],
+  "schema_version": "peptide_omnipanel_v31_peptide18_verification_v1",
+  "scope": "internal_research_only",
+  "small_molecule_teacher_rows": 0,
+  "status": "pass",
+  "validated_model_count": 0
+}
