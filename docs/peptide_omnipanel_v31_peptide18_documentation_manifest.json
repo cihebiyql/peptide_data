@@ -1,0 +1,53 @@
+{
+  "dynamic_model_count": 18,
+  "endpoint_count": 18,
+  "files": {
+    "peptide_omnipanel_v31_peptide18_bundle_manifest.json": {
+      "bytes": 45558,
+      "path": "docs/peptide_omnipanel_v31_peptide18_bundle_manifest.json",
+      "sha256": "f270039d5cf399542fbe976fcb95fb3ecd150813751e625b9ce4d327e910f743"
+    },
+    "peptide_omnipanel_v31_peptide18_detailed_report_20260722.md": {
+      "bytes": 18189,
+      "path": "docs/peptide_omnipanel_v31_peptide18_detailed_report_20260722.md",
+      "sha256": "58b8a6649603696ffaf159fb29de6eb8535dccc535c525c62bf818d886988bbf"
+    },
+    "peptide_omnipanel_v31_peptide18_endpoint_inventory.tsv": {
+      "bytes": 2777,
+      "path": "docs/peptide_omnipanel_v31_peptide18_endpoint_inventory.tsv",
+      "sha256": "7bda3b7ec32c5d901e330014dafae41c37a3bd7eb934ce6a158722dac93901e7"
+    },
+    "peptide_omnipanel_v31_peptide18_endpoint_registry.json": {
+      "bytes": 8475,
+      "path": "docs/peptide_omnipanel_v31_peptide18_endpoint_registry.json",
+      "sha256": "dfe6447047495972968142459b40420974d0e3ea3ee35a826bc3de45b5a0e7c7"
+    },
+    "peptide_omnipanel_v31_peptide18_example_prediction.json": {
+      "bytes": 31057,
+      "path": "docs/peptide_omnipanel_v31_peptide18_example_prediction.json",
+      "sha256": "5247545f90129fc8cf889bc993f82e62c951989fd2feb7680fe8a17e211f8af8"
+    },
+    "peptide_omnipanel_v31_peptide18_probe_predictions.tsv": {
+      "bytes": 10267,
+      "path": "docs/peptide_omnipanel_v31_peptide18_probe_predictions.tsv",
+      "sha256": "4be1141883a14bf67a83d2f28e92b30993d68aa6931d9c592fd0f10606833226"
+    },
+    "peptide_omnipanel_v31_peptide18_training_metrics.tsv": {
+      "bytes": 2736,
+      "path": "docs/peptide_omnipanel_v31_peptide18_training_metrics.tsv",
+      "sha256": "18c8cfa63dfce56468145bd5bc3dc3ce85f9359a79b3f010d34fcf811b03fa3b"
+    },
+    "peptide_omnipanel_v31_peptide18_verification.json": {
+      "bytes": 17376,
+      "path": "docs/peptide_omnipanel_v31_peptide18_verification.json",
+      "sha256": "eb5d89901526ed52f8d941dac164e31ead819b8974e0630ce32f9857f4ef7f6c"
+    }
+  },
+  "model_weights_included": false,
+  "raw_training_data_included": false,
+  "schema_version": "peptide_omnipanel_v31_peptide18_documentation_manifest_v1",
+  "scope": "public_documentation_only",
+  "small_molecule_teacher_rows": 0,
+  "status": "pass",
+  "validated_model_count": 0
+}

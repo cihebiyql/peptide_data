@@ -1,0 +1,19 @@
+endpoint_id	task_kind	training_rows	selected_feature_route	model_family	mae	rmse	r2	research_only	low_confidence	validation_status	roc_auc	average_precision	balanced_accuracy
+LogD7.4	regression	79	multimodal	ExtraTreesRegressor	0.5422316455696197	0.7231783045770724	0.7412251528719057	True	True	not_validated			
+solubility	classification	2168	esm_sequence	LGBMClassifier				True	True	not_validated	0.6038196674917232	0.7107899868323673	0.5055927155441555
+F	regression	12	esm_sequence	ExtraTreesRegressor	0.19614241666666674	0.2446875411041259	0.024253215158220987	True	True	not_validated			
+T1/2	classification	918	esm_sequence	LGBMClassifier				True	False	not_validated	0.6849868929666326	0.5882856302026453	0.6950670902385925
+PPB	regression	103	structure	ExtraTreesRegressor	0.16397138376483195	0.240077449634149	0.5023149031030443	True	True	not_validated			
+CL	regression	19	esm_sequence	ExtraTreesRegressor	21.39456889619882	25.1472361052898	-0.07840743054648525	True	True	not_validated			
+Vd	regression	15	structure	ExtraTreesRegressor	3.369693214814818	3.675887937554664	-2.6095452965198755	True	True	not_validated			
+BBB	classification	844	esm_sequence	LGBMClassifier				True	True	not_validated	0.903062055333749	0.9021108525612183	0.8164311023511508
+permeability	regression	6814	structure	LGBMRegressor	0.32515397742852103	0.4433184730313615	0.6762382767551882	True	True	not_validated			
+overall_peptide_toxicity	classification	11036	esm_sequence	LGBMClassifier				True	True	not_validated	0.9471178118046826	0.9538704524877819	0.8814787966654585
+cytotoxicity	classification	312	multimodal	ExtraTreesClassifier				True	True	not_validated	0.7885269657258063	0.5604191502015158	0.5816532258064516
+hemolysis	classification	2012	multimodal	LGBMClassifier				True	False	not_validated	0.8514819849791057	0.7394383374724104	0.7458055899937294
+HC50	regression	1926	esm_sequence	LGBMRegressor	0.33684282659896875	0.4587211862715863	0.5094049693677822	True	True	not_validated			
+cell_penetration	positive_unlabeled	3784	esm_sequence	LGBMClassifier				True	True	not_validated	0.9782657312925169	0.9319867753589265	0.8971122448979592
+membrane_retention	regression	12	structure	ExtraTreesRegressor	0.1665333333333332	0.2040257686157785	-0.04992259043882208	True	True	not_validated			
+human_plasma_stability	regression	43	traditional	ExtraTreesRegressor	0.7081961061124736	0.9447163899124335	0.15563338114790848	True	True	not_validated			
+mouse_plasma_stability	regression	17	structure	ExtraTreesRegressor	0.7442776131005189	0.9202275021694996	0.009883176137954641	True	True	not_validated			
+intestinal_stability	regression	393	structure	ExtraTreesRegressor	0.42180410704639953	0.6106227884051537	0.8141455454140752	True	True	not_validated			

@@ -1,0 +1,1306 @@
+{
+  "architecture": "frozen_ESM2_650M_mean + 93D peptide features + HELM/SMILES character features + RDKit Morgan/2D descriptors + endpoint-specific grouped-OOF selected local tree head",
+  "bare_sequence_assumption": "natural_L_unmodified_linear_free_N_and_C_termini",
+  "bundle_id": "peptide-omnipanel-v31-peptide18-49d2edb6bd0a4250a893b1f7b8e9bf74",
+  "dynamic_model_count": 18,
+  "elapsed_seconds": 153.624974,
+  "endpoint_count": 18,
+  "endpoint_order": [
+    "LogD7.4",
+    "solubility",
+    "F",
+    "T1/2",
+    "PPB",
+    "CL",
+    "Vd",
+    "BBB",
+    "permeability",
+    "overall_peptide_toxicity",
+    "cytotoxicity",
+    "hemolysis",
+    "HC50",
+    "cell_penetration",
+    "membrane_retention",
+    "human_plasma_stability",
+    "mouse_plasma_stability",
+    "intestinal_stability"
+  ],
+  "endpoints": {
+    "BBB": {
+      "condition": "compiled-positive/rule-negative peptide benchmark",
+      "elapsed_seconds": 6.375418,
+      "endpoint_id": "BBB",
+      "evidence_lane": "weak_binary",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-BBB-esm_sequence-20260722",
+      "model_path": "models/BBB.joblib",
+      "model_sha256": "fa286c16fb4d749fa304cf2737afce2ddd0e01bf14f0cf2f5c04aa1fc202c06e",
+      "modification_sensitive": false,
+      "oof_metrics": {
+        "average_precision": 0.9021108525612183,
+        "balanced_accuracy": 0.8164311023511508,
+        "roc_auc": 0.903062055333749
+      },
+      "oof_path": "oof/BBB.tsv",
+      "oof_sha256": "537821c75cf7ee7fb08142a5a45b866a519bc107be3a3592baefc1b41495cac8",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "weak_bbb_penetration_score",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9063928861101109,
+            "balanced_accuracy": 0.8091648276365515,
+            "roc_auc": 0.8951500143191659
+          },
+          "primary_score": -0.8951500143191659
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9021108525612183,
+            "balanced_accuracy": 0.8164311023511508,
+            "roc_auc": 0.903062055333749
+          },
+          "primary_score": -0.903062055333749
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "classification",
+      "training_row_count": 844,
+      "unique_sequence_count": 844,
+      "unique_validation_group_count": 844,
+      "unit": "score_0_1",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "weak_benchmark_labels_not_direct_measurements"
+      ]
+    },
+    "CL": {
+      "condition": "absolute systemic clearance only; CL/F and CLint excluded",
+      "elapsed_seconds": 1.864985,
+      "endpoint_id": "CL",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-CL-esm_sequence-20260722",
+      "model_path": "models/CL.joblib",
+      "model_sha256": "2fec8b581bb440295db9c2821be64aa76d12704c4b2c4d243040740440094d95",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 21.39456889619882,
+        "r2": -0.07840743054648525,
+        "rmse": 25.1472361052898
+      },
+      "oof_path": "oof/CL.tsv",
+      "oof_sha256": "979c0bb7f2547dfeb73d5d950362ef196923f45958665dc743c09b66597e1565",
+      "output_transform": "clip_nonnegative",
+      "prediction_interval": {
+        "q50": 19.959999999999944,
+        "q90": 34.31652222222226,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "absolute_systemic_clearance",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 22.876634576023342,
+            "r2": -0.21271555367618555,
+            "rmse": 26.667253992377002
+          },
+          "primary_score": 22.876634576023342
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 21.39456889619882,
+            "r2": -0.07840743054648525,
+            "rmse": 25.1472361052898
+          },
+          "primary_score": 21.39456889619882
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 30.713463304093423,
+            "r2": -1.1724584988176145,
+            "rmse": 35.69230273433353
+          },
+          "primary_score": 30.713463304093423
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 30.93938055555542,
+            "r2": -1.1554005047009945,
+            "rmse": 35.55189983452202
+          },
+          "primary_score": 30.93938055555542
+        }
+      ],
+      "source_count": 4,
+      "task_kind": "regression",
+      "training_row_count": 19,
+      "unique_sequence_count": 2,
+      "unique_validation_group_count": 9,
+      "unit": "mL/min/kg",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "very_small_training_cohort"
+      ]
+    },
+    "F": {
+      "condition": "mixed species and administration routes; route returned per training contract",
+      "elapsed_seconds": 1.897331,
+      "endpoint_id": "F",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-F-esm_sequence-20260722",
+      "model_path": "models/F.joblib",
+      "model_sha256": "4937e033207cd0fa3e084ef6fc06a80b46ad918182e373f72c621a5667ce8483",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.19614241666666674,
+        "r2": 0.024253215158220987,
+        "rmse": 0.2446875411041259
+      },
+      "oof_path": "oof/F.tsv",
+      "oof_sha256": "c561c112c743e7fa83a9242d569ea20ef93055a48effb7e6f0ffba4391cf5668",
+      "output_transform": "clip_0_1",
+      "prediction_interval": {
+        "q50": 0.22151650000000073,
+        "q90": 0.32131366666666633,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "absolute_bioavailability_fraction",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.19863137962962973,
+            "r2": -0.02117250707759699,
+            "rmse": 0.2503184431974464
+          },
+          "primary_score": 0.19863137962962973
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.19614241666666674,
+            "r2": 0.024253215158220987,
+            "rmse": 0.2446875411041259
+          },
+          "primary_score": 0.19614241666666674
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.20402762962962953,
+            "r2": -0.028031664494574615,
+            "rmse": 0.25115772355099236
+          },
+          "primary_score": 0.20402762962962953
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.19744454999999986,
+            "r2": 0.01660734320642332,
+            "rmse": 0.24564434617363456
+          },
+          "primary_score": 0.19744454999999986
+        }
+      ],
+      "source_count": 3,
+      "task_kind": "regression",
+      "training_row_count": 12,
+      "unique_sequence_count": 2,
+      "unique_validation_group_count": 6,
+      "unit": "fraction",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "very_small_training_cohort"
+      ]
+    },
+    "HC50": {
+      "condition": "mammalian erythrocytes; source species not row-resolved",
+      "elapsed_seconds": 21.294964,
+      "endpoint_id": "HC50",
+      "evidence_lane": "direct_measured_single_source",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "LGBMRegressor",
+      "model_id": "v31-peptide18-HC50-esm_sequence-20260722",
+      "model_path": "models/HC50.joblib",
+      "model_sha256": "eeb9551b2f68765ad904b210d1473218ee1f5a5073c400a0871a40561cfa8a93",
+      "modification_sensitive": false,
+      "oof_metrics": {
+        "mae": 0.33684282659896875,
+        "r2": 0.5094049693677822,
+        "rmse": 0.4587211862715863
+      },
+      "oof_path": "oof/HC50.tsv",
+      "oof_sha256": "a119cb04d892c8cba34e6bf99455eec13b39e1cd014820c6c6003e9a10059939",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.2498565991547954,
+        "q90": 0.7548878715312679,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "HC50",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.3490612547140734,
+            "r2": 0.4762637989961075,
+            "rmse": 0.47396199969096303
+          },
+          "primary_score": 0.3490612547140734
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.33684282659896875,
+            "r2": 0.5094049693677822,
+            "rmse": 0.4587211862715863
+          },
+          "primary_score": 0.33684282659896875
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "regression",
+      "training_row_count": 1926,
+      "unique_sequence_count": 1926,
+      "unique_validation_group_count": 1926,
+      "unit": "log10(mol/L)",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "LogD7.4": {
+      "condition": "pH=7.4",
+      "elapsed_seconds": 1.478421,
+      "endpoint_id": "LogD7.4",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "multimodal",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-LogD7.4-multimodal-20260722",
+      "model_path": "models/LogD7.4.joblib",
+      "model_sha256": "cf67a3e04b3a66586bbc6178df88b335729efd77381ccf6d1531dd1f05b91726",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.5422316455696197,
+        "r2": 0.7412251528719057,
+        "rmse": 0.7231783045770724
+      },
+      "oof_path": "oof/LogD7.4.tsv",
+      "oof_sha256": "4b5f5154546941f1a25f5f9119c515ca3ec1ad958726dd3106d6c69d1d4a7a74",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.39619999999999944,
+        "q90": 1.1307466666666686,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "logD_pH7_4",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.5470299578059068,
+            "r2": 0.7495329027622022,
+            "rmse": 0.711475090757176
+          },
+          "primary_score": 0.5470299578059068
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.5422316455696197,
+            "r2": 0.7412251528719057,
+            "rmse": 0.7231783045770724
+          },
+          "primary_score": 0.5422316455696197
+        }
+      ],
+      "source_count": 2,
+      "task_kind": "regression",
+      "training_row_count": 79,
+      "unique_sequence_count": 11,
+      "unique_validation_group_count": 77,
+      "unit": "dimensionless_log10",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "PPB": {
+      "condition": "species and plasma/serum heterogeneous",
+      "elapsed_seconds": 1.318035,
+      "endpoint_id": "PPB",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-PPB-structure-20260722",
+      "model_path": "models/PPB.joblib",
+      "model_sha256": "ef8e477bf5c1b81eb6c7d697efd6e29b362ab44b62fdbd3a00860d838e7e7386",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.16397138376483195,
+        "r2": 0.5023149031030443,
+        "rmse": 0.240077449634149
+      },
+      "oof_path": "oof/PPB.tsv",
+      "oof_sha256": "d26004603e4f8a636183cf9f065810918a667bfa80a017254befc46c95206ba6",
+      "output_transform": "clip_0_1",
+      "prediction_interval": {
+        "q50": 0.10303333333333285,
+        "q90": 0.382047333333333,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "plasma_or_serum_fraction_bound",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.16397138376483195,
+            "r2": 0.5023149031030443,
+            "rmse": 0.240077449634149
+          },
+          "primary_score": 0.16397138376483195
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.19010412162890955,
+            "r2": 0.4415368659497604,
+            "rmse": 0.2543146070718209
+          },
+          "primary_score": 0.19010412162890955
+        }
+      ],
+      "source_count": 15,
+      "task_kind": "regression",
+      "training_row_count": 103,
+      "unique_sequence_count": 16,
+      "unique_validation_group_count": 69,
+      "unit": "fraction_bound",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "T1/2": {
+      "condition": "source-defined stability with threshold t1/2 >= 1 hour",
+      "elapsed_seconds": 6.51306,
+      "endpoint_id": "T1/2",
+      "evidence_lane": "direct_measured",
+      "feature_route": "esm_sequence",
+      "low_confidence": false,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-T1_2-esm_sequence-20260722",
+      "model_path": "models/T1_2.joblib",
+      "model_sha256": "77cc1d6df3df72a9373480779eb6968d7d72fe59e5490f116bf55eab79c160b1",
+      "modification_sensitive": false,
+      "oof_metrics": {
+        "average_precision": 0.5882856302026453,
+        "balanced_accuracy": 0.6950670902385925,
+        "roc_auc": 0.6849868929666326
+      },
+      "oof_path": "oof/T1_2.tsv",
+      "oof_sha256": "d91fd78f24a3d5cb255d892090272c556a0adcb3eb47b545758ab93d71c3ec35",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "stable_at_least_1h_probability",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.4889751904535269,
+            "balanced_accuracy": 0.6202736926289598,
+            "roc_auc": 0.6179799617896655
+          },
+          "primary_score": -0.6179799617896655
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.5882856302026453,
+            "balanced_accuracy": 0.6950670902385925,
+            "roc_auc": 0.6849868929666326
+          },
+          "primary_score": -0.6849868929666326
+        }
+      ],
+      "source_count": 339,
+      "task_kind": "classification",
+      "training_row_count": 918,
+      "unique_sequence_count": 918,
+      "unique_validation_group_count": 246,
+      "unit": "probability",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only"
+      ]
+    },
+    "Vd": {
+      "condition": "absolute volume_of_distribution only; apparent V/F and compartment volumes excluded",
+      "elapsed_seconds": 1.852676,
+      "endpoint_id": "Vd",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-Vd-structure-20260722",
+      "model_path": "models/Vd.joblib",
+      "model_sha256": "306af79f3ff404755eda5df4e8e6ccbc301df6e4240c362cf8a71bf667f127fd",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 3.369693214814818,
+        "r2": -2.6095452965198755,
+        "rmse": 3.675887937554664
+      },
+      "oof_path": "oof/Vd.tsv",
+      "oof_sha256": "01b44630620194193061947affda82d4e94bd467266459671fda3b1b86d85d34",
+      "output_transform": "clip_nonnegative",
+      "prediction_interval": {
+        "q50": 4.009773333333341,
+        "q90": 4.279973333333341,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "absolute_volume_of_distribution",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 3.760772296296315,
+            "r2": -2.9652909271460346,
+            "rmse": 3.8527740771620436
+          },
+          "primary_score": 3.760772296296315
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 4.002827145679029,
+            "r2": -3.408789787266209,
+            "rmse": 4.0625218610695955
+          },
+          "primary_score": 4.002827145679029
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 3.369693214814818,
+            "r2": -2.6095452965198755,
+            "rmse": 3.675887937554664
+          },
+          "primary_score": 3.369693214814818
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 4.045837666666678,
+            "r2": -3.441499380237456,
+            "rmse": 4.077564296926088
+          },
+          "primary_score": 4.045837666666678
+        }
+      ],
+      "source_count": 4,
+      "task_kind": "regression",
+      "training_row_count": 15,
+      "unique_sequence_count": 2,
+      "unique_validation_group_count": 4,
+      "unit": "L/kg",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "very_small_training_cohort"
+      ]
+    },
+    "cell_penetration": {
+      "condition": "positive membership versus peptide-domain unlabeled background",
+      "elapsed_seconds": 13.820581,
+      "endpoint_id": "cell_penetration",
+      "evidence_lane": "positive_unlabeled",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-cell_penetration-esm_sequence-20260722",
+      "model_path": "models/cell_penetration.joblib",
+      "model_sha256": "ff1563bca6ad963c5626f63e99fcadd15735079eb607c10c042433a71fe2a9df",
+      "modification_sensitive": false,
+      "oof_metrics": {
+        "average_precision": 0.9319867753589265,
+        "balanced_accuracy": 0.8971122448979592,
+        "roc_auc": 0.9782657312925169
+      },
+      "oof_path": "oof/cell_penetration.tsv",
+      "oof_sha256": "b2fe685cd0b8057b0bc0cc46b7459505d0d4198a134225daaeca52ca33fb7df1",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "cell_penetration_PU_ranking_score",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9399683213763678,
+            "balanced_accuracy": 0.899576530612245,
+            "roc_auc": 0.975982568027211
+          },
+          "primary_score": -0.975982568027211
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9319867753589265,
+            "balanced_accuracy": 0.8971122448979592,
+            "roc_auc": 0.9782657312925169
+          },
+          "primary_score": -0.9782657312925169
+        }
+      ],
+      "source_count": 147,
+      "task_kind": "positive_unlabeled",
+      "training_row_count": 3784,
+      "unique_sequence_count": 3746,
+      "unique_validation_group_count": 3751,
+      "unit": "ranking_score_0_1",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "PU_ranking_score_not_probability",
+        "unlabeled_rows_are_not_negatives"
+      ]
+    },
+    "cytotoxicity": {
+      "condition": "mixed cell-line/concentration/time source-defined benchmark",
+      "elapsed_seconds": 3.325122,
+      "endpoint_id": "cytotoxicity",
+      "evidence_lane": "source_defined_binary",
+      "feature_route": "multimodal",
+      "low_confidence": true,
+      "model_family": "ExtraTreesClassifier",
+      "model_id": "v31-peptide18-cytotoxicity-multimodal-20260722",
+      "model_path": "models/cytotoxicity.joblib",
+      "model_sha256": "b2a89dc2c783a72096ac98b7f850be816de20019265096f0d20f1f6f265c5648",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "average_precision": 0.5604191502015158,
+        "balanced_accuracy": 0.5816532258064516,
+        "roc_auc": 0.7885269657258063
+      },
+      "oof_path": "oof/cytotoxicity.tsv",
+      "oof_sha256": "36e4bd5802211836b44d5357ac4d08334209993acb7fb31bc4508b7884384e5d",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "source_defined_cytotoxicity_score",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.32919922116399736,
+            "balanced_accuracy": 0.5776209677419355,
+            "roc_auc": 0.6146358366935483
+          },
+          "primary_score": -0.6146358366935483
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.44131769606390564,
+            "balanced_accuracy": 0.5582157258064516,
+            "roc_auc": 0.6969191028225806
+          },
+          "primary_score": -0.6969191028225806
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.5312943184983834,
+            "balanced_accuracy": 0.5950100806451613,
+            "roc_auc": 0.7603011592741936
+          },
+          "primary_score": -0.7603011592741936
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.5604191502015158,
+            "balanced_accuracy": 0.5816532258064516,
+            "roc_auc": 0.7885269657258063
+          },
+          "primary_score": -0.7885269657258063
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "classification",
+      "training_row_count": 312,
+      "unique_sequence_count": 141,
+      "unique_validation_group_count": 198,
+      "unit": "score_0_1",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "hemolysis": {
+      "condition": "human erythrocytes; >=20% hemolysis at 50 uM",
+      "elapsed_seconds": 22.646371,
+      "endpoint_id": "hemolysis",
+      "evidence_lane": "direct_source_resolved_binary",
+      "feature_route": "multimodal",
+      "low_confidence": false,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-hemolysis-multimodal-20260722",
+      "model_path": "models/hemolysis.joblib",
+      "model_sha256": "9d072a1240d0d8df4546053d86c281d7e9e42b2979b331df8f3c13b5bb8f4dd9",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "average_precision": 0.7394383374724104,
+        "balanced_accuracy": 0.7458055899937294,
+        "roc_auc": 0.8514819849791057
+      },
+      "oof_path": "oof/hemolysis.tsv",
+      "oof_sha256": "222230a3c0edb950fc891e40ff7f8fb8bdfc228af8111c97b42f1a201d8c90df",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "hemolytic_probability_at_50uM",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.6732016240471921,
+            "balanced_accuracy": 0.6781074534845315,
+            "roc_auc": 0.8084841964683188
+          },
+          "primary_score": -0.8084841964683188
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.7280779455432036,
+            "balanced_accuracy": 0.7314524505885338,
+            "roc_auc": 0.8359495043296363
+          },
+          "primary_score": -0.8359495043296363
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.5949970336792983,
+            "balanced_accuracy": 0.6493078325969681,
+            "roc_auc": 0.7603454135532697
+          },
+          "primary_score": -0.7603454135532697
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.7394383374724104,
+            "balanced_accuracy": 0.7458055899937294,
+            "roc_auc": 0.8514819849791057
+          },
+          "primary_score": -0.8514819849791057
+        }
+      ],
+      "source_count": 491,
+      "task_kind": "classification",
+      "training_row_count": 2012,
+      "unique_sequence_count": 1874,
+      "unique_validation_group_count": 333,
+      "unit": "probability",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only"
+      ]
+    },
+    "human_plasma_stability": {
+      "condition": "plasma_serum_stability semantics with explicit human plasma context; systemic terminal PK excluded",
+      "elapsed_seconds": 2.143989,
+      "endpoint_id": "human_plasma_stability",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "traditional",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-human_plasma_stability-traditional-20260722",
+      "model_path": "models/human_plasma_stability.joblib",
+      "model_sha256": "cf2e5a606ee5857b1876f7d5c1f776b8e7021ceb9c550dcbf2e7ce4a852afaf9",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.7081961061124736,
+        "r2": 0.15563338114790848,
+        "rmse": 0.9447163899124335
+      },
+      "oof_path": "oof/human_plasma_stability.tsv",
+      "oof_sha256": "ab29b4a1d159e546ff3feadd68565f8b6e2d6af30393d11d75b695601db965aa",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.5196638014432322,
+        "q90": 1.4420294841536248,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "human_plasma_stability_t1_2",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.7081961061124736,
+            "r2": 0.15563338114790848,
+            "rmse": 0.9447163899124335
+          },
+          "primary_score": 0.7081961061124736
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.7654033745929428,
+            "r2": 0.12919136898159855,
+            "rmse": 0.9593946330722534
+          },
+          "primary_score": 0.7654033745929428
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.8083138278651516,
+            "r2": -0.16101477830878608,
+            "rmse": 1.1077832548830022
+          },
+          "primary_score": 0.8083138278651516
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.7551836854886081,
+            "r2": 0.1347666937744436,
+            "rmse": 0.9563184544432718
+          },
+          "primary_score": 0.7551836854886081
+        }
+      ],
+      "source_count": 22,
+      "task_kind": "regression",
+      "training_row_count": 43,
+      "unique_sequence_count": 34,
+      "unique_validation_group_count": 37,
+      "unit": "log10(h)",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "intestinal_stability": {
+      "condition": "protease_intestinal_stability semantic family; not duplicated as protease_stability",
+      "elapsed_seconds": 10.860019,
+      "endpoint_id": "intestinal_stability",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-intestinal_stability-structure-20260722",
+      "model_path": "models/intestinal_stability.joblib",
+      "model_sha256": "db3c97bebd11b00cb4ff0f9c15469112e23c8d369a2aa7153e723847008e1786",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.42180410704639953,
+        "r2": 0.8141455454140752,
+        "rmse": 0.6106227884051537
+      },
+      "oof_path": "oof/intestinal_stability.tsv",
+      "oof_sha256": "ab37b3279c8411365b61229a82ba63dc467d5f57472488bb221c300405c395cc",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.2927470353037762,
+        "q90": 0.9316739671645148,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "intestinal_or_protease_stability_t1_2",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.4651262584965228,
+            "r2": 0.7446892061654329,
+            "rmse": 0.7156836713431335
+          },
+          "primary_score": 0.4651262584965228
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.5374420500903071,
+            "r2": 0.6730243393376484,
+            "rmse": 0.809923935365543
+          },
+          "primary_score": 0.5374420500903071
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.42180410704639953,
+            "r2": 0.8141455454140752,
+            "rmse": 0.6106227884051537
+          },
+          "primary_score": 0.42180410704639953
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.4491522229705622,
+            "r2": 0.787445509790285,
+            "rmse": 0.6530127526126579
+          },
+          "primary_score": 0.4491522229705622
+        }
+      ],
+      "source_count": 11,
+      "task_kind": "regression",
+      "training_row_count": 393,
+      "unique_sequence_count": 388,
+      "unique_validation_group_count": 388,
+      "unit": "log10(h)",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "membrane_retention": {
+      "condition": "single modified-peptide PAMPA series",
+      "elapsed_seconds": 0.575238,
+      "endpoint_id": "membrane_retention",
+      "evidence_lane": "direct_measured_structure_only",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-membrane_retention-structure-20260722",
+      "model_path": "models/membrane_retention.joblib",
+      "model_sha256": "36f2f12638e1548c91913b7e4ff2ecaf4b96a77d3711b27d11fd51366052bf16",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.1665333333333332,
+        "r2": -0.04992259043882208,
+        "rmse": 0.2040257686157785
+      },
+      "oof_path": "oof/membrane_retention.tsv",
+      "oof_sha256": "c375b9f1720803dbf5bcc5464a127daa463af472c63f971060812c9ac46fd916",
+      "output_transform": "clip_0_1",
+      "prediction_interval": {
+        "q50": 0.11176666666666651,
+        "q90": 0.35913333333333175,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "PAMPA_fraction_retained",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.1665333333333332,
+            "r2": -0.04992259043882208,
+            "rmse": 0.2040257686157785
+          },
+          "primary_score": 0.1665333333333332
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "regression",
+      "training_row_count": 12,
+      "unique_sequence_count": 0,
+      "unique_validation_group_count": 12,
+      "unit": "fraction_retained",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "very_small_training_cohort"
+      ]
+    },
+    "mouse_plasma_stability": {
+      "condition": "plasma_serum_stability semantics with explicit mouse plasma context; systemic PK, PPB and protease-condition rows excluded",
+      "elapsed_seconds": 1.864742,
+      "endpoint_id": "mouse_plasma_stability",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "ExtraTreesRegressor",
+      "model_id": "v31-peptide18-mouse_plasma_stability-structure-20260722",
+      "model_path": "models/mouse_plasma_stability.joblib",
+      "model_sha256": "c72b93f431664a5d2bf246f0499da06e2a697e098a9c23ee2d8151e95eb10d14",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.7442776131005189,
+        "r2": 0.009883176137954641,
+        "rmse": 0.9202275021694996
+      },
+      "oof_path": "oof/mouse_plasma_stability.tsv",
+      "oof_sha256": "80ed2e3134d5b400469ed391110fd167a9780d124f413e1efadb5dd1f42dc11a",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.5791201270194399,
+        "q90": 1.5206806317411872,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "mouse_plasma_stability_t1_2",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.75031071258771,
+            "r2": 0.012314882095396884,
+            "rmse": 0.919096777852455
+          },
+          "primary_score": 0.75031071258771
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.9040443605153454,
+            "r2": -0.35057187803740186,
+            "rmse": 1.0747583794039222
+          },
+          "primary_score": 0.9040443605153454
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.7442776131005189,
+            "r2": 0.009883176137954641,
+            "rmse": 0.9202275021694996
+          },
+          "primary_score": 0.7442776131005189
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.8790328352008377,
+            "r2": -0.31714175270703704,
+            "rmse": 1.061373516814105
+          },
+          "primary_score": 0.8790328352008377
+        }
+      ],
+      "source_count": 10,
+      "task_kind": "regression",
+      "training_row_count": 17,
+      "unique_sequence_count": 15,
+      "unique_validation_group_count": 16,
+      "unit": "log10(h)",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "overall_peptide_toxicity": {
+      "condition": "ToxinPred3-derived weak peptide benchmark",
+      "elapsed_seconds": 26.405611,
+      "endpoint_id": "overall_peptide_toxicity",
+      "evidence_lane": "weak_binary",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-overall_peptide_toxicity-esm_sequence-20260722",
+      "model_path": "models/overall_peptide_toxicity.joblib",
+      "model_sha256": "3922a30f0648e4f9a17054177ac35715c67235183268f72d09639d643cc410cb",
+      "modification_sensitive": false,
+      "oof_metrics": {
+        "average_precision": 0.9538704524877819,
+        "balanced_accuracy": 0.8814787966654585,
+        "roc_auc": 0.9471178118046826
+      },
+      "oof_path": "oof/overall_peptide_toxicity.tsv",
+      "oof_sha256": "48bdf121171997b12a013a8e65da6bebd217e9a083039e0a3c7e7e247112b5f4",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "weak_overall_toxicity_score",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9405515523693355,
+            "balanced_accuracy": 0.8636281261326568,
+            "roc_auc": 0.9331493910797848
+          },
+          "primary_score": -0.9331493910797848
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.9538704524877819,
+            "balanced_accuracy": 0.8814787966654585,
+            "roc_auc": 0.9471178118046826
+          },
+          "primary_score": -0.9471178118046826
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "classification",
+      "training_row_count": 11036,
+      "unique_sequence_count": 11036,
+      "unique_validation_group_count": 11036,
+      "unit": "score_0_1",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation",
+        "weak_benchmark_labels_not_direct_measurements"
+      ]
+    },
+    "permeability": {
+      "condition": "frozen dominant PAMPA task mlv1.permeability.regression.apparent_permeability.e74490767e77cabe",
+      "elapsed_seconds": 3.337134,
+      "endpoint_id": "permeability",
+      "evidence_lane": "direct_measured_structure_conditioned",
+      "feature_route": "structure",
+      "low_confidence": true,
+      "model_family": "LGBMRegressor",
+      "model_id": "v31-peptide18-permeability-structure-20260722",
+      "model_path": "models/permeability.joblib",
+      "model_sha256": "6ca09db5227b22a3852f3a9b841481bb5ab9e406dedde94d904c35564152c998",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "mae": 0.32515397742852103,
+        "r2": 0.6762382767551882,
+        "rmse": 0.4433184730313615
+      },
+      "oof_path": "oof/permeability.tsv",
+      "oof_sha256": "47a213b8d80571051bbe0388466083ac8361e6be531fc1432d0c8e4daee3c61e",
+      "output_transform": "identity",
+      "prediction_interval": {
+        "q50": 0.2433533212480672,
+        "q90": 0.7079174862910133,
+        "type": "development_OOF_absolute_error_quantiles"
+      },
+      "primary_output": "PAMPA_source_log10_permeability",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "mae": 0.32515397742852103,
+            "r2": 0.6762382767551882,
+            "rmse": 0.4433184730313615
+          },
+          "primary_score": 0.32515397742852103
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "regression",
+      "training_row_count": 6814,
+      "unique_sequence_count": 0,
+      "unique_validation_group_count": 6814,
+      "unit": "source_log10_permeability",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    },
+    "solubility": {
+      "condition": "source-defined solvent-conditioned binary benchmark",
+      "elapsed_seconds": 23.969739,
+      "endpoint_id": "solubility",
+      "evidence_lane": "source_defined_binary",
+      "feature_route": "esm_sequence",
+      "low_confidence": true,
+      "model_family": "LGBMClassifier",
+      "model_id": "v31-peptide18-solubility-esm_sequence-20260722",
+      "model_path": "models/solubility.joblib",
+      "model_sha256": "85f91424265fdacdebee33f7f95198038d96e141fc8f1c9f1926570f4f23a1e3",
+      "modification_sensitive": true,
+      "oof_metrics": {
+        "average_precision": 0.7107899868323673,
+        "balanced_accuracy": 0.5055927155441555,
+        "roc_auc": 0.6038196674917232
+      },
+      "oof_path": "oof/solubility.tsv",
+      "oof_sha256": "2f872821d9126f923205c3435f5ef8f073947e3941c2b41a747c012a62225ceb",
+      "output_transform": "identity",
+      "prediction_interval": null,
+      "primary_output": "source_defined_soluble_score",
+      "research_only": true,
+      "selected_route_candidates": [
+        {
+          "feature_route": "traditional",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.6988948411700423,
+            "balanced_accuracy": 0.5102838583897471,
+            "roc_auc": 0.5955676044759692
+          },
+          "primary_score": -0.5955676044759692
+        },
+        {
+          "feature_route": "esm_sequence",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.7107899868323673,
+            "balanced_accuracy": 0.5055927155441555,
+            "roc_auc": 0.6038196674917232
+          },
+          "primary_score": -0.6038196674917232
+        },
+        {
+          "feature_route": "structure",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.6988247052841692,
+            "balanced_accuracy": 0.5055136538625674,
+            "roc_auc": 0.5906217572357161
+          },
+          "primary_score": -0.5906217572357161
+        },
+        {
+          "feature_route": "multimodal",
+          "n_splits": 3,
+          "oof_metrics": {
+            "average_precision": 0.7105664501847383,
+            "balanced_accuracy": 0.5035793379482595,
+            "roc_auc": 0.6030982296472321
+          },
+          "primary_score": -0.6030982296472321
+        }
+      ],
+      "source_count": 1,
+      "task_kind": "classification",
+      "training_row_count": 2168,
+      "unique_sequence_count": 1337,
+      "unique_validation_group_count": 1337,
+      "unit": "score_0_1",
+      "validation_status": "not_validated",
+      "warnings": [
+        "internal_research_only",
+        "low_confidence",
+        "insufficient_external_validation"
+      ]
+    }
+  },
+  "esm_model_name": "facebook/esm2_t33_650M_UR50D",
+  "esm_revision": "08e4846e537177426273712802403f7ba8261b6c",
+  "feature_availability_counts": {
+    "esm": 23410,
+    "helm": 12265,
+    "rdkit": 7060,
+    "sequence": 23410,
+    "smiles": 7387
+  },
+  "feature_schema_sha256": "9a0419aa9a882ef0f8dc2a5e72562a524b19b4baa4be68c8c9792a46d48a0acd",
+  "frozen_inputs": {
+    "cases_sha256": "7569df3071f2727ff25af75131f91222dfd4594f4e720fae044a1891ecbc6db8",
+    "dataset_manifest_sha256": "22ea3f755fd3ffe7d8834d646721dfc93781387ccc35688a800853853af33627",
+    "esm_cache_manifest_sha256": "a514c7a06d95070ccfc97262376f7e7321abcd7b48b3b9789537736404d7048d",
+    "feature_cache_sha256": "6f992262239601761178e89faf204101d2a1f544e471531a0f5426e17d82d48b",
+    "registry_sha256": "dfe6447047495972968142459b40420974d0e3ea3ee35a826bc3de45b5a0e7c7"
+  },
+  "schema_version": "peptide_omnipanel_v31_peptide18_bundle_manifest_v1",
+  "scope": "internal_research_only",
+  "small_molecule_teacher_rows": 0,
+  "status": "pass",
+  "training_metrics_path": "training_metrics.tsv",
+  "training_metrics_sha256": "18c8cfa63dfce56468145bd5bc3dc3ce85f9359a79b3f010d34fcf811b03fa3b",
+  "validated_model_count": 0
+}
