@@ -197,6 +197,25 @@ python scripts/summarize_peptide_ml_cleaning_v1.py
 - 文献包整合审计：`docs/literature-data-v15-integration-audit-v1.md`
 - Mozi数据整合审计：`docs/mozi-v15-integration-audit-v1.md`
 
+## Peptide OmniPanel V31 科研网站
+
+`agent/v31-peptide18` 分支同时发布 V31 肽类 18 端点网站的公开安全代码与说明：
+
+- 四页面中文界面：序列输入、预测面板、历史任务、网站与结果说明；
+- ESM2-650M 常驻编码器与 18 个本地预测头的运行时接口；
+- 单条/多条/FASTA/CSV/TSV 输入与 JSON/TSV/ZIP 导出；
+- 浏览器级隔离、最多 50 个批次的本地历史和结果恢复；
+- 主结果页证据标记降噪，原始 JSON 仍保留 `research_only`、`low_confidence` 和 `validation_status`；
+- V31 相关测试、部署记录和真实浏览器截图。
+
+入口文档：
+
+- `docs/peptide_omnipanel_v31_web_history_and_evidence_20260723.md`
+- `docs/peptide_omnipanel_v31_web_deployment_20260723.md`
+- `docs/peptide_omnipanel_v31_web_batch_chinese_upgrade_20260723.md`
+
+公开仓库**不包含**训练模型权重、Hugging Face 模型缓存、用户提交序列、浏览器历史、运行日志或临时导出。网站源码需要本地 V31 bundle 才能执行真实预测；公开的 bundle manifest、端点注册表和示例预测用于审计接口与证据合同。
+
 ## Citation
 
 如使用本仓库，请同时引用具体数据行中的原始 DOI/PMID/数据库来源，并记录所用commit hash、`task_id`、过滤规则和数据分区。

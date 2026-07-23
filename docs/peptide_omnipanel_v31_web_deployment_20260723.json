@@ -1,0 +1,211 @@
+{
+  "api_exposed": false,
+  "artifact_sha256": {
+    "models/peptide_omnipanel_v31/release_peptide18_a3_20260722/bundle_manifest.json": "f270039d5cf399542fbe976fcb95fb3ecd150813751e625b9ce4d327e910f743",
+    "scripts/run_local_peptide_omnipanel_v31_web.sh": "0c46d346392aa973d7a6cd555b778121c0cbc2692d5a8903e64d8e473c7a725a",
+    "scripts/run_peptide_omnipanel_v31_web.py": "2afdc13a8905e3c6fa6264bed913faefeaad5c301242aa9f96fe5aa7326c88ff",
+    "src/peptide_omnipanel/v31_web.py": "4c96d6cd3fef12a2ce37e6c7906e1f103562be236e45a6c19fd195e5934e1977",
+    "src/peptide_omnipanel/v31_web_batch.py": "c7faf4ddf4c6b6048a65c3036c5f3fa05465dec6cf60b498dbb30a9e42da0779",
+    "src/peptide_omnipanel/v31_web_history.py": "7135e5632db5ab5d682c9e0cffbeeaa0c863fac850a3c78f9c5bebb036c9ed66",
+    "src/peptide_omnipanel/v31_web_runtime.py": "0b51217f4b7be4849294cff947235d8fb661630b35b13a35673069e989c9864b",
+    "tests/test_peptide_omnipanel_v31_web.py": "25abcb94d3939af55e09124f1f468df4efbb5dfe8e0ae2ed8708af75b18878a1",
+    "tests/test_peptide_omnipanel_v31_web_history.py": "00a53fce4a99b503b17778dfdf975108b867d2da49559d3da239451b16d41033"
+  },
+  "auto_navigate_to_prediction_page": true,
+  "batch": {
+    "aggregate_rows_per_completed_sequence": 18,
+    "duplicate_sequence_cache_within_batch": true,
+    "exports": [
+      "JSON",
+      "TSV",
+      "ZIP_with_individual_JSON"
+    ],
+    "file_formats": [
+      "FASTA",
+      "FA",
+      "FAA",
+      "TXT",
+      "CSV",
+      "TSV"
+    ],
+    "live_task_panel": true,
+    "max_upload_bytes": 1000000,
+    "max_valid_sequences": 32,
+    "per_sequence_selector": true,
+    "text_modes": [
+      "single_sequence",
+      "one_sequence_per_line",
+      "name_tab_sequence",
+      "FASTA"
+    ]
+  },
+  "checks": {
+    "browser_state_component_count": 1,
+    "fake_event_chain": {
+      "aggregate_rows": 36,
+      "auto_tab_update": "prediction",
+      "export_files": 3,
+      "status": "pass",
+      "two_sequence_yield_count": 6
+    },
+    "gradio_title": "Peptide OmniPanel V31 肽类端点预测",
+    "history_unit_contracts": [
+      "owner_isolation",
+      "atomic_save_load",
+      "newest_first",
+      "retention_limit",
+      "unsafe_batch_id_rejected"
+    ],
+    "local_http_status": 200,
+    "predict_api_exposed": false,
+    "public_http_status": 200,
+    "py_compile": "pass",
+    "real_gpu_batch_smoke": {
+      "aggregate_rows": 36,
+      "endpoint_counts": [
+        18,
+        18
+      ],
+      "job_elapsed_seconds": [
+        2.783873171079904,
+        0.36362811096478254
+      ],
+      "result_count": 2,
+      "status": "pass",
+      "task_count": 2,
+      "validated_counts": [
+        0,
+        0
+      ]
+    },
+    "ruff": "pass",
+    "selenium_public_e2e": {
+      "contains_batch_complete": true,
+      "contains_chinese_research_only": true,
+      "endpoint_card_count": 18,
+      "selected_tabs": [
+        "② 预测面板",
+        "端点概览"
+      ],
+      "status": "pass"
+    },
+    "selenium_public_file_upload": {
+      "auto_prediction_page": true,
+      "file": "public_upload_test.fasta",
+      "file_source_visible": true,
+      "status": "pass",
+      "task_names": [
+        "uploaded_A",
+        "uploaded_B"
+      ]
+    },
+    "selenium_public_history_and_evidence": {
+      "about_definitions_visible": [
+        "低置信度",
+        "仅供科研",
+        "未独立验证"
+      ],
+      "endpoint_card_count": 18,
+      "history_open_restores_prediction": true,
+      "history_sequences_visible": [
+        "历史测试肽A",
+        "历史测试肽B"
+      ],
+      "history_survives_browser_reload": true,
+      "main_cards_warning_free": true,
+      "screenshots": [
+        "docs/assets/peptide_omnipanel_v31_history_page_20260723.png",
+        "docs/assets/peptide_omnipanel_v31_about_page_20260723.png"
+      ],
+      "status": "pass",
+      "submitted_sequence_count": 2,
+      "url": "https://3ea53ebc88ba6b8cb5.gradio.live"
+    },
+    "targeted_tests": "19 passed",
+    "top_level_page_count": 4,
+    "ui_component_count": 73,
+    "ui_dependency_count": 11,
+    "visual_screenshots": [
+      ".omx/web_validation/v31_batch_input_page.png",
+      ".omx/web_validation/v31_batch_prediction_page.png"
+    ]
+  },
+  "device": "NVIDIA GeForce RTX 5080",
+  "dynamic_prediction_count_per_sequence": 18,
+  "encoder": "facebook/esm2_t33_650M_UR50D",
+  "encoder_revision": "08e4846e537177426273712802403f7ba8261b6c",
+  "endpoint_count_per_sequence": 18,
+  "evidence_paths": [
+    ".omx/logs/peptide_v31_web_20260723.log",
+    ".omx/web_validation/selenium_history_evidence_ui.log",
+    "docs/assets/peptide_omnipanel_v31_history_page_20260723.png",
+    "docs/assets/peptide_omnipanel_v31_about_page_20260723.png",
+    ".omx/web_validation/gradio_config_history_final.json",
+    ".omx/web_validation/local_headers_history_final.txt",
+    ".omx/web_validation/public_headers_history_final.txt",
+    "docs/peptide_omnipanel_v31_web_history_and_evidence_20260723.md"
+  ],
+  "generated_at": "2026-07-23T09:39:42+08:00",
+  "history": {
+    "account_authentication": false,
+    "atomic_write": "temporary_file_then_os.replace",
+    "browser_state_storage_key": "peptide_omnipanel_v31_browser_owner",
+    "enabled": true,
+    "isolation_level": "browser_level_not_account_level",
+    "normal_web_cross_browser_listing": false,
+    "owner_namespace": "sha256(browser_owner)[:32]",
+    "raw_owner_token_written_to_disk": false,
+    "restores": [
+      "batch_summary",
+      "task_progress",
+      "task_table",
+      "sequence_selector",
+      "18_endpoint_panel",
+      "figure",
+      "raw_json",
+      "exports"
+    ],
+    "retention_batches_per_browser": 50,
+    "storage_root": ".omx/web_history/v31",
+    "temporary_public_origin_limit": "new_gradio_share_domain_does_not_inherit_old_origin_localStorage"
+  },
+  "launch_date": "2026-07-23",
+  "local_url": "http://127.0.0.1:7860",
+  "primary_result_evidence_display": "deemphasized_with_neutral_explanation_link",
+  "process_id": 1652033,
+  "public_link_expiry": "approximately_one_week_from_launch",
+  "public_tunnel": "gradio_share",
+  "public_url": "https://3ea53ebc88ba6b8cb5.gradio.live",
+  "queue_concurrency": 1,
+  "queue_max_size": 8,
+  "raw_evidence_fields_retained": [
+    "research_only",
+    "low_confidence",
+    "validation_status",
+    "insufficient_validation",
+    "warnings"
+  ],
+  "runtime_python": "/root/.venvs/peptide-omnipanel-v31-web311-20260723/bin/python",
+  "schema_version": "peptide_omnipanel_v31_web_deployment_v3_history_evidence_layers",
+  "scope": "internal_research_only",
+  "status": "running_verified",
+  "tmux_session": "peptide_v31_web_20260723",
+  "ui_component_count": 73,
+  "ui_dependency_count": 11,
+  "ui_language": "Chinese-first; technical proper nouns retained",
+  "validated_prediction_count_per_sequence": 0,
+  "warnings": [
+    "证据状态已从主预测卡片降噪，但原始 JSON 与说明页仍完整保留",
+    "18 个端点当前均未通过独立外部验证",
+    "裸序列被假设为未修饰线性天然 L-氨基酸肽",
+    "历史隔离是浏览器级而非账号级，公网未认证，不应提交敏感未公开序列",
+    "新 Gradio 临时公网域名不会自动继承旧域名的浏览器本地历史标识",
+    "公网链接会在隧道停止或服务商时限后失效"
+  ],
+  "workflow_pages": [
+    "① 序列输入",
+    "② 预测面板",
+    "③ 历史任务",
+    "④ 网站与结果说明"
+  ]
+}
