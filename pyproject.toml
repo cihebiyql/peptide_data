@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peptide-omnipanel"
+version = "0.2.0"
+description = "Sequence-first peptide ADMET endpoint panel"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "joblib>=1.4,<2",
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  "scikit-learn>=1.4,<2",
+]
+
+[project.optional-dependencies]
+chem = ["rdkit>=2024.3"]
+gpu = ["torch>=2.6"]
+plm = ["torch>=2.6", "transformers>=4.45,<5"]
+service = ["fastapi>=0.115", "pydantic>=2.10", "uvicorn>=0.34"]
+pk = ["gpytorch>=1.14", "pyro-ppl>=1.9"]
+dev = ["pytest>=8", "ruff>=0.11"]
+web = [
+    "gradio>=5.49,<6",
+    "lightgbm>=4.6,<4.7",
+    "plotly>=6,<7",
+    "rdkit>=2024.3",
+    "torch>=2.6",
+    "transformers>=4.45,<5",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
