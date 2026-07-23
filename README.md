@@ -210,6 +210,7 @@ python scripts/summarize_peptide_ml_cleaning_v1.py
 
 入口文档：
 
+- `docs/peptide_omnipanel_v31_latest_model_architecture_training_results_20260723.md`（最新模型架构、输入合同、训练方法、18 端点逐项 OOF 结果与候选路线比较）
 - `docs/peptide_omnipanel_v31_web_history_and_evidence_20260723.md`
 - `docs/peptide_omnipanel_v31_web_deployment_20260723.md`
 - `docs/peptide_omnipanel_v31_web_batch_chinese_upgrade_20260723.md`
