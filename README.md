@@ -22,6 +22,14 @@
 | 唯一 identity group | 14,374 |
 | 唯一 selected representation | 14,869 |
 
+## Current Project Status
+
+The maintained status ledger is [`PROJECT_PROGRESS.md`](PROJECT_PROGRESS.md), with a release-safe documentation map in [`docs/README.md`](docs/README.md).
+
+Current V31 status must be stated in full: `bundle verified / 18 dynamic / 0 independently validated / internal_research_only`. The repository contains public-safe code and evidence contracts, not model weights or a production service.
+
+The retained `data/peptide_pk_literature_round1/audit_report.json` contains aggregate audit checks and counts only. Its underlying literature candidate tables, full-text caches, and restricted source materials are not included in this public release.
+
 ### Strict Numeric Endpoints
 
 | Endpoint | Rows |
@@ -191,6 +199,8 @@ python scripts/summarize_peptide_ml_cleaning_v1.py
 
 ## Documentation
 
+- 当前项目进展与验证边界：`PROJECT_PROGRESS.md`
+- 发布文档索引：`docs/README.md`
 - 清洗步骤1-6：`docs/peptide-ml-cleaning-v1.md`
 - 全端点/序列/数值分布：`docs/peptide-ml-cleaning-v1-statistical-distributions.md`
 - V15总发布审计：`docs/peptide-cyclic-peptide-property-expansion-v15.md`
