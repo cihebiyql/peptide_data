@@ -25,6 +25,11 @@ def main() -> int:
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=7860)
+    parser.add_argument(
+        "--root-path",
+        default="",
+        help="Public base path when served behind a reverse proxy, e.g. /peptide-omnipanel",
+    )
     parser.add_argument("--share", action="store_true")
     parser.add_argument("--export-dir", type=Path, default=ROOT / ".omx/web_exports/v31")
     parser.add_argument("--history-dir", type=Path, default=ROOT / ".omx/web_history/v31")
@@ -53,6 +58,7 @@ def main() -> int:
     demo.launch(
         server_name=args.host,
         server_port=args.port,
+        root_path=args.root_path or None,
         share=args.share,
         show_api=False,
         show_error=True,
