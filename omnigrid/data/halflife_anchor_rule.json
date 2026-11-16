@@ -1,0 +1,9 @@
+{
+ "rule": "diacid>=16 weekly 120-168h; diacid 12-15 depot 25h; monoacyl>=14 daily 5-13h; else ML",
+ "weekly_anchors": [
+  "dulaglutide 120h",
+  "efpeglenatide 160h",
+  "albiglutide 168h"
+ ],
+ "note": "semaglutide/tirzepatide labels NOT used in anchoring (held out)"
+}
