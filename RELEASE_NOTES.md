@@ -47,3 +47,11 @@
 - Kp has zero rows;
 - Most F/CL/Vd tasks are too small for independent modeling;
 - Binary endpoints are weak, derived, source-defined or positive-unlabeled, not strict experimental binary.
+
+## 2026-11-16 · OmniGrid V32 全端点平台
+
+- 新增 `omnigrid/`：55 端点修饰感知预测平台（序列 + 完整 SMILES 输入，3-seed 一致模型，
+  17 组冻结化学表示，半衰期机制锚定层 12/12 外部验证）
+- 三层部署：node2 Gradio（ESM2-650M @ 第二块 RTX 4090）⇄ node1 隧道 ⇄ node23 推理服务
+- 特征引擎与冻结合同 SHA256 字节级一致；PPB 端到端复现 0.9934/0.9933
+- 详见 `omnigrid/README.md` 与 `omnigrid/docs/architecture.md`
