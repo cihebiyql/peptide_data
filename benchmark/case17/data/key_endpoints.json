@@ -1,0 +1,882 @@
+{
+ "Bivalirudin": {
+  "CL_per_kg": {
+   "value": "0.2342",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "5.992e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.542",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3165",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "2.783e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.4477",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "21.59",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "587.2",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Caspofungin": {
+  "CL_per_kg": {
+   "value": "0.1782",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "1.543e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.512",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3605",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "7.237e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.8705",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "161.8",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "613.7",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Cyclosporine_A": {
+  "CL_per_kg": {
+   "value": "5.103",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "2.15e-06",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "4.661",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3481",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "1.287e-06",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.9251",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "123.0",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "369.6",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Daptomycin": {
+  "CL_per_kg": {
+   "value": "0.1535",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "9.147e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "0.8409",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.398",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "4.643e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.869",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "23.58",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "152.3",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Exenatide": {
+  "CL_per_kg": {
+   "value": "0.2067",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "5.722e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.655",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "1.474",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "2.11e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.6611",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "155.7",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "460.1",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Glucagon": {
+  "CL_per_kg": {
+   "value": "0.195",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "6.802e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.018",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.356",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "1.818e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.8318",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "83.58",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "153.7",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Insulin_degludec": {
+  "CL_per_kg": {
+   "value": "0.2334",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "6.135e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "-0.3927",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3187",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "2.653e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.9208",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "half_life_anchor": {
+   "value": "25.0",
+   "unit": "h (文献锚定范围)",
+   "range": "25-25",
+   "kind": "mechanism"
+  },
+  "hemolysis_HC50": {
+   "value": "44.26",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "537.1",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Insulin_detemir": {
+  "CL_per_kg": {
+   "value": "0.2334",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "6.383e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "0.03944",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3179",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "2.54e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.9132",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "half_life_anchor": {
+   "value": "9.0",
+   "unit": "h (文献锚定范围)",
+   "range": "5-13",
+   "kind": "mechanism"
+  },
+  "hemolysis_HC50": {
+   "value": "44.26",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "480.1",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Leuprolide": {
+  "CL_per_kg": {
+   "value": "1.03",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "5.555e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "2.583",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3543",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "3.519e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.4907",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "395.0",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "727.8",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Linaclotide": {
+  "CL_per_kg": {
+   "value": "0.3875",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "8.724e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "-0.111",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3093",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "1.792e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.5851",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "12.86",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "644.3",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Liraglutide": {
+  "CL_per_kg": {
+   "value": "0.201",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "5.306e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.747",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3171",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "7.951e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.7787",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "half_life_anchor": {
+   "value": "9.0",
+   "unit": "h (文献锚定范围)",
+   "range": "5-13",
+   "kind": "mechanism"
+  },
+  "hemolysis_HC50": {
+   "value": "58.33",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "150.5",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Octreotide": {
+  "CL_per_kg": {
+   "value": "1.799",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "3.17e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "2.328",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3523",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "9.21e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.6905",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "538.1",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "219.0",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Oxytocin": {
+  "CL_per_kg": {
+   "value": "1.446",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "1.402e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.719",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3493",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "4.512e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.3579",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "784.8",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "688.8",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Semaglutide": {
+  "CL_per_kg": {
+   "value": "0.2029",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "6.638e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.627",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3593",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "8.43e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.9934",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "half_life_anchor": {
+   "value": "144.0",
+   "unit": "h (文献锚定范围)",
+   "range": "120-168",
+   "kind": "mechanism"
+  },
+  "hemolysis_HC50": {
+   "value": "79.47",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "168.1",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Teriparatide": {
+  "CL_per_kg": {
+   "value": "0.2287",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "1.105e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "1.38",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3246",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "2.315e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.6514",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "103.5",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "165.5",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Tirzepatide": {
+  "CL_per_kg": {
+   "value": "0.2016",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "4.967e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "2.049",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "1.33",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "1.34e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.9911",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "half_life_anchor": {
+   "value": "144.0",
+   "unit": "h (文献锚定范围)",
+   "range": "120-168",
+   "kind": "mechanism"
+  },
+  "hemolysis_HC50": {
+   "value": "120.6",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "468.9",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ },
+ "Ziconotide": {
+  "CL_per_kg": {
+   "value": "0.2425",
+   "unit": "mL/min/kg",
+   "range": "",
+   "kind": "regression"
+  },
+  "Caco2": {
+   "value": "9.25e-08",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "LogD7.4": {
+   "value": "0.8962",
+   "unit": "dimensionless_log10",
+   "range": "",
+   "kind": "regression"
+  },
+  "MIC": {
+   "value": "0.3373",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "PAMPA": {
+   "value": "1.169e-07",
+   "unit": "cm/s",
+   "range": "",
+   "kind": "regression"
+  },
+  "PPB": {
+   "value": "0.4984",
+   "unit": "fraction_bound",
+   "range": "",
+   "kind": "regression"
+  },
+  "hemolysis_HC50": {
+   "value": "18.4",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  },
+  "solubility": {
+   "value": "150.3",
+   "unit": "uM",
+   "range": "",
+   "kind": "regression"
+  }
+ }
+}

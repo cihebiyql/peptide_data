@@ -1,0 +1,18 @@
+name	half_life_ref	half_life_source	ppb_ref	ppb_source
+Leuprolide	~3 h (2.9-3 h, 二室模型)	FDA LUPRON 说明书 (accessdata 019732s045)	43-49%	FDA LUPRON 说明书 (体外人血浆蛋白结合)
+Bivalirudin	~25 min (肾功能正常)	FDA ANGIOMAX 说明书 (020873)	~0% (不与血浆蛋白/红细胞结合)	FDA ANGIOMAX 说明书
+Glucagon	8-18 min (说明书; 文献 IV 亦有 3-6 min)	GlucaGen FDA 说明书 (020928); Drugs.com PI	低/未明确报道 (非酰化 29 肽)	文献共识 (FDA 综述未见定量值)
+Teriparatide	IV ~5 min; SC ~1 h	FDA FORTEO 说明书 (021318)	~0% (无明显结合)	Medscape 药物专题 (非 FDA 标注)
+Exenatide	2.4 h (末端半衰期)	FDA BYETTA 说明书 (021773, 2024)	~53%	FDA BYETTA 说明书
+Liraglutide	~13 h (SC)	FDA VICTOZA 说明书 (022341)	>98% (白蛋白)	FDA VICTOZA 说明书; Plum 2013
+Semaglutide	~1 周 (~165-168 h)	FDA OZEMPIC 说明书 (209637)	>99% (白蛋白)	FDA OZEMPIC 说明书/ClinPharm 综述
+Tirzepatide	~5 天 (~125 h)	FDA MOUNJARO 说明书 (215866)	~96% (血浆白蛋白)	FDA MOUNJARO 说明书 §12.3
+Cyclosporine_A	~8.4 h (5-18 h)	FDA NEORAL/SANDIMMUNE 说明书 (050715)	~90% (主要脂蛋白)	FDA NEORAL 说明书
+Oxytocin	3-5 min (标签亦见 1-6 min)	FDA PITOCIN 说明书 (018261); DailyMed	轻度/未定量报道	— (标签未报告)
+Octreotide	1.7-1.9 h (SC/IV)	FDA SANDOSTATIN 说明书 (019667)	~65% (脂蛋白+白蛋白)	FDA SANDOSTATIN 说明书
+Linaclotide	血浆低于定量限 无法计算 (肠道局部作用)	FDA LINZESS 说明书 (202811)	n/a (无全身暴露)	FDA LINZESS 说明书
+Ziconotide	鞘内 CSF ~4.6 h (2.9-6.5 h); 血浆 ~1.3 h(旧标签)	FDA PRIALT 说明书 (021060)	~50%	PRIALT 说明书 (2011 版)
+Daptomycin	~8 h (8-9 h)	FDA CUBICIN 说明书 (021572); StatPearls	90-93% (~92%)	FDA CUBICIN 说明书
+Caspofungin	β 相 9-11 h (γ 相 40-50 h)	FDA CANCIDAS 说明书 (021227)	~97%	FDA CANCIDAS 说明书
+Insulin_detemir	5-7 h (剂量依赖)	FDA LEVEMIR 说明书 (021536)	>98% (~99%, 白蛋白)	FDA LEVEMIR 说明书
+Insulin_degludec	~25 h (稳态 剂量无关)	FDA TRESIBA 说明书 (203314)	>99% (白蛋白)	FDA TRESIBA 说明书
