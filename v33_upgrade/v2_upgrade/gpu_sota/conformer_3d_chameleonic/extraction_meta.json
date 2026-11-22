@@ -1,0 +1,47 @@
+{
+  "n_unique_tier1_valid_smiles": 11002,
+  "chameleonic_3d": {
+    "n_valid": 10450,
+    "coverage_pct": 94.98,
+    "dim": 29,
+    "feature_names": [
+      "log1p_pmi1_mean",
+      "log1p_pmi2_mean",
+      "log1p_pmi3_mean",
+      "npr1_mean",
+      "npr2_mean",
+      "npr_sum_mean",
+      "rg_mean",
+      "rg_min",
+      "rg_std",
+      "rg_norm_mw",
+      "asphericity_mean",
+      "eccentricity_mean",
+      "isf_mean",
+      "spherocity_mean",
+      "spherocity_std",
+      "pbf_mean",
+      "imhb_min",
+      "imhb_mean",
+      "imhb_max",
+      "imhb_spread",
+      "imhb_per_hbd",
+      "imhb_max_per_hbd",
+      "exposed_hbd_min",
+      "psa3d_min",
+      "psa3d_mean",
+      "psa3d_spread",
+      "psa3d_to_tpsa_ratio",
+      "exposed_polar_frac_mean",
+      "valid_3d"
+    ],
+    "batch_extract_sec": 4505.61,
+    "live_cpu_latency_ms_median": 708.72,
+    "live_cpu_latency_ms_mean": 1360.12,
+    "live_cpu_latency_ms_p90": 2823.2
+  },
+  "unimol2_84m": {
+    "status": "deferred_vram_ram_ceiling",
+    "reason": "Verified load & forward pass on local RTX 5080 (100-mol length-sorted bf16 probe: 40.3 mol/s, 2.6 GiB active alloc; first 1,500 cyclic peptides extracted cleanly), but variable-length O(B*L^2*128) 4D pair tensors fragmented PyTorch WDDM reserved VRAM to 15.8/16.3 GiB and 24.2 GB host RAM commit on 80-128 atom macrocycles. Deferred cleanly under strict local stability guardrails (<=9 GB VRAM, <=65% RAM), occupied node1 4090s, and node2-CPU-portability requirement."
+  }
+}

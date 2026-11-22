@@ -29,6 +29,8 @@ from .drug_library import (
 from .job_store import JobManager
 from .schemas import (
     AssayConditions,
+    AtomAttributionRequest,
+    AtomAttributionResponse,
     BatchParseResponse,
     BatchPredictRequest,
     BatchPredictResponse,
@@ -39,6 +41,7 @@ from .schemas import (
     PredictResponse,
     RenderSvgRequest,
     RenderSvgResponse,
+    TopAtomContribution,
 )
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -179,6 +182,38 @@ def post_render_svg(req: RenderSvgRequest) -> RenderSvgResponse:
         height=req.height,
         highlights=highlights,
         modifications=modifications,
+    )
+
+
+@app.post("/api/v1/atom-attribution", response_model=AtomAttributionResponse, tags=["Interpretability"])
+def post_atom_attribution(req: AtomAttributionRequest) -> AtomAttributionResponse:
+    """Compute live Pure-PyTorch E-GAT + WeightAndSum per-atom attribution heatmap SVG (<100 ms CPU)."""
+    try:
+        resolved = adapter.resolve_query(query=req.query, sequence=req.sequence, smiles=req.smiles)
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    res = adapter.compute_atom_attribution(
+        resolved=resolved,
+        endpoint=req.endpoint,
+        width=req.width,
+        height=req.height,
+    )
+    if res is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Live GNN atom attribution engine is not loaded on this instance.",
+        )
+    return AtomAttributionResponse(
+        svg=res["svg"],
+        endpoint=res["endpoint"],
+        endpoint_label=res["endpoint_label"],
+        n_atoms=res["n_atoms"],
+        latency_ms=res["latency_ms"],
+        cache_hit=res["cache_hit"],
+        gnn_prediction=res["gnn_prediction"],
+        top_atoms=[TopAtomContribution(**a) for a in res["top_atoms"]],
+        available_endpoints=res["available_endpoints"],
     )
 
 

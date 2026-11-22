@@ -124,6 +124,45 @@ class RenderSvgResponse(BaseModel):
     modifications: list[ModificationBadge] = Field(default_factory=list)
 
 
+class AtomAttributionRequest(BaseModel):
+    """Request live Pure-PyTorch E-GAT per-atom attribution heatmap SVG for one endpoint."""
+
+    query: Optional[str] = Field(
+        default=None,
+        description="Drug name, canonical 20-AA sequence, or SMILES.",
+    )
+    sequence: Optional[str] = Field(default=None)
+    smiles: Optional[str] = Field(default=None)
+    endpoint: str = Field(
+        default="PAMPA",
+        description="Target GNN attribution endpoint (PAMPA, Caco2, hemolysis_cls, hemolysis_HC50, overall_peptide_toxicity, cytotoxicity_cls, cytotoxicity_CC50, half_life_reg).",
+    )
+    width: int = Field(default=760, ge=320, le=1600)
+    height: int = Field(default=460, ge=240, le=1200)
+
+
+class TopAtomContribution(BaseModel):
+    """Top contributing heavy atom entry for attribution transparency."""
+
+    atom_index: int
+    symbol: str
+    weight: float
+
+
+class AtomAttributionResponse(BaseModel):
+    """Live per-atom GNN attribution heatmap response (Pure-PyTorch E-GAT WeightAndSum)."""
+
+    svg: str
+    endpoint: str
+    endpoint_label: str
+    n_atoms: int
+    latency_ms: float
+    cache_hit: bool = False
+    gnn_prediction: Optional[dict[str, Any]] = None
+    top_atoms: list[TopAtomContribution] = Field(default_factory=list)
+    available_endpoints: list[str] = Field(default_factory=list)
+
+
 class PhysChemSummary(BaseModel):
     """Computed physicochemical descriptors strip."""
 
@@ -254,6 +293,9 @@ class PredictResponse(BaseModel):
     modifications: list[ModificationBadge] = Field(default_factory=list)
     svg: Optional[str] = None
     svg_highlights: list[HighlightLegendItem] = Field(default_factory=list)
+    atom_attribution_svg: Optional[str] = None
+    atom_attribution_endpoint: Optional[str] = None
+    atom_attribution_endpoints: list[str] = Field(default_factory=list)
     mechanism_anchor: MechanismAnchor
     radar: list[RadarAxis] = Field(default_factory=list)
     predictions: list[EndpointPrediction] = Field(default_factory=list)

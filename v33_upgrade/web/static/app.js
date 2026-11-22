@@ -1,14 +1,26 @@
 /**
- * Peptide OmniPanel 1.0 — Frontend SPA Controller
+ * Peptide OmniPanel 1.1 — Frontend SPA Controller
  * Features:
+ *  - Atmospheric DeepSeek-Harness Hero, Procedural Molecular Canvas & Scroll Reveals
+ *  - 4 Clinical Modality Showcase Cards, Interactive Human ADMET Barrier Map & 4-FM Animated Pipeline
+ *  - Interactive 17 Clinical Cases Parity Chart & Plan B Atom-Attribution Toggle Hook
  *  - Full Bilingual (中文 / English) & Light / Dark Theme switching
  *  - Dedicated Persistent Task Center with real-time chunked progress, column presets & exports
  *  - Seamless Batch/Task <-> Compound Detail navigation (0ms cached drill-down, Back, Prev/Next, Jump, Esc/Arrows/Browser Back)
- *  - Zero internal codenames (no V32/V33) and clean neutral benchmark naming
  */
 
-import { buildIntervalBarHtml, escapeHtml, renderAdmetRadar, renderBatchRadarOverlay } from "./charts.js?v=1.0";
-import { applyStaticI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.0";
+import { buildIntervalBarHtml, escapeHtml, renderAdmetRadar, renderBatchRadarOverlay, renderCase17ParityChart } from "./charts.js?v=1.2";
+import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.2";
+import {
+  animateKpiValue,
+  initHeroMolecularCanvas,
+  initScrollReveals,
+  loadInlineSvgAsset,
+  renderAdmetHotspotDetail,
+  renderModTemplateGrid,
+  setHeroCanvasPaused,
+  syncAdmetSvgStats,
+} from "./visuals.js?v=1.2";
 
 const API_BASE = (() => {
   const p = window.location.pathname || "/";
@@ -152,8 +164,26 @@ const state = {
   valTier: "all",
   valDomain: "all",
   valSearch: "",
+  // v1.2 Interactive Visuals & Live GNN Atom Attribution
+  activeHotspot: "pk",
+  c17Mode: "hybrid",
+  svgViewMode: "motifs",
+  attrEndpoint: "PAMPA",
+  attrSvgCache: new Map(),
+  attrLoading: false,
   // API snippets
   codeLang: "curl",
+};
+
+const ATTR_ENDPOINT_LABELS = {
+  PAMPA: { zh: "PAMPA", en: "PAMPA" },
+  Caco2: { zh: "Caco-2", en: "Caco-2" },
+  hemolysis_cls: { zh: "溶血风险", en: "Hemolysis" },
+  hemolysis_HC50: { zh: "HC50", en: "HC50" },
+  overall_peptide_toxicity: { zh: "综合毒性", en: "Toxicity" },
+  cytotoxicity_cls: { zh: "细胞毒", en: "Cytotox" },
+  cytotoxicity_CC50: { zh: "CC50", en: "CC50" },
+  half_life_reg: { zh: "半衰期 T½", en: "Half-Life" },
 };
 
 // ==================== BOOTSTRAP ====================
@@ -161,15 +191,183 @@ document.addEventListener("DOMContentLoaded", async () => {
   initThemeAndLang();
   wireNavigation();
   wirePredictWorkspace();
+  wireLandingVisuals();
   wireBatchWorkspace();
   wireTasksWorkspace();
   wireValidationWorkspace();
   wireApiWorkspace();
   wireSvgModal();
   wireGlobalShortcutsAndHistory();
+  initHeroMolecularCanvas();
+  initScrollReveals();
 
-  await Promise.all([loadHealth(), loadExamples(), refreshJobsList({ autoSelectFirst: true })]);
+  await Promise.all([
+    loadHealth(),
+    loadExamples(),
+    loadEndpointsCatalog(),
+    initInlineScientificSvgs(),
+    refreshJobsList({ autoSelectFirst: true }),
+  ]);
 });
+
+// ==================== v1.1 LANDING VISUALS, ADMET MAP & C17 BENCHMARK ====================
+function wireLandingVisuals() {
+  // 4 Featured Modality Cards -> 1-click live prediction
+  document.querySelectorAll(".modality-card").forEach((card) => {
+    const launch = () => {
+      const q = card.dataset.modalityQuery;
+      if (q) runExampleQuery(q);
+    };
+    card.addEventListener("click", launch);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        launch();
+      }
+    });
+  });
+
+  // Quick Modification Template Helper toggle
+  const modBtn = document.getElementById("btn-toggle-modhelper");
+  const modPanel = document.getElementById("mod-template-panel");
+  modBtn?.addEventListener("click", () => {
+    const isHidden = modPanel.classList.toggle("hidden");
+    modBtn.setAttribute("aria-expanded", String(!isHidden));
+    if (!isHidden) {
+      document.getElementById("example-library-panel")?.classList.add("hidden");
+      document.getElementById("btn-toggle-exlib")?.setAttribute("aria-expanded", "false");
+      document.getElementById("advanced-panel")?.classList.add("hidden");
+      document.getElementById("btn-toggle-advanced")?.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.getElementById("btn-close-modhelper")?.addEventListener("click", () => {
+    modPanel?.classList.add("hidden");
+    modBtn?.setAttribute("aria-expanded", "false");
+  });
+  renderModTemplateGrid(document.getElementById("mod-template-grid"), state.lang, applyModTemplate);
+
+  // 17 Clinical Cases chart mode toggles (synced between Landing & Validation views)
+  document.querySelectorAll("[data-c17mode]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.c17Mode = btn.dataset.c17mode;
+      document.querySelectorAll("[data-c17mode]").forEach((x) => x.classList.toggle("active", x.dataset.c17mode === state.c17Mode));
+      renderAllCase17Charts();
+    });
+  });
+
+  document.getElementById("btn-landing-goto-val")?.addEventListener("click", () => {
+    switchTab("validation");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Plan B Structure Card Toggle Hook (Motif Highlights <-> Live Pure-PyTorch E-GAT Atom Attribution Heatmap)
+  document.querySelectorAll("#svg-view-toggle .seg-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.disabled) return;
+      const nextMode = btn.dataset.svgMode || "motifs";
+      state.svgViewMode = nextMode;
+      if (state.lastPrediction) {
+        if (nextMode === "attribution" && !getActiveAttributionSvg(state.lastPrediction)) {
+          fetchAtomAttributionForCurrent(state.lastPrediction, state.attrEndpoint || "PAMPA");
+        } else {
+          renderSvgCard(state.lastPrediction);
+        }
+      }
+    });
+  });
+}
+
+function applyModTemplate(tpl) {
+  document.getElementById("mod-template-panel")?.classList.add("hidden");
+  document.getElementById("btn-toggle-modhelper")?.setAttribute("aria-expanded", "false");
+  const pkSel = document.getElementById("pk-context-select");
+  if (pkSel && tpl.pkContext) pkSel.value = tpl.pkContext;
+  runExampleQuery(tpl.query);
+}
+
+async function initInlineScientificSvgs() {
+  const mapHost = document.getElementById("admet-map-host");
+  const archHost = document.getElementById("arch-flow-host");
+
+  await Promise.all([
+    loadInlineSvgAsset(apiUrl("/static/assets/admet_human_map.svg?v=1.1"), mapHost),
+    loadInlineSvgAsset(apiUrl("/static/assets/arch_4fm_flow.svg?v=1.1"), archHost),
+  ]);
+
+  if (mapHost) applySvgI18n(state.lang, mapHost);
+  if (archHost) applySvgI18n(state.lang, archHost);
+
+  if (mapHost) {
+    const activate = (hsId) => {
+      state.activeHotspot = hsId;
+      mapHost.querySelectorAll(".admet-hotspot").forEach((g) => {
+        g.classList.toggle("is-active", g.getAttribute("data-hotspot") === hsId);
+      });
+      renderAdmetHotspotDetail(
+        document.getElementById("admet-detail-card"),
+        hsId,
+        state.catalogData,
+        state.lang,
+        (q) => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          runExampleQuery(q);
+        }
+      );
+    };
+
+    mapHost.querySelectorAll(".admet-hotspot").forEach((g) => {
+      const hsId = g.getAttribute("data-hotspot");
+      if (!hsId) return;
+      g.addEventListener("mouseenter", () => activate(hsId));
+      g.addEventListener("click", () => activate(hsId));
+      g.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activate(hsId);
+        }
+      });
+    });
+
+    if (state.catalogData) syncAdmetSvgStats(mapHost, state.catalogData, state.lang);
+    activate(state.activeHotspot);
+  }
+}
+
+function renderAllCase17Charts() {
+  const drugs = state.catalogData?.case17_scorecard?.drugs || [];
+  const c17 = state.catalogData?.case17_scorecard || {};
+  const hlPure = c17.half_life_pure_ml_route_matched_log10 || {};
+  const hlAnch = c17.half_life_with_mechanism_anchor_log10 || {};
+  const hem = c17.hemolysis_false_positive_check || {};
+
+  const elRho = document.getElementById("lc17-rho");
+  const elR2 = document.getElementById("lc17-r2");
+  const elMae = document.getElementById("lc17-mae");
+  const elFp = document.getElementById("lc17-fp");
+  if (elRho && hlPure.spearman != null) elRho.textContent = Number(hlPure.spearman).toFixed(3);
+  if (elR2 && hlAnch.r2 != null) elR2.textContent = Number(hlAnch.r2).toFixed(3);
+  if (elMae && hlAnch.mae != null) elMae.textContent = Number(hlAnch.mae).toFixed(3);
+  if (elFp) elFp.textContent = `${hem.n_drugs_gt_0_50 ?? 0} / 17`;
+
+  const onSelectDrug = (drugName) => {
+    switchTab("predict");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    runExampleQuery(drugName);
+  };
+
+  renderCase17ParityChart(
+    document.getElementById("landing-case17-chart"),
+    document.getElementById("landing-case17-readout"),
+    drugs,
+    { mode: state.c17Mode, lang: state.lang, compact: true, onSelectDrug }
+  );
+  renderCase17ParityChart(
+    document.getElementById("val-case17-chart"),
+    document.getElementById("val-case17-readout"),
+    drugs,
+    { mode: state.c17Mode, lang: state.lang, compact: false, onSelectDrug }
+  );
+}
 
 // ==================== THEME & LANGUAGE ====================
 function initThemeAndLang() {
@@ -204,6 +402,7 @@ function applyTheme(theme, reRenderCharts = true) {
     }
     if (state.batchJobDetail) renderJobInspector("batch");
     if (state.selectedTaskDetail) renderJobInspector("tasks");
+    if (state.catalogData) renderAllCase17Charts();
   }
 }
 
@@ -216,13 +415,26 @@ function applyLanguage(lang, reRenderDynamic = true) {
   applyStaticI18n(state.lang);
 
   if (reRenderDynamic) {
-    if (state.healthData) hydrateHealthUi(state.healthData);
+    if (state.healthData) hydrateHealthUi(state.healthData, { forceStatic: true });
     renderExamplesPillsAndLibrary();
+    renderModTemplateGrid(document.getElementById("mod-template-grid"), state.lang, applyModTemplate);
     if (state.lastPrediction) renderPredictionResult(state.lastPrediction, { keepContext: true });
     if (state.batchJobDetail) renderJobInspector("batch");
     renderTasksQueue();
     if (state.selectedTaskDetail) renderJobInspector("tasks");
     if (state.catalogData) {
+      syncAdmetSvgStats(document.getElementById("admet-map-host"), state.catalogData, state.lang);
+      renderAdmetHotspotDetail(
+        document.getElementById("admet-detail-card"),
+        state.activeHotspot,
+        state.catalogData,
+        state.lang,
+        (q) => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          runExampleQuery(q);
+        }
+      );
+      renderAllCase17Charts();
       renderValidationKpis(state.catalogData);
       renderValidationHighlights(state.catalogData);
       renderValidationTable();
@@ -257,8 +469,11 @@ function switchTab(tab) {
   document.querySelectorAll(".view-section").forEach((sec) => {
     sec.classList.toggle("active", sec.id === `view-${tab}`);
   });
+  setHeroCanvasPaused(tab !== "predict" || Boolean(state.lastPrediction));
   if (tab === "validation" && !state.catalogData) {
     loadEndpointsCatalog();
+  } else if (tab === "validation" && state.catalogData) {
+    renderAllCase17Charts();
   }
   if (tab === "tasks") {
     refreshJobsList({ autoSelectFirst: !state.selectedTaskId });
@@ -273,6 +488,7 @@ function resetToLanding() {
   document.getElementById("compact-actions").classList.add("hidden");
   document.getElementById("landing-overview").classList.remove("hidden");
   document.getElementById("predict-results").classList.add("hidden");
+  setHeroCanvasPaused(false);
 }
 
 function wireGlobalShortcutsAndHistory() {
@@ -319,13 +535,13 @@ async function loadHealth() {
   }
 }
 
-function hydrateHealthUi(data) {
+function hydrateHealthUi(data, { forceStatic = false } = {}) {
   const pill = document.getElementById("backend-status");
   const txt = pill.querySelector(".status-text");
   pill.classList.remove("offline", "fallback");
   if (data.adapter_mode === "v33_remote" || data.v33_remote_healthy) {
     txt.textContent = t(state.lang, "status_online", { n: data.endpoints_total });
-    pill.title = `Peptide OmniPanel ${data.version} · RDKit ${data.rdkit_version}`;
+    pill.title = `Peptide OmniPanel 1.1 · RDKit ${data.rdkit_version}`;
   } else {
     pill.classList.add("fallback");
     txt.textContent = t(state.lang, "status_fallback", { n: data.endpoints_total });
@@ -333,9 +549,9 @@ function hydrateHealthUi(data) {
 
   const ds = data.dataset_summary || {};
   const compEl = document.getElementById("kpi-compounds");
-  if (compEl && ds.n_unique_compounds) compEl.textContent = Number(ds.n_unique_compounds).toLocaleString();
+  if (compEl && ds.n_unique_compounds) animateKpiValue(compEl, ds.n_unique_compounds, { forceStatic });
   const epEl = document.getElementById("kpi-ep-count");
-  if (epEl && data.endpoints_total) epEl.textContent = String(data.endpoints_total);
+  if (epEl && data.endpoints_total) animateKpiValue(epEl, data.endpoints_total, { forceStatic });
   const epLbl = document.getElementById("kpi-ep-lbl");
   if (epLbl && data.tier1_endpoints != null) {
     epLbl.textContent = t(state.lang, "kpi_endpoints", { t1: data.tier1_endpoints, t2: data.tier2_endpoints });
@@ -345,11 +561,13 @@ function hydrateHealthUi(data) {
     advT2.textContent = t(state.lang, "adv_tier2", { n: data.tier2_endpoints });
   }
   const recEl = document.getElementById("kpi-records");
-  if (recEl && ds.n_total_rows) recEl.textContent = Number(ds.n_total_rows).toLocaleString();
+  if (recEl && ds.n_total_rows) animateKpiValue(recEl, ds.n_total_rows, { forceStatic });
   const recLbl = document.getElementById("kpi-records-lbl");
   if (recLbl && ds.n_censored_rows != null) {
     recLbl.textContent = t(state.lang, "kpi_records", { cens: Number(ds.n_censored_rows).toLocaleString() });
   }
+  const uqEl = document.getElementById("kpi-uq");
+  if (uqEl) animateKpiValue(uqEl, 80, { suffix: "%", forceStatic });
 }
 
 async function loadExamples() {
@@ -487,6 +705,8 @@ function wirePredictWorkspace() {
     if (!isHidden) {
       document.getElementById("advanced-panel")?.classList.add("hidden");
       document.getElementById("btn-toggle-advanced")?.setAttribute("aria-expanded", "false");
+      document.getElementById("mod-template-panel")?.classList.add("hidden");
+      document.getElementById("btn-toggle-modhelper")?.setAttribute("aria-expanded", "false");
     }
   });
   document.getElementById("btn-close-exlib")?.addEventListener("click", () => {
@@ -499,9 +719,11 @@ function wirePredictWorkspace() {
   advBtn?.addEventListener("click", () => {
     const isHidden = advPanel.classList.toggle("hidden");
     advBtn.setAttribute("aria-expanded", String(!isHidden));
-    if (!isHidden && exlibPanel) {
-      exlibPanel.classList.add("hidden");
+    if (!isHidden) {
+      exlibPanel?.classList.add("hidden");
       exlibBtn?.setAttribute("aria-expanded", "false");
+      document.getElementById("mod-template-panel")?.classList.add("hidden");
+      document.getElementById("btn-toggle-modhelper")?.setAttribute("aria-expanded", "false");
     }
   });
 
@@ -847,14 +1069,149 @@ function clearInspectContext(hideBar = true) {
 }
 
 // ==================== RENDER SINGLE PREDICTION / COMPOUND DETAIL ====================
+function getMolAttrKey(data, endpoint) {
+  const molKey = data?.canonical_smiles || data?.smiles || data?.sequence || data?.query_name || "";
+  return `${molKey}::${endpoint}`;
+}
+
+function getActiveAttributionSvg(data) {
+  if (!data) return null;
+  const ep = state.attrEndpoint || data.atom_attribution_endpoint || "PAMPA";
+  const cached = state.attrSvgCache.get(getMolAttrKey(data, ep));
+  if (cached) return cached;
+  if (data.atom_attribution_svg && (!data.atom_attribution_endpoint || data.atom_attribution_endpoint === ep)) {
+    return data.atom_attribution_svg;
+  }
+  return data.atom_attribution_svg || null;
+}
+
+function getActiveStructureSvg(data) {
+  if (state.svgViewMode === "attribution") {
+    const aSvg = getActiveAttributionSvg(data);
+    if (aSvg) return aSvg;
+  }
+  return data?.svg || null;
+}
+
+async function fetchAtomAttributionForCurrent(data, endpoint) {
+  if (!data) return;
+  const targetEp = endpoint || data.atom_attribution_endpoint || "PAMPA";
+  state.attrEndpoint = targetEp;
+  const ckey = getMolAttrKey(data, targetEp);
+  if (state.attrSvgCache.has(ckey)) {
+    data.atom_attribution_svg = state.attrSvgCache.get(ckey);
+    data.atom_attribution_endpoint = targetEp;
+    renderSvgCard(data);
+    return;
+  }
+
+  state.attrLoading = true;
+  renderSvgCard(data);
+  try {
+    const body = {
+      query: !data.smiles && !data.canonical_smiles && !data.sequence ? data.query_name : null,
+      smiles: data.canonical_smiles || data.smiles || null,
+      sequence: !data.smiles && !data.canonical_smiles ? data.sequence : null,
+      endpoint: targetEp,
+      width: 760,
+      height: 460,
+    };
+    const res = await apiFetch("/api/v1/atom-attribution", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) return;
+    const payload = await res.json();
+    if (payload?.svg && String(payload.svg).includes("<svg")) {
+      state.attrSvgCache.set(ckey, payload.svg);
+      data.atom_attribution_svg = payload.svg;
+      data.atom_attribution_endpoint = payload.endpoint || targetEp;
+      if (Array.isArray(payload.available_endpoints) && payload.available_endpoints.length) {
+        data.atom_attribution_endpoints = payload.available_endpoints;
+      }
+    }
+  } catch {
+  } finally {
+    state.attrLoading = false;
+    if (state.lastPrediction === data) renderSvgCard(data);
+  }
+}
+
 function renderSvgCard(data) {
+  // Seed cache whenever backend returns default atom_attribution_svg on /predict
+  if (data?.atom_attribution_svg && String(data.atom_attribution_svg).includes("<svg")) {
+    const defEp = data.atom_attribution_endpoint || "PAMPA";
+    const ckey = getMolAttrKey(data, defEp);
+    if (!state.attrSvgCache.has(ckey)) {
+      state.attrSvgCache.set(ckey, data.atom_attribution_svg);
+    }
+    if (!state.attrEndpoint || !((data.atom_attribution_endpoints || []).includes(state.attrEndpoint))) {
+      state.attrEndpoint = defEp;
+    }
+  }
+  const availEps =
+    Array.isArray(data?.atom_attribution_endpoints) && data.atom_attribution_endpoints.length
+      ? data.atom_attribution_endpoints
+      : Object.keys(ATTR_ENDPOINT_LABELS);
+  const hasAttrReady =
+    Boolean(data?.atom_attribution_svg && String(data.atom_attribution_svg).includes("<svg")) ||
+    Boolean(data?.canonical_smiles || data?.smiles || data?.sequence);
+  if (!hasAttrReady && state.svgViewMode === "attribution") {
+    state.svgViewMode = "motifs";
+  }
+
+  const attrBtn = document.getElementById("btn-svg-attr");
+  if (attrBtn) {
+    attrBtn.disabled = !hasAttrReady;
+    attrBtn.classList.toggle("has-attr-ready", hasAttrReady);
+    attrBtn.title = hasAttrReady ? t(state.lang, "svg_attr_caption") : t(state.lang, "svg_attr_pending");
+  }
+  document.querySelectorAll("#svg-view-toggle .seg-btn").forEach((b) => {
+    b.classList.toggle("active", b.dataset.svgMode === state.svgViewMode);
+  });
+
+  // Render 8-endpoint attribution selector bar when in attribution mode
+  const attrBar = document.getElementById("svg-attr-bar");
+  if (attrBar) {
+    if (state.svgViewMode === "attribution" && hasAttrReady) {
+      attrBar.classList.remove("hidden");
+      const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
+      attrBar.innerHTML = availEps
+        .map((ep) => {
+          const meta = ATTR_ENDPOINT_LABELS[ep] || { zh: ep, en: ep };
+          const lbl = state.lang === "zh" ? meta.zh : meta.en;
+          return `<button type="button" class="svg-attr-pill ${ep === activeEp ? "active" : ""}" data-attr-ep="${escapeHtml(ep)}">${escapeHtml(lbl)}</button>`;
+        })
+        .join("");
+      attrBar.querySelectorAll(".svg-attr-pill").forEach((pill) => {
+        pill.addEventListener("click", () => {
+          const nextEp = pill.dataset.attrEp;
+          if (nextEp && state.lastPrediction) {
+            fetchAtomAttributionForCurrent(state.lastPrediction, nextEp);
+          }
+        });
+      });
+    } else {
+      attrBar.classList.add("hidden");
+      attrBar.innerHTML = "";
+    }
+  }
+
+  const activeSvg = getActiveStructureSvg(data);
   const svgStage = document.getElementById("mol-svg-stage");
-  svgStage.innerHTML =
-    data.svg || `<div class="svg-loading-hint">${state.lang === "zh" ? "暂无二维结构" : "Structure unavailable"}</div>`;
+  if (state.svgViewMode === "attribution" && state.attrLoading) {
+    svgStage.innerHTML = `<div class="svg-loading-hint">${escapeHtml(t(state.lang, "svg_attr_loading"))}</div>`;
+  } else {
+    svgStage.innerHTML =
+      activeSvg || `<div class="svg-loading-hint">${state.lang === "zh" ? "暂无二维结构" : "Structure unavailable"}</div>`;
+  }
   document.getElementById("svg-meta-caption").textContent = `${data.physchem.formula} · ${data.physchem.heavy_atoms} ${state.lang === "zh" ? "重原子" : "heavy atoms"}`;
 
   const legendEl = document.getElementById("mol-svg-legend");
-  if (data.svg_highlights && data.svg_highlights.length) {
+  if (state.svgViewMode === "attribution" && hasAttrReady) {
+    legendEl.innerHTML = `<span class="legend-item" style="color:var(--teal)">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`;
+  } else if (data.svg_highlights && data.svg_highlights.length) {
     legendEl.innerHTML = data.svg_highlights
       .map(
         (h) => `
@@ -876,10 +1233,14 @@ function renderPredictionResult(data, { keepContext = false } = {}) {
   const hero = document.getElementById("predict-hero");
   hero.classList.remove("hero-centered");
   hero.classList.add("hero-compact");
+  setHeroCanvasPaused(true);
   document.getElementById("compact-actions").classList.remove("hidden");
   document.getElementById("landing-overview").classList.add("hidden");
   document.getElementById("predict-results").classList.remove("hidden");
 
+  if (data.atom_attribution_endpoint) {
+    state.attrEndpoint = data.atom_attribution_endpoint;
+  }
   renderSvgCard(data);
 
   const ref = data.drug_reference;
@@ -1254,10 +1615,11 @@ function wireSvgModal() {
   const modal = document.getElementById("svg-modal");
   const openModal = () => {
     const d = state.lastPrediction;
-    if (!d || !d.svg) return;
+    const svg = getActiveStructureSvg(d);
+    if (!d || !svg) return;
     document.getElementById("modal-mol-title").textContent = `${d.query_name} — ${t(state.lang, "modal_title")}`;
     document.getElementById("modal-mol-sub").textContent = `${d.physchem.formula} · MW ${d.physchem.mw.toFixed(1)} Da · ${d.physchem.heavy_atoms} HA`;
-    document.getElementById("modal-svg-stage").innerHTML = d.svg;
+    document.getElementById("modal-svg-stage").innerHTML = svg;
     document.getElementById("modal-svg-legend").innerHTML = document.getElementById("mol-svg-legend").innerHTML;
     modal.classList.remove("hidden");
   };
@@ -1270,8 +1632,9 @@ function wireSvgModal() {
   });
   const dlSvg = () => {
     const d = state.lastPrediction;
-    if (!d || !d.svg) return;
-    downloadBlob(d.svg, `${slugify(d.query_name)}_2d_structure.svg`, "image/svg+xml;charset=utf-8");
+    const svg = getActiveStructureSvg(d);
+    if (!d || !svg) return;
+    downloadBlob(svg, `${slugify(d.query_name)}_2d_structure.svg`, "image/svg+xml;charset=utf-8");
   };
   document.getElementById("btn-download-svg")?.addEventListener("click", dlSvg);
   document.getElementById("modal-download-svg")?.addEventListener("click", dlSvg);
@@ -2043,6 +2406,18 @@ async function loadEndpointsCatalog() {
     const res = await apiFetch("/api/v1/endpoints");
     const data = await res.json();
     state.catalogData = data;
+    syncAdmetSvgStats(document.getElementById("admet-map-host"), data, state.lang);
+    renderAdmetHotspotDetail(
+      document.getElementById("admet-detail-card"),
+      state.activeHotspot,
+      data,
+      state.lang,
+      (q) => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        runExampleQuery(q);
+      }
+    );
+    renderAllCase17Charts();
     renderValidationKpis(data);
     renderValidationHighlights(data);
     renderValidationTable();
@@ -2263,6 +2638,11 @@ const API_PRESETS = {
     method: "POST",
     url: "/api/v1/predict",
     body: { query: "Micafungin", include_tier2: true, include_svg: false },
+  },
+  atom_attr_csa: {
+    method: "POST",
+    url: "/api/v1/atom-attribution",
+    body: { query: "Cyclosporine A", endpoint: "PAMPA", width: 760, height: 460 },
   },
   render_csa: {
     method: "POST",

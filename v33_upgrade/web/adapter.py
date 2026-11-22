@@ -569,6 +569,7 @@ _FAMILY_LABELS = {
     "deep": "Deep Multi-Task",
     "deep_multitask": "Deep MT",
     "deep_specialist": "Deep T½-Spec",
+    "mt46": "Deep MT-46",
     "cpu": "CPU GBDT",
 }
 
@@ -992,6 +993,10 @@ class OmniPanelAdapter:
         self.remote_healthy: bool = False
         self.mode: str = "v33_offline_fallback"
         self.cache = _TTLCache(maxsize=256, ttl_seconds=3600.0)
+        self._gnn_cache = _TTLCache(maxsize=256, ttl_seconds=3600.0)
+        self._gnn_lock = threading.Lock()
+        self._gnn_engine: Optional[Any] = None
+        self._gnn_checked: bool = False
 
         # 1. Detect live V33 remote inference engine (`V33_REMOTE_URL` or auto-probe 127.0.0.1:8902)
         offline_only = os.environ.get("V33_OFFLINE_ONLY", "").strip().lower() in ("1", "true", "yes")
@@ -1026,6 +1031,126 @@ class OmniPanelAdapter:
         # 4. Precompute RDKit Morgan fingerprints for curated library matching & offline analog lookup
         self.drug_fps: list[dict[str, Any]] = []
         self._build_drug_index()
+
+    # -----------------------------------------------------------------------
+    # Portable Pure-PyTorch E-GAT Live Per-Atom Attribution (0 GPU VRAM)
+    # -----------------------------------------------------------------------
+    def _resolve_gnn_ckpt_path(self) -> Optional[Path]:
+        env_p = os.environ.get("OMNIPANEL_GNN_CKPT", "").strip()
+        cands: list[Path] = []
+        if env_p:
+            cands.append(Path(env_p))
+        cands.extend(
+            [
+                UPGRADE_DIR / "bundle" / "gnn_8ep_5fold_fp16.pt",
+                UPGRADE_DIR / "v2_upgrade" / "gpu_sota" / "gnn_atom_attr" / "checkpoints" / "gnn_8ep_5fold_fp16.pt",
+                Path("/var/www/peptide-omnipanel/v33_next/v33_runtime/bundle/gnn_8ep_5fold_fp16.pt"),
+            ]
+        )
+        for p in cands:
+            if p.exists() and p.is_file():
+                return p
+        return None
+
+    def _get_gnn_engine(self) -> Optional[Any]:
+        if self._gnn_engine is not None:
+            return self._gnn_engine
+        if self._gnn_checked:
+            return None
+        with self._gnn_lock:
+            if self._gnn_engine is not None:
+                return self._gnn_engine
+            if self._gnn_checked:
+                return None
+            self._gnn_checked = True
+            ckpt_path = self._resolve_gnn_ckpt_path()
+            if ckpt_path is None:
+                return None
+            try:
+                from .gnn_atom_attribution import GNNAtomAttributionEngine
+
+                self._gnn_engine = GNNAtomAttributionEngine(ckpt_path=ckpt_path, device="cpu")
+                return self._gnn_engine
+            except Exception:
+                return None
+
+    def get_available_attribution_endpoints(self) -> list[str]:
+        eng = self._get_gnn_engine()
+        if eng is None:
+            return []
+        return list(eng.endpoints)
+
+    @staticmethod
+    def _default_attribution_endpoint(physchem: PhysChemSummary, mod_badges: list[Any]) -> str:
+        mod_keys = {getattr(b, "key", "") for b in (mod_badges or [])}
+        if "fatty_diacid" in mod_keys or "fatty_acyl" in mod_keys:
+            return "half_life_reg"
+        if "macrocycle" in mod_keys or len(physchem.macrocycle_rings) > 0:
+            return "PAMPA"
+        if physchem.net_charge_ph74 >= 2.0:
+            return "hemolysis_cls"
+        return "PAMPA"
+
+    def compute_atom_attribution(
+        self,
+        resolved: ResolvedInput,
+        endpoint: str = "PAMPA",
+        width: int = 760,
+        height: int = 460,
+        prediction_text: Optional[str] = None,
+    ) -> Optional[dict[str, Any]]:
+        """Run cached 5-fold Pure-PyTorch E-GAT attribution & render publication-grade RDKit SVG."""
+        eng = self._get_gnn_engine()
+        if eng is None or resolved.mol is None:
+            return None
+        from .gnn_atom_attribution import GNN_8_TASK_META, render_atom_attribution_svg
+
+        ep = endpoint if endpoint in eng.endpoints else eng.endpoints[0]
+        smi = resolved.canonical_smiles or Chem.MolToSmiles(resolved.mol, canonical=True)
+        cache_hit = False
+        cached = self._gnn_cache.get(smi)
+        t0 = time.perf_counter()
+        if cached is not None:
+            res = cached
+            cache_hit = True
+        else:
+            with self._gnn_lock:
+                res = eng.predict_and_attribute(smi, is_sequence=False, endpoints=eng.endpoints)
+            self._gnn_cache.set(smi, res)
+
+        weights = res["atom_weights"][ep]
+        symbols = res["atom_symbols"]
+        gnn_pred = res["predictions"].get(ep)
+        ep_label = (ENDPOINT_UI_META.get(ep) or {}).get("display_en") or GNN_8_TASK_META.get(ep, {}).get("label", ep)
+
+        # Render publication-grade SVG with cool-to-warm perceptual palette
+        svg_str = render_atom_attribution_svg(
+            resolved.mol,
+            weights=weights,
+            endpoint_name=ep,
+            width=width,
+            height=height,
+            title=f"{resolved.query_name} · {ep_label}",
+            prediction_text=prediction_text,
+        )
+        elapsed_ms = (time.perf_counter() - t0) * 1000.0
+        # Top-8 highest-contribution heavy atoms
+        order = sorted(range(len(weights)), key=lambda i: weights[i], reverse=True)[:8]
+        top_atoms = [
+            {"atom_index": int(i), "symbol": str(symbols[i]), "weight": round(float(weights[i]), 4)}
+            for i in order
+        ]
+        return {
+            "svg": svg_str,
+            "endpoint": ep,
+            "endpoint_label": ep_label,
+            "n_atoms": int(res["n_atoms"]),
+            "latency_ms": round(elapsed_ms, 2),
+            "cache_hit": cache_hit,
+            "gnn_prediction": gnn_pred,
+            "top_atoms": top_atoms,
+            "available_endpoints": list(eng.endpoints),
+        }
 
     @staticmethod
     def _probe_remote(base_url: str, timeout: float = 1.5) -> bool:
@@ -1837,7 +1962,11 @@ class OmniPanelAdapter:
             if ep_doc.get("censored_head") and counts.get("n_censored_total", 0) > 0:
                 cens_note = f"Trained with {counts['n_censored_total']} censored records; AFT/Tobit diagnostic head available in live engine."
 
-            # 2. Compute real conformal q80/q90 intervals directly from manifest conformal spec
+            # 3. Offline nearest analogs from curated library (compute AD first for Mondrian AD-EB intervals!)
+            max_tc, analogs = self._offline_analogs(q_fp, resolved.sequence, resolved.drug_entry["key"] if resolved.drug_entry else None)
+            ad_status = _ad_status_from_tanimoto(max_tc)
+
+            # 2. Compute real conformal q80/q90 intervals directly from manifest conformal spec (supports mondrian_ad_eb)
             bounds = ep_doc.get("bounds")
             if is_cls:
                 val = max(1e-5, min(1.0 - 1e-5, raw_val))
@@ -1846,8 +1975,13 @@ class OmniPanelAdapter:
                 ci80_low = ci80_high = ci90_low = ci90_high = None
                 ci80_disp = ci90_disp = None
             else:
-                q80 = float(conf.get("q80", 0.5))
-                q90 = float(conf.get("q90", 0.75))
+                if conf.get("mode") == "mondrian_ad_eb" and conf.get("q80_by_tier"):
+                    tier_key = "In-Domain" if ad_status == "in_domain" else ("Borderline" if ad_status == "borderline" else "OOD")
+                    q80 = float(conf["q80_by_tier"].get(tier_key, conf.get("q80_global", conf.get("q80", 0.5))))
+                    q90 = float(conf["q90_by_tier"].get(tier_key, conf.get("q90_global", conf.get("q90", 0.75))))
+                else:
+                    q80 = float(conf.get("q80", 0.5))
+                    q90 = float(conf.get("q90", 0.75))
                 lo80_raw, hi80_raw = raw_val - q80, raw_val + q80
                 lo90_raw, hi90_raw = raw_val - q90, raw_val + q90
                 if bounds:
@@ -1872,10 +2006,6 @@ class OmniPanelAdapter:
                     ci90_low, ci90_high = round(lo90_raw, 4), round(hi90_raw, 4)
                 ci80_disp = _fmt_ci(ci80_low, ci80_high, ui_unit, task_type)
                 ci90_disp = _fmt_ci(ci90_low, ci90_high, ui_unit, task_type)
-
-            # 3. Offline nearest analogs from curated library
-            max_tc, analogs = self._offline_analogs(q_fp, resolved.sequence, resolved.drug_entry["key"] if resolved.drug_entry else None)
-            ad_status = _ad_status_from_tanimoto(max_tc)
 
             risk_level, risk_label = _risk_assessment(ep, val)
             v32_cv = v32.get(f"cv_{metric_key}") if v32 else None
@@ -2072,7 +2202,7 @@ class OmniPanelAdapter:
 
         if self.mode == "v33_remote" and self.remote_url:
             raw_v33, cache_hit = self._call_v33_remote_single(resolved, include_tier2, v33_cond)
-            return self._assemble_from_v33_raw(
+            resp = self._assemble_from_v33_raw(
                 resolved=resolved,
                 physchem=physchem,
                 mod_badges=mod_badges,
@@ -2084,18 +2214,46 @@ class OmniPanelAdapter:
                 cache_hit=cache_hit,
                 elapsed_ms=(time.perf_counter() - t0) * 1000.0,
             )
+        else:
+            resp = self._predict_offline_fallback(
+                resolved=resolved,
+                physchem=physchem,
+                mod_badges=mod_badges,
+                svg_text=svg_text,
+                svg_highlights=svg_highlights,
+                include_tier2=include_tier2,
+                cond=cond,
+                v33_cond=v33_cond,
+                elapsed_ms=(time.perf_counter() - t0) * 1000.0,
+            )
 
-        return self._predict_offline_fallback(
-            resolved=resolved,
-            physchem=physchem,
-            mod_badges=mod_badges,
-            svg_text=svg_text,
-            svg_highlights=svg_highlights,
-            include_tier2=include_tier2,
-            cond=cond,
-            v33_cond=v33_cond,
-            elapsed_ms=(time.perf_counter() - t0) * 1000.0,
-        )
+        # Attach live Pure-PyTorch E-GAT per-atom attribution heatmap SVG when include_svg=True (<95 ms CPU)
+        if include_svg and resolved.mol is not None:
+            try:
+                def_ep = self._default_attribution_endpoint(physchem, mod_badges)
+                ep_pred = next((p for p in resp.predictions if p.endpoint == def_ep), None)
+                pred_badge = None
+                if ep_pred is not None:
+                    u_part = f" {ep_pred.unit}" if ep_pred.unit and ep_pred.unit not in ("probability", "fraction", "fraction_bound") else ""
+                    pred_badge = f"Pred: {ep_pred.value_display}{u_part}"
+                attr = self.compute_atom_attribution(
+                    resolved=resolved,
+                    endpoint=def_ep,
+                    width=max(svg_width, 760),
+                    height=max(svg_height, 460),
+                    prediction_text=pred_badge,
+                )
+                if attr is not None:
+                    resp.atom_attribution_svg = attr["svg"]
+                    resp.atom_attribution_endpoint = attr["endpoint"]
+                    resp.atom_attribution_endpoints = attr["available_endpoints"]
+            except Exception:
+                pass
+        else:
+            resp.atom_attribution_endpoints = self.get_available_attribution_endpoints()
+
+        resp.runtime_ms = round((time.perf_counter() - t0) * 1000.0, 1)
+        return resp
 
     def predict_batch(
         self,

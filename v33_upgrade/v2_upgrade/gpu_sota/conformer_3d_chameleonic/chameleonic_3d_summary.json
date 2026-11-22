@@ -1,0 +1,4903 @@
+{
+  "schema": "peptide_omnipanel_3d_chameleonic_summary_v1",
+  "generated_at": "2026-11-23 01:35:48 +0800",
+  "compute_host": "node23 (64-core CPU, 125 GB RAM — 0% local Windows load)",
+  "endpoints_evaluated": [
+    "PAMPA",
+    "Caco2",
+    "MDCK",
+    "RRCK",
+    "efflux_ratio",
+    "F",
+    "PPB",
+    "LogD7.4",
+    "half_life_reg",
+    "CL_per_kg",
+    "Vd_per_kg"
+  ],
+  "extraction_meta": {
+    "n_unique_tier1_valid_smiles": 11002,
+    "chameleonic_3d": {
+      "n_valid": 10450,
+      "coverage_pct": 94.98,
+      "dim": 29,
+      "feature_names": [
+        "log1p_pmi1_mean",
+        "log1p_pmi2_mean",
+        "log1p_pmi3_mean",
+        "npr1_mean",
+        "npr2_mean",
+        "npr_sum_mean",
+        "rg_mean",
+        "rg_min",
+        "rg_std",
+        "rg_norm_mw",
+        "asphericity_mean",
+        "eccentricity_mean",
+        "isf_mean",
+        "spherocity_mean",
+        "spherocity_std",
+        "pbf_mean",
+        "imhb_min",
+        "imhb_mean",
+        "imhb_max",
+        "imhb_spread",
+        "imhb_per_hbd",
+        "imhb_max_per_hbd",
+        "exposed_hbd_min",
+        "psa3d_min",
+        "psa3d_mean",
+        "psa3d_spread",
+        "psa3d_to_tpsa_ratio",
+        "exposed_polar_frac_mean",
+        "valid_3d"
+      ],
+      "batch_extract_sec": 4505.61,
+      "live_cpu_latency_ms_median": 708.72,
+      "live_cpu_latency_ms_mean": 1360.12,
+      "live_cpu_latency_ms_p90": 2823.2
+    },
+    "unimol2_84m": {
+      "status": "deferred_vram_ram_ceiling",
+      "reason": "Verified load & forward pass on local RTX 5080 (100-mol length-sorted bf16 probe: 40.3 mol/s, 2.6 GiB active alloc; first 1,500 cyclic peptides extracted cleanly), but variable-length O(B*L^2*128) 4D pair tensors fragmented PyTorch WDDM reserved VRAM to 15.8/16.3 GiB and 24.2 GB host RAM commit on 80-128 atom macrocycles. Deferred cleanly under strict local stability guardrails (<=9 GB VRAM, <=65% RAM), occupied node1 4090s, and node2-CPU-portability requirement."
+    }
+  },
+  "aggregate": {
+    "n_endpoints": 11,
+    "direct_dual_base_mean_ho_mae": 0.42601,
+    "direct_dual_plus_3d_mean_ho_mae": 0.42149,
+    "direct_dual_3d_improved_count": 6,
+    "direct_smi_base_mean_ho_mae": 0.41524,
+    "direct_smi_plus_3d_mean_ho_mae": 0.40814,
+    "direct_smi_3d_improved_count": 5,
+    "stack_baseline_4fm_mean_ho_mae": 0.4016,
+    "stack_plus_3d_mean_ho_mae": 0.40054,
+    "stack_baseline_4fm_mean_ho_spearman": 0.65818,
+    "stack_plus_3d_mean_ho_spearman": 0.66079,
+    "stack_plus_3d_improved_count": 3,
+    "stack_plus_3d_smi_base_mean_ho_mae": 0.40745,
+    "stack_plus_3d_smi_new_mean_ho_mae": 0.40831,
+    "stack_plus_3d_uni_mean_ho_mae": null
+  },
+  "endpoints": {
+    "F": {
+      "endpoint": "F",
+      "n_cv": 99,
+      "n_holdout": 25,
+      "coverage_3d_pct": 83.1,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "Ridge",
+          "cv_metrics": {
+            "n_total": 99,
+            "n_exact": 91,
+            "n_censored": 8,
+            "mae": 0.2107,
+            "rmse": 0.27987,
+            "r2": 0.42242,
+            "spearman": 0.66533,
+            "pearson": 0.66597,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.28386,
+            "all_row_hinge_mae": 0.21661,
+            "censored_c_index": 0.7224
+          },
+          "ho_metrics": {
+            "n_total": 25,
+            "n_exact": 23,
+            "n_censored": 2,
+            "mae": 0.26994,
+            "rmse": 0.33717,
+            "r2": 0.15718,
+            "spearman": 0.49245,
+            "pearson": 0.5682,
+            "censored_concordance": 0.5,
+            "censored_violation_mae": 0.09935,
+            "all_row_hinge_mae": 0.25629,
+            "censored_c_index": 0.66296
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 99,
+            "n_exact": 91,
+            "n_censored": 8,
+            "mae": 0.22262,
+            "rmse": 0.27912,
+            "r2": 0.42548,
+            "spearman": 0.57217,
+            "pearson": 0.66194,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.28911,
+            "all_row_hinge_mae": 0.22799,
+            "censored_c_index": 0.67385
+          },
+          "ho_metrics": {
+            "n_total": 25,
+            "n_exact": 23,
+            "n_censored": 2,
+            "mae": 0.2358,
+            "rmse": 0.30445,
+            "r2": 0.31284,
+            "spearman": 0.59738,
+            "pearson": 0.6956,
+            "censored_concordance": 0.5,
+            "censored_violation_mae": 0.07342,
+            "all_row_hinge_mae": 0.22281,
+            "censored_c_index": 0.71481
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 99,
+            "n_exact": 91,
+            "n_censored": 8,
+            "mae": 0.23829,
+            "rmse": 0.29276,
+            "r2": 0.36796,
+            "spearman": 0.54763,
+            "pearson": 0.61704,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.29721,
+            "all_row_hinge_mae": 0.24305,
+            "censored_c_index": 0.66527
+          },
+          "ho_metrics": {
+            "n_total": 25,
+            "n_exact": 23,
+            "n_censored": 2,
+            "mae": 0.2351,
+            "rmse": 0.29927,
+            "r2": 0.33602,
+            "spearman": 0.57362,
+            "pearson": 0.69263,
+            "censored_concordance": 0.5,
+            "censored_violation_mae": 0.07824,
+            "all_row_hinge_mae": 0.22255,
+            "censored_c_index": 0.71111
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 99,
+            "n_exact": 91,
+            "n_censored": 8,
+            "mae": 0.22929,
+            "rmse": 0.28486,
+            "r2": 0.40163,
+            "spearman": 0.54595,
+            "pearson": 0.64653,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.3308,
+            "all_row_hinge_mae": 0.23749,
+            "censored_c_index": 0.65863
+          },
+          "ho_metrics": {
+            "n_total": 25,
+            "n_exact": 23,
+            "n_censored": 2,
+            "mae": 0.24999,
+            "rmse": 0.32067,
+            "r2": 0.23764,
+            "spearman": 0.52215,
+            "pearson": 0.60215,
+            "censored_concordance": 0.5,
+            "censored_violation_mae": 0.08902,
+            "all_row_hinge_mae": 0.23711,
+            "censored_c_index": 0.68519
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 99,
+            "n_exact": 91,
+            "n_censored": 8,
+            "mae": 0.23744,
+            "rmse": 0.29037,
+            "r2": 0.37826,
+            "spearman": 0.54602,
+            "pearson": 0.62974,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.32712,
+            "all_row_hinge_mae": 0.24469,
+            "censored_c_index": 0.66141
+          },
+          "ho_metrics": {
+            "n_total": 25,
+            "n_exact": 23,
+            "n_censored": 2,
+            "mae": 0.24843,
+            "rmse": 0.31677,
+            "r2": 0.25609,
+            "spearman": 0.51472,
+            "pearson": 0.62039,
+            "censored_concordance": 0.5,
+            "censored_violation_mae": 0.08821,
+            "all_row_hinge_mae": 0.23561,
+            "censored_c_index": 0.68519
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.00156,
+      "direct_delta_smi_ho_mae": -0.0007,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 99,
+          "n_exact": 91,
+          "n_censored": 8,
+          "mae": 0.2071,
+          "rmse": 0.26227,
+          "r2": 0.49275,
+          "spearman": 0.62877,
+          "pearson": 0.70846,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.28919,
+          "all_row_hinge_mae": 0.21373,
+          "censored_c_index": 0.69914
+        },
+        "dual_ho": {
+          "n_total": 25,
+          "n_exact": 23,
+          "n_censored": 2,
+          "mae": 0.23896,
+          "rmse": 0.31603,
+          "r2": 0.25955,
+          "spearman": 0.54838,
+          "pearson": 0.67378,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.05798,
+          "all_row_hinge_mae": 0.22449,
+          "censored_c_index": 0.69259
+        },
+        "smi_cv": {
+          "n_total": 99,
+          "n_exact": 91,
+          "n_censored": 8,
+          "mae": 0.18937,
+          "rmse": 0.26836,
+          "r2": 0.46894,
+          "spearman": 0.6738,
+          "pearson": 0.70943,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.33736,
+          "all_row_hinge_mae": 0.20133,
+          "censored_c_index": 0.70579
+        },
+        "smi_ho": {
+          "n_total": 25,
+          "n_exact": 23,
+          "n_censored": 2,
+          "mae": 0.28544,
+          "rmse": 0.36298,
+          "r2": 0.0232,
+          "spearman": 0.42613,
+          "pearson": 0.55692,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.06247,
+          "all_row_hinge_mae": 0.2676,
+          "censored_c_index": 0.61111
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 0.50196,
+          "chameleonic_3d_only": 0.49769,
+          "direct_dual_plus_3d_smooth": 0.00024,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.00011
+        },
+        "dual_cv": {
+          "n_total": 99,
+          "n_exact": 91,
+          "n_censored": 8,
+          "mae": 0.2032,
+          "rmse": 0.2659,
+          "r2": 0.47864,
+          "spearman": 0.66314,
+          "pearson": 0.69414,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.27726,
+          "all_row_hinge_mae": 0.20919,
+          "censored_c_index": 0.72122
+        },
+        "dual_ho": {
+          "n_total": 25,
+          "n_exact": 23,
+          "n_censored": 2,
+          "mae": 0.25389,
+          "rmse": 0.32324,
+          "r2": 0.22541,
+          "spearman": 0.51918,
+          "pearson": 0.63332,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.07858,
+          "all_row_hinge_mae": 0.23986,
+          "censored_c_index": 0.67037
+        },
+        "delta_dual_cv_mae": -0.0039,
+        "delta_dual_ho_mae": 0.01493,
+        "delta_dual_ho_spearman": -0.0292,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 99,
+          "n_exact": 91,
+          "n_censored": 8,
+          "mae": 0.18937,
+          "rmse": 0.26836,
+          "r2": 0.46894,
+          "spearman": 0.6738,
+          "pearson": 0.70943,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.33736,
+          "all_row_hinge_mae": 0.20133,
+          "censored_c_index": 0.70579
+        },
+        "smi_ho": {
+          "n_total": 25,
+          "n_exact": 23,
+          "n_censored": 2,
+          "mae": 0.28544,
+          "rmse": 0.36298,
+          "r2": 0.0232,
+          "spearman": 0.42613,
+          "pearson": 0.55692,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.06247,
+          "all_row_hinge_mae": 0.2676,
+          "censored_c_index": 0.61111
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.26727,
+          "fusion_plus_3d_dual": 0.1785,
+          "baseline_fusion_smi": 0.55032,
+          "fusion_plus_3d_smi": 0.55032
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.58458,
+          "fusion_plus_3d_dual": 0.70527,
+          "baseline_fusion_smi": 0.50804,
+          "fusion_plus_3d_smi": 0.50804
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.70487,
+          "fusion_plus_3d_dual": 0.80859,
+          "baseline_fusion_smi": 0.87722,
+          "fusion_plus_3d_smi": 0.87722
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.56289,
+          "fusion_plus_3d_dual": 0.53623,
+          "baseline_fusion_smi": 0.73411,
+          "fusion_plus_3d_smi": 0.73411
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.61771,
+          "fusion_plus_3d_dual": 0.47092,
+          "baseline_fusion_smi": 0.47454,
+          "fusion_plus_3d_smi": 0.47454
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.69983,
+          "fusion_plus_3d_dual": 0.63026,
+          "baseline_fusion_smi": 0.78999,
+          "fusion_plus_3d_smi": 0.78999
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.69666,
+          "fusion_plus_3d_dual": 0.64577,
+          "baseline_fusion_smi": 0.69347,
+          "fusion_plus_3d_smi": 0.69347
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.61896,
+          "fusion_plus_3d_dual": 0.52756,
+          "baseline_fusion_smi": 0.54506,
+          "fusion_plus_3d_smi": 0.54506
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.19766,
+          "fusion_plus_3d_dual": 0.24661,
+          "baseline_fusion_smi": 0.18675,
+          "fusion_plus_3d_smi": 0.18675
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.12397,
+          "fusion_plus_3d_dual": 0.1615,
+          "baseline_fusion_smi": 0.00129,
+          "fusion_plus_3d_smi": 0.00129
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.21971,
+          "fusion_plus_3d_dual": 0.32282,
+          "baseline_fusion_smi": 0.10963,
+          "fusion_plus_3d_smi": 0.10963
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.23947,
+          "fusion_plus_3d_dual": 0.20066,
+          "baseline_fusion_smi": 0.14179,
+          "fusion_plus_3d_smi": 0.14179
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.4528,
+          "fusion_plus_3d_dual": 0.48256,
+          "baseline_fusion_smi": 0.17293,
+          "fusion_plus_3d_smi": 0.17293
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.51279,
+          "fusion_plus_3d_dual": 0.50343,
+          "baseline_fusion_smi": 0.52012,
+          "fusion_plus_3d_smi": 0.52012
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.42275,
+          "fusion_plus_3d_dual": 0.21234,
+          "baseline_fusion_smi": 0.58037,
+          "fusion_plus_3d_smi": 0.58037
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.51434,
+          "fusion_plus_3d_dual": 0.36959,
+          "baseline_fusion_smi": 0.13731,
+          "fusion_plus_3d_smi": 0.13731
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.52376,
+          "fusion_plus_3d_dual": 0.33319,
+          "baseline_fusion_smi": 0.01654,
+          "fusion_plus_3d_smi": 0.01654
+        }
+      ],
+      "elapsed_sec": 11.5
+    },
+    "PPB": {
+      "endpoint": "PPB",
+      "n_cv": 130,
+      "n_holdout": 32,
+      "coverage_3d_pct": 83.3,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "Ridge",
+          "cv_metrics": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.19572,
+            "rmse": 0.26103,
+            "r2": 0.17667,
+            "spearman": 0.48907,
+            "pearson": 0.48482,
+            "censored_concordance": 0.31818,
+            "censored_violation_mae": 0.15208,
+            "all_row_hinge_mae": 0.18834,
+            "censored_c_index": 0.68728
+          },
+          "ho_metrics": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.20668,
+            "rmse": 0.27645,
+            "r2": 0.30867,
+            "spearman": 0.70222,
+            "pearson": 0.67501,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.24236,
+            "all_row_hinge_mae": 0.2156,
+            "censored_c_index": 0.72273
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "Ridge",
+          "cv_metrics": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.1844,
+            "rmse": 0.24403,
+            "r2": 0.28043,
+            "spearman": 0.60072,
+            "pearson": 0.54329,
+            "censored_concordance": 0.27273,
+            "censored_violation_mae": 0.12966,
+            "all_row_hinge_mae": 0.17514,
+            "censored_c_index": 0.72661
+          },
+          "ho_metrics": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.25457,
+            "rmse": 0.2873,
+            "r2": 0.25338,
+            "spearman": 0.63169,
+            "pearson": 0.55341,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.27496,
+            "all_row_hinge_mae": 0.25967,
+            "censored_c_index": 0.69091
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.1896,
+            "rmse": 0.24952,
+            "r2": 0.24769,
+            "spearman": 0.55219,
+            "pearson": 0.5232,
+            "censored_concordance": 0.13636,
+            "censored_violation_mae": 0.10189,
+            "all_row_hinge_mae": 0.17476,
+            "censored_c_index": 0.71942
+          },
+          "ho_metrics": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.21366,
+            "rmse": 0.2409,
+            "r2": 0.47507,
+            "spearman": 0.81324,
+            "pearson": 0.7761,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.30591,
+            "all_row_hinge_mae": 0.23672,
+            "censored_c_index": 0.74091
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.19032,
+            "rmse": 0.25312,
+            "r2": 0.22578,
+            "spearman": 0.57822,
+            "pearson": 0.49251,
+            "censored_concordance": 0.04545,
+            "censored_violation_mae": 0.20981,
+            "all_row_hinge_mae": 0.19362,
+            "censored_c_index": 0.69278
+          },
+          "ho_metrics": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.29097,
+            "rmse": 0.3362,
+            "r2": -0.02244,
+            "spearman": 0.50327,
+            "pearson": 0.32742,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.32454,
+            "all_row_hinge_mae": 0.29936,
+            "censored_c_index": 0.62955
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.19691,
+            "rmse": 0.25325,
+            "r2": 0.22501,
+            "spearman": 0.57223,
+            "pearson": 0.48741,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.18214,
+            "all_row_hinge_mae": 0.19441,
+            "censored_c_index": 0.71111
+          },
+          "ho_metrics": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.26185,
+            "rmse": 0.30063,
+            "r2": 0.18247,
+            "spearman": 0.71572,
+            "pearson": 0.6019,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.33772,
+            "all_row_hinge_mae": 0.28082,
+            "censored_c_index": 0.66818
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.02912,
+      "direct_delta_smi_ho_mae": -0.04091,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.15106,
+          "rmse": 0.21807,
+          "r2": 0.42537,
+          "spearman": 0.70635,
+          "pearson": 0.65415,
+          "censored_concordance": 0.04545,
+          "censored_violation_mae": 0.16813,
+          "all_row_hinge_mae": 0.15395,
+          "censored_c_index": 0.76451
+        },
+        "dual_ho": {
+          "n_total": 32,
+          "n_exact": 24,
+          "n_censored": 8,
+          "mae": 0.2608,
+          "rmse": 0.29672,
+          "r2": 0.20359,
+          "spearman": 0.67828,
+          "pearson": 0.55763,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.29076,
+          "all_row_hinge_mae": 0.26829,
+          "censored_c_index": 0.7
+        },
+        "smi_cv": {
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.15809,
+          "rmse": 0.22417,
+          "r2": 0.39279,
+          "spearman": 0.67926,
+          "pearson": 0.62704,
+          "censored_concordance": 0.09091,
+          "censored_violation_mae": 0.16638,
+          "all_row_hinge_mae": 0.15949,
+          "censored_c_index": 0.753
+        },
+        "smi_ho": {
+          "n_total": 32,
+          "n_exact": 24,
+          "n_censored": 8,
+          "mae": 0.26292,
+          "rmse": 0.29732,
+          "r2": 0.20039,
+          "spearman": 0.81846,
+          "pearson": 0.54055,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.2792,
+          "all_row_hinge_mae": 0.26699,
+          "censored_c_index": 0.75909
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.15106,
+          "rmse": 0.21807,
+          "r2": 0.42537,
+          "spearman": 0.70635,
+          "pearson": 0.65415,
+          "censored_concordance": 0.04545,
+          "censored_violation_mae": 0.16813,
+          "all_row_hinge_mae": 0.15395,
+          "censored_c_index": 0.76451
+        },
+        "dual_ho": {
+          "n_total": 32,
+          "n_exact": 24,
+          "n_censored": 8,
+          "mae": 0.2608,
+          "rmse": 0.29672,
+          "r2": 0.20359,
+          "spearman": 0.67828,
+          "pearson": 0.55763,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.29076,
+          "all_row_hinge_mae": 0.26829,
+          "censored_c_index": 0.7
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.15809,
+          "rmse": 0.22417,
+          "r2": 0.39279,
+          "spearman": 0.67926,
+          "pearson": 0.62704,
+          "censored_concordance": 0.09091,
+          "censored_violation_mae": 0.16638,
+          "all_row_hinge_mae": 0.15949,
+          "censored_c_index": 0.753
+        },
+        "smi_ho": {
+          "n_total": 32,
+          "n_exact": 24,
+          "n_censored": 8,
+          "mae": 0.26292,
+          "rmse": 0.29732,
+          "r2": 0.20039,
+          "spearman": 0.81846,
+          "pearson": 0.54055,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.2792,
+          "all_row_hinge_mae": 0.26699,
+          "censored_c_index": 0.75909
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.5078,
+          "fusion_plus_3d_dual": 0.5078,
+          "baseline_fusion_smi": 0.48397,
+          "fusion_plus_3d_smi": 0.48397
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.45377,
+          "fusion_plus_3d_dual": 0.45377,
+          "baseline_fusion_smi": 0.40125,
+          "fusion_plus_3d_smi": 0.40125
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.55507,
+          "fusion_plus_3d_dual": 0.55507,
+          "baseline_fusion_smi": 0.48049,
+          "fusion_plus_3d_smi": 0.48049
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.59408,
+          "fusion_plus_3d_dual": 0.59408,
+          "baseline_fusion_smi": 0.54008,
+          "fusion_plus_3d_smi": 0.54008
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.54526,
+          "fusion_plus_3d_dual": 0.54526,
+          "baseline_fusion_smi": 0.53331,
+          "fusion_plus_3d_smi": 0.53331
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.68444,
+          "fusion_plus_3d_dual": 0.68444,
+          "baseline_fusion_smi": 0.59252,
+          "fusion_plus_3d_smi": 0.59252
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.70507,
+          "fusion_plus_3d_dual": 0.70507,
+          "baseline_fusion_smi": 0.63485,
+          "fusion_plus_3d_smi": 0.63485
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.73055,
+          "fusion_plus_3d_dual": 0.73055,
+          "baseline_fusion_smi": 0.7062,
+          "fusion_plus_3d_smi": 0.7062
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.82678,
+          "fusion_plus_3d_dual": 0.82678,
+          "baseline_fusion_smi": 0.79892,
+          "fusion_plus_3d_smi": 0.79892
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.35775,
+          "fusion_plus_3d_dual": 0.35775,
+          "baseline_fusion_smi": 0.3418,
+          "fusion_plus_3d_smi": 0.3418
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.60837,
+          "fusion_plus_3d_dual": 0.60837,
+          "baseline_fusion_smi": 0.5737,
+          "fusion_plus_3d_smi": 0.5737
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.35142,
+          "fusion_plus_3d_dual": 0.35142,
+          "baseline_fusion_smi": 0.30487,
+          "fusion_plus_3d_smi": 0.30487
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.41483,
+          "fusion_plus_3d_dual": 0.41483,
+          "baseline_fusion_smi": 0.39822,
+          "fusion_plus_3d_smi": 0.39822
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.62743,
+          "fusion_plus_3d_dual": 0.62743,
+          "baseline_fusion_smi": 0.66363,
+          "fusion_plus_3d_smi": 0.66363
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.74445,
+          "fusion_plus_3d_dual": 0.74445,
+          "baseline_fusion_smi": 0.76753,
+          "fusion_plus_3d_smi": 0.76753
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.73323,
+          "fusion_plus_3d_dual": 0.73323,
+          "baseline_fusion_smi": 0.68263,
+          "fusion_plus_3d_smi": 0.68263
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.72154,
+          "fusion_plus_3d_dual": 0.72154,
+          "baseline_fusion_smi": 0.68019,
+          "fusion_plus_3d_smi": 0.68019
+        }
+      ],
+      "elapsed_sec": 12.2
+    },
+    "efflux_ratio": {
+      "endpoint": "efflux_ratio",
+      "n_cv": 138,
+      "n_holdout": 33,
+      "coverage_3d_pct": 100.0,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 138,
+            "n_exact": 124,
+            "n_censored": 14,
+            "mae": 0.41309,
+            "rmse": 0.52263,
+            "r2": 0.43187,
+            "spearman": 0.53608,
+            "pearson": 0.65854,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.62386,
+            "all_row_hinge_mae": 0.43447,
+            "censored_c_index": 0.68601
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 32,
+            "n_censored": 1,
+            "mae": 0.40469,
+            "rmse": 0.51166,
+            "r2": 0.5399,
+            "spearman": 0.48025,
+            "pearson": 0.77277,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.71783,
+            "all_row_hinge_mae": 0.41418,
+            "censored_c_index": 0.67304
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 138,
+            "n_exact": 124,
+            "n_censored": 14,
+            "mae": 0.42028,
+            "rmse": 0.5471,
+            "r2": 0.37745,
+            "spearman": 0.50914,
+            "pearson": 0.61583,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.71554,
+            "all_row_hinge_mae": 0.45024,
+            "censored_c_index": 0.66855
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 32,
+            "n_censored": 1,
+            "mae": 0.40504,
+            "rmse": 0.49228,
+            "r2": 0.57408,
+            "spearman": 0.57593,
+            "pearson": 0.81724,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.5932,
+            "all_row_hinge_mae": 0.41075,
+            "censored_c_index": 0.70937
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 138,
+            "n_exact": 124,
+            "n_censored": 14,
+            "mae": 0.41836,
+            "rmse": 0.53581,
+            "r2": 0.40287,
+            "spearman": 0.50399,
+            "pearson": 0.64038,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.76884,
+            "all_row_hinge_mae": 0.45391,
+            "censored_c_index": 0.65672
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 32,
+            "n_censored": 1,
+            "mae": 0.39825,
+            "rmse": 0.48595,
+            "r2": 0.58496,
+            "spearman": 0.59005,
+            "pearson": 0.83198,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.61097,
+            "all_row_hinge_mae": 0.40469,
+            "censored_c_index": 0.71319
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 138,
+            "n_exact": 124,
+            "n_censored": 14,
+            "mae": 0.40889,
+            "rmse": 0.54654,
+            "r2": 0.3787,
+            "spearman": 0.53423,
+            "pearson": 0.61704,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.63456,
+            "all_row_hinge_mae": 0.43179,
+            "censored_c_index": 0.69165
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 32,
+            "n_censored": 1,
+            "mae": 0.39949,
+            "rmse": 0.4949,
+            "r2": 0.56954,
+            "spearman": 0.57117,
+            "pearson": 0.78357,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.63261,
+            "all_row_hinge_mae": 0.40655,
+            "censored_c_index": 0.69598
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 138,
+            "n_exact": 124,
+            "n_censored": 14,
+            "mae": 0.41111,
+            "rmse": 0.54048,
+            "r2": 0.39242,
+            "spearman": 0.51794,
+            "pearson": 0.62736,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.67461,
+            "all_row_hinge_mae": 0.43784,
+            "censored_c_index": 0.68027
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 32,
+            "n_censored": 1,
+            "mae": 0.40788,
+            "rmse": 0.49814,
+            "r2": 0.56389,
+            "spearman": 0.57172,
+            "pearson": 0.78475,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.6988,
+            "all_row_hinge_mae": 0.41669,
+            "censored_c_index": 0.69598
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": 0.00839,
+      "direct_delta_smi_ho_mae": -0.00679,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 138,
+          "n_exact": 124,
+          "n_censored": 14,
+          "mae": 0.37085,
+          "rmse": 0.49758,
+          "r2": 0.48505,
+          "spearman": 0.56928,
+          "pearson": 0.6968,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.72481,
+          "all_row_hinge_mae": 0.40676,
+          "censored_c_index": 0.68441
+        },
+        "dual_ho": {
+          "n_total": 33,
+          "n_exact": 32,
+          "n_censored": 1,
+          "mae": 0.35987,
+          "rmse": 0.43316,
+          "r2": 0.67024,
+          "spearman": 0.64155,
+          "pearson": 0.84254,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.72065,
+          "all_row_hinge_mae": 0.3708,
+          "censored_c_index": 0.72562
+        },
+        "smi_cv": {
+          "n_total": 138,
+          "n_exact": 124,
+          "n_censored": 14,
+          "mae": 0.3956,
+          "rmse": 0.51455,
+          "r2": 0.4493,
+          "spearman": 0.53641,
+          "pearson": 0.67052,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.72054,
+          "all_row_hinge_mae": 0.42857,
+          "censored_c_index": 0.67684
+        },
+        "smi_ho": {
+          "n_total": 33,
+          "n_exact": 32,
+          "n_censored": 1,
+          "mae": 0.38264,
+          "rmse": 0.44597,
+          "r2": 0.65045,
+          "spearman": 0.63514,
+          "pearson": 0.84985,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.51805,
+          "all_row_hinge_mae": 0.38675,
+          "censored_c_index": 0.75526
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 138,
+          "n_exact": 124,
+          "n_censored": 14,
+          "mae": 0.37085,
+          "rmse": 0.49758,
+          "r2": 0.48505,
+          "spearman": 0.56928,
+          "pearson": 0.6968,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.72481,
+          "all_row_hinge_mae": 0.40676,
+          "censored_c_index": 0.68441
+        },
+        "dual_ho": {
+          "n_total": 33,
+          "n_exact": 32,
+          "n_censored": 1,
+          "mae": 0.35987,
+          "rmse": 0.43316,
+          "r2": 0.67024,
+          "spearman": 0.64155,
+          "pearson": 0.84254,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.72065,
+          "all_row_hinge_mae": 0.3708,
+          "censored_c_index": 0.72562
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 0.63321,
+          "chameleonic_3d_only": 0.36679,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 138,
+          "n_exact": 124,
+          "n_censored": 14,
+          "mae": 0.40987,
+          "rmse": 0.50827,
+          "r2": 0.46268,
+          "spearman": 0.53087,
+          "pearson": 0.68268,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.71023,
+          "all_row_hinge_mae": 0.44034,
+          "censored_c_index": 0.67518
+        },
+        "smi_ho": {
+          "n_total": 33,
+          "n_exact": 32,
+          "n_censored": 1,
+          "mae": 0.38907,
+          "rmse": 0.46032,
+          "r2": 0.62759,
+          "spearman": 0.62597,
+          "pearson": 0.84535,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.59133,
+          "all_row_hinge_mae": 0.3952,
+          "censored_c_index": 0.74379
+        },
+        "delta_smi_ho_mae": 0.00643
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.71152,
+          "fusion_plus_3d_dual": 0.71152,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51437
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.70028,
+          "fusion_plus_3d_dual": 0.70028,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51444
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.82032,
+          "fusion_plus_3d_dual": 0.82032,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.5145
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.7588,
+          "fusion_plus_3d_dual": 0.7588,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51515
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.75394,
+          "fusion_plus_3d_dual": 0.75394,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51423
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.73718,
+          "fusion_plus_3d_dual": 0.73718,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51466
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.74024,
+          "fusion_plus_3d_dual": 0.74024,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51458
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.74927,
+          "fusion_plus_3d_dual": 0.74927,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51411
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.70183,
+          "fusion_plus_3d_dual": 0.70183,
+          "baseline_fusion_smi": 0.46881,
+          "fusion_plus_3d_smi": 0.50465
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.78985,
+          "fusion_plus_3d_dual": 0.78985,
+          "baseline_fusion_smi": 0.46862,
+          "fusion_plus_3d_smi": 0.50842
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.8885,
+          "fusion_plus_3d_dual": 0.8885,
+          "baseline_fusion_smi": 0.47059,
+          "fusion_plus_3d_smi": 0.50515
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.79561,
+          "fusion_plus_3d_dual": 0.79561,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51423
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.8056,
+          "fusion_plus_3d_dual": 0.8056,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51449
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.79088,
+          "fusion_plus_3d_dual": 0.79088,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51439
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.89109,
+          "fusion_plus_3d_dual": 0.89109,
+          "baseline_fusion_smi": 0.46881,
+          "fusion_plus_3d_smi": 0.51436
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.77055,
+          "fusion_plus_3d_dual": 0.77055,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.5143
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.77064,
+          "fusion_plus_3d_dual": 0.77064,
+          "baseline_fusion_smi": 0.4688,
+          "fusion_plus_3d_smi": 0.51422
+        }
+      ],
+      "elapsed_sec": 14.1
+    },
+    "MDCK": {
+      "endpoint": "MDCK",
+      "n_cv": 134,
+      "n_holdout": 34,
+      "coverage_3d_pct": 100.0,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 134,
+            "n_exact": 118,
+            "n_censored": 16,
+            "mae": 0.47139,
+            "rmse": 0.60734,
+            "r2": 0.18004,
+            "spearman": 0.45186,
+            "pearson": 0.42586,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.51937,
+            "all_row_hinge_mae": 0.47712,
+            "censored_c_index": 0.70739
+          },
+          "ho_metrics": {
+            "n_total": 34,
+            "n_exact": 34,
+            "n_censored": 0,
+            "mae": 0.49865,
+            "rmse": 0.62396,
+            "r2": 0.03825,
+            "spearman": 0.50987,
+            "pearson": 0.52999,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.49865,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 134,
+            "n_exact": 118,
+            "n_censored": 16,
+            "mae": 0.46032,
+            "rmse": 0.61366,
+            "r2": 0.1629,
+            "spearman": 0.45454,
+            "pearson": 0.44523,
+            "censored_concordance": 0.3125,
+            "censored_violation_mae": 0.44804,
+            "all_row_hinge_mae": 0.45885,
+            "censored_c_index": 0.68756
+          },
+          "ho_metrics": {
+            "n_total": 34,
+            "n_exact": 34,
+            "n_censored": 0,
+            "mae": 0.48406,
+            "rmse": 0.63165,
+            "r2": 0.0144,
+            "spearman": 0.42237,
+            "pearson": 0.44708,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.48406,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 134,
+            "n_exact": 118,
+            "n_censored": 16,
+            "mae": 0.4728,
+            "rmse": 0.59848,
+            "r2": 0.20379,
+            "spearman": 0.4489,
+            "pearson": 0.45991,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.49686,
+            "all_row_hinge_mae": 0.47567,
+            "censored_c_index": 0.6814
+          },
+          "ho_metrics": {
+            "n_total": 34,
+            "n_exact": 34,
+            "n_censored": 0,
+            "mae": 0.48625,
+            "rmse": 0.62316,
+            "r2": 0.04072,
+            "spearman": 0.38657,
+            "pearson": 0.46237,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.48625,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 134,
+            "n_exact": 118,
+            "n_censored": 16,
+            "mae": 0.4834,
+            "rmse": 0.62109,
+            "r2": 0.14251,
+            "spearman": 0.45095,
+            "pearson": 0.44341,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.48614,
+            "all_row_hinge_mae": 0.48373,
+            "censored_c_index": 0.6794
+          },
+          "ho_metrics": {
+            "n_total": 34,
+            "n_exact": 34,
+            "n_censored": 0,
+            "mae": 0.53537,
+            "rmse": 0.68583,
+            "r2": -0.16194,
+            "spearman": 0.30932,
+            "pearson": 0.39698,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.53537,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 134,
+            "n_exact": 118,
+            "n_censored": 16,
+            "mae": 0.46184,
+            "rmse": 0.59477,
+            "r2": 0.21362,
+            "spearman": 0.47367,
+            "pearson": 0.48118,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.49853,
+            "all_row_hinge_mae": 0.46622,
+            "censored_c_index": 0.69219
+          },
+          "ho_metrics": {
+            "n_total": 34,
+            "n_exact": 34,
+            "n_censored": 0,
+            "mae": 0.53853,
+            "rmse": 0.69864,
+            "r2": -0.20573,
+            "spearman": 0.36882,
+            "pearson": 0.39581,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.53853,
+            "censored_c_index": null
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": 0.00316,
+      "direct_delta_smi_ho_mae": 0.00219,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 134,
+          "n_exact": 118,
+          "n_censored": 16,
+          "mae": 0.45302,
+          "rmse": 0.58515,
+          "r2": 0.23888,
+          "spearman": 0.49486,
+          "pearson": 0.49483,
+          "censored_concordance": 0.1875,
+          "censored_violation_mae": 0.35682,
+          "all_row_hinge_mae": 0.44153,
+          "censored_c_index": 0.71385
+        },
+        "dual_ho": {
+          "n_total": 34,
+          "n_exact": 34,
+          "n_censored": 0,
+          "mae": 0.49886,
+          "rmse": 0.64272,
+          "r2": -0.02046,
+          "spearman": 0.45495,
+          "pearson": 0.46987,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.49886,
+          "censored_c_index": null
+        },
+        "smi_cv": {
+          "n_total": 134,
+          "n_exact": 118,
+          "n_censored": 16,
+          "mae": 0.45078,
+          "rmse": 0.58371,
+          "r2": 0.24262,
+          "spearman": 0.50063,
+          "pearson": 0.4968,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.28564,
+          "all_row_hinge_mae": 0.43106,
+          "censored_c_index": 0.72218
+        },
+        "smi_ho": {
+          "n_total": 34,
+          "n_exact": 34,
+          "n_censored": 0,
+          "mae": 0.48913,
+          "rmse": 0.62045,
+          "r2": 0.04905,
+          "spearman": 0.49855,
+          "pearson": 0.48629,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.48913,
+          "censored_c_index": null
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 0.21409,
+          "chameleonic_3d_only": 0.22072,
+          "direct_dual_plus_3d_smooth": 0.11451,
+          "direct_dual_plus_3d_tree": 0.25329,
+          "direct_smiles_plus_3d_smooth": 0.19739
+        },
+        "dual_cv": {
+          "n_total": 134,
+          "n_exact": 118,
+          "n_censored": 16,
+          "mae": 0.45485,
+          "rmse": 0.58515,
+          "r2": 0.23888,
+          "spearman": 0.48638,
+          "pearson": 0.49307,
+          "censored_concordance": 0.125,
+          "censored_violation_mae": 0.46777,
+          "all_row_hinge_mae": 0.4564,
+          "censored_c_index": 0.70669
+        },
+        "dual_ho": {
+          "n_total": 34,
+          "n_exact": 34,
+          "n_censored": 0,
+          "mae": 0.48953,
+          "rmse": 0.632,
+          "r2": 0.01331,
+          "spearman": 0.47269,
+          "pearson": 0.5014,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.48953,
+          "censored_c_index": null
+        },
+        "delta_dual_cv_mae": 0.00183,
+        "delta_dual_ho_mae": -0.00933,
+        "delta_dual_ho_spearman": 0.01774,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 134,
+          "n_exact": 118,
+          "n_censored": 16,
+          "mae": 0.45078,
+          "rmse": 0.58371,
+          "r2": 0.24262,
+          "spearman": 0.50063,
+          "pearson": 0.4968,
+          "censored_concordance": 0.5,
+          "censored_violation_mae": 0.28564,
+          "all_row_hinge_mae": 0.43106,
+          "censored_c_index": 0.72218
+        },
+        "smi_ho": {
+          "n_total": 34,
+          "n_exact": 34,
+          "n_censored": 0,
+          "mae": 0.48913,
+          "rmse": 0.62045,
+          "r2": 0.04905,
+          "spearman": 0.49855,
+          "pearson": 0.48629,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.48913,
+          "censored_c_index": null
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.45828,
+          "fusion_plus_3d_dual": -6.32326,
+          "baseline_fusion_smi": -6.51733,
+          "fusion_plus_3d_smi": -6.51733
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.22256,
+          "fusion_plus_3d_dual": -6.08935,
+          "baseline_fusion_smi": -6.25005,
+          "fusion_plus_3d_smi": -6.25005
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.27526,
+          "fusion_plus_3d_dual": -6.21825,
+          "baseline_fusion_smi": -6.27122,
+          "fusion_plus_3d_smi": -6.27122
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.21526,
+          "fusion_plus_3d_dual": -6.09136,
+          "baseline_fusion_smi": -6.23171,
+          "fusion_plus_3d_smi": -6.23171
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.21825,
+          "fusion_plus_3d_dual": -6.0575,
+          "baseline_fusion_smi": -6.25622,
+          "fusion_plus_3d_smi": -6.25622
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.22795,
+          "fusion_plus_3d_dual": -6.10787,
+          "baseline_fusion_smi": -6.27773,
+          "fusion_plus_3d_smi": -6.27773
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.23076,
+          "fusion_plus_3d_dual": -6.10769,
+          "baseline_fusion_smi": -6.26494,
+          "fusion_plus_3d_smi": -6.26494
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.26624,
+          "fusion_plus_3d_dual": -6.11556,
+          "baseline_fusion_smi": -6.23891,
+          "fusion_plus_3d_smi": -6.23891
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.05045,
+          "fusion_plus_3d_dual": -6.0023,
+          "baseline_fusion_smi": -6.09063,
+          "fusion_plus_3d_smi": -6.09063
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.31239,
+          "fusion_plus_3d_dual": -6.231,
+          "baseline_fusion_smi": -6.36554,
+          "fusion_plus_3d_smi": -6.36554
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.42234,
+          "fusion_plus_3d_dual": -6.37199,
+          "baseline_fusion_smi": -6.49375,
+          "fusion_plus_3d_smi": -6.49375
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.22697,
+          "fusion_plus_3d_dual": -6.11219,
+          "baseline_fusion_smi": -6.2477,
+          "fusion_plus_3d_smi": -6.2477
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.2239,
+          "fusion_plus_3d_dual": -6.16789,
+          "baseline_fusion_smi": -6.24788,
+          "fusion_plus_3d_smi": -6.24788
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.20148,
+          "fusion_plus_3d_dual": -6.13412,
+          "baseline_fusion_smi": -6.27844,
+          "fusion_plus_3d_smi": -6.27844
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.35569,
+          "fusion_plus_3d_dual": -6.25375,
+          "baseline_fusion_smi": -6.36315,
+          "fusion_plus_3d_smi": -6.36315
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.2052,
+          "fusion_plus_3d_dual": -6.05052,
+          "baseline_fusion_smi": -6.24098,
+          "fusion_plus_3d_smi": -6.24098
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.20376,
+          "fusion_plus_3d_dual": -6.05481,
+          "baseline_fusion_smi": -6.24424,
+          "fusion_plus_3d_smi": -6.24424
+        }
+      ],
+      "elapsed_sec": 14.9
+    },
+    "RRCK": {
+      "endpoint": "RRCK",
+      "n_cv": 137,
+      "n_holdout": 30,
+      "coverage_3d_pct": 100.0,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 137,
+            "n_exact": 137,
+            "n_censored": 0,
+            "mae": 0.41383,
+            "rmse": 0.52503,
+            "r2": 0.28362,
+            "spearman": 0.53728,
+            "pearson": 0.54753,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.41383,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 30,
+            "n_exact": 30,
+            "n_censored": 0,
+            "mae": 0.27427,
+            "rmse": 0.37756,
+            "r2": 0.42826,
+            "spearman": 0.61646,
+            "pearson": 0.6625,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.27427,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 137,
+            "n_exact": 137,
+            "n_censored": 0,
+            "mae": 0.42685,
+            "rmse": 0.51255,
+            "r2": 0.31728,
+            "spearman": 0.52063,
+            "pearson": 0.56539,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.42685,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 30,
+            "n_exact": 30,
+            "n_censored": 0,
+            "mae": 0.33079,
+            "rmse": 0.44182,
+            "r2": 0.21709,
+            "spearman": 0.44561,
+            "pearson": 0.53047,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33079,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 137,
+            "n_exact": 137,
+            "n_censored": 0,
+            "mae": 0.42331,
+            "rmse": 0.51809,
+            "r2": 0.30243,
+            "spearman": 0.55726,
+            "pearson": 0.55686,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.42331,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 30,
+            "n_exact": 30,
+            "n_censored": 0,
+            "mae": 0.30718,
+            "rmse": 0.38862,
+            "r2": 0.39428,
+            "spearman": 0.58754,
+            "pearson": 0.66892,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.30718,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 137,
+            "n_exact": 137,
+            "n_censored": 0,
+            "mae": 0.43567,
+            "rmse": 0.53352,
+            "r2": 0.26026,
+            "spearman": 0.46642,
+            "pearson": 0.51257,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.43567,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 30,
+            "n_exact": 30,
+            "n_censored": 0,
+            "mae": 0.33155,
+            "rmse": 0.41628,
+            "r2": 0.30501,
+            "spearman": 0.48209,
+            "pearson": 0.6174,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33155,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 137,
+            "n_exact": 137,
+            "n_censored": 0,
+            "mae": 0.43999,
+            "rmse": 0.53708,
+            "r2": 0.25035,
+            "spearman": 0.47433,
+            "pearson": 0.50305,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.43999,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 30,
+            "n_exact": 30,
+            "n_censored": 0,
+            "mae": 0.31408,
+            "rmse": 0.40155,
+            "r2": 0.35331,
+            "spearman": 0.60133,
+            "pearson": 0.65204,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.31408,
+            "censored_c_index": null
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.01747,
+      "direct_delta_smi_ho_mae": -0.02361,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 137,
+          "n_exact": 137,
+          "n_censored": 0,
+          "mae": 0.37847,
+          "rmse": 0.46784,
+          "r2": 0.43118,
+          "spearman": 0.61389,
+          "pearson": 0.66214,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.37847,
+          "censored_c_index": null
+        },
+        "dual_ho": {
+          "n_total": 30,
+          "n_exact": 30,
+          "n_censored": 0,
+          "mae": 0.31996,
+          "rmse": 0.42433,
+          "r2": 0.27784,
+          "spearman": 0.54794,
+          "pearson": 0.56297,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.31996,
+          "censored_c_index": null
+        },
+        "smi_cv": {
+          "n_total": 137,
+          "n_exact": 137,
+          "n_censored": 0,
+          "mae": 0.3793,
+          "rmse": 0.47041,
+          "r2": 0.42491,
+          "spearman": 0.6039,
+          "pearson": 0.65679,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.3793,
+          "censored_c_index": null
+        },
+        "smi_ho": {
+          "n_total": 30,
+          "n_exact": 30,
+          "n_censored": 0,
+          "mae": 0.32175,
+          "rmse": 0.42471,
+          "r2": 0.27656,
+          "spearman": 0.5208,
+          "pearson": 0.57012,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.32175,
+          "censored_c_index": null
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 137,
+          "n_exact": 137,
+          "n_censored": 0,
+          "mae": 0.37847,
+          "rmse": 0.46784,
+          "r2": 0.43118,
+          "spearman": 0.61389,
+          "pearson": 0.66214,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.37847,
+          "censored_c_index": null
+        },
+        "dual_ho": {
+          "n_total": 30,
+          "n_exact": 30,
+          "n_censored": 0,
+          "mae": 0.31996,
+          "rmse": 0.42433,
+          "r2": 0.27784,
+          "spearman": 0.54794,
+          "pearson": 0.56297,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.31996,
+          "censored_c_index": null
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 137,
+          "n_exact": 137,
+          "n_censored": 0,
+          "mae": 0.3793,
+          "rmse": 0.47041,
+          "r2": 0.42491,
+          "spearman": 0.6039,
+          "pearson": 0.65679,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.3793,
+          "censored_c_index": null
+        },
+        "smi_ho": {
+          "n_total": 30,
+          "n_exact": 30,
+          "n_censored": 0,
+          "mae": 0.32175,
+          "rmse": 0.42471,
+          "r2": 0.27656,
+          "spearman": 0.5208,
+          "pearson": 0.57012,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.32175,
+          "censored_c_index": null
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.1945,
+          "fusion_plus_3d_dual": -6.1945,
+          "baseline_fusion_smi": -6.16904,
+          "fusion_plus_3d_smi": -6.16904
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.13301,
+          "fusion_plus_3d_dual": -6.13301,
+          "baseline_fusion_smi": -6.10752,
+          "fusion_plus_3d_smi": -6.10752
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.13252,
+          "fusion_plus_3d_dual": -6.13252,
+          "baseline_fusion_smi": -6.10702,
+          "fusion_plus_3d_smi": -6.10702
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13269,
+          "fusion_plus_3d_dual": -6.13269,
+          "baseline_fusion_smi": -6.10719,
+          "fusion_plus_3d_smi": -6.10719
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13228,
+          "fusion_plus_3d_dual": -6.13228,
+          "baseline_fusion_smi": -6.10679,
+          "fusion_plus_3d_smi": -6.10679
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13269,
+          "fusion_plus_3d_dual": -6.13269,
+          "baseline_fusion_smi": -6.1072,
+          "fusion_plus_3d_smi": -6.1072
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13159,
+          "fusion_plus_3d_dual": -6.13159,
+          "baseline_fusion_smi": -6.1061,
+          "fusion_plus_3d_smi": -6.1061
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13148,
+          "fusion_plus_3d_dual": -6.13148,
+          "baseline_fusion_smi": -6.10599,
+          "fusion_plus_3d_smi": -6.10599
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.11566,
+          "fusion_plus_3d_dual": -6.11566,
+          "baseline_fusion_smi": -6.10982,
+          "fusion_plus_3d_smi": -6.10982
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.23408,
+          "fusion_plus_3d_dual": -6.23408,
+          "baseline_fusion_smi": -6.20957,
+          "fusion_plus_3d_smi": -6.20957
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.24087,
+          "fusion_plus_3d_dual": -6.24087,
+          "baseline_fusion_smi": -6.21834,
+          "fusion_plus_3d_smi": -6.21834
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.15066,
+          "fusion_plus_3d_dual": -6.15066,
+          "baseline_fusion_smi": -6.12517,
+          "fusion_plus_3d_smi": -6.12517
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.13422,
+          "fusion_plus_3d_dual": -6.13422,
+          "baseline_fusion_smi": -6.10873,
+          "fusion_plus_3d_smi": -6.10873
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.14284,
+          "fusion_plus_3d_dual": -6.14284,
+          "baseline_fusion_smi": -6.11735,
+          "fusion_plus_3d_smi": -6.11735
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.20975,
+          "fusion_plus_3d_dual": -6.20975,
+          "baseline_fusion_smi": -6.18429,
+          "fusion_plus_3d_smi": -6.18429
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13227,
+          "fusion_plus_3d_dual": -6.13227,
+          "baseline_fusion_smi": -6.10677,
+          "fusion_plus_3d_smi": -6.10677
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13194,
+          "fusion_plus_3d_dual": -6.13194,
+          "baseline_fusion_smi": -6.10645,
+          "fusion_plus_3d_smi": -6.10645
+        }
+      ],
+      "elapsed_sec": 16.0
+    },
+    "Vd_per_kg": {
+      "endpoint": "Vd_per_kg",
+      "n_cv": 133,
+      "n_holdout": 33,
+      "coverage_3d_pct": 76.5,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 133,
+            "n_exact": 133,
+            "n_censored": 0,
+            "mae": 0.38053,
+            "rmse": 0.49401,
+            "r2": 0.26973,
+            "spearman": 0.53689,
+            "pearson": 0.52107,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.38053,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 33,
+            "n_censored": 0,
+            "mae": 0.33799,
+            "rmse": 0.47411,
+            "r2": 0.48291,
+            "spearman": 0.73756,
+            "pearson": 0.72129,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33799,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 133,
+            "n_exact": 133,
+            "n_censored": 0,
+            "mae": 0.39298,
+            "rmse": 0.51983,
+            "r2": 0.19139,
+            "spearman": 0.5009,
+            "pearson": 0.44329,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.39298,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 33,
+            "n_censored": 0,
+            "mae": 0.33454,
+            "rmse": 0.49818,
+            "r2": 0.42906,
+            "spearman": 0.71393,
+            "pearson": 0.66115,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33454,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 133,
+            "n_exact": 133,
+            "n_censored": 0,
+            "mae": 0.38583,
+            "rmse": 0.50117,
+            "r2": 0.2484,
+            "spearman": 0.53996,
+            "pearson": 0.49864,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.38583,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 33,
+            "n_censored": 0,
+            "mae": 0.33764,
+            "rmse": 0.48694,
+            "r2": 0.45454,
+            "spearman": 0.74335,
+            "pearson": 0.69363,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33764,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 133,
+            "n_exact": 133,
+            "n_censored": 0,
+            "mae": 0.36658,
+            "rmse": 0.49068,
+            "r2": 0.27954,
+            "spearman": 0.56787,
+            "pearson": 0.53029,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.36658,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 33,
+            "n_censored": 0,
+            "mae": 0.33563,
+            "rmse": 0.49978,
+            "r2": 0.42539,
+            "spearman": 0.6942,
+            "pearson": 0.65737,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.33563,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 133,
+            "n_exact": 133,
+            "n_censored": 0,
+            "mae": 0.37665,
+            "rmse": 0.49874,
+            "r2": 0.25568,
+            "spearman": 0.52878,
+            "pearson": 0.50574,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.37665,
+            "censored_c_index": null
+          },
+          "ho_metrics": {
+            "n_total": 33,
+            "n_exact": 33,
+            "n_censored": 0,
+            "mae": 0.32357,
+            "rmse": 0.48413,
+            "r2": 0.46082,
+            "spearman": 0.76409,
+            "pearson": 0.68409,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.32357,
+            "censored_c_index": null
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.01206,
+      "direct_delta_smi_ho_mae": 0.0031,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 133,
+          "n_exact": 133,
+          "n_censored": 0,
+          "mae": 0.36848,
+          "rmse": 0.48848,
+          "r2": 0.28598,
+          "spearman": 0.57963,
+          "pearson": 0.53632,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.36848,
+          "censored_c_index": null
+        },
+        "dual_ho": {
+          "n_total": 33,
+          "n_exact": 33,
+          "n_censored": 0,
+          "mae": 0.32954,
+          "rmse": 0.48709,
+          "r2": 0.4542,
+          "spearman": 0.71409,
+          "pearson": 0.68243,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.32954,
+          "censored_c_index": null
+        },
+        "smi_cv": {
+          "n_total": 133,
+          "n_exact": 133,
+          "n_censored": 0,
+          "mae": 0.36783,
+          "rmse": 0.48946,
+          "r2": 0.28314,
+          "spearman": 0.57633,
+          "pearson": 0.53284,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.36783,
+          "censored_c_index": null
+        },
+        "smi_ho": {
+          "n_total": 33,
+          "n_exact": 33,
+          "n_censored": 0,
+          "mae": 0.34938,
+          "rmse": 0.491,
+          "r2": 0.44541,
+          "spearman": 0.70423,
+          "pearson": 0.68908,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.34938,
+          "censored_c_index": null
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 0.22071,
+          "chameleonic_3d_only": 0.20902,
+          "direct_dual_plus_3d_smooth": 0.21643,
+          "direct_dual_plus_3d_tree": 0.20647,
+          "direct_smiles_plus_3d_smooth": 0.14737
+        },
+        "dual_cv": {
+          "n_total": 133,
+          "n_exact": 133,
+          "n_censored": 0,
+          "mae": 0.37274,
+          "rmse": 0.49007,
+          "r2": 0.28133,
+          "spearman": 0.58378,
+          "pearson": 0.53115,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.37274,
+          "censored_c_index": null
+        },
+        "dual_ho": {
+          "n_total": 33,
+          "n_exact": 33,
+          "n_censored": 0,
+          "mae": 0.3201,
+          "rmse": 0.47705,
+          "r2": 0.47649,
+          "spearman": 0.76643,
+          "pearson": 0.69892,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.3201,
+          "censored_c_index": null
+        },
+        "delta_dual_cv_mae": 0.00426,
+        "delta_dual_ho_mae": -0.00944,
+        "delta_dual_ho_spearman": 0.05234,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 133,
+          "n_exact": 133,
+          "n_censored": 0,
+          "mae": 0.36783,
+          "rmse": 0.48946,
+          "r2": 0.28314,
+          "spearman": 0.57633,
+          "pearson": 0.53284,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.36783,
+          "censored_c_index": null
+        },
+        "smi_ho": {
+          "n_total": 33,
+          "n_exact": 33,
+          "n_censored": 0,
+          "mae": 0.34938,
+          "rmse": 0.491,
+          "r2": 0.44541,
+          "spearman": 0.70423,
+          "pearson": 0.68908,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.34938,
+          "censored_c_index": null
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.31481,
+          "fusion_plus_3d_dual": -0.3202,
+          "baseline_fusion_smi": -0.32541,
+          "fusion_plus_3d_smi": -0.32541
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.58649,
+          "fusion_plus_3d_dual": -0.53167,
+          "baseline_fusion_smi": -0.55104,
+          "fusion_plus_3d_smi": -0.55104
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.43099,
+          "fusion_plus_3d_dual": -0.48262,
+          "baseline_fusion_smi": -0.44727,
+          "fusion_plus_3d_smi": -0.44727
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.55015,
+          "fusion_plus_3d_dual": -0.49551,
+          "baseline_fusion_smi": -0.294,
+          "fusion_plus_3d_smi": -0.294
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.45731,
+          "fusion_plus_3d_dual": -0.40512,
+          "baseline_fusion_smi": -0.33042,
+          "fusion_plus_3d_smi": -0.33042
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.52762,
+          "fusion_plus_3d_dual": -0.48961,
+          "baseline_fusion_smi": -0.54424,
+          "fusion_plus_3d_smi": -0.54424
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.55298,
+          "fusion_plus_3d_dual": -0.51703,
+          "baseline_fusion_smi": -0.48367,
+          "fusion_plus_3d_smi": -0.48367
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.52579,
+          "fusion_plus_3d_dual": -0.46722,
+          "baseline_fusion_smi": -0.48885,
+          "fusion_plus_3d_smi": -0.48885
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.00599,
+          "fusion_plus_3d_dual": 0.02068,
+          "baseline_fusion_smi": -0.04722,
+          "fusion_plus_3d_smi": -0.04722
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.47922,
+          "fusion_plus_3d_dual": -0.51438,
+          "baseline_fusion_smi": -0.46849,
+          "fusion_plus_3d_smi": -0.46849
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.39808,
+          "fusion_plus_3d_dual": -0.39491,
+          "baseline_fusion_smi": -0.32429,
+          "fusion_plus_3d_smi": -0.32429
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.46042,
+          "fusion_plus_3d_dual": -0.40227,
+          "baseline_fusion_smi": -0.49211,
+          "fusion_plus_3d_smi": -0.49211
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.4118,
+          "fusion_plus_3d_dual": -0.4249,
+          "baseline_fusion_smi": -0.40515,
+          "fusion_plus_3d_smi": -0.40515
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.58305,
+          "fusion_plus_3d_dual": -0.62721,
+          "baseline_fusion_smi": -0.55326,
+          "fusion_plus_3d_smi": -0.55326
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.33122,
+          "fusion_plus_3d_dual": -0.30137,
+          "baseline_fusion_smi": -0.39738,
+          "fusion_plus_3d_smi": -0.39738
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.58291,
+          "fusion_plus_3d_dual": -0.58419,
+          "baseline_fusion_smi": -0.41038,
+          "fusion_plus_3d_smi": -0.41038
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.64564,
+          "fusion_plus_3d_dual": -0.64539,
+          "baseline_fusion_smi": -0.55827,
+          "fusion_plus_3d_smi": -0.55827
+        }
+      ],
+      "elapsed_sec": 17.5
+    },
+    "CL_per_kg": {
+      "endpoint": "CL_per_kg",
+      "n_cv": 165,
+      "n_holdout": 41,
+      "coverage_3d_pct": 75.7,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 165,
+            "n_exact": 158,
+            "n_censored": 7,
+            "mae": 0.52497,
+            "rmse": 0.72856,
+            "r2": 0.42187,
+            "spearman": 0.65682,
+            "pearson": 0.65154,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.61531,
+            "all_row_hinge_mae": 0.52881,
+            "censored_c_index": 0.74292
+          },
+          "ho_metrics": {
+            "n_total": 41,
+            "n_exact": 41,
+            "n_censored": 0,
+            "mae": 0.61553,
+            "rmse": 0.71996,
+            "r2": 0.46258,
+            "spearman": 0.7084,
+            "pearson": 0.74143,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.61553,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 165,
+            "n_exact": 158,
+            "n_censored": 7,
+            "mae": 0.54648,
+            "rmse": 0.73946,
+            "r2": 0.40444,
+            "spearman": 0.633,
+            "pearson": 0.64064,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.72858,
+            "all_row_hinge_mae": 0.5542,
+            "censored_c_index": 0.72844
+          },
+          "ho_metrics": {
+            "n_total": 41,
+            "n_exact": 41,
+            "n_censored": 0,
+            "mae": 0.51529,
+            "rmse": 0.63317,
+            "r2": 0.58433,
+            "spearman": 0.82502,
+            "pearson": 0.84148,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.51529,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 165,
+            "n_exact": 158,
+            "n_censored": 7,
+            "mae": 0.55529,
+            "rmse": 0.74952,
+            "r2": 0.38811,
+            "spearman": 0.60677,
+            "pearson": 0.63254,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.7482,
+            "all_row_hinge_mae": 0.56347,
+            "censored_c_index": 0.71785
+          },
+          "ho_metrics": {
+            "n_total": 41,
+            "n_exact": 41,
+            "n_censored": 0,
+            "mae": 0.52352,
+            "rmse": 0.64373,
+            "r2": 0.57036,
+            "spearman": 0.78242,
+            "pearson": 0.83145,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.52352,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 165,
+            "n_exact": 158,
+            "n_censored": 7,
+            "mae": 0.55423,
+            "rmse": 0.72548,
+            "r2": 0.42674,
+            "spearman": 0.65672,
+            "pearson": 0.65798,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.66994,
+            "all_row_hinge_mae": 0.55914,
+            "censored_c_index": 0.73458
+          },
+          "ho_metrics": {
+            "n_total": 41,
+            "n_exact": 41,
+            "n_censored": 0,
+            "mae": 0.56325,
+            "rmse": 0.70941,
+            "r2": 0.47821,
+            "spearman": 0.73537,
+            "pearson": 0.74548,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.56325,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 165,
+            "n_exact": 158,
+            "n_censored": 7,
+            "mae": 0.55238,
+            "rmse": 0.73052,
+            "r2": 0.41874,
+            "spearman": 0.64333,
+            "pearson": 0.65144,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.66083,
+            "all_row_hinge_mae": 0.55698,
+            "censored_c_index": 0.72837
+          },
+          "ho_metrics": {
+            "n_total": 41,
+            "n_exact": 41,
+            "n_censored": 0,
+            "mae": 0.56983,
+            "rmse": 0.71327,
+            "r2": 0.47252,
+            "spearman": 0.74313,
+            "pearson": 0.75508,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.56983,
+            "censored_c_index": null
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": 0.00658,
+      "direct_delta_smi_ho_mae": 0.00823,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 165,
+          "n_exact": 158,
+          "n_censored": 7,
+          "mae": 0.50015,
+          "rmse": 0.69689,
+          "r2": 0.47103,
+          "spearman": 0.67503,
+          "pearson": 0.68741,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.7768,
+          "all_row_hinge_mae": 0.51189,
+          "censored_c_index": 0.74388
+        },
+        "dual_ho": {
+          "n_total": 41,
+          "n_exact": 41,
+          "n_censored": 0,
+          "mae": 0.54773,
+          "rmse": 0.7044,
+          "r2": 0.48556,
+          "spearman": 0.83199,
+          "pearson": 0.82974,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.54773,
+          "censored_c_index": null
+        },
+        "smi_cv": {
+          "n_total": 165,
+          "n_exact": 158,
+          "n_censored": 7,
+          "mae": 0.50682,
+          "rmse": 0.69344,
+          "r2": 0.47625,
+          "spearman": 0.68541,
+          "pearson": 0.693,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.70814,
+          "all_row_hinge_mae": 0.51536,
+          "censored_c_index": 0.74702
+        },
+        "smi_ho": {
+          "n_total": 41,
+          "n_exact": 41,
+          "n_censored": 0,
+          "mae": 0.54429,
+          "rmse": 0.70109,
+          "r2": 0.49038,
+          "spearman": 0.82999,
+          "pearson": 0.83432,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.54429,
+          "censored_c_index": null
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 0.5,
+          "chameleonic_3d_only": 0.5,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 165,
+          "n_exact": 158,
+          "n_censored": 7,
+          "mae": 0.49771,
+          "rmse": 0.69458,
+          "r2": 0.47453,
+          "spearman": 0.68717,
+          "pearson": 0.6905,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.69605,
+          "all_row_hinge_mae": 0.50612,
+          "censored_c_index": 0.75324
+        },
+        "dual_ho": {
+          "n_total": 41,
+          "n_exact": 41,
+          "n_censored": 0,
+          "mae": 0.5346,
+          "rmse": 0.6634,
+          "r2": 0.5437,
+          "spearman": 0.81727,
+          "pearson": 0.83145,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.5346,
+          "censored_c_index": null
+        },
+        "delta_dual_cv_mae": -0.00244,
+        "delta_dual_ho_mae": -0.01313,
+        "delta_dual_ho_spearman": -0.01472,
+        "smi_weights": {
+          "official_fusion_smi": 0.5,
+          "chameleonic_3d_only": 0.5,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 165,
+          "n_exact": 158,
+          "n_censored": 7,
+          "mae": 0.50311,
+          "rmse": 0.69822,
+          "r2": 0.46901,
+          "spearman": 0.68437,
+          "pearson": 0.69046,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.66173,
+          "all_row_hinge_mae": 0.50984,
+          "censored_c_index": 0.75179
+        },
+        "smi_ho": {
+          "n_total": 41,
+          "n_exact": 41,
+          "n_censored": 0,
+          "mae": 0.54626,
+          "rmse": 0.67645,
+          "r2": 0.52558,
+          "spearman": 0.81491,
+          "pearson": 0.82845,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.54626,
+          "censored_c_index": null
+        },
+        "delta_smi_ho_mae": 0.00197
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.39108,
+          "fusion_plus_3d_dual": 0.25279,
+          "baseline_fusion_smi": 0.35972,
+          "fusion_plus_3d_smi": 0.23711
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.26544,
+          "fusion_plus_3d_dual": 0.3134,
+          "baseline_fusion_smi": 0.26092,
+          "fusion_plus_3d_smi": 0.31114
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.0322,
+          "fusion_plus_3d_dual": 0.1368,
+          "baseline_fusion_smi": -0.05893,
+          "fusion_plus_3d_smi": 0.12344
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.43791,
+          "fusion_plus_3d_dual": 0.1986,
+          "baseline_fusion_smi": 0.23869,
+          "fusion_plus_3d_smi": 0.09898
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.38569,
+          "fusion_plus_3d_dual": 0.62391,
+          "baseline_fusion_smi": 0.68974,
+          "fusion_plus_3d_smi": 0.77593
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.55046,
+          "fusion_plus_3d_dual": -0.51127,
+          "baseline_fusion_smi": -0.16866,
+          "fusion_plus_3d_smi": -0.32036
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -0.13763,
+          "fusion_plus_3d_dual": -0.19121,
+          "baseline_fusion_smi": 0.23816,
+          "fusion_plus_3d_smi": -0.00331
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.17815,
+          "fusion_plus_3d_dual": 0.12352,
+          "baseline_fusion_smi": 0.37265,
+          "fusion_plus_3d_smi": 0.22077
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.84126,
+          "fusion_plus_3d_dual": 0.79867,
+          "baseline_fusion_smi": 0.67688,
+          "fusion_plus_3d_smi": 0.71648
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.03536,
+          "fusion_plus_3d_dual": 0.80401,
+          "baseline_fusion_smi": 0.89716,
+          "fusion_plus_3d_smi": 0.73491
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.65508,
+          "fusion_plus_3d_dual": 0.52668,
+          "baseline_fusion_smi": 0.5777,
+          "fusion_plus_3d_smi": 0.48799
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.7003,
+          "fusion_plus_3d_dual": 0.5346,
+          "baseline_fusion_smi": 0.53558,
+          "fusion_plus_3d_smi": 0.45224
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.42,
+          "fusion_plus_3d_dual": 0.53667,
+          "baseline_fusion_smi": 0.48726,
+          "fusion_plus_3d_smi": 0.57031
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.28774,
+          "fusion_plus_3d_dual": 0.15512,
+          "baseline_fusion_smi": 0.04815,
+          "fusion_plus_3d_smi": 0.03533
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.18148,
+          "fusion_plus_3d_dual": -0.07687,
+          "baseline_fusion_smi": -0.04473,
+          "fusion_plus_3d_smi": -0.0085
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.71691,
+          "fusion_plus_3d_dual": 0.59164,
+          "baseline_fusion_smi": 0.72698,
+          "fusion_plus_3d_smi": 0.59668
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.75543,
+          "fusion_plus_3d_dual": 0.5329,
+          "baseline_fusion_smi": 0.77301,
+          "fusion_plus_3d_smi": 0.54169
+        }
+      ],
+      "elapsed_sec": 18.3
+    },
+    "LogD7.4": {
+      "endpoint": "LogD7.4",
+      "n_cv": 553,
+      "n_holdout": 125,
+      "coverage_3d_pct": 100.0,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 553,
+            "n_exact": 550,
+            "n_censored": 3,
+            "mae": 0.46494,
+            "rmse": 0.67802,
+            "r2": 0.66118,
+            "spearman": 0.63668,
+            "pearson": 0.81927,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 2.19362,
+            "all_row_hinge_mae": 0.47432,
+            "censored_c_index": 0.73235
+          },
+          "ho_metrics": {
+            "n_total": 125,
+            "n_exact": 125,
+            "n_censored": 0,
+            "mae": 0.5461,
+            "rmse": 0.76726,
+            "r2": 0.53846,
+            "spearman": 0.64107,
+            "pearson": 0.74838,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.5461,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 553,
+            "n_exact": 550,
+            "n_censored": 3,
+            "mae": 0.4809,
+            "rmse": 0.72497,
+            "r2": 0.61263,
+            "spearman": 0.58301,
+            "pearson": 0.78821,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 2.51519,
+            "all_row_hinge_mae": 0.49193,
+            "censored_c_index": 0.71542
+          },
+          "ho_metrics": {
+            "n_total": 125,
+            "n_exact": 125,
+            "n_censored": 0,
+            "mae": 0.50607,
+            "rmse": 0.7193,
+            "r2": 0.59436,
+            "spearman": 0.64876,
+            "pearson": 0.77726,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.50607,
+            "censored_c_index": null
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 553,
+            "n_exact": 550,
+            "n_censored": 3,
+            "mae": 0.488,
+            "rmse": 0.69974,
+            "r2": 0.63913,
+            "spearman": 0.5653,
+            "pearson": 0.7997,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 2.15337,
+            "all_row_hinge_mae": 0.49704,
+            "censored_c_index": 0.70521
+          },
+          "ho_metrics": {
+            "n_total": 125,
+            "n_exact": 125,
+            "n_censored": 0,
+            "mae": 0.45561,
+            "rmse": 0.64971,
+            "r2": 0.66904,
+            "spearman": 0.70439,
+            "pearson": 0.81995,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.45561,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 553,
+            "n_exact": 550,
+            "n_censored": 3,
+            "mae": 0.52973,
+            "rmse": 0.81975,
+            "r2": 0.50473,
+            "spearman": 0.58719,
+            "pearson": 0.71096,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 2.55743,
+            "all_row_hinge_mae": 0.54073,
+            "censored_c_index": 0.71819
+          },
+          "ho_metrics": {
+            "n_total": 125,
+            "n_exact": 125,
+            "n_censored": 0,
+            "mae": 0.48162,
+            "rmse": 0.66714,
+            "r2": 0.65105,
+            "spearman": 0.67779,
+            "pearson": 0.81771,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.48162,
+            "censored_c_index": null
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 553,
+            "n_exact": 550,
+            "n_censored": 3,
+            "mae": 0.52603,
+            "rmse": 0.81678,
+            "r2": 0.5083,
+            "spearman": 0.59113,
+            "pearson": 0.71321,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 2.44977,
+            "all_row_hinge_mae": 0.53646,
+            "censored_c_index": 0.7199
+          },
+          "ho_metrics": {
+            "n_total": 125,
+            "n_exact": 125,
+            "n_censored": 0,
+            "mae": 0.46894,
+            "rmse": 0.65137,
+            "r2": 0.66735,
+            "spearman": 0.66998,
+            "pearson": 0.82827,
+            "censored_concordance": null,
+            "censored_violation_mae": null,
+            "all_row_hinge_mae": 0.46894,
+            "censored_c_index": null
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.01268,
+      "direct_delta_smi_ho_mae": -0.05046,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 553,
+          "n_exact": 550,
+          "n_censored": 3,
+          "mae": 0.41876,
+          "rmse": 0.63334,
+          "r2": 0.70436,
+          "spearman": 0.65012,
+          "pearson": 0.84407,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 2.03968,
+          "all_row_hinge_mae": 0.42756,
+          "censored_c_index": 0.74556
+        },
+        "dual_ho": {
+          "n_total": 125,
+          "n_exact": 125,
+          "n_censored": 0,
+          "mae": 0.45704,
+          "rmse": 0.67545,
+          "r2": 0.6423,
+          "spearman": 0.70174,
+          "pearson": 0.80375,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.45704,
+          "censored_c_index": null
+        },
+        "smi_cv": {
+          "n_total": 553,
+          "n_exact": 550,
+          "n_censored": 3,
+          "mae": 0.40588,
+          "rmse": 0.6134,
+          "r2": 0.72269,
+          "spearman": 0.6606,
+          "pearson": 0.85318,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 2.05983,
+          "all_row_hinge_mae": 0.41486,
+          "censored_c_index": 0.74957
+        },
+        "smi_ho": {
+          "n_total": 125,
+          "n_exact": 125,
+          "n_censored": 0,
+          "mae": 0.4618,
+          "rmse": 0.67524,
+          "r2": 0.64253,
+          "spearman": 0.70637,
+          "pearson": 0.80344,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.4618,
+          "censored_c_index": null
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 0.8026,
+          "chameleonic_3d_only": 0.1974,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 553,
+          "n_exact": 550,
+          "n_censored": 3,
+          "mae": 0.41477,
+          "rmse": 0.62868,
+          "r2": 0.7087,
+          "spearman": 0.66501,
+          "pearson": 0.84859,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 2.06848,
+          "all_row_hinge_mae": 0.42374,
+          "censored_c_index": 0.75033
+        },
+        "dual_ho": {
+          "n_total": 125,
+          "n_exact": 125,
+          "n_censored": 0,
+          "mae": 0.46233,
+          "rmse": 0.67876,
+          "r2": 0.63879,
+          "spearman": 0.70434,
+          "pearson": 0.80258,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.46233,
+          "censored_c_index": null
+        },
+        "delta_dual_cv_mae": -0.00399,
+        "delta_dual_ho_mae": 0.00529,
+        "delta_dual_ho_spearman": 0.0026,
+        "smi_weights": {
+          "official_fusion_smi": 0.88948,
+          "chameleonic_3d_only": 0.11052,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 553,
+          "n_exact": 550,
+          "n_censored": 3,
+          "mae": 0.40539,
+          "rmse": 0.6126,
+          "r2": 0.72341,
+          "spearman": 0.66711,
+          "pearson": 0.8547,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 2.07488,
+          "all_row_hinge_mae": 0.41445,
+          "censored_c_index": 0.75178
+        },
+        "smi_ho": {
+          "n_total": 125,
+          "n_exact": 125,
+          "n_censored": 0,
+          "mae": 0.46428,
+          "rmse": 0.67643,
+          "r2": 0.64126,
+          "spearman": 0.70664,
+          "pearson": 0.80322,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.46428,
+          "censored_c_index": null
+        },
+        "delta_smi_ho_mae": 0.00248
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.81458,
+          "fusion_plus_3d_dual": 1.9553,
+          "baseline_fusion_smi": 1.85896,
+          "fusion_plus_3d_smi": 1.93283
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.32614,
+          "fusion_plus_3d_dual": 1.5101,
+          "baseline_fusion_smi": 1.35461,
+          "fusion_plus_3d_smi": 1.45446
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.35242,
+          "fusion_plus_3d_dual": 1.62788,
+          "baseline_fusion_smi": 1.31341,
+          "fusion_plus_3d_smi": 1.47194
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.38885,
+          "fusion_plus_3d_dual": 1.66858,
+          "baseline_fusion_smi": 1.34052,
+          "fusion_plus_3d_smi": 1.50246
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.20938,
+          "fusion_plus_3d_dual": 1.52323,
+          "baseline_fusion_smi": 1.10483,
+          "fusion_plus_3d_smi": 1.29209
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.40096,
+          "fusion_plus_3d_dual": 1.68055,
+          "baseline_fusion_smi": 1.38266,
+          "fusion_plus_3d_smi": 1.54121
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.43189,
+          "fusion_plus_3d_dual": 1.7059,
+          "baseline_fusion_smi": 1.41074,
+          "fusion_plus_3d_smi": 1.56648
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.29331,
+          "fusion_plus_3d_dual": 1.59462,
+          "baseline_fusion_smi": 1.18552,
+          "fusion_plus_3d_smi": 1.36613
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 3.44763,
+          "fusion_plus_3d_dual": 3.49079,
+          "baseline_fusion_smi": 3.46075,
+          "fusion_plus_3d_smi": 3.48347
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.8956,
+          "fusion_plus_3d_dual": 0.97952,
+          "baseline_fusion_smi": 0.64097,
+          "fusion_plus_3d_smi": 0.71609
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.69163,
+          "fusion_plus_3d_dual": 1.6633,
+          "baseline_fusion_smi": 1.72415,
+          "fusion_plus_3d_smi": 1.7047
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.9671,
+          "fusion_plus_3d_dual": 1.06658,
+          "baseline_fusion_smi": 1.04241,
+          "fusion_plus_3d_smi": 1.08978
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.27458,
+          "fusion_plus_3d_dual": 1.54423,
+          "baseline_fusion_smi": 1.08917,
+          "fusion_plus_3d_smi": 1.26063
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.33768,
+          "fusion_plus_3d_dual": 1.4757,
+          "baseline_fusion_smi": 1.40647,
+          "fusion_plus_3d_smi": 1.47613
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.88965,
+          "fusion_plus_3d_dual": 2.03449,
+          "baseline_fusion_smi": 1.80009,
+          "fusion_plus_3d_smi": 1.89108
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.51167,
+          "fusion_plus_3d_dual": 1.77343,
+          "baseline_fusion_smi": 1.42983,
+          "fusion_plus_3d_smi": 1.58542
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.51639,
+          "fusion_plus_3d_dual": 1.77777,
+          "baseline_fusion_smi": 1.41676,
+          "fusion_plus_3d_smi": 1.57411
+        }
+      ],
+      "elapsed_sec": 187.4
+    },
+    "Caco2": {
+      "endpoint": "Caco2",
+      "n_cv": 1265,
+      "n_holdout": 315,
+      "coverage_3d_pct": 99.9,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 1265,
+            "n_exact": 1256,
+            "n_censored": 9,
+            "mae": 0.43471,
+            "rmse": 0.56279,
+            "r2": 0.56371,
+            "spearman": 0.72238,
+            "pearson": 0.75253,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.85329,
+            "all_row_hinge_mae": 0.43769,
+            "censored_c_index": 0.76848
+          },
+          "ho_metrics": {
+            "n_total": 315,
+            "n_exact": 311,
+            "n_censored": 4,
+            "mae": 0.42197,
+            "rmse": 0.53406,
+            "r2": 0.62159,
+            "spearman": 0.787,
+            "pearson": 0.79164,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.39989,
+            "all_row_hinge_mae": 0.42169,
+            "censored_c_index": 0.79732
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 1265,
+            "n_exact": 1256,
+            "n_censored": 9,
+            "mae": 0.39766,
+            "rmse": 0.51544,
+            "r2": 0.63403,
+            "spearman": 0.78116,
+            "pearson": 0.79711,
+            "censored_concordance": 0.22222,
+            "censored_violation_mae": 0.97631,
+            "all_row_hinge_mae": 0.40178,
+            "censored_c_index": 0.79436
+          },
+          "ho_metrics": {
+            "n_total": 315,
+            "n_exact": 311,
+            "n_censored": 4,
+            "mae": 0.37037,
+            "rmse": 0.47652,
+            "r2": 0.69873,
+            "spearman": 0.84545,
+            "pearson": 0.83963,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.50654,
+            "all_row_hinge_mae": 0.3721,
+            "censored_c_index": 0.8285
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 1265,
+            "n_exact": 1256,
+            "n_censored": 9,
+            "mae": 0.39534,
+            "rmse": 0.51479,
+            "r2": 0.63496,
+            "spearman": 0.78451,
+            "pearson": 0.8022,
+            "censored_concordance": 0.22222,
+            "censored_violation_mae": 1.01026,
+            "all_row_hinge_mae": 0.39972,
+            "censored_c_index": 0.79574
+          },
+          "ho_metrics": {
+            "n_total": 315,
+            "n_exact": 311,
+            "n_censored": 4,
+            "mae": 0.38003,
+            "rmse": 0.49619,
+            "r2": 0.67335,
+            "spearman": 0.83007,
+            "pearson": 0.82137,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.41351,
+            "all_row_hinge_mae": 0.38045,
+            "censored_c_index": 0.81862
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 1265,
+            "n_exact": 1256,
+            "n_censored": 9,
+            "mae": 0.40016,
+            "rmse": 0.51285,
+            "r2": 0.6377,
+            "spearman": 0.78165,
+            "pearson": 0.79963,
+            "censored_concordance": 0.22222,
+            "censored_violation_mae": 0.97551,
+            "all_row_hinge_mae": 0.40426,
+            "censored_c_index": 0.79444
+          },
+          "ho_metrics": {
+            "n_total": 315,
+            "n_exact": 311,
+            "n_censored": 4,
+            "mae": 0.35571,
+            "rmse": 0.46999,
+            "r2": 0.70694,
+            "spearman": 0.85947,
+            "pearson": 0.84425,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.48957,
+            "all_row_hinge_mae": 0.3574,
+            "censored_c_index": 0.83617
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "KRR_RBF",
+          "cv_metrics": {
+            "n_total": 1265,
+            "n_exact": 1256,
+            "n_censored": 9,
+            "mae": 0.39655,
+            "rmse": 0.5087,
+            "r2": 0.64355,
+            "spearman": 0.78358,
+            "pearson": 0.80331,
+            "censored_concordance": 0.22222,
+            "censored_violation_mae": 0.98951,
+            "all_row_hinge_mae": 0.40077,
+            "censored_c_index": 0.79497
+          },
+          "ho_metrics": {
+            "n_total": 315,
+            "n_exact": 311,
+            "n_censored": 4,
+            "mae": 0.35843,
+            "rmse": 0.47462,
+            "r2": 0.70113,
+            "spearman": 0.85571,
+            "pearson": 0.84002,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.51023,
+            "all_row_hinge_mae": 0.36035,
+            "censored_c_index": 0.83357
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": 0.00272,
+      "direct_delta_smi_ho_mae": 0.00966,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 1265,
+          "n_exact": 1256,
+          "n_censored": 9,
+          "mae": 0.37226,
+          "rmse": 0.49109,
+          "r2": 0.66779,
+          "spearman": 0.80188,
+          "pearson": 0.81728,
+          "censored_concordance": 0.33333,
+          "censored_violation_mae": 0.52551,
+          "all_row_hinge_mae": 0.37335,
+          "censored_c_index": 0.8089
+        },
+        "dual_ho": {
+          "n_total": 315,
+          "n_exact": 311,
+          "n_censored": 4,
+          "mae": 0.36625,
+          "rmse": 0.47346,
+          "r2": 0.70259,
+          "spearman": 0.86061,
+          "pearson": 0.84726,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.41939,
+          "all_row_hinge_mae": 0.36692,
+          "censored_c_index": 0.84047
+        },
+        "smi_cv": {
+          "n_total": 1265,
+          "n_exact": 1256,
+          "n_censored": 9,
+          "mae": 0.36911,
+          "rmse": 0.48761,
+          "r2": 0.67248,
+          "spearman": 0.80864,
+          "pearson": 0.8203,
+          "censored_concordance": 0.33333,
+          "censored_violation_mae": 0.63611,
+          "all_row_hinge_mae": 0.37101,
+          "censored_c_index": 0.81157
+        },
+        "smi_ho": {
+          "n_total": 315,
+          "n_exact": 311,
+          "n_censored": 4,
+          "mae": 0.36096,
+          "rmse": 0.47048,
+          "r2": 0.70633,
+          "spearman": 0.8674,
+          "pearson": 0.84989,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.46806,
+          "all_row_hinge_mae": 0.36232,
+          "censored_c_index": 0.84337
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 1265,
+          "n_exact": 1256,
+          "n_censored": 9,
+          "mae": 0.37226,
+          "rmse": 0.49109,
+          "r2": 0.66779,
+          "spearman": 0.80188,
+          "pearson": 0.81728,
+          "censored_concordance": 0.33333,
+          "censored_violation_mae": 0.52551,
+          "all_row_hinge_mae": 0.37335,
+          "censored_c_index": 0.8089
+        },
+        "dual_ho": {
+          "n_total": 315,
+          "n_exact": 311,
+          "n_censored": 4,
+          "mae": 0.36625,
+          "rmse": 0.47346,
+          "r2": 0.70259,
+          "spearman": 0.86061,
+          "pearson": 0.84726,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.41939,
+          "all_row_hinge_mae": 0.36692,
+          "censored_c_index": 0.84047
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 0.72219,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.27734,
+          "direct_smiles_plus_3d_tree": 0.00046
+        },
+        "smi_cv": {
+          "n_total": 1265,
+          "n_exact": 1256,
+          "n_censored": 9,
+          "mae": 0.36878,
+          "rmse": 0.48352,
+          "r2": 0.67795,
+          "spearman": 0.80853,
+          "pearson": 0.82343,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.66533,
+          "all_row_hinge_mae": 0.37089,
+          "censored_c_index": 0.81117
+        },
+        "smi_ho": {
+          "n_total": 315,
+          "n_exact": 311,
+          "n_censored": 4,
+          "mae": 0.35955,
+          "rmse": 0.46814,
+          "r2": 0.70924,
+          "spearman": 0.86463,
+          "pearson": 0.84983,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.45005,
+          "all_row_hinge_mae": 0.3607,
+          "censored_c_index": 0.8409
+        },
+        "delta_smi_ho_mae": -0.00141
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.38661,
+          "fusion_plus_3d_dual": -6.38661,
+          "baseline_fusion_smi": -6.40228,
+          "fusion_plus_3d_smi": -6.37166
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.49649,
+          "fusion_plus_3d_dual": -6.49649,
+          "baseline_fusion_smi": -6.46431,
+          "fusion_plus_3d_smi": -6.33907
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.63539,
+          "fusion_plus_3d_dual": -6.63539,
+          "baseline_fusion_smi": -6.56759,
+          "fusion_plus_3d_smi": -6.41916
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.66722,
+          "fusion_plus_3d_dual": -6.66722,
+          "baseline_fusion_smi": -6.55543,
+          "fusion_plus_3d_smi": -6.41679
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.5095,
+          "fusion_plus_3d_dual": -6.5095,
+          "baseline_fusion_smi": -6.43011,
+          "fusion_plus_3d_smi": -6.32673
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.76188,
+          "fusion_plus_3d_dual": -6.76188,
+          "baseline_fusion_smi": -6.67838,
+          "fusion_plus_3d_smi": -6.50965
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.68896,
+          "fusion_plus_3d_dual": -6.68896,
+          "baseline_fusion_smi": -6.5621,
+          "fusion_plus_3d_smi": -6.42551
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.60742,
+          "fusion_plus_3d_dual": -6.60742,
+          "baseline_fusion_smi": -6.5221,
+          "fusion_plus_3d_smi": -6.40019
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.09014,
+          "fusion_plus_3d_dual": -6.09014,
+          "baseline_fusion_smi": -6.08324,
+          "fusion_plus_3d_smi": -5.99098
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.4697,
+          "fusion_plus_3d_dual": -6.4697,
+          "baseline_fusion_smi": -6.48958,
+          "fusion_plus_3d_smi": -6.47792
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.31368,
+          "fusion_plus_3d_dual": -6.31368,
+          "baseline_fusion_smi": -6.30665,
+          "fusion_plus_3d_smi": -6.22837
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.20938,
+          "fusion_plus_3d_dual": -6.20938,
+          "baseline_fusion_smi": -6.21078,
+          "fusion_plus_3d_smi": -6.06178
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.34127,
+          "fusion_plus_3d_dual": -6.34127,
+          "baseline_fusion_smi": -6.24146,
+          "fusion_plus_3d_smi": -6.14677
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.41883,
+          "fusion_plus_3d_dual": -6.41883,
+          "baseline_fusion_smi": -6.36263,
+          "fusion_plus_3d_smi": -6.27496
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.44683,
+          "fusion_plus_3d_dual": -6.44683,
+          "baseline_fusion_smi": -6.46047,
+          "fusion_plus_3d_smi": -6.54507
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.45878,
+          "fusion_plus_3d_dual": -6.45878,
+          "baseline_fusion_smi": -6.34719,
+          "fusion_plus_3d_smi": -6.26768
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.47022,
+          "fusion_plus_3d_dual": -6.47022,
+          "baseline_fusion_smi": -6.3554,
+          "fusion_plus_3d_smi": -6.26788
+        }
+      ],
+      "elapsed_sec": 477.2
+    },
+    "half_life_reg": {
+      "endpoint": "half_life_reg",
+      "n_cv": 2462,
+      "n_holdout": 616,
+      "coverage_3d_pct": 66.3,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 2317,
+            "n_exact": 2194,
+            "n_censored": 123,
+            "mae": 0.65663,
+            "rmse": 0.83201,
+            "r2": 0.36485,
+            "spearman": 0.55584,
+            "pearson": 0.60488,
+            "censored_concordance": 0.11382,
+            "censored_violation_mae": 0.86125,
+            "all_row_hinge_mae": 0.6675,
+            "censored_c_index": 0.68785
+          },
+          "ho_metrics": {
+            "n_total": 573,
+            "n_exact": 527,
+            "n_censored": 46,
+            "mae": 0.72856,
+            "rmse": 0.92282,
+            "r2": 0.32243,
+            "spearman": 0.41628,
+            "pearson": 0.5762,
+            "censored_concordance": 0.06522,
+            "censored_violation_mae": 1.1361,
+            "all_row_hinge_mae": 0.76128,
+            "censored_c_index": 0.63614
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 2317,
+            "n_exact": 2194,
+            "n_censored": 123,
+            "mae": 0.61753,
+            "rmse": 0.80944,
+            "r2": 0.39886,
+            "spearman": 0.61664,
+            "pearson": 0.63328,
+            "censored_concordance": 0.09756,
+            "censored_violation_mae": 0.87944,
+            "all_row_hinge_mae": 0.63143,
+            "censored_c_index": 0.71159
+          },
+          "ho_metrics": {
+            "n_total": 573,
+            "n_exact": 527,
+            "n_censored": 46,
+            "mae": 0.69585,
+            "rmse": 0.9029,
+            "r2": 0.35138,
+            "spearman": 0.44721,
+            "pearson": 0.60147,
+            "censored_concordance": 0.04348,
+            "censored_violation_mae": 1.1404,
+            "all_row_hinge_mae": 0.73153,
+            "censored_c_index": 0.64223
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 2317,
+            "n_exact": 2194,
+            "n_censored": 123,
+            "mae": 0.61711,
+            "rmse": 0.81117,
+            "r2": 0.39627,
+            "spearman": 0.61731,
+            "pearson": 0.6317,
+            "censored_concordance": 0.10569,
+            "censored_violation_mae": 0.87157,
+            "all_row_hinge_mae": 0.63062,
+            "censored_c_index": 0.71253
+          },
+          "ho_metrics": {
+            "n_total": 573,
+            "n_exact": 527,
+            "n_censored": 46,
+            "mae": 0.71515,
+            "rmse": 0.9246,
+            "r2": 0.31982,
+            "spearman": 0.40739,
+            "pearson": 0.57638,
+            "censored_concordance": 0.04348,
+            "censored_violation_mae": 1.1425,
+            "all_row_hinge_mae": 0.74945,
+            "censored_c_index": 0.62904
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 2462,
+            "n_exact": 2334,
+            "n_censored": 128,
+            "mae": 0.618,
+            "rmse": 0.81999,
+            "r2": 0.37374,
+            "spearman": 0.59834,
+            "pearson": 0.61207,
+            "censored_concordance": 0.10156,
+            "censored_violation_mae": 0.89315,
+            "all_row_hinge_mae": 0.6323,
+            "censored_c_index": 0.70489
+          },
+          "ho_metrics": {
+            "n_total": 616,
+            "n_exact": 567,
+            "n_censored": 49,
+            "mae": 0.70883,
+            "rmse": 0.91173,
+            "r2": 0.31065,
+            "spearman": 0.43266,
+            "pearson": 0.57099,
+            "censored_concordance": 0.02041,
+            "censored_violation_mae": 1.20116,
+            "all_row_hinge_mae": 0.74799,
+            "censored_c_index": 0.63328
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "SVR_RBF",
+          "cv_metrics": {
+            "n_total": 2462,
+            "n_exact": 2334,
+            "n_censored": 128,
+            "mae": 0.61839,
+            "rmse": 0.8208,
+            "r2": 0.37251,
+            "spearman": 0.59858,
+            "pearson": 0.61128,
+            "censored_concordance": 0.10938,
+            "censored_violation_mae": 0.89051,
+            "all_row_hinge_mae": 0.63254,
+            "censored_c_index": 0.70521
+          },
+          "ho_metrics": {
+            "n_total": 616,
+            "n_exact": 567,
+            "n_censored": 49,
+            "mae": 0.7149,
+            "rmse": 0.92046,
+            "r2": 0.29738,
+            "spearman": 0.41022,
+            "pearson": 0.55835,
+            "censored_concordance": 0.02041,
+            "censored_violation_mae": 1.1999,
+            "all_row_hinge_mae": 0.75348,
+            "censored_c_index": 0.62653
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": 0.00607,
+      "direct_delta_smi_ho_mae": 0.0193,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 2462,
+          "n_exact": 2334,
+          "n_censored": 128,
+          "mae": 0.59574,
+          "rmse": 0.77816,
+          "r2": 0.43601,
+          "spearman": 0.63091,
+          "pearson": 0.66243,
+          "censored_concordance": 0.07812,
+          "censored_violation_mae": 0.88627,
+          "all_row_hinge_mae": 0.61084,
+          "censored_c_index": 0.71688
+        },
+        "dual_ho": {
+          "n_total": 616,
+          "n_exact": 567,
+          "n_censored": 49,
+          "mae": 0.66541,
+          "rmse": 0.85448,
+          "r2": 0.3945,
+          "spearman": 0.4824,
+          "pearson": 0.64238,
+          "censored_concordance": 0.02041,
+          "censored_violation_mae": 1.18566,
+          "all_row_hinge_mae": 0.70679,
+          "censored_c_index": 0.65092
+        },
+        "smi_cv": {
+          "n_total": 2317,
+          "n_exact": 2194,
+          "n_censored": 123,
+          "mae": 0.59505,
+          "rmse": 0.77874,
+          "r2": 0.44359,
+          "spearman": 0.63183,
+          "pearson": 0.66615,
+          "censored_concordance": 0.13008,
+          "censored_violation_mae": 0.87607,
+          "all_row_hinge_mae": 0.60997,
+          "censored_c_index": 0.71765
+        },
+        "smi_ho": {
+          "n_total": 573,
+          "n_exact": 527,
+          "n_censored": 46,
+          "mae": 0.64851,
+          "rmse": 0.83475,
+          "r2": 0.4456,
+          "spearman": 0.53374,
+          "pearson": 0.67636,
+          "censored_concordance": 0.02174,
+          "censored_violation_mae": 1.12785,
+          "all_row_hinge_mae": 0.68699,
+          "censored_c_index": 0.67633
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 2462,
+          "n_exact": 2334,
+          "n_censored": 128,
+          "mae": 0.59574,
+          "rmse": 0.77816,
+          "r2": 0.43601,
+          "spearman": 0.63091,
+          "pearson": 0.66243,
+          "censored_concordance": 0.07812,
+          "censored_violation_mae": 0.88627,
+          "all_row_hinge_mae": 0.61084,
+          "censored_c_index": 0.71688
+        },
+        "dual_ho": {
+          "n_total": 616,
+          "n_exact": 567,
+          "n_censored": 49,
+          "mae": 0.66541,
+          "rmse": 0.85448,
+          "r2": 0.3945,
+          "spearman": 0.4824,
+          "pearson": 0.64238,
+          "censored_concordance": 0.02041,
+          "censored_violation_mae": 1.18566,
+          "all_row_hinge_mae": 0.70679,
+          "censored_c_index": 0.65092
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 2317,
+          "n_exact": 2194,
+          "n_censored": 123,
+          "mae": 0.59505,
+          "rmse": 0.77874,
+          "r2": 0.44359,
+          "spearman": 0.63183,
+          "pearson": 0.66615,
+          "censored_concordance": 0.13008,
+          "censored_violation_mae": 0.87607,
+          "all_row_hinge_mae": 0.60997,
+          "censored_c_index": 0.71765
+        },
+        "smi_ho": {
+          "n_total": 573,
+          "n_exact": 527,
+          "n_censored": 46,
+          "mae": 0.64851,
+          "rmse": 0.83475,
+          "r2": 0.4456,
+          "spearman": 0.53374,
+          "pearson": 0.67636,
+          "censored_concordance": 0.02174,
+          "censored_violation_mae": 1.12785,
+          "all_row_hinge_mae": 0.68699,
+          "censored_c_index": 0.67633
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.08355,
+          "fusion_plus_3d_dual": 0.08355,
+          "baseline_fusion_smi": 0.02154,
+          "fusion_plus_3d_smi": 0.02154
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.08018,
+          "fusion_plus_3d_dual": -0.08018,
+          "baseline_fusion_smi": -0.09767,
+          "fusion_plus_3d_smi": -0.09767
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.69945,
+          "fusion_plus_3d_dual": -0.69945,
+          "baseline_fusion_smi": -0.71592,
+          "fusion_plus_3d_smi": -0.71592
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.26199,
+          "fusion_plus_3d_dual": 0.26199,
+          "baseline_fusion_smi": 0.39384,
+          "fusion_plus_3d_smi": 0.39384
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.239,
+          "fusion_plus_3d_dual": 0.239,
+          "baseline_fusion_smi": 0.4448,
+          "fusion_plus_3d_smi": 0.4448
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.023,
+          "fusion_plus_3d_dual": 1.023,
+          "baseline_fusion_smi": 0.94149,
+          "fusion_plus_3d_smi": 0.94149
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.79627,
+          "fusion_plus_3d_dual": 1.79627,
+          "baseline_fusion_smi": 1.86135,
+          "fusion_plus_3d_smi": 1.86135
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": 1.78671,
+          "fusion_plus_3d_dual": 1.78671,
+          "baseline_fusion_smi": 2.15438,
+          "fusion_plus_3d_smi": 2.15438
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.11816,
+          "fusion_plus_3d_dual": 1.11816,
+          "baseline_fusion_smi": 1.34266,
+          "fusion_plus_3d_smi": 1.34266
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.16407,
+          "fusion_plus_3d_dual": 0.16407,
+          "baseline_fusion_smi": 0.19241,
+          "fusion_plus_3d_smi": 0.19241
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.19107,
+          "fusion_plus_3d_dual": 0.19107,
+          "baseline_fusion_smi": 0.2805,
+          "fusion_plus_3d_smi": 0.2805
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.50677,
+          "fusion_plus_3d_dual": 0.50677,
+          "baseline_fusion_smi": 0.36693,
+          "fusion_plus_3d_smi": 0.36693
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -0.14679,
+          "fusion_plus_3d_dual": -0.14679,
+          "baseline_fusion_smi": -0.15593,
+          "fusion_plus_3d_smi": -0.15593
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 0.51101,
+          "fusion_plus_3d_dual": 0.51101,
+          "baseline_fusion_smi": 0.48977,
+          "fusion_plus_3d_smi": 0.48977
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": 1.07998,
+          "fusion_plus_3d_dual": 1.07998,
+          "baseline_fusion_smi": 1.02128,
+          "fusion_plus_3d_smi": 1.02128
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.684,
+          "fusion_plus_3d_dual": 0.684,
+          "baseline_fusion_smi": 0.60757,
+          "fusion_plus_3d_smi": 0.60757
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": 0.6769,
+          "fusion_plus_3d_dual": 0.6769,
+          "baseline_fusion_smi": 0.68439,
+          "fusion_plus_3d_smi": 0.68439
+        }
+      ],
+      "elapsed_sec": 691.8
+    },
+    "PAMPA": {
+      "endpoint": "PAMPA",
+      "n_cv": 6865,
+      "n_holdout": 1716,
+      "coverage_3d_pct": 100.0,
+      "direct_ablation": {
+        "chameleonic_3d_only": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 6865,
+            "n_exact": 6857,
+            "n_censored": 8,
+            "mae": 0.43391,
+            "rmse": 0.60057,
+            "r2": 0.47798,
+            "spearman": 0.69556,
+            "pearson": 0.69177,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 1.16135,
+            "all_row_hinge_mae": 0.43476,
+            "censored_c_index": 0.76515
+          },
+          "ho_metrics": {
+            "n_total": 1716,
+            "n_exact": 1715,
+            "n_censored": 1,
+            "mae": 0.42245,
+            "rmse": 0.56908,
+            "r2": 0.54321,
+            "spearman": 0.72265,
+            "pearson": 0.74774,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.07774,
+            "all_row_hinge_mae": 0.42283,
+            "censored_c_index": 0.77088
+          }
+        },
+        "direct_smiles_base": {
+          "winning_family": "Nystrom_RBF",
+          "cv_metrics": {
+            "n_total": 6865,
+            "n_exact": 6857,
+            "n_censored": 8,
+            "mae": 0.41698,
+            "rmse": 0.5778,
+            "r2": 0.51682,
+            "spearman": 0.71804,
+            "pearson": 0.71915,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 1.28554,
+            "all_row_hinge_mae": 0.41799,
+            "censored_c_index": 0.77332
+          },
+          "ho_metrics": {
+            "n_total": 1716,
+            "n_exact": 1715,
+            "n_censored": 1,
+            "mae": 0.43524,
+            "rmse": 0.60572,
+            "r2": 0.48249,
+            "spearman": 0.67697,
+            "pearson": 0.70327,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.50622,
+            "all_row_hinge_mae": 0.43586,
+            "censored_c_index": 0.75145
+          }
+        },
+        "direct_smiles_plus_3d": {
+          "winning_family": "Nystrom_RBF",
+          "cv_metrics": {
+            "n_total": 6865,
+            "n_exact": 6857,
+            "n_censored": 8,
+            "mae": 0.42064,
+            "rmse": 0.58052,
+            "r2": 0.51226,
+            "spearman": 0.71389,
+            "pearson": 0.71594,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 1.28503,
+            "all_row_hinge_mae": 0.42164,
+            "censored_c_index": 0.77033
+          },
+          "ho_metrics": {
+            "n_total": 1716,
+            "n_exact": 1715,
+            "n_censored": 1,
+            "mae": 0.43712,
+            "rmse": 0.60999,
+            "r2": 0.47517,
+            "spearman": 0.67735,
+            "pearson": 0.69905,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.41901,
+            "all_row_hinge_mae": 0.43769,
+            "censored_c_index": 0.75122
+          }
+        },
+        "direct_dual_base": {
+          "winning_family": "XGBoost",
+          "cv_metrics": {
+            "n_total": 6865,
+            "n_exact": 6857,
+            "n_censored": 8,
+            "mae": 0.41884,
+            "rmse": 0.57065,
+            "r2": 0.52869,
+            "spearman": 0.72099,
+            "pearson": 0.72802,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 1.13333,
+            "all_row_hinge_mae": 0.41967,
+            "censored_c_index": 0.76848
+          },
+          "ho_metrics": {
+            "n_total": 1716,
+            "n_exact": 1715,
+            "n_censored": 1,
+            "mae": 0.4337,
+            "rmse": 0.58454,
+            "r2": 0.51805,
+            "spearman": 0.69897,
+            "pearson": 0.72983,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.09451,
+            "all_row_hinge_mae": 0.43409,
+            "censored_c_index": 0.7622
+          }
+        },
+        "direct_dual_plus_3d": {
+          "winning_family": "LightGBM",
+          "cv_metrics": {
+            "n_total": 6865,
+            "n_exact": 6857,
+            "n_censored": 8,
+            "mae": 0.42026,
+            "rmse": 0.56691,
+            "r2": 0.53485,
+            "spearman": 0.72003,
+            "pearson": 0.73244,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 1.02296,
+            "all_row_hinge_mae": 0.42096,
+            "censored_c_index": 0.76942
+          },
+          "ho_metrics": {
+            "n_total": 1716,
+            "n_exact": 1715,
+            "n_censored": 1,
+            "mae": 0.42999,
+            "rmse": 0.58267,
+            "r2": 0.52113,
+            "spearman": 0.70104,
+            "pearson": 0.73308,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.09533,
+            "all_row_hinge_mae": 0.43038,
+            "censored_c_index": 0.7631
+          }
+        }
+      },
+      "direct_delta_dual_ho_mae": -0.00371,
+      "direct_delta_smi_ho_mae": 0.00188,
+      "baseline_4fm_fusion": {
+        "dual_cv": {
+          "n_total": 6865,
+          "n_exact": 6857,
+          "n_censored": 8,
+          "mae": 0.38037,
+          "rmse": 0.53202,
+          "r2": 0.59035,
+          "spearman": 0.76624,
+          "pearson": 0.76842,
+          "censored_concordance": 0.375,
+          "censored_violation_mae": 1.09325,
+          "all_row_hinge_mae": 0.3812,
+          "censored_c_index": 0.79573
+        },
+        "dual_ho": {
+          "n_total": 1716,
+          "n_exact": 1715,
+          "n_censored": 1,
+          "mae": 0.37319,
+          "rmse": 0.51542,
+          "r2": 0.62528,
+          "spearman": 0.77803,
+          "pearson": 0.79801,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 1.14286,
+          "all_row_hinge_mae": 0.37364,
+          "censored_c_index": 0.79935
+        },
+        "smi_cv": {
+          "n_total": 6865,
+          "n_exact": 6857,
+          "n_censored": 8,
+          "mae": 0.37871,
+          "rmse": 0.53083,
+          "r2": 0.59218,
+          "spearman": 0.76937,
+          "pearson": 0.77001,
+          "censored_concordance": 0.375,
+          "censored_violation_mae": 1.16726,
+          "all_row_hinge_mae": 0.37963,
+          "censored_c_index": 0.79857
+        },
+        "smi_ho": {
+          "n_total": 1716,
+          "n_exact": 1715,
+          "n_censored": 1,
+          "mae": 0.37509,
+          "rmse": 0.51879,
+          "r2": 0.62037,
+          "spearman": 0.77982,
+          "pearson": 0.80047,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 1.44606,
+          "all_row_hinge_mae": 0.37571,
+          "censored_c_index": 0.80093
+        }
+      },
+      "fusion_plus_3d_chameleonic": {
+        "dual_weights": {
+          "official_fusion_dual": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_dual_plus_3d_smooth": 0.0,
+          "direct_dual_plus_3d_tree": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0
+        },
+        "dual_cv": {
+          "n_total": 6865,
+          "n_exact": 6857,
+          "n_censored": 8,
+          "mae": 0.38037,
+          "rmse": 0.53202,
+          "r2": 0.59035,
+          "spearman": 0.76624,
+          "pearson": 0.76842,
+          "censored_concordance": 0.375,
+          "censored_violation_mae": 1.09325,
+          "all_row_hinge_mae": 0.3812,
+          "censored_c_index": 0.79573
+        },
+        "dual_ho": {
+          "n_total": 1716,
+          "n_exact": 1715,
+          "n_censored": 1,
+          "mae": 0.37319,
+          "rmse": 0.51542,
+          "r2": 0.62528,
+          "spearman": 0.77803,
+          "pearson": 0.79801,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 1.14286,
+          "all_row_hinge_mae": 0.37364,
+          "censored_c_index": 0.79935
+        },
+        "delta_dual_cv_mae": 0.0,
+        "delta_dual_ho_mae": 0.0,
+        "delta_dual_ho_spearman": 0.0,
+        "smi_weights": {
+          "official_fusion_smi": 1.0,
+          "chameleonic_3d_only": 0.0,
+          "direct_smiles_plus_3d_smooth": 0.0,
+          "direct_smiles_plus_3d_tree": 0.0
+        },
+        "smi_cv": {
+          "n_total": 6865,
+          "n_exact": 6857,
+          "n_censored": 8,
+          "mae": 0.37871,
+          "rmse": 0.53083,
+          "r2": 0.59218,
+          "spearman": 0.76937,
+          "pearson": 0.77001,
+          "censored_concordance": 0.375,
+          "censored_violation_mae": 1.16726,
+          "all_row_hinge_mae": 0.37963,
+          "censored_c_index": 0.79857
+        },
+        "smi_ho": {
+          "n_total": 1716,
+          "n_exact": 1715,
+          "n_censored": 1,
+          "mae": 0.37509,
+          "rmse": 0.51879,
+          "r2": 0.62037,
+          "spearman": 0.77982,
+          "pearson": 0.80047,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 1.44606,
+          "all_row_hinge_mae": 0.37571,
+          "censored_c_index": 0.80093
+        },
+        "delta_smi_ho_mae": 0.0
+      },
+      "fusion_plus_3d_and_unimol2": null,
+      "case17_leaveout": [
+        {
+          "drug_name": "Leuprolide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.03601,
+          "fusion_plus_3d_dual": -6.03601,
+          "baseline_fusion_smi": -6.00026,
+          "fusion_plus_3d_smi": -6.00026
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -5.94862,
+          "fusion_plus_3d_dual": -5.94862,
+          "baseline_fusion_smi": -6.06027,
+          "fusion_plus_3d_smi": -6.06027
+        },
+        {
+          "drug_name": "Glucagon",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.15949,
+          "fusion_plus_3d_dual": -6.15949,
+          "baseline_fusion_smi": -6.28363,
+          "fusion_plus_3d_smi": -6.28363
+        },
+        {
+          "drug_name": "Teriparatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.28023,
+          "fusion_plus_3d_dual": -6.28023,
+          "baseline_fusion_smi": -6.41718,
+          "fusion_plus_3d_smi": -6.41718
+        },
+        {
+          "drug_name": "Exenatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.13739,
+          "fusion_plus_3d_dual": -6.13739,
+          "baseline_fusion_smi": -6.30291,
+          "fusion_plus_3d_smi": -6.30291
+        },
+        {
+          "drug_name": "Liraglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.23539,
+          "fusion_plus_3d_dual": -6.23539,
+          "baseline_fusion_smi": -6.3205,
+          "fusion_plus_3d_smi": -6.3205
+        },
+        {
+          "drug_name": "Semaglutide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.23098,
+          "fusion_plus_3d_dual": -6.23098,
+          "baseline_fusion_smi": -6.30016,
+          "fusion_plus_3d_smi": -6.30016
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.17384,
+          "fusion_plus_3d_dual": -6.17384,
+          "baseline_fusion_smi": -6.22924,
+          "fusion_plus_3d_smi": -6.22924
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "valid_3d": true,
+          "baseline_fusion_dual": -5.80161,
+          "fusion_plus_3d_dual": -5.80161,
+          "baseline_fusion_smi": -5.80056,
+          "fusion_plus_3d_smi": -5.80056
+        },
+        {
+          "drug_name": "Oxytocin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.57093,
+          "fusion_plus_3d_dual": -6.57093,
+          "baseline_fusion_smi": -6.48006,
+          "fusion_plus_3d_smi": -6.48006
+        },
+        {
+          "drug_name": "Octreotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.48847,
+          "fusion_plus_3d_dual": -6.48847,
+          "baseline_fusion_smi": -6.351,
+          "fusion_plus_3d_smi": -6.351
+        },
+        {
+          "drug_name": "Linaclotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.16811,
+          "fusion_plus_3d_dual": -6.16811,
+          "baseline_fusion_smi": -6.10921,
+          "fusion_plus_3d_smi": -6.10921
+        },
+        {
+          "drug_name": "Ziconotide",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.01515,
+          "fusion_plus_3d_dual": -6.01515,
+          "baseline_fusion_smi": -6.09047,
+          "fusion_plus_3d_smi": -6.09047
+        },
+        {
+          "drug_name": "Daptomycin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.08306,
+          "fusion_plus_3d_dual": -6.08306,
+          "baseline_fusion_smi": -6.04358,
+          "fusion_plus_3d_smi": -6.04358
+        },
+        {
+          "drug_name": "Caspofungin",
+          "valid_3d": true,
+          "baseline_fusion_dual": -6.36619,
+          "fusion_plus_3d_dual": -6.36619,
+          "baseline_fusion_smi": -6.32411,
+          "fusion_plus_3d_smi": -6.32411
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.18391,
+          "fusion_plus_3d_dual": -6.18391,
+          "baseline_fusion_smi": -6.39572,
+          "fusion_plus_3d_smi": -6.39572
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "valid_3d": false,
+          "baseline_fusion_dual": -6.17342,
+          "fusion_plus_3d_dual": -6.17342,
+          "baseline_fusion_smi": -6.39412,
+          "fusion_plus_3d_smi": -6.39412
+        }
+      ],
+      "elapsed_sec": 2996.0
+    }
+  },
+  "total_elapsed_sec": 3009.7
+}

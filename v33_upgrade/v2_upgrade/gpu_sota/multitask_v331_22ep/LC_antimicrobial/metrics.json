@@ -1,0 +1,166 @@
+{
+  "endpoint": "LC_antimicrobial",
+  "tier": "tier2",
+  "domain": "antimicrobial",
+  "size_tier": "medium",
+  "unit": "log10(uM)",
+  "n_total": 544,
+  "n_cv": 435,
+  "n_holdout": 109,
+  "seeds": [
+    42,
+    137
+  ],
+  "mean_best_epoch": 12.6,
+  "cv_metrics": {
+    "dual_modality": {
+      "n_total": 435,
+      "n_exact": 405,
+      "n_censored": 30,
+      "mae": 0.48601,
+      "rmse": 0.66614,
+      "r2": 0.10334,
+      "spearman": 0.44305,
+      "pearson": 0.47178,
+      "censored_concordance": 0.43333,
+      "censored_violation_mae": 0.40204,
+      "all_row_hinge_mae": 0.48022,
+      "censored_c_index": 0.6896
+    },
+    "smiles_only": {
+      "n_total": 435,
+      "n_exact": 405,
+      "n_censored": 30,
+      "mae": 0.52345,
+      "rmse": 0.6953,
+      "r2": 0.02311,
+      "spearman": 0.39348,
+      "pearson": 0.45784,
+      "censored_concordance": 0.3,
+      "censored_violation_mae": 0.51766,
+      "all_row_hinge_mae": 0.52305,
+      "censored_c_index": 0.66461
+    }
+  },
+  "holdout_metrics": {
+    "dual_modality": {
+      "n_total": 109,
+      "n_exact": 106,
+      "n_censored": 3,
+      "mae": 0.51496,
+      "rmse": 0.69928,
+      "r2": -0.05906,
+      "spearman": 0.44908,
+      "pearson": 0.43184,
+      "censored_concordance": 0.33333,
+      "censored_violation_mae": 0.69438,
+      "all_row_hinge_mae": 0.5199,
+      "censored_c_index": 0.67077
+    },
+    "smiles_only": {
+      "n_total": 109,
+      "n_exact": 106,
+      "n_censored": 3,
+      "mae": 0.52503,
+      "rmse": 0.69737,
+      "r2": -0.05326,
+      "spearman": 0.42511,
+      "pearson": 0.42558,
+      "censored_concordance": 0.33333,
+      "censored_violation_mae": 0.63932,
+      "all_row_hinge_mae": 0.52817,
+      "censored_c_index": 0.66359
+    }
+  },
+  "conformal": {
+    "dual_modality": {
+      "mode": "adaptive_tanimoto_dist",
+      "n_eval": 106,
+      "cov80": 0.6981,
+      "cov90": 0.8113,
+      "mean_width_80": 1.4174,
+      "mean_width_90": 1.9117
+    },
+    "smiles_only": {
+      "mode": "adaptive_tanimoto_dist",
+      "n_eval": 106,
+      "cov80": 0.7075,
+      "cov90": 0.8019,
+      "mean_width_80": 1.5172,
+      "mean_width_90": 2.0065
+    }
+  },
+  "applicability_domain": {
+    "In-Domain": {
+      "n": 106,
+      "mae": 0.51496,
+      "median_ae": 0.37563,
+      "rmse": 0.69928,
+      "mean_max_tanimoto": 0.7951
+    },
+    "spearman_tanimoto_vs_abs_err": 0.0982
+  },
+  "zero_leakage_audit": {
+    "cv_folds": [
+      {
+        "n_active_tasks": 46,
+        "n_train_clusters_all_46": 15040,
+        "n_forbidden_clusters": 42,
+        "n_leaked_clusters": 0,
+        "n_leaked_compounds": 0,
+        "n_target_train_rows": 349,
+        "n_target_val_rows": 86,
+        "n_aux_rows_kept": 64669,
+        "n_aux_rows_dropped_for_leak": 776
+      },
+      {
+        "n_active_tasks": 46,
+        "n_train_clusters_all_46": 15038,
+        "n_forbidden_clusters": 44,
+        "n_leaked_clusters": 0,
+        "n_leaked_compounds": 0,
+        "n_target_train_rows": 344,
+        "n_target_val_rows": 91,
+        "n_aux_rows_kept": 64717,
+        "n_aux_rows_dropped_for_leak": 728
+      },
+      {
+        "n_active_tasks": 46,
+        "n_train_clusters_all_46": 15040,
+        "n_forbidden_clusters": 42,
+        "n_leaked_clusters": 0,
+        "n_leaked_compounds": 0,
+        "n_target_train_rows": 349,
+        "n_target_val_rows": 86,
+        "n_aux_rows_kept": 64753,
+        "n_aux_rows_dropped_for_leak": 692
+      },
+      {
+        "n_active_tasks": 46,
+        "n_train_clusters_all_46": 15039,
+        "n_forbidden_clusters": 43,
+        "n_leaked_clusters": 0,
+        "n_leaked_compounds": 0,
+        "n_target_train_rows": 349,
+        "n_target_val_rows": 86,
+        "n_aux_rows_kept": 64912,
+        "n_aux_rows_dropped_for_leak": 533
+      },
+      {
+        "n_active_tasks": 46,
+        "n_train_clusters_all_46": 15039,
+        "n_forbidden_clusters": 43,
+        "n_leaked_clusters": 0,
+        "n_leaked_compounds": 0,
+        "n_target_train_rows": 349,
+        "n_target_val_rows": 86,
+        "n_aux_rows_kept": 64339,
+        "n_aux_rows_dropped_for_leak": 1106
+      }
+    ],
+    "total_leaked_clusters": 0,
+    "total_leaked_compounds": 0,
+    "verified_zero_leak": true
+  },
+  "elapsed_sec": 238.58
+}

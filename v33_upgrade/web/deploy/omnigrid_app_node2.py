@@ -28,6 +28,10 @@ os.environ["V33_MANIFEST_PATH"] = os.environ.get(
 )
 os.environ["V33_ROOT_PATH"] = os.environ.get("V33_ROOT_PATH", "/peptide-omnipanel")
 os.environ["OMNIPANEL_JOBS_DIR"] = os.environ.get("OMNIPANEL_JOBS_DIR", str(V33_DIR / "jobs_store"))
+os.environ["OMNIPANEL_GNN_CKPT"] = os.environ.get(
+    "OMNIPANEL_GNN_CKPT",
+    str(V33_DIR / "v33_runtime" / "bundle" / "gnn_8ep_5fold_fp16.pt"),
+)
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 

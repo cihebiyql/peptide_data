@@ -300,17 +300,42 @@ def test_spa_root_serves_subpath_safe_html_without_internal_codenames():
     assert res.status_code == 200
     html = res.text
     assert "OmniPanel" in html
-    assert 'href="static/styles.css?v=1.0' in html
-    assert 'src="static/app.js?v=1.0' in html
+    assert 'href="static/styles.css?v=1.2' in html
+    assert 'src="static/app.js?v=1.2' in html
     assert 'href="docs"' in html
-    # Zero hardcoded stale counts, zero internal codenames (V32/V33), zero institution naming
-    for forbidden in ("58,932", "213,800", "V32", "V33", "中检院", "叶老师", "NIFDC"):
+    # Zero hardcoded stale counts, zero internal codenames, zero institution naming
+    for forbidden in ("58,932", "213,800", "V32", "V33", "v33_remote", "中检院", "叶老师", "NIFDC", "Prof. Ye"):
         assert forbidden not in html, f"Found forbidden UI string: {forbidden}"
-    # Bilingual toggle, Dark/Light theme toggle, Tasks Center tab, and Return Context Bar must exist
+    # Bilingual toggle, Dark/Light theme toggle, Tasks Center tab, Return Context Bar & v1.1 visual showcase hooks
     assert 'data-tab="tasks"' in html
     assert 'id="btn-theme-toggle"' in html
     assert 'data-lang="zh"' in html and 'data-lang="en"' in html
     assert 'id="detail-context-bar"' in html
+    assert 'id="hero-mol-canvas"' in html
+    assert 'id="admet-map-host"' in html
+    assert 'id="arch-flow-host"' in html
+    assert 'id="landing-case17-chart"' in html
+    assert 'id="svg-view-toggle"' in html
+    assert 'card_semaglutide.png?v=1.1' in html
+
+
+def test_v11_scientific_static_assets_served():
+    for png_name in ("card_semaglutide.png", "card_cyclosporine.png", "card_micafungin.png", "card_magainin.png"):
+        r = client.get(f"/static/assets/{png_name}")
+        assert r.status_code == 200, f"Missing static asset {png_name}"
+        assert r.content.startswith(b"\x89PNG\r\n\x1a\n")
+        assert len(r.content) < 300 * 1024, f"{png_name} exceeds 300 KB ({len(r.content)} bytes)"
+
+    r_map = client.get("/static/assets/admet_human_map.svg")
+    assert r_map.status_code == 200
+    assert 'viewBox="0 0 640 520"' in r_map.text
+    for hs in ("bbb", "gut", "pk", "clearance", "safety", "micro"):
+        assert f'data-hotspot="{hs}"' in r_map.text
+
+    r_arch = client.get("/static/assets/arch_4fm_flow.svg")
+    assert r_arch.status_code == 200
+    assert 'viewBox="0 0 960 230"' in r_arch.text
+    assert "flow-pulse" in r_arch.text
 
 
 def test_async_task_center_lifecycle_and_exports():
@@ -420,3 +445,42 @@ def test_all_25_curated_examples_and_echinocandins():
     assert r_ec.status_code == 200
     assert r_ec.json()["valid_count"] == 6
     assert r_ec.json()["invalid_count"] == 0
+
+
+def test_mondrian_conformal_manifest_and_live_atom_attribution():
+    """Verify Plan B Mondrian AD-EB conformal manifest metadata + live Pure-PyTorch E-GAT atom attribution API."""
+    manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["version"] == "v33.2"
+    reg_eps = [ep for ep, v in manifest["endpoints"].items() if v["task_type"] == "regression"]
+    assert len(reg_eps) == 40
+    for ep in reg_eps:
+        for tr in ("dual_modality", "smiles_only"):
+            conf = manifest["endpoints"][ep][tr]["conformal"]
+            assert conf["mode"] == "mondrian_ad_eb"
+            assert set(conf["q80_by_tier"].keys()) == {"In-Domain", "Borderline", "OOD"}
+    # Promoted MT46 tracks verified present
+    assert manifest["endpoints"]["efflux_ratio"]["dual_modality"]["weights"].get("mt46", 0) > 0.3
+    assert manifest["endpoints"]["cytotoxicity_CC50"]["dual_modality"]["weights"].get("mt46", 0) > 0.2
+    assert manifest["endpoints"]["hemolysis_MHC"]["dual_modality"]["weights"].get("mt46", 0) > 0.3
+
+    # Test POST /api/v1/atom-attribution if checkpoint is available in workspace
+    res = client.post(
+        "/api/v1/atom-attribution",
+        json={"query": "Cyclosporine A", "endpoint": "PAMPA", "width": 760, "height": 460},
+    )
+    if res.status_code == 200:
+        d = res.json()
+        assert "<svg" in d["svg"]
+        assert d["endpoint"] == "PAMPA"
+        assert d["n_atoms"] == 85
+        assert len(d["top_atoms"]) >= 5
+        assert len(d["available_endpoints"]) == 8
+        # Also verify /predict auto-attaches atom_attribution_svg when include_svg=True
+        rp = client.post("/api/v1/predict", json={"query": "Cyclosporine A", "include_svg": True})
+        assert rp.status_code == 200
+        dp = rp.json()
+        assert dp["atom_attribution_svg"] and "<svg" in dp["atom_attribution_svg"]
+        assert len(dp["atom_attribution_endpoints"]) == 8
+    else:
+        assert res.status_code == 503

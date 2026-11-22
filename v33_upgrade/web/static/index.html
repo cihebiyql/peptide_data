@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Peptide OmniPanel · 多肽全端点性质预测平台</title>
-  <link rel="stylesheet" href="static/styles.css?v=1.0.1" />
+  <link rel="stylesheet" href="static/styles.css?v=1.2" />
 </head>
 <body>
   <!-- Clean Top Navigation Bar (56px) -->
@@ -20,7 +20,7 @@
           <circle cx="14" cy="14" r="2.1" fill="var(--cobalt)"/>
         </svg>
         <span class="brand-name">Omni<strong>Panel</strong></span>
-        <span class="brand-ver">v1.0</span>
+        <span class="brand-ver">v1.2</span>
       </a>
 
       <nav class="main-nav" role="tablist" aria-label="Primary Workspace">
@@ -91,181 +91,306 @@
         </div>
       </div>
 
-      <!-- Adaptive Hero -->
+      <!-- Adaptive Atmospheric Hero (DeepSeek-Harness Misty Gradient + Procedural Molecular Canvas) -->
       <div id="predict-hero" class="predict-hero hero-centered">
-        <div class="hero-intro">
-          <div class="hero-eyebrow" data-i18n="hero_eyebrow">4 基座模型超集成 · 多肽与环肽 ADMET / PK / 抗菌全端点预测</div>
-          <h1 class="hero-title"><span data-i18n="hero_title_zh">多肽全端点性质预测平台</span> <span class="title-sep">·</span> <span class="title-en">Peptide OmniPanel</span></h1>
-          <p class="hero-sub" data-i18n="hero_sub">
-            支持 20 种天然氨基酸序列、环肽大环、棘白菌素及脂化长效修饰多肽——提供 RDKit 二维结构高亮、校准概率与 80% 共形预测区间、精确 Tanimoto 适用域及长效脂化半衰期机制识别。
-          </p>
-        </div>
+        <canvas id="hero-mol-canvas" class="hero-mol-canvas" aria-hidden="true"></canvas>
+        <div class="hero-ambient-halo" aria-hidden="true"></div>
 
-        <div class="query-bar-wrap">
-          <form id="predict-form" class="smart-query-bar" autocomplete="off">
-            <span class="query-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="7.5"/>
-                <path d="M20 20l-3.5-3.5" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <input
-              type="text"
-              id="smart-query-input"
-              class="smart-input"
-              data-i18n-ph="query_placeholder"
-              placeholder="输入多肽药物名称（如 司美格鲁肽 / Cyclosporine A）、20AA 序列或完整 SMILES…"
-              aria-label="Peptide drug name, sequence, or SMILES"
-            />
-            <span id="detected-type-chip" class="detect-chip hidden">Auto</span>
-            <button type="submit" id="btn-predict" class="btn-primary btn-predict">
-              <span class="btn-label" data-i18n="btn_predict">开始预测</span>
-              <span class="btn-spinner hidden" aria-hidden="true"></span>
-            </button>
-          </form>
-
-          <!-- Autocomplete dropdown -->
-          <div id="autocomplete-list" class="autocomplete-menu hidden" role="listbox"></div>
-
-          <!-- Compact action buttons visible in results mode -->
-          <div id="compact-actions" class="compact-actions hidden">
-            <button type="button" class="btn-ghost btn-sm" id="btn-export-csv" data-i18n="btn_csv">导出 CSV</button>
-            <button type="button" class="btn-ghost btn-sm" id="btn-export-json" data-i18n="btn_json">导出 JSON</button>
-            <button type="button" class="btn-ghost btn-sm" id="btn-print-report" data-i18n="btn_print">打印报告</button>
+        <div class="hero-content-layer">
+          <div class="hero-intro">
+            <div class="hero-eyebrow" data-i18n="hero_eyebrow">4 基座模型超集成 · 46 端点多肽 ADMET / PK / 抗菌引擎</div>
+            <h1 class="hero-title"><span data-i18n="hero_title_zh">多肽全端点性质预测平台</span> <span class="title-sep">·</span> <span class="title-en">Peptide OmniPanel</span></h1>
+            <p class="hero-sub" data-i18n="hero_sub">覆盖天然序列、大环肽与脂化长效修饰 — 一键输出 46 端点预测、80% 共形区间与精确适用域。</p>
           </div>
-        </div>
 
-        <!-- Single-Row Compact Pill Examples + Curated Library Drawer + Advanced Options -->
-        <div class="examples-row">
-          <div class="examples-pills" id="example-pills">
-            <span class="examples-label" data-i18n="examples_label">快捷示例：</span>
-          </div>
-          <div class="examples-actions">
-            <button type="button" id="btn-toggle-exlib" class="btn-exlib-toggle" aria-expanded="false">
-              <span id="exlib-btn-label">全部 25 个示例</span>
-              <span class="exlib-chevron">▾</span>
-            </button>
-            <button type="button" id="btn-toggle-advanced" class="btn-link-subtle" aria-expanded="false">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" stroke-linecap="round"/>
-              </svg>
-              <span data-i18n="btn_advanced">高级设置</span>
-            </button>
-          </div>
-        </div>
+          <div class="query-bar-wrap">
+            <form id="predict-form" class="smart-query-bar" autocomplete="off">
+              <span class="query-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="7.5"/>
+                  <path d="M20 20l-3.5-3.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input
+                type="text"
+                id="smart-query-input"
+                class="smart-input"
+                data-i18n-ph="query_placeholder"
+                placeholder="输入多肽药物名称（司美格鲁肽 / Cyclosporine A）、20AA 序列或 SMILES…"
+                aria-label="Peptide drug name, sequence, or SMILES"
+              />
+              <span id="detected-type-chip" class="detect-chip hidden">Auto</span>
+              <button type="submit" id="btn-predict" class="btn-primary btn-predict">
+                <span class="btn-label" data-i18n="btn_predict">开始预测</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+            </form>
 
-        <!-- Collapsible Curated Example Library -->
-        <div id="example-library-panel" class="example-library-panel hidden">
-          <div class="exlib-head">
-            <div>
-              <strong data-i18n="exlib_title">精选临床与研究多肽示例库</strong>
-              <span class="exlib-sub" data-i18n="exlib_sub">17 个经典临床多肽案例 · 棘白菌素类环肽全家族 (4) · 经典抗菌肽序列 (5)</span>
+            <!-- Autocomplete dropdown -->
+            <div id="autocomplete-list" class="autocomplete-menu hidden" role="listbox"></div>
+
+            <!-- Compact action buttons visible in results mode -->
+            <div id="compact-actions" class="compact-actions hidden">
+              <button type="button" class="btn-ghost btn-sm" id="btn-export-csv" data-i18n="btn_csv">导出 CSV</button>
+              <button type="button" class="btn-ghost btn-sm" id="btn-export-json" data-i18n="btn_json">导出 JSON</button>
+              <button type="button" class="btn-ghost btn-sm" id="btn-print-report" data-i18n="btn_print">打印报告</button>
             </div>
-            <button type="button" id="btn-close-exlib" class="icon-btn" aria-label="Close examples library">✕</button>
           </div>
-          <div id="exlib-grid" class="exlib-grid"></div>
-        </div>
 
-        <!-- Collapsible Advanced Options Panel -->
-        <div id="advanced-panel" class="advanced-panel hidden">
-          <div class="adv-grid">
-            <div class="adv-field">
-              <label for="adv-sequence" data-i18n="adv_seq_label">指定天然序列（20 种标准氨基酸）</label>
-              <textarea id="adv-sequence" rows="2" data-i18n-ph="adv_seq_ph" placeholder="可选 — 例如 HISEAVKIFGCKWKENWKWNSNC"></textarea>
+          <!-- Single-Row Compact Pill Examples + Curated Library + Mod Template Helper + Advanced Options -->
+          <div class="examples-row">
+            <div class="examples-pills" id="example-pills">
+              <span class="examples-label" data-i18n="examples_label">快捷示例：</span>
             </div>
-            <div class="adv-field">
-              <label for="adv-smiles" data-i18n="adv_smi_label">指定共价结构 SMILES</label>
-              <textarea id="adv-smiles" rows="2" data-i18n-ph="adv_smi_ph" placeholder="可选 — 环肽或脂化修饰多肽推荐提供 SMILES"></textarea>
+            <div class="examples-actions">
+              <button type="button" id="btn-toggle-exlib" class="btn-exlib-toggle" aria-expanded="false">
+                <span id="exlib-btn-label">全部 25 个示例</span>
+                <span class="exlib-chevron">▾</span>
+              </button>
+              <button type="button" id="btn-toggle-modhelper" class="btn-link-subtle" aria-expanded="false">
+                <svg width="13.5" height="13.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2"/>
+                  <circle cx="12" cy="12" r="2.5"/>
+                </svg>
+                <span data-i18n="btn_mod_helper">修饰模板</span>
+              </button>
+              <button type="button" id="btn-toggle-advanced" class="btn-link-subtle" aria-expanded="false">
+                <svg width="13.5" height="13.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" stroke-linecap="round"/>
+                </svg>
+                <span data-i18n="btn_advanced">高级设置</span>
+              </button>
             </div>
-            <div class="adv-field adv-conditions">
-              <label data-i18n="adv_cond_label">实验条件与预测范围</label>
-              <div class="cond-row">
-                <span class="cond-label" data-i18n="adv_rbc">红细胞物种</span>
-                <div class="seg-group" id="rbc-species-group">
-                  <button type="button" class="seg-btn active" data-val="human" data-i18n="rbc_human">人源</button>
-                  <button type="button" class="seg-btn" data-val="horse" data-i18n="rbc_horse">马源</button>
-                  <button type="button" class="seg-btn" data-val="mouse" data-i18n="rbc_mouse">鼠源</button>
+          </div>
+
+          <!-- Collapsible Quick Modification Template Helper (Self-contained, Zero CDNs) -->
+          <div id="mod-template-panel" class="mod-template-panel hidden">
+            <div class="exlib-head">
+              <div>
+                <strong data-i18n="mod_helper_title">快速修饰模板助手</strong>
+                <span class="exlib-sub" data-i18n="mod_helper_sub">一键填入代表性修饰骨架（长效脂化 / 大环 N-甲基化 / 二硫键 / 棘白菌素 / 抗菌螺旋）</span>
+              </div>
+              <button type="button" id="btn-close-modhelper" class="icon-btn" aria-label="Close template helper">✕</button>
+            </div>
+            <div id="mod-template-grid" class="mod-template-grid"></div>
+          </div>
+
+          <!-- Collapsible Curated Example Library -->
+          <div id="example-library-panel" class="example-library-panel hidden">
+            <div class="exlib-head">
+              <div>
+                <strong data-i18n="exlib_title">精选临床与研究多肽示例库</strong>
+                <span class="exlib-sub" data-i18n="exlib_sub">17 个经典临床多肽案例 · 棘白菌素类环肽全家族 (4) · 经典抗菌肽序列 (5)</span>
+              </div>
+              <button type="button" id="btn-close-exlib" class="icon-btn" aria-label="Close examples library">✕</button>
+            </div>
+            <div id="exlib-grid" class="exlib-grid"></div>
+          </div>
+
+          <!-- Collapsible Advanced Options Panel -->
+          <div id="advanced-panel" class="advanced-panel hidden">
+            <div class="adv-grid">
+              <div class="adv-field">
+                <label for="adv-sequence" data-i18n="adv_seq_label">指定天然序列（20 种标准氨基酸）</label>
+                <textarea id="adv-sequence" rows="2" data-i18n-ph="adv_seq_ph" placeholder="可选 — 例如 HISEAVKIFGCKWKENWKWNSNC"></textarea>
+              </div>
+              <div class="adv-field">
+                <label for="adv-smiles" data-i18n="adv_smi_label">指定共价结构 SMILES</label>
+                <textarea id="adv-smiles" rows="2" data-i18n-ph="adv_smi_ph" placeholder="可选 — 环肽或脂化修饰多肽推荐提供 SMILES"></textarea>
+              </div>
+              <div class="adv-field adv-conditions">
+                <label data-i18n="adv_cond_label">实验条件与预测范围</label>
+                <div class="cond-row">
+                  <span class="cond-label" data-i18n="adv_rbc">红细胞物种</span>
+                  <div class="seg-group" id="rbc-species-group">
+                    <button type="button" class="seg-btn active" data-val="human" data-i18n="rbc_human">人源</button>
+                    <button type="button" class="seg-btn" data-val="horse" data-i18n="rbc_horse">马源</button>
+                    <button type="button" class="seg-btn" data-val="mouse" data-i18n="rbc_mouse">鼠源</button>
+                  </div>
                 </div>
+                <div class="cond-row">
+                  <span class="cond-label" data-i18n="adv_pk_ctx">药代给药场景</span>
+                  <select id="pk-context-select" class="select-sm">
+                    <option value="human_plasma" data-i18n="pk_human_plasma">人血浆 (IV)</option>
+                    <option value="human_sc" data-i18n="pk_human_sc">人皮下注射 (SC)</option>
+                    <option value="human_po" data-i18n="pk_human_po">人口服 (PO)</option>
+                    <option value="rat_iv" data-i18n="pk_rat_iv">大鼠 (IV)</option>
+                    <option value="mouse_sc" data-i18n="pk_mouse_sc">小鼠 (SC)</option>
+                  </select>
+                </div>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="toggle-tier2-req" checked />
+                  <span id="adv-tier2-label">包含 Tier 2 抗菌、杀菌与抗生物膜端点</span>
+                </label>
               </div>
-              <div class="cond-row">
-                <span class="cond-label" data-i18n="adv_pk_ctx">药代给药场景</span>
-                <select id="pk-context-select" class="select-sm">
-                  <option value="human_plasma" data-i18n="pk_human_plasma">人血浆 (IV)</option>
-                  <option value="human_sc" data-i18n="pk_human_sc">人皮下注射 (SC)</option>
-                  <option value="human_po" data-i18n="pk_human_po">人口服 (PO)</option>
-                  <option value="rat_iv" data-i18n="pk_rat_iv">大鼠 (IV)</option>
-                  <option value="mouse_sc" data-i18n="pk_mouse_sc">小鼠 (SC)</option>
-                </select>
-              </div>
-              <label class="checkbox-inline">
-                <input type="checkbox" id="toggle-tier2-req" checked />
-                <span id="adv-tier2-label">包含 Tier 2 抗菌、杀菌与抗生物膜端点</span>
-              </label>
+            </div>
+          </div>
+
+          <div id="predict-error" class="alert-error hidden" role="alert"></div>
+
+          <!-- Compact Glass KPI Strip inside Hero (Animated Count-Up) -->
+          <div class="kpi-ribbon hero-kpi-ribbon">
+            <div class="kpi-item">
+              <span class="kpi-val mono" id="kpi-compounds" data-count-target="50994">—</span>
+              <span class="kpi-lbl" data-i18n="kpi_compounds">标准化多肽</span>
+            </div>
+            <div class="kpi-divider"></div>
+            <div class="kpi-item">
+              <span class="kpi-val mono" id="kpi-ep-count" data-count-target="46">—</span>
+              <span class="kpi-lbl" id="kpi-ep-lbl">全端点模型</span>
+            </div>
+            <div class="kpi-divider"></div>
+            <div class="kpi-item">
+              <span class="kpi-val mono" id="kpi-records" data-count-target="82327">—</span>
+              <span class="kpi-lbl" id="kpi-records-lbl">实验记录</span>
+            </div>
+            <div class="kpi-divider"></div>
+            <div class="kpi-item">
+              <span class="kpi-val mono" id="kpi-uq" data-count-target="80" data-count-suffix="%">80%</span>
+              <span class="kpi-lbl" data-i18n="kpi_uq">共形区间 · Tanimoto AD</span>
             </div>
           </div>
         </div>
-
-        <div id="predict-error" class="alert-error hidden" role="alert"></div>
       </div>
 
-      <!-- Landing Overview Strip -->
+      <!-- ==================== LANDING EDITORIAL SCIENTIFIC SHOWCASE ==================== -->
       <div id="landing-overview" class="landing-overview">
-        <div class="kpi-ribbon">
-          <div class="kpi-item">
-            <span class="kpi-val mono" id="kpi-compounds">—</span>
-            <span class="kpi-lbl" data-i18n="kpi_compounds">标准化多肽分子</span>
-          </div>
-          <div class="kpi-divider"></div>
-          <div class="kpi-item">
-            <span class="kpi-val mono" id="kpi-ep-count">—</span>
-            <span class="kpi-lbl" id="kpi-ep-lbl">分层全端点模型</span>
-          </div>
-          <div class="kpi-divider"></div>
-          <div class="kpi-item">
-            <span class="kpi-val mono" id="kpi-records">—</span>
-            <span class="kpi-lbl" id="kpi-records-lbl">实验记录</span>
-          </div>
-          <div class="kpi-divider"></div>
-          <div class="kpi-item">
-            <span class="kpi-val mono" id="kpi-uq">80%</span>
-            <span class="kpi-lbl" data-i18n="kpi_uq">共形区间 + Tanimoto 适用域</span>
-          </div>
-        </div>
 
-        <div class="feature-trio">
-          <article class="feature-card">
-            <div class="feature-icon icon-cobalt">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
+        <!-- 1. Four Visual Featured Clinical Modality Cards -->
+        <section class="landing-section reveal-on-scroll is-visible" id="modality-showcase-section">
+          <div class="landing-sec-head">
+            <div>
+              <span class="landing-kicker" data-i18n="sec_modalities_kicker">REPRESENTATIVE MODALITIES</span>
+              <h2 class="landing-sec-title" data-i18n="sec_modalities_title">四大临床多肽模态 · 一键实时预测</h2>
             </div>
-            <h3 data-i18n="feat1_title">4 基座模型多模态超集成</h3>
-            <p data-i18n="feat1_desc"></p>
-          </article>
+            <span class="landing-sec-sub" data-i18n="sec_modalities_sub">点击卡片即刻运行完整 46 端点预测与二维修饰高亮</span>
+          </div>
 
-          <article class="feature-card">
-            <div class="feature-icon icon-amber">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <circle cx="12" cy="12" r="9"/>
-                <polyline points="12 7 12 12 15.5 14"/>
-              </svg>
-            </div>
-            <h3 data-i18n="feat2_title">长效脂化半衰期机制识别</h3>
-            <p data-i18n="feat2_desc"></p>
-          </article>
+          <div class="modality-grid">
+            <article class="modality-card" data-modality-query="Semaglutide" role="button" tabindex="0">
+              <div class="modality-img-wrap">
+                <img src="static/assets/card_semaglutide.png?v=1.1" alt="Semaglutide C18 fatty-diacid helical peptide" width="512" height="320" loading="eager" />
+                <span class="modality-pill pill-amber" data-i18n="mc1_pill">T½ 120–168 h ★</span>
+              </div>
+              <div class="modality-body">
+                <h3 data-i18n="mc1_title">司美格鲁肽 · Semaglutide</h3>
+                <p data-i18n="mc1_sub">C18 脂肪二酸 · 白蛋白长效锚定</p>
+                <span class="modality-cta" data-i18n="mod_card_run">运行 46 端点 →</span>
+              </div>
+            </article>
 
-          <article class="feature-card">
-            <div class="feature-icon icon-teal">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M12 3l8 4v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
+            <article class="modality-card" data-modality-query="Cyclosporine A" role="button" tabindex="0">
+              <div class="modality-img-wrap">
+                <img src="static/assets/card_cyclosporine.png?v=1.1" alt="Cyclosporine A cyclic macrocycle traversing bilayer" width="512" height="320" loading="eager" />
+                <span class="modality-pill pill-cobalt" data-i18n="mc2_pill">33-Atom 大环</span>
+              </div>
+              <div class="modality-body">
+                <h3 data-i18n="mc2_title">环孢素 A · Cyclosporine A</h3>
+                <p data-i18n="mc2_sub">7× N-甲基化 · 跨磷脂膜渗透</p>
+                <span class="modality-cta" data-i18n="mod_card_run">运行 46 端点 →</span>
+              </div>
+            </article>
+
+            <article class="modality-card" data-modality-query="Micafungin" role="button" tabindex="0">
+              <div class="modality-img-wrap">
+                <img src="static/assets/card_micafungin.png?v=1.1" alt="Micafungin echinocandin cyclic lipopeptide" width="512" height="320" loading="eager" />
+                <span class="modality-pill pill-emerald" data-i18n="mc3_pill">抗真菌脂环肽</span>
+              </div>
+              <div class="modality-body">
+                <h3 data-i18n="mc3_title">米卡芬净 · Micafungin</h3>
+                <p data-i18n="mc3_sub">棘白菌素 · 靶向真菌细胞壁</p>
+                <span class="modality-cta" data-i18n="mod_card_run">运行 46 端点 →</span>
+              </div>
+            </article>
+
+            <article class="modality-card" data-modality-query="Magainin 2" role="button" tabindex="0">
+              <div class="modality-img-wrap">
+                <img src="static/assets/card_magainin.png?v=1.1" alt="Magainin 2 amphipathic antimicrobial helix" width="512" height="320" loading="eager" />
+                <span class="modality-pill pill-teal" data-i18n="mc4_pill">22 ESKAPE 端点</span>
+              </div>
+              <div class="modality-body">
+                <h3 data-i18n="mc4_title">爪蟾抗菌肽 · Magainin 2</h3>
+                <p data-i18n="mc4_sub">两亲 α-螺旋 · 扰动细菌外膜</p>
+                <span class="modality-cta" data-i18n="mod_card_run">运行 46 端点 →</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- 2. Interactive Human ADMET Barrier & ESKAPE Spectrum Explorer -->
+        <section class="landing-section reveal-on-scroll" id="admet-explorer-section">
+          <div class="landing-sec-head">
+            <div>
+              <span class="landing-kicker" data-i18n="sec_admet_kicker">PHYSIOLOGICAL BARRIERS & SPECTRUM</span>
+              <h2 class="landing-sec-title" data-i18n="sec_admet_title">人体 ADMET 屏障与 ESKAPE 抗菌图谱</h2>
             </div>
-            <h3 data-i18n="feat3_title">共形不确定性、删失建模与近邻溯源</h3>
-            <p data-i18n="feat3_desc"></p>
-          </article>
-        </div>
+            <span class="landing-sec-sub" data-i18n="sec_admet_sub">悬停或点击 6 大生理节点，实时查看对应端点与 20% 独立留出集精度</span>
+          </div>
+
+          <div class="admet-explorer-grid card">
+            <div class="admet-map-stage" id="admet-map-host" aria-label="Interactive Human ADMET Physiological Map"></div>
+            <div class="admet-detail-panel" id="admet-detail-card"></div>
+          </div>
+        </section>
+
+        <!-- 3. Animated 4-FM Pipeline Flow + Real 17-Clinical-Case Parity Benchmark -->
+        <section class="landing-section reveal-on-scroll" id="arch-benchmark-section">
+          <div class="landing-sec-head">
+            <div>
+              <span class="landing-kicker" data-i18n="sec_arch_kicker">ARCHITECTURE & CLINICAL BENCHMARK</span>
+              <h2 class="landing-sec-title" data-i18n="sec_arch_title">4 基座模型超集成架构与 17 临床药实证</h2>
+            </div>
+            <span class="landing-sec-sub" data-i18n="sec_arch_sub">严格零泄漏分组交叉验证 · 17 临床多肽半衰期 Spearman 0.903 · 0/17 溶血误报</span>
+          </div>
+
+          <div class="card arch-flow-card">
+            <div id="arch-flow-host" class="arch-flow-host"></div>
+          </div>
+
+          <div class="card landing-c17-card">
+            <div class="c17-showcase-grid">
+              <div class="c17-chart-col">
+                <div class="c17-chart-bar">
+                  <div class="seg-group" id="landing-c17-mode-group">
+                    <button type="button" class="seg-btn active" data-c17mode="hybrid" data-i18n="c17_mode_hybrid">纯 ML + 脂化锚定</button>
+                    <button type="button" class="seg-btn" data-c17mode="pure" data-i18n="c17_mode_pure">纯机器学习路线</button>
+                  </div>
+                  <div class="c17-legend-inline">
+                    <span class="c17-leg-item"><i class="c17-leg-dot dot-lip"></i><span data-i18n="c17_legend_lip">长效脂化 (5)</span></span>
+                    <span class="c17-leg-item"><i class="c17-leg-dot dot-cyc"></i><span data-i18n="c17_legend_cyc">环肽 / 二硫键 (6)</span></span>
+                    <span class="c17-leg-item"><i class="c17-leg-dot dot-lin"></i><span data-i18n="c17_legend_lin">线性临床肽 (5)</span></span>
+                  </div>
+                </div>
+                <div id="landing-case17-chart" class="c17-chart-stage"></div>
+                <div id="landing-case17-readout" class="c17-readout" data-i18n="c17_click_hint">悬停查看药物实测与预测对比，点击任意数据点直接运行实时预测</div>
+              </div>
+
+              <div class="c17-stats-col">
+                <div class="c17-kpi-stack" id="landing-c17-kpis">
+                  <div class="c17-mini-kpi">
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_rho">16 药半衰期 Spearman</span>
+                    <strong class="c17-mini-val mono" id="lc17-rho">0.903</strong>
+                  </div>
+                  <div class="c17-mini-kpi">
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_r2">锚定后对数 R²</span>
+                    <strong class="c17-mini-val mono" id="lc17-r2">0.781</strong>
+                  </div>
+                  <div class="c17-mini-kpi">
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_mae">锚定后 MAE (log₁₀ h)</span>
+                    <strong class="c17-mini-val mono" id="lc17-mae">0.299</strong>
+                  </div>
+                  <div class="c17-mini-kpi">
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_fp">临床药溶血误报</span>
+                    <strong class="c17-mini-val mono" id="lc17-fp" style="color:var(--emerald)">0 / 17</strong>
+                  </div>
+                </div>
+                <button type="button" class="btn-ghost btn-sm c17-goto-val" id="btn-landing-goto-val">
+                  <span data-i18n="nav_validation">端点与验证</span> →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- ==================== PREDICTION RESULTS WORKSPACE ==================== -->
@@ -278,6 +403,11 @@
                 <span class="card-sub" id="svg-meta-caption">RDKit rdMolDraw2D</span>
               </div>
               <div class="card-actions">
+                <!-- Plan B Future-Proof Hook: Motif Highlights <-> Atom Attribution Heatmap -->
+                <div class="seg-group svg-view-toggle" id="svg-view-toggle" role="group" aria-label="2D Structure Overlay Mode">
+                  <button type="button" class="seg-btn active" data-svg-mode="motifs" data-i18n="svg_tab_motifs">修饰高亮</button>
+                  <button type="button" class="seg-btn" id="btn-svg-attr" data-svg-mode="attribution" disabled data-i18n="svg_tab_attr" data-i18n-title="svg_attr_pending">原子归因热图</button>
+                </div>
                 <button type="button" class="icon-btn" id="btn-zoom-svg" title="Zoom">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -290,6 +420,7 @@
                 </button>
               </div>
             </div>
+            <div class="svg-attr-bar hidden" id="svg-attr-bar" role="group" aria-label="Atom Attribution Endpoint"></div>
             <div class="svg-stage" id="mol-svg-stage"></div>
             <div class="svg-legend" id="mol-svg-legend"></div>
           </div>
@@ -525,6 +656,22 @@
         <div class="card val-highlight-card" id="val-fm-strip"></div>
       </div>
 
+      <!-- Expanded Interactive 17 Clinical Cases Parity Plot in Validation View -->
+      <div class="card val-c17-chart-card">
+        <div class="card-head" style="margin-bottom:8px;">
+          <div>
+            <h2 class="card-title" data-i18n="val_c17_title">17 个经典案例严格留出验证</h2>
+            <span class="card-sub" data-i18n="c17_click_hint">悬停查看药物实测与预测对比，点击任意数据点直接运行实时预测</span>
+          </div>
+          <div class="seg-group" id="val-c17-mode-group">
+            <button type="button" class="seg-btn active" data-c17mode="hybrid" data-i18n="c17_mode_hybrid">纯 ML + 脂化锚定</button>
+            <button type="button" class="seg-btn" data-c17mode="pure" data-i18n="c17_mode_pure">纯机器学习路线</button>
+          </div>
+        </div>
+        <div id="val-case17-chart" class="c17-chart-stage c17-chart-wide"></div>
+        <div id="val-case17-readout" class="c17-readout"></div>
+      </div>
+
       <div class="card val-table-card">
         <div class="val-toolbar">
           <div class="seg-group" id="val-tier-filter">
@@ -610,6 +757,11 @@
               <span class="api-desc" data-i18n="api_desc_svg"></span>
             </div>
             <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/atom-attribution</code>
+              <span class="api-desc" data-i18n="api_desc_attr"></span>
+            </div>
+            <div class="api-ep-item">
               <span class="http-method method-get">GET</span>
               <code class="api-path">api/v1/endpoints</code>
               <span class="api-desc" data-i18n="api_desc_endpoints"></span>
@@ -642,6 +794,7 @@
             <select id="api-preset-select" class="select-sm">
               <option value="predict_sema">POST api/v1/predict — Semaglutide</option>
               <option value="predict_mica">POST api/v1/predict — Micafungin</option>
+              <option value="atom_attr_csa">POST api/v1/atom-attribution — Cyclosporine A (PAMPA)</option>
               <option value="render_csa">POST api/v1/render-svg — Cyclosporine A</option>
               <option value="jobs_list">GET api/v1/jobs — Task Center Queue</option>
               <option value="health">GET api/v1/health</option>
@@ -659,9 +812,9 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span><strong data-i18n="footer_brand">Peptide OmniPanel 1.0</strong> · <span data-i18n="footer_desc">多肽与环肽全端点 ADMET / PK / 抗菌预测平台</span></span>
+      <span><strong data-i18n="footer_brand">Peptide OmniPanel 1.2</strong> · <span data-i18n="footer_desc">多肽与环肽全端点 ADMET / PK / 抗菌预测平台</span></span>
       <span class="footer-sep">·</span>
-      <span data-i18n="footer_tech">RDKit 二维高亮 · 4 基座模型超集成 · 80% 共形不确定性 · 精确 Tanimoto 适用域</span>
+      <span data-i18n="footer_tech">RDKit 二维高亮 · GNN 原子归因 · 4 基座超集成 · Mondrian 共形不确定性 · 精确 Tanimoto 适用域</span>
       <span class="footer-sep">·</span>
       <span class="mono">internal_research_only</span>
     </div>
@@ -685,6 +838,6 @@
     </div>
   </div>
 
-  <script type="module" src="static/app.js?v=1.0"></script>
+  <script type="module" src="static/app.js?v=1.2"></script>
 </body>
 </html>

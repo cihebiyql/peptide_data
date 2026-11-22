@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Peptide OmniPanel V33 — Self-Contained Live Super-Ensemble Inference HTTP Service.
+"""Peptide OmniPanel — Self-Contained Live Super-Ensemble Inference HTTP Service.
 
-Runs on `node23` with `/usr/bin/python3` (`http.server.ThreadingHTTPServer`, 0 GPU usage),
-binding `0.0.0.0:8902` (never touches V32 `:8901`).
+Runs 100% self-contained on CPU (`http.server.ThreadingHTTPServer`, 0 MiB GPU VRAM),
+binding `127.0.0.1:8902` (or configured `--host/--port`).
 
 Loads ONLY the pruned champion models referenced by `v33_manifest.json`, keeps
-ncAA-RepDistill v2 + PeptideCLM-2 + ChemBERTa-MTR warm in RAM, and communicates with a
-persistent background `esmc_worker.py` (`/data/qlyu/esmfold2-env312/bin/python`) over
+ncAA-RepDistill v2 + PeptideCLM-2 + ChemBERTa-MTR + unified 46-EP MultiTaskPeptideNet46
+warm in RAM, and communicates with a persistent background `esmc_worker.py` over
 localhost TCP for warm ESM-C 600M multi-region sequence encoding.
 
 HTTP Endpoints:
@@ -55,6 +55,11 @@ from fusion_models import (  # noqa: E402
     PrecomputedRBFSVR,
 )
 from inference_api import load_deep_checkpoint, predict_from_numpy  # noqa: E402
+try:
+    from mt46_inference import load_mt46_checkpoint, predict_mt46_from_numpy  # noqa: E402
+except Exception:  # pragma: no cover
+    load_mt46_checkpoint = None  # type: ignore[assignment]
+    predict_mt46_from_numpy = None  # type: ignore[assignment]
 from v33_config import AUX_ENDPOINTS, ENDPOINT_SPECS, compute_halflife_mechanism_anchor  # noqa: E402
 from v33_live_encoders import (  # noqa: E402
     AA20,
@@ -79,11 +84,10 @@ def _resolve_deep_ckpt_path(raw_path: str) -> Path:
     p = Path(raw_path)
     if p.exists():
         return p
-    legacy_prefix = "/data/qlyu/v33_upgrade/"
-    if raw_path.startswith(legacy_prefix):
-        remapped = BASE_DIR / raw_path[len(legacy_prefix) :]
-        if remapped.exists():
-            return remapped
+    if not p.is_absolute():
+        rel = BASE_DIR / p
+        if rel.exists():
+            return rel
     # Fallback: match models_gpu_deep/... suffix if present
     marker = "models_gpu_deep/"
     if marker in raw_path:
@@ -164,17 +168,38 @@ def _apply_frozen_conformal(
     max_tanimoto: np.ndarray,
 ) -> Dict[str, np.ndarray]:
     p = np.asarray(pred, dtype=np.float64)
-    if conf_spec.get("mode") == "adaptive_tanimoto_dist":
-        t = np.where(np.isfinite(max_tanimoto), max_tanimoto, 0.5)
-        d = 1.0 - np.clip(t, 0.0, 1.0)
-        s = np.maximum(
-            float(conf_spec["dist_intercept"]) + float(conf_spec["dist_slope"]) * d,
-            float(conf_spec["min_scale"]),
+    mode = conf_spec.get("mode", "standard")
+    if mode == "mondrian_ad_eb":
+        thr = conf_spec.get("ad_thresholds") or {"in_domain": 0.65, "borderline": 0.40}
+        t_in = float(thr.get("in_domain", 0.65))
+        t_bo = float(thr.get("borderline", 0.40))
+        q80_map = conf_spec.get("q80_by_tier") or {}
+        q90_map = conf_spec.get("q90_by_tier") or {}
+        q80_g = float(conf_spec.get("q80_global", conf_spec.get("q80", 0.5)))
+        q90_g = float(conf_spec.get("q90_global", conf_spec.get("q90", 0.75)))
+        t = np.where(np.isfinite(max_tanimoto), max_tanimoto, 0.0)
+        hw80 = np.where(
+            t >= t_in,
+            float(q80_map.get("In-Domain", q80_g)),
+            np.where(t >= t_bo, float(q80_map.get("Borderline", q80_g)), float(q80_map.get("OOD", q80_g))),
+        )
+        hw90 = np.where(
+            t >= t_in,
+            float(q90_map.get("In-Domain", q90_g)),
+            np.where(t >= t_bo, float(q90_map.get("Borderline", q90_g)), float(q90_map.get("OOD", q90_g))),
         )
     else:
-        s = np.ones(len(p), dtype=np.float64)
-    hw80 = float(conf_spec["q80"]) * s
-    hw90 = float(conf_spec["q90"]) * s
+        if mode == "adaptive_tanimoto_dist":
+            t = np.where(np.isfinite(max_tanimoto), max_tanimoto, 0.5)
+            d = 1.0 - np.clip(t, 0.0, 1.0)
+            s = np.maximum(
+                float(conf_spec["dist_intercept"]) + float(conf_spec["dist_slope"]) * d,
+                float(conf_spec["min_scale"]),
+            )
+        else:
+            s = np.ones(len(p), dtype=np.float64)
+        hw80 = float(conf_spec["q80"]) * s
+        hw90 = float(conf_spec["q90"]) * s
     lo80, hi80 = p - hw80, p + hw80
     lo90, hi90 = p - hw90, p + hw90
     bounds = conf_spec.get("bounds")
@@ -464,6 +489,16 @@ class V33InferenceEngine:
                     loaded.append(load_deep_checkpoint(_resolve_deep_ckpt_path(p), device="cpu"))
                     n_ckpts += 1
                 self.deep_models[ep][kind] = loaded
+
+        # Load shared 46-endpoint unified MultiTaskPeptideNet46 folds (5 compact fp16 checkpoints)
+        self.mt46_models: List[Tuple[Any, Dict[str, Any]]] = []
+        mt46_refs = inv.get("mt46_checkpoint_refs") or []
+        if mt46_refs and load_mt46_checkpoint is not None:
+            for p in mt46_refs:
+                rp = _resolve_deep_ckpt_path(p)
+                if rp.exists():
+                    self.mt46_models.append(load_mt46_checkpoint(rp, device="cpu"))
+
         self.deep_lock = threading.Lock()
         self._tune_estimator_threads(n_jobs=2)
         self.ep_pool = ThreadPoolExecutor(max_workers=EP_WORKERS)
@@ -471,7 +506,7 @@ class V33InferenceEngine:
         self.startup_sec = round(time.time() - self.t_boot, 2)
         print(
             f"[engine] READY in {self.startup_sec}s (models={time.time()-t_m:.1f}s | cpu={len(self.cpu_models)} "
-            f"| fusion={len(self.fusion_models)} | deep_ckpts={n_ckpts} | RSS={_get_rss_mb():.1f} MB)",
+            f"| fusion={len(self.fusion_models)} | deep_ckpts={n_ckpts} | mt46_folds={len(self.mt46_models)} | RSS={_get_rss_mb():.1f} MB)",
             flush=True,
         )
 
@@ -571,6 +606,7 @@ class V33InferenceEngine:
                 "cpu_bundles": len(self.cpu_models),
                 "fusion_bundles": len(self.fusion_models),
                 "deep_endpoints": len(self.deep_models),
+                "mt46_folds": len(self.mt46_models),
             },
             "rss_mb": _get_rss_mb(),
             "startup_sec": self.startup_sec,
@@ -662,11 +698,16 @@ class V33InferenceEngine:
         fb = self.fusion_models[ep]
         task_type = "regression" if is_aft else fb["task_type"]
         if is_aft:
-            stacker = fb["aft"]["stacker_dual"] if track == "dual_modality" else fb["aft"]["stacker_smiles_only"]
+            aft_blk = fb.get("aft") or {}
+            stacker = aft_blk.get("stacker_dual") if track == "dual_modality" else aft_blk.get("stacker_smiles_only")
+            if stacker is None:
+                return np.full(len(idx), np.nan, dtype=np.float64)
             cand_heads = list(stacker.head_names_)
             active_heads = set(stacker.active_heads(tol=1e-9))
         else:
-            tb = fb[track]
+            tb = fb.get(track)
+            if tb is None:
+                return np.full(len(idx), np.nan, dtype=np.float64)
             stacker = tb["stacker"]
             cand_heads = tb["candidate_heads"]
             active_heads = set(tb["active_heads"])
@@ -771,6 +812,54 @@ class V33InferenceEngine:
                 mu, _ = predict_from_numpy(
                     model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
                     cond_rows=cond_rows, eval_mode=track, device="cpu",
+                )
+                preds.append(mu)
+        out = np.mean(np.stack(preds, axis=0), axis=0)
+        deep_cache[ckey] = out
+        return out
+
+    def _run_mt46_stream(
+        self,
+        ep: str,
+        track: str,
+        bank: LiveMiniBank,
+        idx: np.ndarray,
+        cond_dict: Dict[str, str],
+        bounds: Optional[List[float]],
+        deep_cache: Dict[Tuple[str, str, str], np.ndarray],
+    ) -> np.ndarray:
+        ckey = (ep, track, "mt46")
+        if ckey in deep_cache:
+            return deep_cache[ckey]
+        if not self.mt46_models or predict_mt46_from_numpy is None:
+            return np.full(len(idx), np.nan, dtype=np.float64)
+
+        phys = bank.physchem[idx]
+        sv = bank.smiles_valid[idx]
+        qv = bank.seq_valid[idx]
+        nc_s = bank.emb_blocks["ncaa_smiles_repr"][idx]
+        nc_f = bank.emb_blocks["ncaa_fusion_hf"][idx]
+        nc_p = bank.emb_blocks["ncaa_protein_proj"][idx]
+        pc = bank.emb_blocks["peptideclm2"][idx]
+        cb = bank.emb_blocks["chemberta_mtr"][idx]
+        esmc_4 = np.stack(
+            [
+                bank.emb_blocks["esmc_mean"][idx],
+                bank.emb_blocks["esmc_max"][idx],
+                bank.emb_blocks["esmc_nterm5"][idx],
+                bank.emb_blocks["esmc_cterm5"][idx],
+            ],
+            axis=1,
+        )
+        cond_rows = [cond_dict] * len(idx)
+
+        preds = []
+        with self.deep_lock:
+            for model, ckpt in self.mt46_models:
+                mu, _ = predict_mt46_from_numpy(
+                    model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
+                    cond_rows=cond_rows, canonical_conditions=cond_dict, bounds=bounds,
+                    eval_mode=track, device="cpu",
                 )
                 preds.append(mu)
         out = np.mean(np.stack(preds, axis=0), axis=0)
@@ -901,6 +990,10 @@ class V33InferenceEngine:
                     elif fam == "deep_multitask":
                         streams["deep_multitask"] = self._run_deep_stream(
                             ep, track, "multitask", mini_bank, pos_idx, cond_dict, deep_cache
+                        )
+                    elif fam == "mt46":
+                        streams["mt46"] = self._run_mt46_stream(
+                            ep, track, mini_bank, pos_idx, cond_dict, bounds, deep_cache
                         )
 
                 raw_pred = _weighted_blend(streams, weights, task_type=task_type, bounds=bounds)

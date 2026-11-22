@@ -1,6 +1,6 @@
 /**
- * Bilingual i18n module (Chinese / English) for Peptide OmniPanel 1.0.
- * Zero internal codenames (no V32/V33) and clean neutral benchmark naming ("17 Cases").
+ * Bilingual i18n module (Chinese / English) for Peptide OmniPanel 1.1.
+ * Zero internal codenames and clean neutral benchmark naming ("17 Cases").
  */
 
 export const TRANSLATIONS = {
@@ -18,11 +18,10 @@ export const TRANSLATIONS = {
     status_fallback: "离线模式 · {n} 端点",
     status_offline: "服务离线",
 
-    hero_eyebrow: "4 基座模型超集成 · 多肽与环肽 ADMET / PK / 抗菌全端点预测",
+    hero_eyebrow: "4 基座模型超集成 · 46 端点多肽 ADMET / PK / 抗菌引擎",
     hero_title_zh: "多肽全端点性质预测平台",
-    hero_sub:
-      "支持 20 种天然氨基酸序列、环肽大环、棘白菌素及脂化长效修饰多肽——提供 RDKit 二维结构高亮、校准概率与 80% 共形预测区间、精确 Tanimoto 适用域及长效脂化半衰期机制识别。",
-    query_placeholder: "输入多肽药物名称（如 司美格鲁肽 / Cyclosporine A）、20AA 序列或完整 SMILES…",
+    hero_sub: "覆盖天然序列、大环肽与脂化长效修饰 — 一键输出 46 端点预测、80% 共形区间与精确适用域。",
+    query_placeholder: "输入多肽药物名称（司美格鲁肽 / Cyclosporine A）、20AA 序列或 SMILES…",
     btn_predict: "开始预测",
     btn_running: "预测中…",
     btn_csv: "导出 CSV",
@@ -30,9 +29,12 @@ export const TRANSLATIONS = {
     btn_print: "打印报告",
     examples_label: "快捷示例：",
     btn_all_examples: "全部 {n} 个示例",
+    btn_mod_helper: "修饰模板",
     btn_advanced: "高级设置",
     exlib_title: "精选临床与研究多肽示例库",
     exlib_sub: "17 个经典临床多肽案例 · 棘白菌素类环肽全家族 (4) · 经典抗菌肽序列 (5)",
+    mod_helper_title: "快速修饰模板助手",
+    mod_helper_sub: "一键填入代表性修饰骨架（长效脂化 / 大环 N-甲基化 / 二硫键 / 棘白菌素 / 抗菌螺旋）",
     adv_seq_label: "指定天然序列（20 种标准氨基酸）",
     adv_seq_ph: "可选 — 例如 HISEAVKIFGCKWKENWKWNSNC",
     adv_smi_label: "指定共价结构 SMILES",
@@ -50,19 +52,89 @@ export const TRANSLATIONS = {
     pk_mouse_sc: "小鼠 (SC)",
     adv_tier2: "包含 Tier 2 抗菌、杀菌与抗生物膜端点 ({n})",
 
-    kpi_compounds: "标准化多肽分子",
-    kpi_endpoints: "分层全端点模型 ({t1} 核心 + {t2} 抗菌)",
-    kpi_records: "实验记录（含 {cens} 条删失区间）",
-    kpi_uq: "共形区间 + Tanimoto 适用域",
-    feat1_title: "4 基座模型多模态超集成",
-    feat1_desc:
-      "融合 ncAA-RepDistill v2、ESM-C 600M、PeptideCLM-2 与 ChemBERTa-MTR，结合梯度提升树与多任务深度学习，在严格分组交叉验证下自动遴选最优模型。",
-    feat2_title: "长效脂化半衰期机制识别",
-    feat2_desc:
-      "自动识别 C14–C20 脂肪酸单酰/二羧酸白蛋白结合修饰，将同类临床半衰期参考窗口与纯机器学习路线预测并列透明呈现（17 案例 Spearman 0.903）。",
-    feat3_title: "共形不确定性、删失建模与近邻溯源",
-    feat3_desc:
-      "每个端点同步输出校准概率或 80%/90% 共形预测区间、AFT/Tobit 删失诊断值、精确 Morgan Tanimoto 适用域分级以及最相似 Top-3 训练实验分子。",
+    kpi_compounds: "标准化多肽",
+    kpi_endpoints: "全端点模型 ({t1}+{t2})",
+    kpi_records: "实验记录 ({cens} 删失)",
+    kpi_uq: "共形区间 · Tanimoto AD",
+
+    // v1.1 Landing Visual Sections
+    sec_modalities_kicker: "REPRESENTATIVE MODALITIES",
+    sec_modalities_title: "四大临床多肽模态 · 一键实时预测",
+    sec_modalities_sub: "点击卡片即刻运行完整 46 端点预测与二维修饰高亮",
+    mod_card_run: "运行 46 端点 →",
+    mc1_title: "司美格鲁肽 · Semaglutide",
+    mc1_pill: "T½ 120–168 h ★",
+    mc1_sub: "C18 脂肪二酸 · 白蛋白长效锚定",
+    mc2_title: "环孢素 A · Cyclosporine A",
+    mc2_pill: "33-Atom 大环",
+    mc2_sub: "7× N-甲基化 · 跨磷脂膜渗透",
+    mc3_title: "米卡芬净 · Micafungin",
+    mc3_pill: "抗真菌脂环肽",
+    mc3_sub: "棘白菌素 · 靶向真菌细胞壁",
+    mc4_title: "爪蟾抗菌肽 · Magainin 2",
+    mc4_pill: "22 ESKAPE 端点",
+    mc4_sub: "两亲 α-螺旋 · 扰动细菌外膜",
+
+    sec_admet_kicker: "PHYSIOLOGICAL BARRIERS & SPECTRUM",
+    sec_admet_title: "人体 ADMET 屏障与 ESKAPE 抗菌图谱",
+    sec_admet_sub: "悬停或点击 6 大生理节点，实时查看对应端点与 20% 独立留出集精度",
+    admet_run_sample: "一键预测代表分子",
+    admet_ep_header: "覆盖端点与 20% 独立留出集审计",
+    admet_ho_label: "20% 留出",
+
+    sec_arch_kicker: "ARCHITECTURE & CLINICAL BENCHMARK",
+    sec_arch_title: "4 基座模型超集成架构与 17 临床药实证",
+    sec_arch_sub: "严格零泄漏分组交叉验证 · 17 临床多肽半衰期 Spearman 0.903 · 0/17 溶血误报",
+    c17_mode_hybrid: "纯 ML + 脂化锚定",
+    c17_mode_pure: "纯机器学习路线",
+    c17_legend_lip: "长效脂化 (5)",
+    c17_legend_cyc: "环肽 / 二硫键 (6)",
+    c17_legend_lin: "线性临床肽 (5)",
+    c17_click_hint: "悬停查看药物实测与预测对比，点击任意数据点直接运行实时预测",
+    c17_kpi_rho: "16 药半衰期 Spearman",
+    c17_kpi_r2: "锚定后对数 R²",
+    c17_kpi_mae: "锚定后 MAE (log₁₀ h)",
+    c17_kpi_fp: "临床药溶血误报",
+
+    // Inline SVG bilingual labels
+    map_bbb_t: "血脑屏障 · BBB",
+    map_bbb_s: "CNS 入脑渗透评估",
+    map_safety_t: "溶血与细胞毒",
+    map_safety_s: "HC50 · MHC · CC50 · 毒性",
+    map_gut_t: "肠膜渗透与外排",
+    map_gut_s: "PAMPA · Caco-2 · ER",
+    map_pk_t: "白蛋白长效 T½",
+    map_pk_s: "脂化锚定 · 蛋白结合 PPB",
+    map_cl_t: "肝肾清除与分布",
+    map_cl_s: "CL · Vd · F · LogD / 溶解",
+    map_micro_t: "ESKAPE 抗菌与生物膜",
+    map_micro_s: "MIC · MBC · MFC · MBIC",
+    map_flow_strip: "给药入体 (SC / IV / PO)  →  白蛋白循环  →  屏障渗透与清除  →  安全窗与靶向抗菌",
+    arch_s1: "01 · 双轨分子输入",
+    arch_s2: "02 · 4 大预训练基座表征",
+    arch_s3: "03 · 超集成与条件路由",
+    arch_s4: "04 · 审计化科学输出",
+    arch_in1: "环肽 · 脂化 · 非天然修饰",
+    arch_in2: "标准多肽 · 抗菌肽 · FASTA",
+    arch_ens_t: "多模态超集成引擎",
+    arch_ens_1: "GBDT + Fusion + Deep MT",
+    arch_ens_2: "实验条件路由 + 脂化锚定",
+    arch_ens_3: "删失 AFT / Tobit 诊断头",
+    arch_out1_t: "46 预测端点",
+    arch_out1_s: "24 核心 ADMET + 22 抗菌",
+    arch_out2_t: "80% 共形不确定性",
+    arch_out2_s: "Platt 校准 + 80/90% CI",
+    arch_out3_t: "精确 Tanimoto AD",
+    arch_out3_s: "适用域分级 + Top-3 近邻",
+    arch_foot: "零留出集偷看 5 折分组交叉验证遴选 · 20% 骨架聚类独立留出审计",
+
+    // Plan B Structure Card Toggle Hook
+    svg_tab_motifs: "修饰高亮",
+    svg_tab_attr: "原子归因热图",
+    svg_attr_pending: "当后端返回原子归因热图时自动启用",
+    svg_attr_caption: "Pure-PyTorch E-GAT 原子级归因热图 · 红=高贡献药效团 / 蓝=低权重区域",
+    svg_attr_loading: "正在计算 E-GAT 原子归因热图…",
+    api_desc_attr: "实时计算 8 大核心端点的 Pure-PyTorch E-GAT 原子级可解释性归因热图 SVG",
 
     // Sticky Batch/Task -> Detail Return Context Bar
     ctx_back_task: "返回任务结果",
@@ -181,7 +253,7 @@ export const TRANSLATIONS = {
     task_export_full: "全部 46 端点 CSV",
     task_export_json: "完整 JSON",
 
-    // Task / Batch Result Inspector (shared rich presentation)
+    // Task / Batch Result Inspector
     ins_success: "成功 / 总数",
     ins_anchors: "长效脂化识别",
     ins_cyclic: "环肽 / 二硫键",
@@ -268,9 +340,9 @@ export const TRANSLATIONS = {
     api_sending: "请求中…",
     api_ready: "就绪",
     api_resp_lbl: "实时响应 JSON",
-    footer_brand: "Peptide OmniPanel 1.0",
+    footer_brand: "Peptide OmniPanel 1.2",
     footer_desc: "多肽与环肽全端点 ADMET / PK / 抗菌预测平台",
-    footer_tech: "RDKit 二维高亮 · 4 基座模型超集成 · 80% 共形不确定性 · 精确 Tanimoto 适用域",
+    footer_tech: "RDKit 二维高亮 · GNN 原子归因 · 4 基座超集成 · Mondrian 共形不确定性 · 精确 Tanimoto 适用域",
     modal_title: "二维分子结构大图",
     modal_dl: "下载 SVG",
   },
@@ -289,10 +361,9 @@ export const TRANSLATIONS = {
     status_fallback: "Offline Mode · {n} EPs",
     status_offline: "Service Offline",
 
-    hero_eyebrow: "4-Foundation-Model Super-Ensemble · Peptide & Macrocycle ADMET, PK & Antimicrobial Suite",
-    hero_title_zh: "Peptide OmniPanel",
-    hero_sub:
-      "Canonical 20-AA sequences, cyclic macrocycles, echinocandins, and lipidated therapeutics — RDKit 2D motif inspection, calibrated probabilities & 80% conformal intervals, exact Tanimoto AD, and fatty-acylation PK anchoring.",
+    hero_eyebrow: "4-Foundation-Model Super-Ensemble · 46-Endpoint Peptide Engine",
+    hero_title_zh: "Peptide ADMET Intelligence",
+    hero_sub: "Canonical sequences, cyclic macrocycles & lipidated therapeutics — 46 audited endpoints with 80% conformal UQ and exact Tanimoto AD.",
     query_placeholder: "Enter peptide drug name (Semaglutide, Cyclosporine A), 20-AA sequence, or SMILES…",
     btn_predict: "Predict",
     btn_running: "Running…",
@@ -301,9 +372,12 @@ export const TRANSLATIONS = {
     btn_print: "Print",
     examples_label: "Examples:",
     btn_all_examples: "All {n} Examples",
-    btn_advanced: "Advanced Options",
+    btn_mod_helper: "Mod Templates",
+    btn_advanced: "Advanced",
     exlib_title: "Curated Clinical & Research Peptide Library",
     exlib_sub: "17 Classic Clinical Cases · Complete Echinocandin Class (4) · Canonical AMPs (5)",
+    mod_helper_title: "Quick Modification Template Helper",
+    mod_helper_sub: "Insert representative peptide scaffolds (fatty-diacid, N-methyl macrocycle, disulfide, echinocandin, or AMP)",
     adv_seq_label: "Explicit Sequence (20 Standard AA)",
     adv_seq_ph: "Optional — e.g. HISEAVKIFGCKWKENWKWNSNC",
     adv_smi_label: "Explicit Covalent SMILES",
@@ -322,18 +396,88 @@ export const TRANSLATIONS = {
     adv_tier2: "Include Tier-2 Antimicrobial, Bactericidal & Biofilm Endpoints ({n})",
 
     kpi_compounds: "Curated Peptides",
-    kpi_endpoints: "Tiered Endpoints ({t1} Core + {t2} Antimicrobial)",
-    kpi_records: "Harmonized Records ({cens} Censored)",
-    kpi_uq: "Conformal UQ + Tanimoto AD",
-    feat1_title: "4-Foundation-Model Super-Ensemble",
-    feat1_desc:
-      "Combines ncAA-RepDistill v2, ESM-C 600M, PeptideCLM-2, and ChemBERTa-MTR with GBDT & Deep Multi-Task models under strict zero-holdout-peeking grouped CV selection.",
-    feat2_title: "Long-Acting PK Mechanism Anchor",
-    feat2_desc:
-      "Detects C14–C20 fatty-acylation signatures and pairs literature-anchored clinical half-life windows transparently beside route-matched pure-ML predictions (17-Case Spearman 0.903).",
-    feat3_title: "Conformal UQ, Censored Heads & Analogs",
-    feat3_desc:
-      "Every endpoint reports calibrated probabilities or 80%/90% conformal intervals, AFT/Tobit censored diagnostics, exact Morgan Tanimoto AD, and top-3 training analogs.",
+    kpi_endpoints: "Unified Endpoints ({t1}+{t2})",
+    kpi_records: "Records ({cens} Censored)",
+    kpi_uq: "Conformal UQ · Tanimoto AD",
+
+    // v1.1 Landing Visual Sections
+    sec_modalities_kicker: "REPRESENTATIVE MODALITIES",
+    sec_modalities_title: "Four Clinical Peptide Modalities · Instant Live Profiling",
+    sec_modalities_sub: "Click any visual card to launch full 46-endpoint prediction and 2D motif inspection",
+    mod_card_run: "Run 46 EPs →",
+    mc1_title: "Semaglutide",
+    mc1_pill: "T½ 120–168 h ★",
+    mc1_sub: "C18 Fatty Diacid · Albumin Binding",
+    mc2_title: "Cyclosporine A",
+    mc2_pill: "33-Atom Ring",
+    mc2_sub: "7× N-Methyl · Membrane Traversal",
+    mc3_title: "Micafungin",
+    mc3_pill: "Echinocandin",
+    mc3_sub: "Cyclic Lipopeptide · Fungal Barrier",
+    mc4_title: "Magainin 2",
+    mc4_pill: "22 ESKAPE EPs",
+    mc4_sub: "Amphipathic α-Helix · Bacterial Pore",
+
+    sec_admet_kicker: "PHYSIOLOGICAL BARRIERS & SPECTRUM",
+    sec_admet_title: "Human ADMET Barriers & ESKAPE Spectrum Explorer",
+    sec_admet_sub: "Hover or click the 6 physiological hotspots to inspect audited 20% holdout accuracy and launch live samples",
+    admet_run_sample: "Run Representative Sample",
+    admet_ep_header: "Mapped Endpoints · Audited 20% Cluster Holdout",
+    admet_ho_label: "20% Holdout",
+
+    sec_arch_kicker: "ARCHITECTURE & CLINICAL BENCHMARK",
+    sec_arch_title: "4-FM Super-Ensemble Pipeline & 17-Case Clinical Parity",
+    sec_arch_sub: "Strict zero-leakage grouped CV · 17 Clinical Cases T½ Spearman 0.903 · 0/17 Hemolysis FP",
+    c17_mode_hybrid: "Pure-ML + Acylation Anchor",
+    c17_mode_pure: "Pure-ML Route-Matched",
+    c17_legend_lip: "Lipidated (5)",
+    c17_legend_cyc: "Cyclic / S–S (6)",
+    c17_legend_lin: "Linear Clinical (5)",
+    c17_click_hint: "Hover any point to inspect FDA vs predicted T½; click to run live 46-endpoint profiling",
+    c17_kpi_rho: "16-Drug T½ Spearman",
+    c17_kpi_r2: "Anchored Log₁₀ R²",
+    c17_kpi_mae: "Anchored MAE (log₁₀ h)",
+    c17_kpi_fp: "Clinical Hemolysis FP",
+
+    // Inline SVG bilingual labels
+    map_bbb_t: "Blood-Brain · BBB",
+    map_bbb_s: "CNS Penetration Screening",
+    map_safety_t: "Hemolysis & Cyto",
+    map_safety_s: "HC50 · MHC · CC50 · Tox",
+    map_gut_t: "GI & Membrane",
+    map_gut_s: "PAMPA · Caco-2 · Efflux",
+    map_pk_t: "Albumin T½ & PPB",
+    map_pk_s: "Acylation Anchor · Binding",
+    map_cl_t: "Clearance & Vd",
+    map_cl_s: "CL · Vd · F · LogD / Sol",
+    map_micro_t: "ESKAPE & Biofilm",
+    map_micro_s: "MIC · MBC · MFC · MBIC",
+    map_flow_strip: "Entry (SC / IV / PO)  →  Albumin Circulation  →  Barrier Crossing & CL  →  Safety & ESKAPE Target",
+    arch_s1: "01 · DUAL INPUT",
+    arch_s2: "02 · 4 FOUNDATION MODELS",
+    arch_s3: "03 · SUPER-ENSEMBLE",
+    arch_s4: "04 · AUDITED OUTPUT",
+    arch_in1: "Cyclic · Lipidated · ncAA",
+    arch_in2: "20-AA · AMPs · FASTA",
+    arch_ens_t: "Super-Ensemble Engine",
+    arch_ens_1: "GBDT + Fusion + Deep MT",
+    arch_ens_2: "Condition Routing + Anchor",
+    arch_ens_3: "Censored AFT / Tobit Heads",
+    arch_out1_t: "46 Endpoints",
+    arch_out1_s: "24 Core ADMET + 22 Micro",
+    arch_out2_t: "80% Conformal UQ",
+    arch_out2_s: "Platt Cal. + 80/90% CI",
+    arch_out3_t: "Exact Tanimoto AD",
+    arch_out3_s: "AD Tiers + Top-3 Analogs",
+    arch_foot: "Zero-holdout-peeking 5-fold grouped CV selection · Untouched 20% scaffold-cluster holdout audit",
+
+    // Plan B Structure Card Toggle Hook
+    svg_tab_motifs: "Motif Highlights",
+    svg_tab_attr: "Atom Attribution",
+    svg_attr_pending: "Auto-enables when live atom attribution is available",
+    svg_attr_caption: "Pure-PyTorch E-GAT atom attribution · Crimson = high pharmacophore weight / Blue = low",
+    svg_attr_loading: "Computing E-GAT atom attribution heatmap…",
+    api_desc_attr: "Live Pure-PyTorch E-GAT per-atom attribution heatmap SVG across 8 core endpoints (<100 ms)",
 
     ctx_back_task: "Back to Task Results",
     ctx_back_batch: "Back to Batch Results",
@@ -533,9 +677,9 @@ export const TRANSLATIONS = {
     api_sending: "Sending…",
     api_ready: "Ready",
     api_resp_lbl: "Live JSON Response",
-    footer_brand: "Peptide OmniPanel 1.0",
+    footer_brand: "Peptide OmniPanel 1.2",
     footer_desc: "Scientific Peptide ADMET, PK & Antimicrobial Prediction Platform",
-    footer_tech: "RDKit 2D Substructure Engine · 4-FM Super-Ensemble · 80% Conformal UQ · Exact Tanimoto AD",
+    footer_tech: "RDKit 2D Highlights · GNN Atom Attribution · 4-FM Super-Ensemble · Mondrian Conformal UQ · Exact Tanimoto AD",
     modal_title: "2D Molecular Structure",
     modal_dl: "Download SVG",
   },
@@ -629,6 +773,13 @@ export function trAd(lang, status) {
   return m[status] || status;
 }
 
+export function applySvgI18n(lang, root = document) {
+  root.querySelectorAll("[data-svg-i18n]").forEach((el) => {
+    const k = el.getAttribute("data-svg-i18n");
+    if (k) el.textContent = t(lang, k);
+  });
+}
+
 export function applyStaticI18n(lang) {
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   document.title = t(lang, "page_title");
@@ -644,4 +795,5 @@ export function applyStaticI18n(lang) {
     const k = el.getAttribute("data-i18n-title");
     if (k) el.setAttribute("title", t(lang, k));
   });
+  applySvgI18n(lang);
 }

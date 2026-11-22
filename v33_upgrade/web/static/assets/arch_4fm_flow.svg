@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 230" width="960" height="230" role="img" aria-label="4-Foundation-Model Peptide Super-Ensemble Architecture Pipeline" class="arch-flow-svg">
+  <defs>
+    <linearGradient id="stage3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--cobalt, #0369A1)" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="var(--teal, #0D9488)" stop-opacity="0.10"/>
+    </linearGradient>
+    <filter id="nodeShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Stage Headers -->
+  <g font-size="10.5" font-weight="700" letter-spacing="0.06em" fill="var(--ink-muted, #64748B)">
+    <text x="98" y="20" text-anchor="middle" data-svg-i18n="arch_s1">01 · DUAL INPUT</text>
+    <text x="362" y="20" text-anchor="middle" data-svg-i18n="arch_s2">02 · 4 FOUNDATION MODELS</text>
+    <text x="634" y="20" text-anchor="middle" data-svg-i18n="arch_s3">03 · SUPER-ENSEMBLE</text>
+    <text x="866" y="20" text-anchor="middle" data-svg-i18n="arch_s4">04 · AUDITED OUTPUT</text>
+  </g>
+
+  <!-- Connecting Static Tracks -->
+  <g fill="none" stroke="var(--border-strong, #CBD5E1)" stroke-width="1.6" opacity="0.55">
+    <!-- Input -> 4 FMs -->
+    <path d="M 184 78 C 214 78, 214 54, 244 54"/>
+    <path d="M 184 78 C 214 78, 214 134, 244 134"/>
+    <path d="M 184 78 C 214 78, 214 174, 244 174"/>
+    <path d="M 184 152 C 216 152, 216 94, 244 94"/>
+    <!-- 4 FMs -> Super-Ensemble -->
+    <path d="M 480 54 C 510 54, 510 115, 538 115"/>
+    <path d="M 480 94 C 510 94, 510 115, 538 115"/>
+    <path d="M 480 134 C 510 134, 510 115, 538 115"/>
+    <path d="M 480 174 C 510 174, 510 115, 538 115"/>
+    <!-- Super-Ensemble -> Outputs -->
+    <path d="M 730 115 C 756 115, 756 62, 782 62"/>
+    <path d="M 730 115 L 782 115"/>
+    <path d="M 730 115 C 756 115, 756 168, 782 168"/>
+  </g>
+
+  <!-- Animated Signal Flow Pulses -->
+  <g fill="none" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 10">
+    <path class="flow-pulse" d="M 184 78 C 214 78, 214 54, 244 54" stroke="var(--cobalt, #0369A1)"/>
+    <path class="flow-pulse flow-delay-1" d="M 184 152 C 216 152, 216 94, 244 94" stroke="var(--teal, #0D9488)"/>
+    <path class="flow-pulse flow-delay-2" d="M 184 78 C 214 78, 214 134, 244 134" stroke="var(--violet, #7C3AED)"/>
+    <path class="flow-pulse flow-delay-3" d="M 184 78 C 214 78, 214 174, 244 174" stroke="var(--amber, #D97706)"/>
+
+    <path class="flow-pulse flow-delay-1" d="M 480 54 C 510 54, 510 115, 538 115" stroke="var(--cobalt, #0369A1)"/>
+    <path class="flow-pulse flow-delay-2" d="M 480 94 C 510 94, 510 115, 538 115" stroke="var(--teal, #0D9488)"/>
+    <path class="flow-pulse flow-delay-3" d="M 480 134 C 510 134, 510 115, 538 115" stroke="var(--violet, #7C3AED)"/>
+    <path class="flow-pulse" d="M 480 174 C 510 174, 510 115, 538 115" stroke="var(--amber, #D97706)"/>
+
+    <path class="flow-pulse flow-delay-2" d="M 730 115 C 756 115, 756 62, 782 62" stroke="var(--cobalt, #0369A1)"/>
+    <path class="flow-pulse flow-delay-1" d="M 730 115 L 782 115" stroke="var(--teal, #0D9488)"/>
+    <path class="flow-pulse flow-delay-3" d="M 730 115 C 756 115, 756 168, 782 168" stroke="var(--emerald, #059669)"/>
+  </g>
+
+  <!-- STAGE 1: Input Cards -->
+  <g filter="url(#nodeShadow)">
+    <rect x="12" y="46" width="172" height="64" rx="10" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.3"/>
+    <rect x="12" y="46" width="4" height="64" rx="2" fill="var(--cobalt, #0369A1)"/>
+    <polygon points="34,68 41,72 41,80 34,84 27,80 27,72" fill="var(--cobalt, #0369A1)" fill-opacity="0.16" stroke="var(--cobalt, #0369A1)" stroke-width="1.4"/>
+    <text x="50" y="74" font-size="12" font-weight="700" fill="var(--ink, #0F172A)">SMILES / Macrocycles</text>
+    <text x="50" y="92" font-size="10.2" fill="var(--ink-muted, #64748B)" data-svg-i18n="arch_in1">环肽 · 脂化 · 非天然修饰</text>
+
+    <rect x="12" y="122" width="172" height="64" rx="10" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.3"/>
+    <rect x="12" y="122" width="4" height="64" rx="2" fill="var(--teal, #0D9488)"/>
+    <path d="M 27 154 C 30 146, 34 162, 37 154 C 39 148, 42 160, 44 154" fill="none" stroke="var(--teal, #0D9488)" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="50" y="150" font-size="12" font-weight="700" fill="var(--ink, #0F172A)">20-AA Sequence</text>
+    <text x="50" y="168" font-size="10.2" fill="var(--ink-muted, #64748B)" data-svg-i18n="arch_in2">标准多肽 · 抗菌肽 · FASTA</text>
+  </g>
+
+  <!-- STAGE 2: 4 Foundation Models -->
+  <g filter="url(#nodeShadow)">
+    <!-- FM 1 -->
+    <rect x="244" y="36" width="236" height="34" rx="8" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <circle cx="260" cy="53" r="4.5" fill="var(--cobalt, #0369A1)"/>
+    <text x="272" y="57" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)">ncAA-RepDistill v2</text>
+    <text x="468" y="57" text-anchor="end" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--ink-muted, #64748B)">SMILES · 4096d</text>
+
+    <!-- FM 2 -->
+    <rect x="244" y="76" width="236" height="34" rx="8" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <circle cx="260" cy="93" r="4.5" fill="var(--teal, #0D9488)"/>
+    <text x="272" y="97" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)">ESM-C 600M</text>
+    <text x="468" y="97" text-anchor="end" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--ink-muted, #64748B)">4-Reg · 4608d</text>
+
+    <!-- FM 3 -->
+    <rect x="244" y="116" width="236" height="34" rx="8" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <circle cx="260" cy="133" r="4.5" fill="var(--violet, #7C3AED)"/>
+    <text x="272" y="137" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)">PeptideCLM-2</text>
+    <text x="468" y="137" text-anchor="end" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--ink-muted, #64748B)">SMILES · 512d</text>
+
+    <!-- FM 4 -->
+    <rect x="244" y="156" width="236" height="34" rx="8" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <circle cx="260" cy="173" r="4.5" fill="var(--amber, #D97706)"/>
+    <text x="272" y="177" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)">ChemBERTa-MTR</text>
+    <text x="468" y="177" text-anchor="end" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--ink-muted, #64748B)">SMILES · 384d</text>
+  </g>
+
+  <!-- STAGE 3: Super-Ensemble + Routing + Censored AFT/Tobit -->
+  <g filter="url(#nodeShadow)">
+    <rect x="538" y="38" width="192" height="154" rx="12" fill="url(#stage3Grad)" stroke="var(--cobalt, #0369A1)" stroke-width="1.5"/>
+    <text x="634" y="63" text-anchor="middle" font-size="13" font-weight="750" fill="var(--ink, #0F172A)" data-svg-i18n="arch_ens_t">多模态超集成引擎</text>
+
+    <rect x="552" y="76" width="164" height="28" rx="6" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1"/>
+    <text x="634" y="94" text-anchor="middle" font-size="10.8" font-weight="600" fill="var(--cobalt, #0369A1)" data-svg-i18n="arch_ens_1">GBDT + Fusion + Deep MT</text>
+
+    <rect x="552" y="111" width="164" height="28" rx="6" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1"/>
+    <text x="634" y="129" text-anchor="middle" font-size="10.8" font-weight="600" fill="var(--teal, #0D9488)" data-svg-i18n="arch_ens_2">实验条件路由 + 脂化锚定</text>
+
+    <rect x="552" y="146" width="164" height="28" rx="6" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1"/>
+    <text x="634" y="164" text-anchor="middle" font-size="10.8" font-weight="600" fill="var(--amber, #D97706)" data-svg-i18n="arch_ens_3">删失 AFT / Tobit 诊断头</text>
+  </g>
+
+  <!-- STAGE 4: Audited Outputs -->
+  <g filter="url(#nodeShadow)">
+    <rect x="782" y="38" width="166" height="44" rx="9" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <rect x="782" y="38" width="4" height="44" rx="2" fill="var(--cobalt, #0369A1)"/>
+    <text x="796" y="57" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)" data-svg-i18n="arch_out1_t">46 预测端点</text>
+    <text x="796" y="73" font-size="10" fill="var(--ink-muted, #64748B)" data-svg-i18n="arch_out1_s">24 核心 ADMET + 22 抗菌</text>
+
+    <rect x="782" y="93" width="166" height="44" rx="9" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <rect x="782" y="93" width="4" height="44" rx="2" fill="var(--teal, #0D9488)"/>
+    <text x="796" y="112" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)" data-svg-i18n="arch_out2_t">80% 共形不确定性</text>
+    <text x="796" y="128" font-size="10" fill="var(--ink-muted, #64748B)" data-svg-i18n="arch_out2_s">Platt 校准 + 80/90% CI</text>
+
+    <rect x="782" y="148" width="166" height="44" rx="9" fill="var(--surface, #FFFFFF)" stroke="var(--border, #E2E8F0)" stroke-width="1.2"/>
+    <rect x="782" y="148" width="4" height="44" rx="2" fill="var(--emerald, #059669)"/>
+    <text x="796" y="167" font-size="11.8" font-weight="700" fill="var(--ink, #0F172A)" data-svg-i18n="arch_out3_t">精确 Tanimoto AD</text>
+    <text x="796" y="183" font-size="10" fill="var(--ink-muted, #64748B)" data-svg-i18n="arch_out3_s">适用域分级 + Top-3 近邻</text>
+  </g>
+
+  <!-- Subtle Footer Protocol Tag -->
+  <text x="480" y="216" text-anchor="middle" font-size="10.2" fill="var(--ink-faint, #94A3B8)" data-svg-i18n="arch_foot">零留出集偷看 5 折分组交叉验证遴选 · 20% 骨架聚类独立留出审计</text>
+</svg>

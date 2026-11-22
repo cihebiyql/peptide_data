@@ -71,3 +71,11 @@
 - **批量/任务结果 ↔ 单分子详情无缝闭环**：点击任意分子以 `0 ms` 缓存直开完整 46 端点详情页（2D 结构异步增量绘制），顶部粘性导航条支持 `← 返回任务结果`（自动恢复原标签页、滚动位置并高亮上次查看行）、`‹ 上一个` / `下一个 ›` 快速翻阅、下拉直达、`←`/`→`/`Esc` 快捷键及浏览器前进后退。
 - **统一品牌 `Peptide OmniPanel v1.0`**：界面全面去除内部开发代号（`V32`/`V33`/`v33_remote`）及机构/个人名称，统一采用中性临床基准表述（`17 个案例` / `17 Clinical Cases`）。
 - **全站即时中英双语（`中文 / English`）与明暗主题（`Light / Dark`）**：顶栏一键切换并持久化至 `localStorage`，含暗色模式 SVG 雷达图自适应及 RDKit 二维化学结构亮底衬板。
+
+## 2026-11-23 · Peptide OmniPanel 1.2 / 引擎 v33.2（Plan A 视觉重构 + Plan B 模型/校准/可解释性 SOTA 升级）
+
+- **Plan A — 科学极简视觉重构与 100% 原创科研图形（`v1.1` → `v1.2`）**：引入动态分子粒子 Canvas 首屏与滚动渐现动效；原创绘制 4 张无版权风险临床代表多肽机制卡片（`Semaglutide` / `Cyclosporine A` / `Micafungin` / `Magainin 2`）、6 热点可交互人体 ADMET 与 ESKAPE 屏障 SVG 探索图、4 基座模型流动架构 SVG 以及可切换纯 ML / 脂化锚定的 17 案例交互式 Parity 散点图。
+- **Plan B-1 — Mondrian 适用域分层经验贝叶斯共形校准（40 个回归端点全覆盖，纯 JSON 零延迟）**：在零留出集偷看下，将全 40 回归端点的 OOD 80% 覆盖率从 `64.2% → 76.0%`（`+11.8 pp` 双模态）与 `53.9% → 74.2%`（`+20.3 pp` SMILES-only）显著拉升，同时平均区间宽度进一步收窄（`1.479 → 1.470`），无需 `.joblib`、零额外内存/推理耗时；小样本 `TabPFN v2` / `MultiBlockCompositeGPR` 赢家诅咒审计结果完整归档于 `v33_upgrade/v2_upgrade/smalln_cqr/`。
+- **Plan B-2 — 46 端点统一 `MultiTaskPeptideNet46` 深度学习迁移**：在严格零跨端点簇泄漏（110 折 `0` 泄漏）与 `0.00e+00` SMILES-only 序列不变性下，仅上线通过嵌套 OOF 且零留出集回退的 7 条 V33.1 端点轨道（`efflux_ratio` 双模态 HO Spearman **`0.642 → 0.741`**、SMILES-only MAE `-0.0383`，`cytotoxicity_CC50` HO Spearman **`0.652 → 0.677`**，`hemolysis_MHC` HO Spearman **`0.550 → 0.567`**，`MIC_Salmonella` / `MIC_B_subtilis` / `MBC_S_aureus`），同时保证核心 24 端点点预测权重 `0.0` 变更。
+- **Plan B-2 — 纯 PyTorch 便携式 E-GAT + `WeightAndSum` 实时原子级归因热图（`17.47 MB`，`<95 ms` CPU）**：零 `torch_geometric` / `dgl` 依赖，在 `node2` CPU 上实时运行并接入 `POST /api/v1/atom-attribution` 与首页二维结构卡片的「修饰高亮 ↔ 原子归因热图」切换及 8 端点实时热图选择器（`PAMPA` / `Caco-2` / `溶血风险` / `HC50` / `综合毒性` / `细胞毒` / `CC50` / `半衰期 T½`），单次前向缓存全部 8 端点，端点切换 `<20 ms`。
+- 详见 `v33_upgrade/reports/v20_full_upgrade_report.md`、`v33_upgrade/v2_upgrade/smalln_cqr/smalln_cqr_report.md` 与 `v33_upgrade/v2_upgrade/gpu_sota/gpu_sota_report.md`。

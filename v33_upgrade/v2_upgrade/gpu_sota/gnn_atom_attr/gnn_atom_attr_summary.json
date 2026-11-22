@@ -1,0 +1,1092 @@
+{
+  "schema": "peptide_omnipanel_gnn_atom_attr_summary_v1",
+  "generated_at": "2026-11-22 23:01:23 +0800",
+  "architecture": "Pure-PyTorch 4-Layer Edge-Conditioned Multi-Head GATv2 + Multi-Scale JK + Task WeightAndSum",
+  "endpoints": [
+    "PAMPA",
+    "Caco2",
+    "hemolysis_cls",
+    "hemolysis_HC50",
+    "overall_peptide_toxicity",
+    "cytotoxicity_cls",
+    "cytotoxicity_CC50",
+    "half_life_reg"
+  ],
+  "model_config": {
+    "d_node": 160,
+    "d_edge": 48,
+    "n_layers": 4,
+    "n_heads": 4,
+    "dropout": 0.18
+  },
+  "total_elapsed_sec": 3421.3,
+  "per_endpoint_zero_leak_benchmark": {
+    "endpoints": {
+      "PAMPA": {
+        "endpoint": "PAMPA",
+        "task_type": "regression",
+        "n_cv_smiles": 6865,
+        "n_ho_smiles": 1716,
+        "cv_metrics": {
+          "n_total": 6865,
+          "n_exact": 6857,
+          "n_censored": 8,
+          "mae": 0.46276,
+          "rmse": 0.64014,
+          "r2": 0.40692,
+          "spearman": 0.65278,
+          "pearson": 0.64972,
+          "censored_concordance": 0.375,
+          "censored_violation_mae": 0.61186,
+          "all_row_hinge_mae": 0.46293,
+          "censored_c_index": 0.74179
+        },
+        "holdout_metrics": {
+          "n_total": 1716,
+          "n_exact": 1715,
+          "n_censored": 1,
+          "mae": 0.50484,
+          "rmse": 0.72168,
+          "r2": 0.26538,
+          "spearman": 0.54313,
+          "pearson": 0.52757,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.80429,
+          "all_row_hinge_mae": 0.50502,
+          "censored_c_index": 0.69946
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 5492,
+            "n_target_val": 1373,
+            "n_train_clusters_all_8": 12078,
+            "n_forbidden_clusters": 226,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 5492,
+            "n_target_val": 1373,
+            "n_train_clusters_all_8": 12079,
+            "n_forbidden_clusters": 225,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 5492,
+            "n_target_val": 1373,
+            "n_train_clusters_all_8": 12078,
+            "n_forbidden_clusters": 226,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 5492,
+            "n_target_val": 1373,
+            "n_train_clusters_all_8": 12078,
+            "n_forbidden_clusters": 226,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 5492,
+            "n_target_val": 1373,
+            "n_train_clusters_all_8": 12080,
+            "n_forbidden_clusters": 224,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 321.6
+      },
+      "Caco2": {
+        "endpoint": "Caco2",
+        "task_type": "regression",
+        "n_cv_smiles": 1265,
+        "n_ho_smiles": 315,
+        "cv_metrics": {
+          "n_total": 1265,
+          "n_exact": 1256,
+          "n_censored": 9,
+          "mae": 0.48098,
+          "rmse": 0.6311,
+          "r2": 0.45137,
+          "spearman": 0.68697,
+          "pearson": 0.696,
+          "censored_concordance": 0.66667,
+          "censored_violation_mae": 0.43078,
+          "all_row_hinge_mae": 0.48062,
+          "censored_c_index": 0.75489
+        },
+        "holdout_metrics": {
+          "n_total": 315,
+          "n_exact": 311,
+          "n_censored": 4,
+          "mae": 0.47377,
+          "rmse": 0.59459,
+          "r2": 0.53095,
+          "spearman": 0.73323,
+          "pearson": 0.73457,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.45223,
+          "all_row_hinge_mae": 0.4735,
+          "censored_c_index": 0.77211
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 992,
+            "n_target_val": 273,
+            "n_train_clusters_all_8": 12161,
+            "n_forbidden_clusters": 74,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 1017,
+            "n_target_val": 248,
+            "n_train_clusters_all_8": 12127,
+            "n_forbidden_clusters": 108,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 1017,
+            "n_target_val": 248,
+            "n_train_clusters_all_8": 12125,
+            "n_forbidden_clusters": 110,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 1017,
+            "n_target_val": 248,
+            "n_train_clusters_all_8": 12125,
+            "n_forbidden_clusters": 110,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 1017,
+            "n_target_val": 248,
+            "n_train_clusters_all_8": 12127,
+            "n_forbidden_clusters": 108,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 178.1
+      },
+      "hemolysis_cls": {
+        "endpoint": "hemolysis_cls",
+        "task_type": "classification",
+        "n_cv_smiles": 14460,
+        "n_ho_smiles": 3629,
+        "cv_metrics": {
+          "n_total": 14460,
+          "n_pos": 3969,
+          "n_neg": 10491,
+          "roc_auc": 0.79422,
+          "pr_auc": 0.57763,
+          "mcc": 0.31341,
+          "brier": 0.16608,
+          "ece": 0.08576,
+          "log_loss": 0.50709
+        },
+        "holdout_metrics": {
+          "n_total": 3629,
+          "n_pos": 980,
+          "n_neg": 2649,
+          "roc_auc": 0.8223,
+          "pr_auc": 0.64118,
+          "mcc": 0.33586,
+          "brier": 0.15518,
+          "ece": 0.09404,
+          "log_loss": 0.47779
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 11539,
+            "n_target_val": 2921,
+            "n_train_clusters_all_8": 10828,
+            "n_forbidden_clusters": 2219,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 11599,
+            "n_target_val": 2861,
+            "n_train_clusters_all_8": 10821,
+            "n_forbidden_clusters": 2226,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 11566,
+            "n_target_val": 2894,
+            "n_train_clusters_all_8": 10824,
+            "n_forbidden_clusters": 2223,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 11499,
+            "n_target_val": 2961,
+            "n_train_clusters_all_8": 10821,
+            "n_forbidden_clusters": 2226,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 11637,
+            "n_target_val": 2823,
+            "n_train_clusters_all_8": 10831,
+            "n_forbidden_clusters": 2216,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 715.2
+      },
+      "hemolysis_HC50": {
+        "endpoint": "hemolysis_HC50",
+        "task_type": "regression",
+        "n_cv_smiles": 4447,
+        "n_ho_smiles": 1112,
+        "cv_metrics": {
+          "n_total": 4447,
+          "n_exact": 3364,
+          "n_censored": 1083,
+          "mae": 0.52229,
+          "rmse": 0.69598,
+          "r2": -0.01971,
+          "spearman": 0.32077,
+          "pearson": 0.30868,
+          "censored_concordance": 0.46999,
+          "censored_violation_mae": 0.21416,
+          "all_row_hinge_mae": 0.44725,
+          "censored_c_index": 0.64558
+        },
+        "holdout_metrics": {
+          "n_total": 1112,
+          "n_exact": 820,
+          "n_censored": 292,
+          "mae": 0.49796,
+          "rmse": 0.66759,
+          "r2": 0.06915,
+          "spearman": 0.43384,
+          "pearson": 0.39987,
+          "censored_concordance": 0.41096,
+          "censored_violation_mae": 0.20712,
+          "all_row_hinge_mae": 0.42159,
+          "censored_c_index": 0.67014
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 3557,
+            "n_target_val": 890,
+            "n_train_clusters_all_8": 11760,
+            "n_forbidden_clusters": 481,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 3557,
+            "n_target_val": 890,
+            "n_train_clusters_all_8": 11761,
+            "n_forbidden_clusters": 480,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 3558,
+            "n_target_val": 889,
+            "n_train_clusters_all_8": 11761,
+            "n_forbidden_clusters": 480,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 3558,
+            "n_target_val": 889,
+            "n_train_clusters_all_8": 11761,
+            "n_forbidden_clusters": 480,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 3558,
+            "n_target_val": 889,
+            "n_train_clusters_all_8": 11761,
+            "n_forbidden_clusters": 480,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 211.4
+      },
+      "overall_peptide_toxicity": {
+        "endpoint": "overall_peptide_toxicity",
+        "task_type": "classification",
+        "n_cv_smiles": 8828,
+        "n_ho_smiles": 2208,
+        "cv_metrics": {
+          "n_total": 8828,
+          "n_pos": 4414,
+          "n_neg": 4414,
+          "roc_auc": 0.89323,
+          "pr_auc": 0.90409,
+          "mcc": 0.63938,
+          "brier": 0.12838,
+          "ece": 0.01547,
+          "log_loss": 0.40677
+        },
+        "holdout_metrics": {
+          "n_total": 2208,
+          "n_pos": 1104,
+          "n_neg": 1104,
+          "roc_auc": 0.89802,
+          "pr_auc": 0.90674,
+          "mcc": 0.64482,
+          "brier": 0.12813,
+          "ece": 0.03037,
+          "log_loss": 0.40437
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 7062,
+            "n_target_val": 1766,
+            "n_train_clusters_all_8": 10877,
+            "n_forbidden_clusters": 2613,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 7062,
+            "n_target_val": 1766,
+            "n_train_clusters_all_8": 10877,
+            "n_forbidden_clusters": 2613,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 7063,
+            "n_target_val": 1765,
+            "n_train_clusters_all_8": 10878,
+            "n_forbidden_clusters": 2612,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 7062,
+            "n_target_val": 1766,
+            "n_train_clusters_all_8": 10876,
+            "n_forbidden_clusters": 2614,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 7063,
+            "n_target_val": 1765,
+            "n_train_clusters_all_8": 10877,
+            "n_forbidden_clusters": 2613,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 416.1
+      },
+      "cytotoxicity_cls": {
+        "endpoint": "cytotoxicity_cls",
+        "task_type": "classification",
+        "n_cv_smiles": 2347,
+        "n_ho_smiles": 587,
+        "cv_metrics": {
+          "n_total": 2347,
+          "n_pos": 773,
+          "n_neg": 1574,
+          "roc_auc": 0.72528,
+          "pr_auc": 0.56977,
+          "mcc": 0.28776,
+          "brier": 0.19525,
+          "ece": 0.07516,
+          "log_loss": 0.58218
+        },
+        "holdout_metrics": {
+          "n_total": 587,
+          "n_pos": 193,
+          "n_neg": 394,
+          "roc_auc": 0.83396,
+          "pr_auc": 0.70302,
+          "mcc": 0.3529,
+          "brier": 0.16964,
+          "ece": 0.09089,
+          "log_loss": 0.50533
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 1878,
+            "n_target_val": 469,
+            "n_train_clusters_all_8": 11805,
+            "n_forbidden_clusters": 457,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 1877,
+            "n_target_val": 470,
+            "n_train_clusters_all_8": 11802,
+            "n_forbidden_clusters": 460,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 1877,
+            "n_target_val": 470,
+            "n_train_clusters_all_8": 11801,
+            "n_forbidden_clusters": 461,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 1878,
+            "n_target_val": 469,
+            "n_train_clusters_all_8": 11802,
+            "n_forbidden_clusters": 460,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 1878,
+            "n_target_val": 469,
+            "n_train_clusters_all_8": 11802,
+            "n_forbidden_clusters": 460,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 175.0
+      },
+      "cytotoxicity_CC50": {
+        "endpoint": "cytotoxicity_CC50",
+        "task_type": "regression",
+        "n_cv_smiles": 2394,
+        "n_ho_smiles": 605,
+        "cv_metrics": {
+          "n_total": 2394,
+          "n_exact": 1784,
+          "n_censored": 610,
+          "mae": 0.529,
+          "rmse": 0.73504,
+          "r2": 0.13235,
+          "spearman": 0.38805,
+          "pearson": 0.51407,
+          "censored_concordance": 0.37705,
+          "censored_violation_mae": 0.27782,
+          "all_row_hinge_mae": 0.465,
+          "censored_c_index": 0.65135
+        },
+        "holdout_metrics": {
+          "n_total": 605,
+          "n_exact": 446,
+          "n_censored": 159,
+          "mae": 0.53697,
+          "rmse": 0.7085,
+          "r2": 0.29093,
+          "spearman": 0.40439,
+          "pearson": 0.66261,
+          "censored_concordance": 0.41509,
+          "censored_violation_mae": 0.21554,
+          "all_row_hinge_mae": 0.45249,
+          "censored_c_index": 0.68538
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 1924,
+            "n_target_val": 470,
+            "n_train_clusters_all_8": 11863,
+            "n_forbidden_clusters": 378,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 1905,
+            "n_target_val": 489,
+            "n_train_clusters_all_8": 11859,
+            "n_forbidden_clusters": 382,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 1904,
+            "n_target_val": 490,
+            "n_train_clusters_all_8": 11860,
+            "n_forbidden_clusters": 381,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 1929,
+            "n_target_val": 465,
+            "n_train_clusters_all_8": 11863,
+            "n_forbidden_clusters": 378,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 1914,
+            "n_target_val": 480,
+            "n_train_clusters_all_8": 11860,
+            "n_forbidden_clusters": 381,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 180.6
+      },
+      "half_life_reg": {
+        "endpoint": "half_life_reg",
+        "task_type": "regression",
+        "n_cv_smiles": 2317,
+        "n_ho_smiles": 573,
+        "cv_metrics": {
+          "n_total": 2317,
+          "n_exact": 2194,
+          "n_censored": 123,
+          "mae": 0.74151,
+          "rmse": 0.96173,
+          "r2": 0.15137,
+          "spearman": 0.45505,
+          "pearson": 0.42896,
+          "censored_concordance": 0.17886,
+          "censored_violation_mae": 0.85663,
+          "all_row_hinge_mae": 0.74762,
+          "censored_c_index": 0.65189
+        },
+        "holdout_metrics": {
+          "n_total": 573,
+          "n_exact": 527,
+          "n_censored": 46,
+          "mae": 0.78517,
+          "rmse": 1.02451,
+          "r2": 0.16488,
+          "spearman": 0.40882,
+          "pearson": 0.41052,
+          "censored_concordance": 0.08696,
+          "censored_violation_mae": 1.06984,
+          "all_row_hinge_mae": 0.80802,
+          "censored_c_index": 0.63088
+        },
+        "fold_audits": [
+          {
+            "fold": 0,
+            "n_target_train": 1837,
+            "n_target_val": 480,
+            "n_train_clusters_all_8": 12045,
+            "n_forbidden_clusters": 292,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 1,
+            "n_target_train": 1852,
+            "n_target_val": 465,
+            "n_train_clusters_all_8": 12042,
+            "n_forbidden_clusters": 295,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 2,
+            "n_target_train": 1851,
+            "n_target_val": 466,
+            "n_train_clusters_all_8": 12048,
+            "n_forbidden_clusters": 289,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 3,
+            "n_target_train": 1860,
+            "n_target_val": 457,
+            "n_train_clusters_all_8": 12047,
+            "n_forbidden_clusters": 290,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          },
+          {
+            "fold": 4,
+            "n_target_train": 1868,
+            "n_target_val": 449,
+            "n_train_clusters_all_8": 12044,
+            "n_forbidden_clusters": 293,
+            "n_leaked_clusters": 0,
+            "n_leaked_compounds": 0
+          }
+        ],
+        "total_leaked_clusters": 0,
+        "elapsed_sec": 208.6
+      }
+    },
+    "total_cv_folds_verified": 40,
+    "total_leaked_clusters": 0,
+    "total_leaked_compounds": 0
+  },
+  "unified_5fold_checkpoint": {
+    "checkpoint_file": "D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\gpu_sota\\gnn_atom_attr\\checkpoints\\gnn_8ep_5fold_fp16.pt",
+    "checkpoint_size_mb": 17.47,
+    "n_params_per_fold": 1800557,
+    "n_folds": 5,
+    "n_leaked_clusters": 0,
+    "unified_holdout_metrics": {
+      "PAMPA": {
+        "n_total": 1716,
+        "n_exact": 1715,
+        "n_censored": 1,
+        "mae": 0.49774,
+        "rmse": 0.69368,
+        "r2": 0.32128,
+        "spearman": 0.57633,
+        "pearson": 0.56805,
+        "censored_concordance": 0.0,
+        "censored_violation_mae": 1.12099,
+        "all_row_hinge_mae": 0.4981,
+        "censored_c_index": 0.71008
+      },
+      "Caco2": {
+        "n_total": 315,
+        "n_exact": 311,
+        "n_censored": 4,
+        "mae": 0.43878,
+        "rmse": 0.54932,
+        "r2": 0.59966,
+        "spearman": 0.78165,
+        "pearson": 0.77608,
+        "censored_concordance": 0.0,
+        "censored_violation_mae": 0.709,
+        "all_row_hinge_mae": 0.44221,
+        "censored_c_index": 0.79003
+      },
+      "hemolysis_cls": {
+        "n_total": 3629,
+        "n_pos": 980,
+        "n_neg": 2649,
+        "roc_auc": 0.78691,
+        "pr_auc": 0.56969,
+        "mcc": 0.20881,
+        "brier": 0.16711,
+        "ece": 0.08679,
+        "log_loss": 0.50435
+      },
+      "hemolysis_HC50": {
+        "n_total": 1112,
+        "n_exact": 820,
+        "n_censored": 292,
+        "mae": 0.52157,
+        "rmse": 0.68982,
+        "r2": 0.00614,
+        "spearman": 0.44071,
+        "pearson": 0.41708,
+        "censored_concordance": 0.50342,
+        "censored_violation_mae": 0.16853,
+        "all_row_hinge_mae": 0.42887,
+        "censored_c_index": 0.67469
+      },
+      "overall_peptide_toxicity": {
+        "n_total": 2208,
+        "n_pos": 1104,
+        "n_neg": 1104,
+        "roc_auc": 0.88929,
+        "pr_auc": 0.89602,
+        "mcc": 0.59679,
+        "brier": 0.14356,
+        "ece": 0.06901,
+        "log_loss": 0.44113
+      },
+      "cytotoxicity_cls": {
+        "n_total": 587,
+        "n_pos": 193,
+        "n_neg": 394,
+        "roc_auc": 0.80665,
+        "pr_auc": 0.63256,
+        "mcc": 0.21768,
+        "brier": 0.19192,
+        "ece": 0.12796,
+        "log_loss": 0.55803
+      },
+      "cytotoxicity_CC50": {
+        "n_total": 605,
+        "n_exact": 446,
+        "n_censored": 159,
+        "mae": 0.55711,
+        "rmse": 0.75603,
+        "r2": 0.19262,
+        "spearman": 0.39192,
+        "pearson": 0.6358,
+        "censored_concordance": 0.48428,
+        "censored_violation_mae": 0.18357,
+        "all_row_hinge_mae": 0.45894,
+        "censored_c_index": 0.68124
+      },
+      "half_life_reg": {
+        "n_total": 573,
+        "n_exact": 527,
+        "n_censored": 46,
+        "mae": 0.77037,
+        "rmse": 1.00844,
+        "r2": 0.19087,
+        "spearman": 0.41078,
+        "pearson": 0.43984,
+        "censored_concordance": 0.02174,
+        "censored_violation_mae": 1.09265,
+        "all_row_hinge_mae": 0.79625,
+        "censored_c_index": 0.63217
+      }
+    },
+    "elapsed_sec": 970.4
+  },
+  "unit_tests_4peptides": {
+    "import_audit_passed": true,
+    "external_deps": [
+      "numpy",
+      "rdkit",
+      "torch"
+    ],
+    "all_cases_passed": true,
+    "cases": [
+      {
+        "name": "Semaglutide",
+        "input_mode": "smiles",
+        "n_atoms": 291,
+        "cpu_latency_ms_median": 92.68,
+        "cpu_latency_ms_runs": [
+          107.73,
+          90.14,
+          92.68
+        ],
+        "under_200ms": true,
+        "all_weights_finite_0_1": true,
+        "pampa_vs_hemolysis_weight_corr": 0.2065,
+        "svg_endpoint": "half_life_reg",
+        "svg_valid_xml": true,
+        "svg_bytes": 305718,
+        "svg_file": "D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\gpu_sota\\gnn_atom_attr\\sample_svgs\\Semaglutide_half_life_reg.svg",
+        "predictions": {
+          "PAMPA": {
+            "value": -6.87427,
+            "ensemble_sd": 0.40787,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.91039
+          },
+          "Caco2": {
+            "value": -7.67993,
+            "ensemble_sd": 0.26887,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.40665
+          },
+          "hemolysis_cls": {
+            "value": 0.16562,
+            "ensemble_sd": 0.07495,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "hemolysis_HC50": {
+            "value": 2.33178,
+            "ensemble_sd": 0.18453,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.64606
+          },
+          "overall_peptide_toxicity": {
+            "value": 0.21128,
+            "ensemble_sd": 0.06315,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_cls": {
+            "value": 0.22576,
+            "ensemble_sd": 0.10785,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_CC50": {
+            "value": 1.8261,
+            "ensemble_sd": 0.11687,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.71188
+          },
+          "half_life_reg": {
+            "value": 0.65721,
+            "ensemble_sd": 0.66046,
+            "unit": "log10(h)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.73094
+          }
+        }
+      },
+      {
+        "name": "Cyclosporine_A",
+        "input_mode": "smiles",
+        "n_atoms": 85,
+        "cpu_latency_ms_median": 49.45,
+        "cpu_latency_ms_runs": [
+          45.9,
+          49.86,
+          49.45
+        ],
+        "under_200ms": true,
+        "all_weights_finite_0_1": true,
+        "pampa_vs_hemolysis_weight_corr": 0.8846,
+        "svg_endpoint": "PAMPA",
+        "svg_valid_xml": true,
+        "svg_bytes": 89083,
+        "svg_file": "D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\gpu_sota\\gnn_atom_attr\\sample_svgs\\Cyclosporine_A_PAMPA.svg",
+        "predictions": {
+          "PAMPA": {
+            "value": -5.41495,
+            "ensemble_sd": 0.36817,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.96199
+          },
+          "Caco2": {
+            "value": -6.67881,
+            "ensemble_sd": 0.08722,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.56269
+          },
+          "hemolysis_cls": {
+            "value": 0.84955,
+            "ensemble_sd": 0.03201,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "hemolysis_HC50": {
+            "value": 0.44649,
+            "ensemble_sd": 0.24374,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.76786
+          },
+          "overall_peptide_toxicity": {
+            "value": 0.52455,
+            "ensemble_sd": 0.26952,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_cls": {
+            "value": 0.78502,
+            "ensemble_sd": 0.07485,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_CC50": {
+            "value": 1.31808,
+            "ensemble_sd": 0.10439,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.54607
+          },
+          "half_life_reg": {
+            "value": 0.98488,
+            "ensemble_sd": 0.46978,
+            "unit": "log10(h)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.90032
+          }
+        }
+      },
+      {
+        "name": "Micafungin",
+        "input_mode": "smiles",
+        "n_atoms": 86,
+        "cpu_latency_ms_median": 57.16,
+        "cpu_latency_ms_runs": [
+          56.49,
+          58.58,
+          57.16
+        ],
+        "under_200ms": true,
+        "all_weights_finite_0_1": true,
+        "pampa_vs_hemolysis_weight_corr": 0.4407,
+        "svg_endpoint": "hemolysis_cls",
+        "svg_valid_xml": true,
+        "svg_bytes": 96580,
+        "svg_file": "D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\gpu_sota\\gnn_atom_attr\\sample_svgs\\Micafungin_hemolysis_cls.svg",
+        "predictions": {
+          "PAMPA": {
+            "value": -6.74141,
+            "ensemble_sd": 0.06897,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.84487
+          },
+          "Caco2": {
+            "value": -6.36833,
+            "ensemble_sd": 0.44173,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.57527
+          },
+          "hemolysis_cls": {
+            "value": 0.33074,
+            "ensemble_sd": 0.19298,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "hemolysis_HC50": {
+            "value": 1.99503,
+            "ensemble_sd": 0.09614,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.57246
+          },
+          "overall_peptide_toxicity": {
+            "value": 0.54819,
+            "ensemble_sd": 0.31069,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_cls": {
+            "value": 0.21446,
+            "ensemble_sd": 0.14429,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_CC50": {
+            "value": 2.27679,
+            "ensemble_sd": 0.14066,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.50904
+          },
+          "half_life_reg": {
+            "value": 1.3611,
+            "ensemble_sd": 0.18434,
+            "unit": "log10(h)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.57032
+          }
+        }
+      },
+      {
+        "name": "Magainin_2",
+        "input_mode": "sequence",
+        "n_atoms": 174,
+        "cpu_latency_ms_median": 65.24,
+        "cpu_latency_ms_runs": [
+          67.33,
+          65.24,
+          64.74
+        ],
+        "under_200ms": true,
+        "all_weights_finite_0_1": true,
+        "pampa_vs_hemolysis_weight_corr": 0.1834,
+        "svg_endpoint": "hemolysis_HC50",
+        "svg_valid_xml": true,
+        "svg_bytes": 189529,
+        "svg_file": "D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\gpu_sota\\gnn_atom_attr\\sample_svgs\\Magainin_2_hemolysis_HC50.svg",
+        "predictions": {
+          "PAMPA": {
+            "value": -6.76914,
+            "ensemble_sd": 0.25947,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 1.08993
+          },
+          "Caco2": {
+            "value": -7.42368,
+            "ensemble_sd": 0.3224,
+            "unit": "log10(cm/s)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.36354
+          },
+          "hemolysis_cls": {
+            "value": 0.16948,
+            "ensemble_sd": 0.11089,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "hemolysis_HC50": {
+            "value": 2.16684,
+            "ensemble_sd": 0.14941,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.51866
+          },
+          "overall_peptide_toxicity": {
+            "value": 0.27828,
+            "ensemble_sd": 0.13598,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_cls": {
+            "value": 0.11534,
+            "ensemble_sd": 0.05471,
+            "unit": "prob [0,1]",
+            "task_type": "classification"
+          },
+          "cytotoxicity_CC50": {
+            "value": 1.94288,
+            "ensemble_sd": 0.18574,
+            "unit": "log10(uM)",
+            "task_type": "regression",
+            "aleatoric_sigma": 0.68162
+          },
+          "half_life_reg": {
+            "value": -0.46479,
+            "ensemble_sd": 0.26677,
+            "unit": "log10(h)",
+            "task_type": "regression",
+            "aleatoric_sigma": 1.45081
+          }
+        }
+      }
+    ]
+  }
+}
