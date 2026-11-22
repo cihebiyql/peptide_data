@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniPanel V33 · Peptide ADMET &amp; PK Prediction Platform</title>
+  <link rel="stylesheet" href="static/styles.css" />
+</head>
+<body>
+  <!-- Single Clean Top Navigation Bar (56px) -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#predict" id="brand-home" aria-label="OmniPanel Home">
+        <svg class="brand-mark" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="7" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1.2"/>
+          <path d="M8.5 6.5C8.5 10.5 19.5 11.5 19.5 14C19.5 16.5 8.5 17.5 8.5 21.5" stroke="#0369A1" stroke-width="2" stroke-linecap="round"/>
+          <path d="M19.5 6.5C19.5 10.5 8.5 11.5 8.5 14C8.5 16.5 19.5 17.5 19.5 21.5" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/>
+          <line x1="10.5" y1="9" x2="17.5" y2="9" stroke="#7DD3FC" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="10.5" y1="19" x2="17.5" y2="19" stroke="#5EEAD4" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="14" cy="14" r="2.1" fill="#0369A1"/>
+        </svg>
+        <span class="brand-name">Omni<strong>Panel</strong></span>
+        <span class="brand-ver">V33.1</span>
+      </a>
+
+      <nav class="main-nav" role="tablist" aria-label="Primary Workspace">
+        <button class="nav-tab active" data-tab="predict" role="tab" aria-selected="true">Predict</button>
+        <button class="nav-tab" data-tab="batch" role="tab" aria-selected="false">Batch</button>
+        <button class="nav-tab" data-tab="validation" role="tab" aria-selected="false">Endpoints &amp; Validation</button>
+        <button class="nav-tab" data-tab="api" role="tab" aria-selected="false">API Docs</button>
+      </nav>
+
+      <div class="topbar-meta">
+        <span class="pill-ruo" title="internal_research_only — Not validated for clinical or regulatory decisions">
+          Research Use Only
+        </span>
+        <span class="status-pill" id="backend-status" title="Live V33 inference engine status">
+          <span class="status-dot"></span>
+          <span class="status-text">Connecting…</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <!-- ==================== VIEW 1: PREDICT ==================== -->
+    <section id="view-predict" class="view-section active">
+      <!-- Adaptive Hero (starts centered, collapses to compact top query bar on prediction) -->
+      <div id="predict-hero" class="predict-hero hero-centered">
+        <div class="hero-intro">
+          <div class="hero-eyebrow">V33.1 · 4-Foundation-Model Peptide ADMET, PK &amp; Antimicrobial Super-Ensemble</div>
+          <h1 class="hero-title">多肽全端点性质预测平台 <span class="title-sep">·</span> <span class="title-en">Peptide OmniPanel</span></h1>
+          <p class="hero-sub">
+            Canonical 20-AA sequences, cyclic macrocycles, and lipidated therapeutics — RDKit 2D motif inspection,
+            calibrated probabilities &amp; 80% conformal intervals, exact Tanimoto AD, and fatty-acylation PK anchoring.
+          </p>
+        </div>
+
+        <div class="query-bar-wrap">
+          <form id="predict-form" class="smart-query-bar" autocomplete="off">
+            <span class="query-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7.5"/>
+                <path d="M20 20l-3.5-3.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="smart-query-input"
+              class="smart-input"
+              placeholder="Enter peptide drug name (Semaglutide, Cyclosporine A), 20-AA sequence, or SMILES…"
+              aria-label="Peptide drug name, sequence, or SMILES"
+            />
+            <span id="detected-type-chip" class="detect-chip hidden">Auto</span>
+            <button type="submit" id="btn-predict" class="btn-primary btn-predict">
+              <span class="btn-label">Predict</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- Autocomplete dropdown -->
+          <div id="autocomplete-list" class="autocomplete-menu hidden" role="listbox"></div>
+
+          <!-- Compact action buttons visible in compact/results mode -->
+          <div id="compact-actions" class="compact-actions hidden">
+            <button type="button" class="btn-ghost btn-sm" id="btn-export-csv" title="Export predictions as CSV">
+              CSV
+            </button>
+            <button type="button" class="btn-ghost btn-sm" id="btn-export-json" title="Export full JSON report">
+              JSON
+            </button>
+            <button type="button" class="btn-ghost btn-sm" id="btn-print-report" title="Print clean report">
+              Print
+            </button>
+          </div>
+        </div>
+
+        <!-- Single-Row Compact Pill Examples + Curated Library Drawer + Advanced Options Trigger -->
+        <div class="examples-row">
+          <div class="examples-pills" id="example-pills">
+            <span class="examples-label">Examples:</span>
+            <!-- Hydrated by JS from api/v1/examples -->
+          </div>
+          <div class="examples-actions">
+            <button type="button" id="btn-toggle-exlib" class="btn-exlib-toggle" aria-expanded="false">
+              <span id="exlib-btn-label">All 25 Examples</span>
+              <span class="exlib-chevron">▾</span>
+            </button>
+            <button type="button" id="btn-toggle-advanced" class="btn-link-subtle" aria-expanded="false">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" stroke-linecap="round"/>
+              </svg>
+              <span>Advanced Options</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Curated Clinical & Research Example Library (All 17 Case17 + 4 FDA Echinocandins + 5 AMPs) -->
+        <div id="example-library-panel" class="example-library-panel hidden">
+          <div class="exlib-head">
+            <div>
+              <strong>Curated Clinical &amp; Research Peptide Examples</strong>
+              <span class="exlib-sub">中检院叶老师 17 个经典临床多肽案例 · 棘白菌素类环肽全家族 (4/4 FDA) · 经典抗菌肽序列</span>
+            </div>
+            <button type="button" id="btn-close-exlib" class="icon-btn" aria-label="Close examples library">✕</button>
+          </div>
+          <div id="exlib-grid" class="exlib-grid"></div>
+        </div>
+
+        <!-- Collapsible Advanced Options Panel -->
+        <div id="advanced-panel" class="advanced-panel hidden">
+          <div class="adv-grid">
+            <div class="adv-field">
+              <label for="adv-sequence">Explicit Sequence (20 Standard AA)</label>
+              <textarea id="adv-sequence" rows="2" placeholder="Optional — e.g. HISEAVKIFGCKWKENWKWNSNC"></textarea>
+            </div>
+            <div class="adv-field">
+              <label for="adv-smiles">Explicit Covalent SMILES</label>
+              <textarea id="adv-smiles" rows="2" placeholder="Optional — recommended for cyclic or lipidated peptides"></textarea>
+            </div>
+            <div class="adv-field adv-conditions">
+              <label>Assay Conditions &amp; Scope</label>
+              <div class="cond-row">
+                <span class="cond-label">RBC Species</span>
+                <div class="seg-group" id="rbc-species-group">
+                  <button type="button" class="seg-btn active" data-val="human">Human</button>
+                  <button type="button" class="seg-btn" data-val="horse">Horse</button>
+                  <button type="button" class="seg-btn" data-val="mouse">Mouse</button>
+                </div>
+              </div>
+              <div class="cond-row">
+                <span class="cond-label">PK Context</span>
+                <select id="pk-context-select" class="select-sm">
+                  <option value="human_plasma">Human Plasma (IV)</option>
+                  <option value="human_sc">Human Subcutaneous (SC)</option>
+                  <option value="human_po">Human Oral (PO)</option>
+                  <option value="rat_iv">Rat IV</option>
+                  <option value="mouse_sc">Mouse SC</option>
+                </select>
+              </div>
+              <label class="checkbox-inline">
+                <input type="checkbox" id="toggle-tier2-req" checked />
+                <span id="adv-tier2-label">Include Tier-2 Antimicrobial, Bactericidal &amp; Biofilm Endpoints</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="predict-error" class="alert-error hidden" role="alert"></div>
+      </div>
+
+      <!-- Landing Overview Strip (Visible ONLY before first prediction; hydrated dynamically from v33_manifest.json) -->
+      <div id="landing-overview" class="landing-overview">
+        <div class="kpi-ribbon">
+          <div class="kpi-item">
+            <span class="kpi-val mono" id="kpi-compounds">—</span>
+            <span class="kpi-lbl">Curated Peptides</span>
+          </div>
+          <div class="kpi-divider"></div>
+          <div class="kpi-item">
+            <span class="kpi-val mono" id="kpi-ep-count">—</span>
+            <span class="kpi-lbl" id="kpi-ep-lbl">Tiered ADMET &amp; MIC Endpoints</span>
+          </div>
+          <div class="kpi-divider"></div>
+          <div class="kpi-item">
+            <span class="kpi-val mono" id="kpi-records">—</span>
+            <span class="kpi-lbl" id="kpi-records-lbl">Harmonized Records</span>
+          </div>
+          <div class="kpi-divider"></div>
+          <div class="kpi-item">
+            <span class="kpi-val mono" id="kpi-uq">80%</span>
+            <span class="kpi-lbl">Conformal UQ + Tanimoto AD</span>
+          </div>
+        </div>
+
+        <div class="feature-trio">
+          <article class="feature-card">
+            <div class="feature-icon icon-cobalt">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <h3>4-Foundation-Model Super-Ensemble</h3>
+            <p>
+              Combines ncAA-RepDistill v2, ESM-C 600M, PeptideCLM-2, and ChemBERTa-MTR with CPU GBDT &amp; Deep Multi-Task
+              models under zero-holdout-peeking grouped CV selection.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon icon-amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="9"/>
+                <polyline points="12 7 12 12 15.5 14"/>
+              </svg>
+            </div>
+            <h3>Long-Acting PK Mechanism Anchor</h3>
+            <p>
+              Detects C14–C20 fatty-acylation signatures and pairs literature-anchored clinical half-life windows
+              transparently beside route-matched pure-ML predictions (Case17 Spearman 0.903).
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon icon-teal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 3l8 4v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            </div>
+            <h3>Conformal UQ, Censored Heads &amp; Analogs</h3>
+            <p>
+              Every endpoint reports Platt/isotonic calibrated probabilities or 80%/90% conformal intervals, AFT/Tobit
+              censored diagnostics, exact Morgan Tanimoto AD, and top-3 training analogs.
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <!-- ==================== PREDICTION RESULTS WORKSPACE ==================== -->
+      <div id="predict-results" class="predict-results hidden">
+        <!-- Row 1: Molecule Summary & Visual Inspection (3-Column Balanced Grid) -->
+        <div class="mol-summary-grid">
+          <!-- Left: Live 2D Structure SVG -->
+          <div class="card structure-card">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">2D Structure &amp; Motifs</h2>
+                <span class="card-sub" id="svg-meta-caption">RDKit rdMolDraw2D</span>
+              </div>
+              <div class="card-actions">
+                <button type="button" class="icon-btn" id="btn-zoom-svg" title="Inspect Fullscreen">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button type="button" class="icon-btn" id="btn-download-svg" title="Download SVG">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="svg-stage" id="mol-svg-stage" title="Click to zoom 2D molecular structure"></div>
+            <div class="svg-legend" id="mol-svg-legend"></div>
+          </div>
+
+          <!-- Middle: Identity, Modification Badges & Physicochemical Strip -->
+          <div class="card profile-card">
+            <div class="profile-head">
+              <div class="profile-title-row">
+                <h2 class="mol-name" id="res-mol-name">—</h2>
+                <span class="type-pill" id="res-type-pill">SMILES</span>
+              </div>
+              <div class="mol-subtitle" id="res-mol-subtitle"></div>
+            </div>
+
+            <div class="mod-badges" id="res-mod-badges"></div>
+
+            <div class="fda-ref-box hidden" id="res-fda-ref"></div>
+
+            <div class="physchem-grid" id="res-physchem-grid">
+              <!-- 8 monospace descriptors hydrated by JS -->
+            </div>
+          </div>
+
+          <!-- Right: 6-Axis ADMET Overview Radar -->
+          <div class="card radar-card">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">ADMET Profile Radar</h2>
+                <span class="card-sub">6-Axis Favorable Balance (0–100)</span>
+              </div>
+              <span class="runtime-chip mono" id="res-runtime-chip">— ms</span>
+            </div>
+            <div class="radar-stage" id="res-radar-stage"></div>
+            <div class="radar-readout" id="res-radar-readout">
+              Hover any axis point to inspect metric balance.
+            </div>
+          </div>
+        </div>
+
+        <!-- Dedicated Highlight Banner: Long-Acting Half-Life Mechanism Recognition -->
+        <div id="mechanism-banner" class="mechanism-banner hidden"></div>
+
+        <!-- Tier Switcher + Filter Toolbar -->
+        <div class="dashboard-toolbar">
+          <div class="tier-tabs" role="tablist">
+            <button type="button" class="tier-tab active" data-tier="1" id="tab-tier-1">
+              Core ADMET &amp; PK <span class="count-pill" id="count-tier-1">0</span>
+            </button>
+            <button type="button" class="tier-tab" data-tier="2" id="tab-tier-2">
+              Antimicrobial &amp; Biofilm (Tier 2) <span class="count-pill" id="count-tier-2">0</span>
+            </button>
+          </div>
+
+          <div class="toolbar-filters">
+            <div class="ad-filter-group" id="ad-filter-group">
+              <button type="button" class="filter-chip active" data-ad="all">All</button>
+              <button type="button" class="filter-chip" data-ad="in_domain">In-Domain</button>
+              <button type="button" class="filter-chip" data-ad="borderline">Borderline</button>
+              <button type="button" class="filter-chip" data-ad="ood">OOD</button>
+            </div>
+            <input type="search" id="endpoint-search" class="search-sm" placeholder="Filter endpoints…" />
+          </div>
+        </div>
+
+        <!-- Tier 1: 2x2 Balanced Domain Card Grid (20 endpoints) -->
+        <div id="tier1-dashboard" class="domain-grid-2x2"></div>
+
+        <!-- Tier 2: Reference-Strain Antimicrobial MICs (4 endpoints) + Selectivity Guide -->
+        <div id="tier2-dashboard" class="tier2-grid-balanced hidden"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: BATCH PREDICTION ==================== -->
+    <section id="view-batch" class="view-section">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Batch Screening &amp; Multi-Peptide Comparison</h1>
+          <p class="page-sub">
+            Upload <code>.csv</code>, <code>.tsv</code>, <code>.txt</code>, or <code>.fasta</code> (up to 500 molecules), or paste drug names, sequences, and SMILES directly.
+          </p>
+        </div>
+        <div class="section-actions preset-btn-group">
+          <button type="button" class="btn-ghost btn-sm" id="btn-batch-demo">Mixed Demo (7)</button>
+          <button type="button" class="btn-ghost btn-sm" id="btn-batch-case17" title="All 17 classic clinical peptide drugs (NIFDC / Prof. Ye benchmark)">Case17 Clinical (17 · 中检院案例)</button>
+          <button type="button" class="btn-ghost btn-sm" id="btn-batch-echino" title="All 4 FDA Echinocandins + Cyclosporine A + Daptomycin">Echinocandins &amp; Macrocycles (6)</button>
+          <button type="button" class="btn-ghost btn-sm" id="btn-batch-clear">Clear</button>
+        </div>
+      </div>
+
+      <div class="batch-setup-grid">
+        <!-- Left: Dropzone + Paste + Run -->
+        <div class="card batch-input-card">
+          <div class="dropzone" id="batch-dropzone">
+            <input type="file" id="batch-file-input" accept=".csv,.tsv,.txt,.fasta,.fa,.faa" hidden />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="dropzone-text">
+              <strong>Drop CSV / TSV / TXT / FASTA</strong> or <button type="button" class="link-inline" id="btn-browse-file">browse files</button>
+            </div>
+            <span class="dropzone-hint" id="batch-file-label">Auto-detects FASTA headers, columns, drug names, sequences &amp; SMILES</span>
+          </div>
+
+          <label class="field-label" for="batch-paste-area">Or paste molecules (one per line, CSV, or FASTA)</label>
+          <textarea
+            id="batch-paste-area"
+            class="mono-textarea"
+            rows="6"
+            placeholder="name,query&#10;Semaglutide,Semaglutide&#10;Cyclosporine A,Cyclosporine A&#10;Classic AMP,HISEAVKIFGCKWKENWKWNSNC"
+          ></textarea>
+
+          <div class="batch-controls">
+            <div class="batch-cond-inline">
+              <label>RBC:
+                <select id="batch-rbc" class="select-sm">
+                  <option value="human">Human</option>
+                  <option value="horse">Horse</option>
+                  <option value="mouse">Mouse</option>
+                </select>
+              </label>
+              <label class="checkbox-inline">
+                <input type="checkbox" id="batch-tier2" />
+                <span>Include Tier-2 MICs</span>
+              </label>
+            </div>
+            <button type="button" id="btn-run-batch" class="btn-primary">
+              Run Batch Prediction
+            </button>
+          </div>
+
+          <div id="batch-progress-wrap" class="progress-wrap hidden">
+            <div class="progress-bar-track"><div class="progress-bar-fill" id="batch-progress-fill"></div></div>
+            <span class="progress-label" id="batch-progress-label">Running…</span>
+          </div>
+          <div id="batch-error" class="alert-error hidden"></div>
+        </div>
+
+        <!-- Right: Instant Parsed Preview Table -->
+        <div class="card batch-preview-card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Parsed Input Preview</h2>
+              <span class="card-sub" id="batch-preview-meta">Waiting for file or pasted molecules</span>
+            </div>
+            <div class="preview-badges" id="batch-preview-badges"></div>
+          </div>
+          <div class="table-scroll batch-preview-scroll">
+            <table class="data-table compact-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Sequence / SMILES</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="batch-preview-tbody">
+                <tr><td colspan="5" class="empty-cell">Click “Load Clinical Benchmark (7)” or paste peptides to preview.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batch Results Matrix + Multi-Molecule Radar Overlay -->
+      <div id="batch-results-section" class="batch-results-section hidden">
+        <div class="batch-results-header">
+          <div class="batch-kpis" id="batch-kpis"></div>
+          <div class="batch-export-bar">
+            <input type="search" id="batch-result-search" class="search-sm" placeholder="Filter molecules…" />
+            <button type="button" class="btn-ghost btn-sm" id="btn-batch-csv">Export CSV</button>
+            <button type="button" class="btn-ghost btn-sm" id="btn-batch-json">Export JSON</button>
+          </div>
+        </div>
+
+        <div class="batch-analytics-grid">
+          <!-- Interactive Sortable Matrix -->
+          <div class="card batch-matrix-card">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">Screening Results Matrix</h2>
+                <span class="card-sub">Click headers to sort · Check up to 4 peptides to overlay on Radar</span>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table sortable-table" id="batch-results-table">
+                <thead>
+                  <tr>
+                    <th class="col-check">Plot</th>
+                    <th data-sort="name">Molecule</th>
+                    <th data-sort="mw" class="num">MW</th>
+                    <th data-sort="half_life_val" class="num">Half-Life</th>
+                    <th data-sort="ppb_val" class="num">PPB</th>
+                    <th data-sort="pampa_val" class="num">PAMPA</th>
+                    <th data-sort="caco2_val" class="num">Caco-2</th>
+                    <th data-sort="hemolysis">Hemolysis</th>
+                    <th data-sort="logd" class="num">LogD7.4</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="batch-results-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Multi-Molecule Radar Overlay -->
+          <div class="card batch-radar-card">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">Multi-Peptide Radar Overlay</h2>
+                <span class="card-sub">Compare up to 4 peptides across 6 ADMET dimensions</span>
+              </div>
+            </div>
+            <div class="batch-radar-stage" id="batch-radar-stage"></div>
+            <div class="batch-radar-legend" id="batch-radar-legend"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: ENDPOINTS & VALIDATION ==================== -->
+    <section id="view-validation" class="view-section">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Endpoints, Censored Modeling &amp; Validation Transparency</h1>
+          <p class="page-sub" id="val-manifest-subtitle">
+            100% audited metrics hydrated live from <code>v33_manifest.json</code> — zero-holdout-peeking super-ensemble selection, untouched 20% scaffold holdout, and Leave-Case17-Out benchmark.
+          </p>
+        </div>
+        <span class="scope-badge mono">scope: internal_research_only</span>
+      </div>
+
+      <!-- Honest Scientific Boundary Notice -->
+      <div class="scope-notice-card">
+        <div class="scope-notice-icon">i</div>
+        <div>
+          <strong>Scientific Scope &amp; Validation Disclosure (internal_research_only):</strong>
+          All models are intended strictly for early-stage preclinical prioritization and hypothesis generation — not clinical or regulatory decision-making.
+          Champion selection uses nested 5-fold grouped cross-validation with zero peeking at the untouched 20% cluster holdout. Small-<em>n</em> PK endpoints (e.g., CL_absolute, Cmax, F, Vd_per_kg) should be interpreted for rank ordering alongside their 80% conformal intervals and exact Morgan Tanimoto AD tiers.
+        </div>
+      </div>
+
+      <div class="val-kpi-grid" id="val-kpi-grid"></div>
+
+      <!-- Leave-Case17-Out Clinical Benchmark + 4-Foundation-Model Dominance Strip -->
+      <div class="val-highlights-grid">
+        <div class="card val-highlight-card" id="val-case17-card"></div>
+        <div class="card val-highlight-card" id="val-fm-strip"></div>
+      </div>
+
+      <div class="card val-table-card">
+        <div class="val-toolbar">
+          <div class="seg-group" id="val-tier-filter">
+            <button type="button" class="seg-btn active" data-tier="all" id="val-btn-all">All Endpoints</button>
+            <button type="button" class="seg-btn" data-tier="1" id="val-btn-t1">Tier 1 · Core ADMET</button>
+            <button type="button" class="seg-btn" data-tier="2" id="val-btn-t2">Tier 2 · Antimicrobial &amp; Biofilm</button>
+          </div>
+          <div class="val-toolbar-right">
+            <select id="val-domain-filter" class="select-sm">
+              <option value="all">All Domains</option>
+              <option value="pk">Pharmacokinetics &amp; PK</option>
+              <option value="permeability">Permeability &amp; Absorption</option>
+              <option value="safety">Safety &amp; Hemolysis</option>
+              <option value="physicochemical">Physicochemical &amp; In Vitro</option>
+              <option value="antimicrobial">Antimicrobial MICs</option>
+            </select>
+            <input type="search" id="val-search" class="search-sm" placeholder="Search endpoint or family…" />
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="data-table val-table">
+            <thead>
+              <tr>
+                <th>Endpoint</th>
+                <th>Tier / Domain</th>
+                <th>Kind &amp; Unit</th>
+                <th class="num">Train/CV N</th>
+                <th class="num">Holdout N</th>
+                <th class="num">Censored</th>
+                <th>Winning Family &amp; Weights</th>
+                <th class="num">V32 Ref</th>
+                <th class="num">V33 Grouped CV</th>
+                <th class="num">V33 20% Holdout</th>
+                <th class="num">80% Cov. / Cal.</th>
+              </tr>
+            </thead>
+            <tbody id="val-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: API DOCS ==================== -->
+    <section id="view-api" class="view-section">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">RESTful OpenAPI &amp; V33 Live Engine Integration</h1>
+          <p class="page-sub">
+            FastAPI scientific web platform backed by live <code>v33_remote</code> super-ensemble inference and deterministic RDKit 2D rendering.
+          </p>
+        </div>
+        <div class="section-actions">
+          <a href="docs" target="_blank" rel="noopener" class="btn-primary">Open Swagger UI (/docs) ↗</a>
+          <a href="redoc" target="_blank" rel="noopener" class="btn-ghost">ReDoc (/redoc) ↗</a>
+        </div>
+      </div>
+
+      <div class="api-grid">
+        <div class="card api-ref-card">
+          <h2 class="card-title">REST Endpoints</h2>
+          <div class="api-endpoint-list">
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/predict</code>
+              <span class="api-desc">Single peptide full-panel V33 prediction, 2D SVG, 80% CI, AD &amp; analogs</span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/batch</code>
+              <span class="api-desc">Batched inference up to 500 molecules (JSON or raw CSV/TSV/FASTA)</span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/render-svg</code>
+              <span class="api-desc">Server-side RDKit 2D SVG with motif substructure highlights</span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-get">GET</span>
+              <code class="api-path">api/v1/endpoints</code>
+              <span class="api-desc">Audited <code>v33_manifest.json</code> catalog, Case17 scorecard &amp; FM ablations</span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-get">GET</span>
+              <code class="api-path">api/v1/health</code>
+              <span class="api-desc">Liveness, active adapter mode, RDKit version &amp; dataset KPIs</span>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">Quickstart Snippets</h3>
+          <div class="code-tabs">
+            <button type="button" class="code-tab active" data-lang="curl">cURL</button>
+            <button type="button" class="code-tab" data-lang="python">Python (httpx)</button>
+            <button type="button" class="btn-link-subtle ml-auto" id="btn-copy-snippet">Copy</button>
+          </div>
+          <pre class="code-block" id="api-code-snippet"></pre>
+        </div>
+
+        <div class="card api-playground-card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Live API Explorer</h2>
+              <span class="card-sub">Execute live requests against this FastAPI server</span>
+            </div>
+            <button type="button" class="btn-primary btn-sm" id="btn-api-try">Send Request</button>
+          </div>
+          <div class="playground-controls">
+            <select id="api-preset-select" class="select-sm">
+              <option value="predict_sema">POST api/v1/predict — Semaglutide</option>
+              <option value="predict_amp">POST api/v1/predict — Classic AMP Sequence</option>
+              <option value="render_csa">POST api/v1/render-svg — Cyclosporine A</option>
+              <option value="health">GET api/v1/health</option>
+              <option value="endpoints">GET api/v1/endpoints</option>
+            </select>
+            <span class="mono playground-status" id="api-play-status">Ready</span>
+          </div>
+          <textarea id="api-play-body" class="mono-textarea" rows="5"></textarea>
+          <label class="field-label">Live JSON Response</label>
+          <pre class="code-block response-block" id="api-play-output">{ "hint": "Click 'Send Request' to inspect the live V33 JSON contract." }</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>Peptide OmniPanel V33</strong> · Scientific ADMET &amp; PK Prediction Platform</span>
+      <span class="footer-sep">·</span>
+      <span>RDKit 2D Substructure Engine · 4-FM Super-Ensemble · 80% Conformal UQ · Exact Tanimoto AD</span>
+      <span class="footer-sep">·</span>
+      <span class="mono">internal_research_only</span>
+    </div>
+  </footer>
+
+  <!-- Fullscreen 2D Structure Zoom Modal -->
+  <div id="svg-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="2D Molecular Structure Zoom">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-mol-title">2D Molecular Structure</h3>
+          <span class="card-sub" id="modal-mol-sub">RDKit rdMolDraw2D · Vector SVG</span>
+        </div>
+        <div class="card-actions">
+          <button type="button" class="btn-ghost btn-sm" id="modal-download-svg">Download SVG</button>
+          <button type="button" class="icon-btn" id="modal-close" aria-label="Close modal">✕</button>
+        </div>
+      </div>
+      <div class="modal-svg-stage" id="modal-svg-stage"></div>
+      <div class="svg-legend" id="modal-svg-legend"></div>
+    </div>
+  </div>
+
+  <script type="module" src="static/app.js"></script>
+</body>
+</html>

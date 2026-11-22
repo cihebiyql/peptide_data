@@ -1,0 +1,380 @@
+{
+  "timestamp": "2026-11-22 07:11:14 +0800",
+  "checks": {
+    "manifest_integrity": {
+      "passed": true,
+      "endpoints": 24,
+      "serving_joblibs_verified": 43,
+      "zero_nan_inf": true
+    },
+    "health": {
+      "status": "ok",
+      "ok": true,
+      "version": "v33.0",
+      "mode": "v33_live",
+      "endpoints": 24,
+      "tier1_endpoints": 20,
+      "tier2_endpoints": 4,
+      "encoders_ready": {
+        "ncaa_repdistill_v2": {
+          "ready": true,
+          "load_sec": 27.25
+        },
+        "peptideclm2": {
+          "ready": true,
+          "load_sec": 52.16
+        },
+        "chemberta_mtr": {
+          "ready": true,
+          "load_sec": 14.34
+        },
+        "esmc_600m": {
+          "ready": true,
+          "ok": true,
+          "dtype": "float32",
+          "load_sec": 72.17,
+          "uptime_s": 2222.0,
+          "total_encoded": 1
+        },
+        "bank_smiles_cached": 43943,
+        "bank_sequences_cached": 31792
+      },
+      "models_loaded": {
+        "cpu_bundles": 22,
+        "fusion_bundles": 21,
+        "deep_endpoints": 20
+      },
+      "rss_mb": 22815.6,
+      "startup_sec": 215.75,
+      "uptime_s": 774.0
+    },
+    "parity_cases": {
+      "Semaglutide": {
+        "modality_track": "smiles_only",
+        "cached_hit_first_call": true,
+        "cached_wall_ms": 6582.06,
+        "live_wall_ms": 7296.02,
+        "live_timing_ms": {
+          "encode_ms": 890.58,
+          "smiles_live_ms": 890.2,
+          "esmc_live_ms": 0.0,
+          "predict_ms": 6352.43,
+          "ad_ms": 8.02,
+          "total_ms": 7258.87
+        },
+        "cosines": {
+          "ncaa_smiles_repr": 0.99955,
+          "ncaa_fusion_hf": 0.999924,
+          "ncaa_protein_proj": 0.999042,
+          "peptideclm2": 0.999998,
+          "chemberta_mtr": 0.99999
+        },
+        "min_cosine": 0.999042,
+        "physchem_max_abs_diff": 0.0,
+        "max_prediction_diff_across_24ep": 0.01071,
+        "mechanism_anchor": {
+          "anchor_class": "weekly_diacid",
+          "diacid_internal_c": 16,
+          "monoacyl_linear_c": 17,
+          "anchor_mid_h": 144.0,
+          "anchor_range_h": [
+            120.0,
+            168.0
+          ]
+        },
+        "sample_predictions": {
+          "half_life_h": 21.148,
+          "ppb": 0.7991,
+          "hemolysis_prob": 0.09685,
+          "mic_e_coli_uM": 15.871
+        }
+      },
+      "Tirzepatide": {
+        "modality_track": "smiles_only",
+        "cached_hit_first_call": true,
+        "cached_wall_ms": 7183.88,
+        "live_wall_ms": 8817.54,
+        "live_timing_ms": {
+          "encode_ms": 2535.47,
+          "smiles_live_ms": 2535.21,
+          "esmc_live_ms": 0.0,
+          "predict_ms": 6223.9,
+          "ad_ms": 12.34,
+          "total_ms": 8780.34
+        },
+        "cosines": {
+          "ncaa_smiles_repr": 0.999089,
+          "ncaa_fusion_hf": 0.99976,
+          "ncaa_protein_proj": 0.996829,
+          "peptideclm2": 0.999999,
+          "chemberta_mtr": 0.999988
+        },
+        "min_cosine": 0.996829,
+        "physchem_max_abs_diff": 0.0,
+        "max_prediction_diff_across_24ep": 0.03587,
+        "mechanism_anchor": {
+          "anchor_class": "weekly_diacid",
+          "diacid_internal_c": 18,
+          "monoacyl_linear_c": 19,
+          "anchor_mid_h": 144.0,
+          "anchor_range_h": [
+            120.0,
+            168.0
+          ]
+        },
+        "sample_predictions": {
+          "half_life_h": 30.866,
+          "ppb": 0.8075,
+          "hemolysis_prob": 0.17939,
+          "mic_e_coli_uM": 9.2685
+        }
+      },
+      "Cyclosporine_A": {
+        "modality_track": "smiles_only",
+        "cached_hit_first_call": true,
+        "cached_wall_ms": 6628.16,
+        "live_wall_ms": 6457.68,
+        "live_timing_ms": {
+          "encode_ms": 313.25,
+          "smiles_live_ms": 313.03,
+          "esmc_live_ms": 0.0,
+          "predict_ms": 6100.1,
+          "ad_ms": 16.15,
+          "total_ms": 6432.15
+        },
+        "cosines": {
+          "ncaa_smiles_repr": 0.999963,
+          "ncaa_fusion_hf": 0.999977,
+          "ncaa_protein_proj": 0.999481,
+          "peptideclm2": 0.999998,
+          "chemberta_mtr": 0.99998
+        },
+        "min_cosine": 0.999481,
+        "physchem_max_abs_diff": 0.0,
+        "max_prediction_diff_across_24ep": 0.0095,
+        "mechanism_anchor": {
+          "anchor_class": "non_acylated",
+          "diacid_internal_c": 0,
+          "monoacyl_linear_c": 0,
+          "anchor_mid_h": null,
+          "anchor_range_h": null
+        },
+        "sample_predictions": {
+          "half_life_h": 8.5915,
+          "ppb": 0.8955,
+          "hemolysis_prob": 0.29349,
+          "mic_e_coli_uM": 26.754
+        }
+      },
+      "Bank_AMP_MKTKAAVLFETHKPFEIVELEL": {
+        "modality_track": "dual_modality",
+        "cached_hit_first_call": true,
+        "cached_wall_ms": 18784.41,
+        "live_wall_ms": 20547.13,
+        "live_timing_ms": {
+          "encode_ms": 733.95,
+          "smiles_live_ms": 512.49,
+          "esmc_live_ms": 221.12,
+          "predict_ms": 19777.78,
+          "ad_ms": 9.56,
+          "total_ms": 20525.82
+        },
+        "cosines": {
+          "ncaa_smiles_repr": 0.999826,
+          "ncaa_fusion_hf": 0.999966,
+          "ncaa_protein_proj": 0.998971,
+          "peptideclm2": 0.999999,
+          "chemberta_mtr": 0.999988,
+          "esmc_mean": 0.999975,
+          "esmc_max": 0.999954,
+          "esmc_nterm5": 0.999952,
+          "esmc_cterm5": 0.999964
+        },
+        "min_cosine": 0.998971,
+        "physchem_max_abs_diff": 0.0,
+        "max_prediction_diff_across_24ep": 0.01089,
+        "mechanism_anchor": {
+          "anchor_class": "non_acylated",
+          "diacid_internal_c": 0,
+          "monoacyl_linear_c": 0,
+          "anchor_mid_h": null,
+          "anchor_range_h": null
+        },
+        "sample_predictions": {
+          "half_life_h": 0.8675,
+          "ppb": 0.5092,
+          "hemolysis_prob": 0.02773,
+          "mic_e_coli_uM": 59.986
+        }
+      },
+      "AMP_HISEAVKIFGCKWKENWKWNSNC": {
+        "modality_track": "dual_modality",
+        "cached_hit_first_call": false,
+        "cached_wall_ms": 20066.34,
+        "live_wall_ms": 19204.02,
+        "live_timing_ms": {
+          "encode_ms": 791.11,
+          "smiles_live_ms": 576.31,
+          "esmc_live_ms": 214.56,
+          "predict_ms": 18370.79,
+          "ad_ms": 12.8,
+          "total_ms": 19177.7
+        },
+        "cosines": {
+          "ncaa_smiles_repr": 1.0,
+          "ncaa_fusion_hf": 1.0,
+          "ncaa_protein_proj": 1.0,
+          "peptideclm2": 1.0,
+          "chemberta_mtr": 1.0,
+          "esmc_mean": 1.0,
+          "esmc_max": 1.0,
+          "esmc_nterm5": 1.0,
+          "esmc_cterm5": 1.0
+        },
+        "min_cosine": 1.0,
+        "physchem_max_abs_diff": 0.0,
+        "max_prediction_diff_across_24ep": 0.0,
+        "mechanism_anchor": {
+          "anchor_class": "non_acylated",
+          "diacid_internal_c": 0,
+          "monoacyl_linear_c": 0,
+          "anchor_mid_h": null,
+          "anchor_range_h": null
+        },
+        "sample_predictions": {
+          "half_life_h": 3.387,
+          "ppb": 0.5491,
+          "hemolysis_prob": 0.12242,
+          "mic_e_coli_uM": 20.309
+        }
+      }
+    },
+    "unseen_synthetic_cases": {
+      "Unseen_AMP_KLLKLLKKLLKLLK": {
+        "cache_hit": false,
+        "modality_track": "dual_modality",
+        "smiles_generated_from_sequence": true,
+        "wall_ms": 19377.7,
+        "timing_ms": {
+          "encode_ms": 342.14,
+          "smiles_live_ms": 341.89,
+          "esmc_live_ms": 0.0,
+          "predict_ms": 19013.87,
+          "ad_ms": 7.33,
+          "total_ms": 19365.31
+        },
+        "mechanism_anchor": {
+          "anchor_class": "non_acylated",
+          "diacid_internal_c": 0,
+          "monoacyl_linear_c": 0,
+          "anchor_mid_h": null,
+          "anchor_range_h": null
+        },
+        "sample_predictions": {
+          "half_life_h": 6.1358,
+          "ppb": 0.5585,
+          "hemolysis_prob": 0.70857,
+          "mic_e_coli_uM": 6.6504,
+          "mic_e_coli_ad_tier": "In-Domain",
+          "mic_e_coli_max_tanimoto": 0.8974
+        }
+      },
+      "Unseen_C18Diacid_NMe_Tetrapeptide": {
+        "cache_hit": false,
+        "modality_track": "smiles_only",
+        "smiles_generated_from_sequence": false,
+        "wall_ms": 6646.28,
+        "timing_ms": {
+          "encode_ms": 202.97,
+          "smiles_live_ms": 202.82,
+          "esmc_live_ms": 0.0,
+          "predict_ms": 6417.9,
+          "ad_ms": 9.28,
+          "total_ms": 6631.65
+        },
+        "mechanism_anchor": {
+          "anchor_class": "weekly_diacid",
+          "diacid_internal_c": 16,
+          "monoacyl_linear_c": 17,
+          "anchor_mid_h": 144.0,
+          "anchor_range_h": [
+            120.0,
+            168.0
+          ]
+        },
+        "sample_predictions": {
+          "half_life_h": 2.8298,
+          "ppb": 0.9406,
+          "hemolysis_prob": 0.33613,
+          "mic_e_coli_uM": 42.397,
+          "mic_e_coli_ad_tier": "Borderline",
+          "mic_e_coli_max_tanimoto": 0.5529
+        }
+      }
+    },
+    "condition_and_batch": {
+      "semaglutide_half_life_IV_h": 21.57,
+      "semaglutide_half_life_SC_h": 51.676,
+      "batch_5_wall_ms": 25482.07,
+      "batch_5_timing_ms": {
+        "encode_ms": 0.31,
+        "predict_ms": 25387.0,
+        "ad_ms": 33.63,
+        "total_ms": 25429.04
+      },
+      "batch_succeeded": 5
+    },
+    "v32_8901_untouched": {
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "models_cached": 152,
+        "entries": 57,
+        "endpoints": 55
+      }
+    },
+    "health_post_verification": {
+      "status": "ok",
+      "ok": true,
+      "version": "v33.0",
+      "mode": "v33_live",
+      "endpoints": 24,
+      "tier1_endpoints": 20,
+      "tier2_endpoints": 4,
+      "encoders_ready": {
+        "ncaa_repdistill_v2": {
+          "ready": true,
+          "load_sec": 27.25
+        },
+        "peptideclm2": {
+          "ready": true,
+          "load_sec": 52.16
+        },
+        "chemberta_mtr": {
+          "ready": true,
+          "load_sec": 14.34
+        },
+        "esmc_600m": {
+          "ready": true,
+          "ok": true,
+          "dtype": "float32",
+          "load_sec": 72.17,
+          "uptime_s": 2407.5,
+          "total_encoded": 4
+        },
+        "bank_smiles_cached": 43943,
+        "bank_sequences_cached": 31792
+      },
+      "models_loaded": {
+        "cpu_bundles": 22,
+        "fusion_bundles": 21,
+        "deep_endpoints": 20
+      },
+      "rss_mb": 23193.3,
+      "startup_sec": 215.75,
+      "uptime_s": 959.6
+    }
+  },
+  "total_verify_sec": 213.26,
+  "all_passed": true
+}

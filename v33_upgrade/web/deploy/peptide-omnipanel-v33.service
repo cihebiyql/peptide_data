@@ -1,0 +1,25 @@
+# Ready-to-apply systemd service unit for Peptide OmniPanel V33 Web Platform (127.0.0.1:7863)
+# Install path (with root/sudo): /etc/systemd/system/peptide-omnipanel-v33.service
+
+[Unit]
+Description=Peptide OmniPanel V33 Scientific Web Platform (FastAPI on 127.0.0.1:7863 -> V33 engine :8902)
+After=network.target
+
+[Service]
+Type=simple
+User=mode2
+Group=mode2
+WorkingDirectory=/var/www/peptide-omnipanel/v33_next
+Environment=PYTHONUNBUFFERED=1
+Environment=V33_REMOTE_URL=http://127.0.0.1:8902
+Environment=V33_MANIFEST_PATH=/var/www/peptide-omnipanel/v33_next/v33_manifest.json
+Environment=V33_ROOT_PATH=/peptide-omnipanel
+ExecStart=/var/www/peptide-omnipanel/app/.venv/bin/python -m uvicorn web.app:app --host 127.0.0.1 --port 7863 --workers 1 --proxy-headers
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGINT
+StandardOutput=append:/var/www/peptide-omnipanel/v33_next/v33_web.log
+StandardError=append:/var/www/peptide-omnipanel/v33_next/v33_web.log
+
+[Install]
+WantedBy=multi-user.target

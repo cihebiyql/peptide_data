@@ -55,3 +55,12 @@
 - 三层部署：node2 Gradio（ESM2-650M @ 第二块 RTX 4090）⇄ node1 隧道 ⇄ node23 推理服务
 - 特征引擎与冻结合同 SHA256 字节级一致；PPB 端到端复现 0.9934/0.9933
 - 详见 `omnigrid/README.md` 与 `omnigrid/docs/architecture.md`
+
+
+## 2026-11-22 · Peptide OmniPanel V33.1（46 端点 4 基座模型超集成 + `node2` 完全独立部署）
+
+- **端点扩充（24 → 46 端点，零回退）**：在完整保留 V33.0 核心 24 端点比特级不变（96/96 `max_abs_diff = 0.0`）的基础上，基于严格零泄漏清洗与无跨菌种污染的 DBAASP 多重集精确桥接新增 **22 个实验端点**（Tier 1 核心 ADMET/PK/安全增至 **24 个**：新增 `efflux_ratio`、`cytotoxicity_CC50`、`hemolysis_MHC`、`Vd_absolute`；Tier 2 抗菌/杀菌/抗真菌/抗生物膜增至 **22 个**：覆盖 WHO ESKAPE 全谱 MIC、5 菌种杀菌 MBC、`MFC_C_albicans`、`MBIC_biofilm`、`MBEC_biofilm`、`LC_antimicrobial`），总数据规模达 **50,994 唯一肽 / 82,327 条记录 / 4,535 条删失记录**。
+- **4 基座模型超集成与零偷看验证**：融合 `ncAA-RepDistill v2` + `ESM-C 600M`（纯 PyTorch 独立实现）+ `PeptideCLM-2` + `ChemBERTa-MTR` 与 CPU GBDT / Deep Multi-Task，在严格 Leave-Case17-Out 中实现纯 ML 半衰期 `Spearman 0.903 / R² 0.763`（联合脂化锚定 `MAE 0.299 / R² 0.781`）、临床 PPB `Spearman 0.709`、FDA 临床药溶血误报 `0/17`。
+- **现代 FastAPI + SPA 网站与 25 个精选示例库**：新增可折叠 5 分类 25 示例库（完整涵盖中检院叶老师 17 个经典临床多肽 Case17、4/4 FDA 棘白菌素环肽 `Caspofungin / Micafungin / Anidulafungin / Rezafungin` 与 5 条经典抗菌肽）及 3 套 Batch 批量预设。
+- **`node2` 100% 独立部署上线**：所有模型、预训练权重、特征/嵌入缓存与推理服务全部迁至 `node2` 本地运行（零 `node23`/`node1` 运行时依赖、零 `sudo`、`0 MiB` GPU 显存），公网 HTTPS <https://lmmd.ecust.edu.cn/peptide-omnipanel/> API 与无头浏览器验证全部通过。
+- 详见 `v33_upgrade/reports/v33_champion_summary.md`、`v33_upgrade/reports/v331_endpoint_expansion.md` 与 `v33_upgrade/reports/v331_node2_deployment.md`。

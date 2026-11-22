@@ -1,0 +1,652 @@
+{
+  "schema": "v331_offline_verification_receipt_v1",
+  "status": "PASS",
+  "version": "v33.1",
+  "n_total_endpoints": 46,
+  "n_tier1_endpoints": 24,
+  "n_tier2_endpoints": 22,
+  "n_existing_24_verified_bit_exact": 96,
+  "max_abs_diff_existing_24": 0.0,
+  "n_new_22_verified": 110,
+  "nan_or_inf_count": 0,
+  "batch5_timings_ms": {
+    "encode_ms": 0.57,
+    "predict_ms": 50019.53,
+    "ad_ms": 55.43,
+    "total_ms": 50109.06
+  },
+  "live_encode_test": {
+    "name": "Novel_Live_AMP",
+    "n_endpoints": 46,
+    "timing_ms": {
+      "encode_ms": 744.5,
+      "predict_ms": 36489.54,
+      "ad_ms": 46.85,
+      "total_ms": 37283.32
+    }
+  },
+  "rss_mb": 26218.5,
+  "models_loaded": {
+    "cpu_bundles": 42,
+    "fusion_bundles": 42,
+    "deep_endpoints": 20
+  },
+  "spot_predictions": {
+    "Semaglutide": {
+      "cytotoxicity_CC50": {
+        "display_text": "38.09 uM",
+        "raw_value": 1.5808,
+        "ci80": [
+          0.92367,
+          2.23793
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6503,
+        "top1_analog_sim": 0.6503
+      },
+      "hemolysis_MHC": {
+        "display_text": "23.79 uM",
+        "raw_value": 1.37638,
+        "ci80": [
+          0.48418,
+          2.26858
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.5521,
+        "top1_analog_sim": 0.5521
+      },
+      "efflux_ratio": {
+        "display_text": "2.7 ratio",
+        "raw_value": 0.43208,
+        "ci80": [
+          -0.19572,
+          1.05988
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1675,
+        "top1_analog_sim": 0.1675
+      },
+      "Vd_absolute": {
+        "display_text": "11.53 L",
+        "raw_value": 1.06176,
+        "ci80": [
+          0.3471,
+          1.77642
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 1.0,
+        "top1_analog_sim": 1.0
+      },
+      "MIC_A_baumannii": {
+        "display_text": "10.47 uM",
+        "raw_value": 1.02009,
+        "ci80": [
+          0.28832,
+          1.75186
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.6415,
+        "top1_analog_sim": 0.6415
+      },
+      "MIC_K_pneumoniae": {
+        "display_text": "11.06 uM",
+        "raw_value": 1.04386,
+        "ci80": [
+          0.13333,
+          1.9544
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6538,
+        "top1_analog_sim": 0.6538
+      },
+      "MBC_S_aureus": {
+        "display_text": "3.77 uM",
+        "raw_value": 0.57671,
+        "ci80": [
+          -0.3085,
+          1.46192
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6538,
+        "top1_analog_sim": 0.6538
+      },
+      "MFC_C_albicans": {
+        "display_text": "24.67 uM",
+        "raw_value": 1.39216,
+        "ci80": [
+          0.73031,
+          2.05401
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.6364,
+        "top1_analog_sim": 0.6364
+      },
+      "MBIC_biofilm": {
+        "display_text": "21.08 uM",
+        "raw_value": 1.32385,
+        "ci80": [
+          0.67417,
+          1.97353
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.6284,
+        "top1_analog_sim": 0.6284
+      },
+      "MBEC_biofilm": {
+        "display_text": "35.13 uM",
+        "raw_value": 1.54568,
+        "ci80": [
+          0.94065,
+          2.15071
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.5531,
+        "top1_analog_sim": 0.5531
+      },
+      "LC_antimicrobial": {
+        "display_text": "7.95 uM",
+        "raw_value": 0.9003,
+        "ci80": [
+          0.02199,
+          1.7786
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.689,
+        "top1_analog_sim": 0.689
+      }
+    },
+    "Cyclosporine_A": {
+      "cytotoxicity_CC50": {
+        "display_text": "19.56 uM",
+        "raw_value": 1.29132,
+        "ci80": [
+          0.63419,
+          1.94845
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 1.0,
+        "top1_analog_sim": 1.0
+      },
+      "hemolysis_MHC": {
+        "display_text": "19.78 uM",
+        "raw_value": 1.29626,
+        "ci80": [
+          0.40406,
+          2.18846
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2583,
+        "top1_analog_sim": 0.2583
+      },
+      "efflux_ratio": {
+        "display_text": "2.7 ratio",
+        "raw_value": 0.43208,
+        "ci80": [
+          -0.19572,
+          1.05988
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.3125,
+        "top1_analog_sim": 0.3125
+      },
+      "Vd_absolute": {
+        "display_text": "2.16 L",
+        "raw_value": 0.33482,
+        "ci80": [
+          -0.37984,
+          1.04948
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1538,
+        "top1_analog_sim": 0.1538
+      },
+      "MIC_A_baumannii": {
+        "display_text": "11.72 uM",
+        "raw_value": 1.06904,
+        "ci80": [
+          0.33727,
+          1.80081
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2261,
+        "top1_analog_sim": 0.2261
+      },
+      "MIC_K_pneumoniae": {
+        "display_text": "49.05 uM",
+        "raw_value": 1.69062,
+        "ci80": [
+          0.53214,
+          2.84911
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.3,
+        "top1_analog_sim": 0.3
+      },
+      "MBC_S_aureus": {
+        "display_text": "1.69 uM",
+        "raw_value": 0.2283,
+        "ci80": [
+          -0.65691,
+          1.11351
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2818,
+        "top1_analog_sim": 0.2818
+      },
+      "MFC_C_albicans": {
+        "display_text": "17.57 uM",
+        "raw_value": 1.24478,
+        "ci80": [
+          0.58293,
+          1.90663
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1858,
+        "top1_analog_sim": 0.1858
+      },
+      "MBIC_biofilm": {
+        "display_text": "35.66 uM",
+        "raw_value": 1.55219,
+        "ci80": [
+          0.90251,
+          2.20187
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1818,
+        "top1_analog_sim": 0.1818
+      },
+      "MBEC_biofilm": {
+        "display_text": "46.94 uM",
+        "raw_value": 1.67158,
+        "ci80": [
+          1.06655,
+          2.27661
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1734,
+        "top1_analog_sim": 0.1734
+      },
+      "LC_antimicrobial": {
+        "display_text": "4.62 uM",
+        "raw_value": 0.66482,
+        "ci80": [
+          -1.13602,
+          2.46567
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.189,
+        "top1_analog_sim": 0.189
+      }
+    },
+    "Caspofungin": {
+      "cytotoxicity_CC50": {
+        "display_text": "1.03 uM",
+        "raw_value": 0.01336,
+        "ci80": [
+          -0.64377,
+          0.67049
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 1.0,
+        "top1_analog_sim": 1.0
+      },
+      "hemolysis_MHC": {
+        "display_text": "174.7 uM",
+        "raw_value": 2.24225,
+        "ci80": [
+          1.35005,
+          3.13445
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.272,
+        "top1_analog_sim": 0.272
+      },
+      "efflux_ratio": {
+        "display_text": "2.7 ratio",
+        "raw_value": 0.43208,
+        "ci80": [
+          -0.19572,
+          1.05988
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.1948,
+        "top1_analog_sim": 0.1948
+      },
+      "Vd_absolute": {
+        "display_text": "2.24 L",
+        "raw_value": 0.35043,
+        "ci80": [
+          -0.36423,
+          1.06509
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2349,
+        "top1_analog_sim": 0.2349
+      },
+      "MIC_A_baumannii": {
+        "display_text": "14.39 uM",
+        "raw_value": 1.15807,
+        "ci80": [
+          0.4263,
+          1.88984
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2944,
+        "top1_analog_sim": 0.2944
+      },
+      "MIC_K_pneumoniae": {
+        "display_text": "26.00 uM",
+        "raw_value": 1.41505,
+        "ci80": [
+          0.25713,
+          2.57298
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.3008,
+        "top1_analog_sim": 0.3008
+      },
+      "MBC_S_aureus": {
+        "display_text": "9.28 uM",
+        "raw_value": 0.9674,
+        "ci80": [
+          0.08219,
+          1.85261
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2864,
+        "top1_analog_sim": 0.2864
+      },
+      "MFC_C_albicans": {
+        "display_text": "9.75 uM",
+        "raw_value": 0.98885,
+        "ci80": [
+          0.327,
+          1.6507
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.4106,
+        "top1_analog_sim": 0.4106
+      },
+      "MBIC_biofilm": {
+        "display_text": "41.84 uM",
+        "raw_value": 1.62154,
+        "ci80": [
+          0.97186,
+          2.27122
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2667,
+        "top1_analog_sim": 0.2667
+      },
+      "MBEC_biofilm": {
+        "display_text": "50.97 uM",
+        "raw_value": 1.70735,
+        "ci80": [
+          1.10232,
+          2.31238
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2514,
+        "top1_analog_sim": 0.2514
+      },
+      "LC_antimicrobial": {
+        "display_text": "6.55 uM",
+        "raw_value": 0.81608,
+        "ci80": [
+          -0.7724,
+          2.40455
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.3041,
+        "top1_analog_sim": 0.3041
+      }
+    },
+    "Classic_AMP_LL37_core": {
+      "cytotoxicity_CC50": {
+        "display_text": "98.93 uM",
+        "raw_value": 1.99531,
+        "ci80": [
+          1.36693,
+          2.62369
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.9174,
+        "top1_analog_sim": 0.9174
+      },
+      "hemolysis_MHC": {
+        "display_text": "50.02 uM",
+        "raw_value": 1.69912,
+        "ci80": [
+          1.02736,
+          2.37088
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.9027,
+        "top1_analog_sim": 0.9027
+      },
+      "efflux_ratio": {
+        "display_text": "5.23 ratio",
+        "raw_value": 0.71834,
+        "ci80": [
+          0.12335,
+          1.31333
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.22,
+        "top1_analog_sim": 0.22
+      },
+      "Vd_absolute": {
+        "display_text": "43.49 L",
+        "raw_value": 1.63839,
+        "ci80": [
+          1.00262,
+          2.27416
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6917,
+        "top1_analog_sim": 0.6917
+      },
+      "MIC_A_baumannii": {
+        "display_text": "9.61 uM",
+        "raw_value": 0.98274,
+        "ci80": [
+          0.23523,
+          1.73025
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6935,
+        "top1_analog_sim": 0.6935
+      },
+      "MIC_K_pneumoniae": {
+        "display_text": "12.73 uM",
+        "raw_value": 1.10472,
+        "ci80": [
+          0.33853,
+          1.87092
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.8476,
+        "top1_analog_sim": 0.8476
+      },
+      "MBC_S_aureus": {
+        "display_text": "41.15 uM",
+        "raw_value": 1.61437,
+        "ci80": [
+          0.73502,
+          2.49372
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.9804,
+        "top1_analog_sim": 0.9804
+      },
+      "MFC_C_albicans": {
+        "display_text": "61.93 uM",
+        "raw_value": 1.79193,
+        "ci80": [
+          1.18374,
+          2.40012
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.7273,
+        "top1_analog_sim": 0.7273
+      },
+      "MBIC_biofilm": {
+        "display_text": "18.61 uM",
+        "raw_value": 1.26978,
+        "ci80": [
+          0.56372,
+          1.97584
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.6486,
+        "top1_analog_sim": 0.6486
+      },
+      "MBEC_biofilm": {
+        "display_text": "65.22 uM",
+        "raw_value": 1.81436,
+        "ci80": [
+          1.20933,
+          2.41939
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.6486,
+        "top1_analog_sim": 0.6486
+      },
+      "LC_antimicrobial": {
+        "display_text": "5.85 uM",
+        "raw_value": 0.76686,
+        "ci80": [
+          -0.1779,
+          1.71163
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6698,
+        "top1_analog_sim": 0.6698
+      }
+    },
+    "Classic_AMP_Indolicidin": {
+      "cytotoxicity_CC50": {
+        "display_text": "47.05 uM",
+        "raw_value": 1.67255,
+        "ci80": [
+          1.04417,
+          2.30093
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 1.0,
+        "top1_analog_sim": 1.0
+      },
+      "hemolysis_MHC": {
+        "display_text": "22.43 uM",
+        "raw_value": 1.35084,
+        "ci80": [
+          0.67908,
+          2.0226
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 1.0,
+        "top1_analog_sim": 1.0
+      },
+      "efflux_ratio": {
+        "display_text": "5.05 ratio",
+        "raw_value": 0.70295,
+        "ci80": [
+          0.10796,
+          1.29794
+        ],
+        "ad_tier": "OOD",
+        "max_tanimoto": 0.2154,
+        "top1_analog_sim": 0.2154
+      },
+      "Vd_absolute": {
+        "display_text": "33.38 L",
+        "raw_value": 1.52346,
+        "ci80": [
+          0.88769,
+          2.15923
+        ],
+        "ad_tier": "Borderline",
+        "max_tanimoto": 0.5286,
+        "top1_analog_sim": 0.5286
+      },
+      "MIC_A_baumannii": {
+        "display_text": "12.82 uM",
+        "raw_value": 1.10789,
+        "ci80": [
+          0.36038,
+          1.8554
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.7404,
+        "top1_analog_sim": 0.7404
+      },
+      "MIC_K_pneumoniae": {
+        "display_text": "26.98 uM",
+        "raw_value": 1.43109,
+        "ci80": [
+          0.70417,
+          2.15802
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.8925,
+        "top1_analog_sim": 0.8925
+      },
+      "MBC_S_aureus": {
+        "display_text": "5.02 uM",
+        "raw_value": 0.70053,
+        "ci80": [
+          -0.17882,
+          1.57988
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.7333,
+        "top1_analog_sim": 0.7333
+      },
+      "MFC_C_albicans": {
+        "display_text": "93.84 uM",
+        "raw_value": 1.97237,
+        "ci80": [
+          1.36418,
+          2.58056
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6525,
+        "top1_analog_sim": 0.6525
+      },
+      "MBIC_biofilm": {
+        "display_text": "19.04 uM",
+        "raw_value": 1.27966,
+        "ci80": [
+          0.5736,
+          1.98572
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6737,
+        "top1_analog_sim": 0.6737
+      },
+      "MBEC_biofilm": {
+        "display_text": "25.95 uM",
+        "raw_value": 1.41418,
+        "ci80": [
+          0.80915,
+          2.01921
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.6847,
+        "top1_analog_sim": 0.6847
+      },
+      "LC_antimicrobial": {
+        "display_text": "3.47 uM",
+        "raw_value": 0.54095,
+        "ci80": [
+          -0.27746,
+          1.35935
+        ],
+        "ad_tier": "In-Domain",
+        "max_tanimoto": 0.7347,
+        "top1_analog_sim": 0.7347
+      }
+    }
+  },
+  "elapsed_sec": 319.56
+}

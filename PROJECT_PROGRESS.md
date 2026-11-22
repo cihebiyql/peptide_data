@@ -1,6 +1,8 @@
 # 中检院项目进展总账
 
-> 状态基准：2026-08-28 10:09（Asia/Shanghai）
+> **最新更新（2026-11-22 · Peptide OmniPanel V33.1）**：多肽/环肽 ADMET 与 PK/抗菌主线已升级至 **V33.1**（**46 个统一实验端点** = 24 Tier 1 + 22 Tier 2，**50,994 唯一肽 / 82,327 条记录 / 4,535 条删失记录**，4 基座模型超集成 + 80%/90% 共形不确定性 + 精确 Tanimoto 适用域 + 25 个内置临床/棘白菌素/AMP 示例），并完成 **`node2` 100% 独立部署**（零 `node23`/`node1` 运行时依赖，公网 <https://lmmd.ecust.edu.cn/peptide-omnipanel/> 实测通过）。详细审计见 `v33_upgrade/reports/v33_champion_summary.md`、`v33_upgrade/reports/v331_endpoint_expansion.md`、`v33_upgrade/reports/v331_node2_deployment.md`。以下保留历史 V31 冻结基线记录供追溯。
+
+> 历史状态基准：2026-08-28 10:09（Asia/Shanghai）
 > 仓库证据最新日期：2026-07-23；当前模型和训练数据冻结日期：2026-07-22
 > 维护定位：本文件是项目级唯一可变进度总账；日期化报告、JSON manifest 和 TSV 结果作为冻结证据，不在本文件中重复维护。
 > 公开镜像说明：本仓库只发布公开安全子集；总账中部分内部证据路径用于说明审计来源，并不随公开仓库分发。

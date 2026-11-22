@@ -1,0 +1,295 @@
+"""FastAPI scientific web platform & REST API for Peptide OmniPanel V33."""
+
+from __future__ import annotations
+
+import os
+import time
+from pathlib import Path
+
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from rdkit import rdBase
+
+from . import __version__
+from .adapter import OmniPanelAdapter
+from .batch_parser import MAX_BATCH_SIZE, items_from_batch_request, parse_batch_text
+from .chem_utils import InputValidationError, compute_physchem, render_molecule_svg
+from .drug_library import (
+    BATCH_DEMO_SAMPLE,
+    BATCH_PRESETS,
+    DRUG_LIBRARY,
+    EXAMPLE_CATEGORIES,
+    QUICK_EXAMPLES,
+    lookup_drug,
+)
+from .schemas import (
+    AssayConditions,
+    BatchParseResponse,
+    BatchPredictRequest,
+    BatchPredictResponse,
+    EndpointsResponse,
+    HealthResponse,
+    PredictRequest,
+    PredictResponse,
+    RenderSvgRequest,
+    RenderSvgResponse,
+)
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+ROOT_PATH = os.environ.get("V33_ROOT_PATH", "").strip()
+
+app = FastAPI(
+    title="Peptide OmniPanel V33 API",
+    description=(
+        "Publication-grade scientific ADMET, PK, permeability, safety, and antimicrobial prediction "
+        "platform powered by the V33 4-foundation-model super-ensemble (tiered endpoints, "
+        "calibrated probabilities, conformal UQ, and exact Tanimoto AD). "
+        "Scope: internal_research_only."
+    ),
+    version=__version__,
+    root_path=ROOT_PATH,
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+adapter = OmniPanelAdapter()
+
+
+@app.get("/api/v1/health", response_model=HealthResponse, tags=["System"])
+def get_health() -> HealthResponse:
+    """Service liveness, active V33 adapter mode, RDKit version, and audited dataset KPIs."""
+    if adapter.remote_url and not adapter.remote_healthy:
+        adapter.refresh_remote_health()
+    catalog = adapter.get_catalog()
+    return HealthResponse(
+        ok=True,
+        version=__version__,
+        adapter_mode=adapter.mode,
+        bundle_loaded=bool(adapter.manifest),
+        bundle_path=str(adapter.manifest_path) if adapter.manifest_path else None,
+        v33_remote_url=adapter.remote_url,
+        v33_remote_healthy=adapter.remote_healthy,
+        manifest_loaded=bool(adapter.manifest),
+        manifest_path=str(adapter.manifest_path) if adapter.manifest_path else None,
+        rdkit_version=rdBase.rdkitVersion,
+        endpoints_total=len(catalog),
+        tier1_endpoints=sum(1 for e in catalog if e.tier == 1),
+        tier2_endpoints=sum(1 for e in catalog if e.tier == 2),
+        case17_drugs_loaded=sum(1 for d in DRUG_LIBRARY if d.get("case17")),
+        dataset_summary=adapter.get_dataset_summary(),
+        uptime_s=round(time.time() - adapter.start_time, 1),
+    )
+
+
+@app.get("/api/v1/endpoints", response_model=EndpointsResponse, tags=["Catalog"])
+def get_endpoints() -> EndpointsResponse:
+    """List all 24 audited Tier-1 and Tier-2 V33 endpoints directly from `v33_manifest.json`."""
+    if adapter.remote_url and not adapter.remote_healthy:
+        adapter.refresh_remote_health()
+    tp = adapter.get_transparency_payload()
+    return EndpointsResponse(
+        version=__version__,
+        adapter_mode=adapter.mode,
+        manifest_generated_at=tp["manifest_generated_at"],
+        dataset_summary=tp["dataset_summary"],
+        overall_summary=tp["overall_summary"],
+        representation_ablation_summary=tp["representation_ablation_summary"],
+        case17_scorecard=tp["case17_scorecard"],
+        selection_protocol=tp["selection_protocol"],
+        endpoints=adapter.get_catalog(),
+    )
+
+
+@app.get("/api/v1/examples", tags=["Catalog"])
+def get_examples() -> JSONResponse:
+    """Curated quick-example chips, categorized clinical library (25 peptides), and batch benchmark presets."""
+    drugs_index = [
+        {
+            "key": d["key"],
+            "display_name": d["display_name"],
+            "zh_name": d["zh_name"],
+            "category": d.get("category", "linear_clinical"),
+            "drug_class": d["drug_class"],
+            "case17": d.get("case17", False),
+            "fda_half_life": d.get("fda_half_life"),
+            "fda_ppb": d.get("fda_ppb"),
+            "query": d["sequence"] if (not d.get("smiles") and d.get("sequence")) else d["display_name"],
+            "has_smiles": bool(d.get("smiles")),
+            "has_sequence": bool(d.get("sequence")),
+        }
+        for d in DRUG_LIBRARY
+    ]
+    return JSONResponse(
+        {
+            "quick_examples": QUICK_EXAMPLES,
+            "example_categories": EXAMPLE_CATEGORIES,
+            "drugs": drugs_index,
+            "batch_demo_csv": BATCH_DEMO_SAMPLE,
+            "batch_presets": BATCH_PRESETS,
+        }
+    )
+
+
+@app.post("/api/v1/render-svg", response_model=RenderSvgResponse, tags=["Chemistry"])
+def post_render_svg(req: RenderSvgRequest) -> RenderSvgResponse:
+    """Render a server-side 2D molecular structure SVG via RDKit with motif substructure highlights."""
+    try:
+        resolved = adapter.resolve_query(query=req.query, sequence=req.sequence, smiles=req.smiles)
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    physchem = compute_physchem(resolved.mol, sequence=resolved.sequence)
+    svg, highlights, modifications = render_molecule_svg(
+        resolved.mol,
+        sequence=resolved.sequence,
+        width=req.width,
+        height=req.height,
+    )
+    atom_cnt = int(resolved.mol.GetNumAtoms()) if resolved.mol is not None else physchem.heavy_atoms
+    bond_cnt = int(resolved.mol.GetNumBonds()) if resolved.mol is not None else max(0, atom_cnt - 1)
+    return RenderSvgResponse(
+        svg=svg,
+        resolved_type=resolved.resolved_type,
+        formula=physchem.formula,
+        atom_count=atom_cnt,
+        bond_count=bond_cnt,
+        width=req.width,
+        height=req.height,
+        highlights=highlights,
+        modifications=modifications,
+    )
+
+
+@app.post("/api/v1/predict", response_model=PredictResponse, tags=["Inference"])
+def post_predict(req: PredictRequest) -> PredictResponse:
+    """Run full 24-endpoint V33 ADMET/PK/MIC prediction for one peptide."""
+    try:
+        return adapter.predict(
+            query=req.query,
+            sequence=req.sequence,
+            smiles=req.smiles,
+            include_tier2=req.include_tier2,
+            include_svg=req.include_svg,
+            svg_width=req.svg_width,
+            svg_height=req.svg_height,
+            conditions=req.conditions,
+        )
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/batch/parse", response_model=BatchParseResponse, tags=["Batch"])
+def post_batch_parse(req: BatchPredictRequest) -> BatchParseResponse:
+    """Parse pasted text or CSV/TSV/FASTA content for instant client-side preview before batch inference."""
+    if req.items is not None:
+        rows = items_from_batch_request(req.items, drug_lookup_fn=lookup_drug)
+        valid_c = sum(1 for r in rows if r.valid)
+        return BatchParseResponse(
+            total=len(rows),
+            valid_count=valid_c,
+            invalid_count=len(rows) - valid_c,
+            truncated=len(req.items) > MAX_BATCH_SIZE,
+            max_batch=MAX_BATCH_SIZE,
+            rows=rows,
+        )
+    if not req.raw_text or not req.raw_text.strip():
+        raise HTTPException(status_code=400, detail="Provide raw_text or items for batch parsing.")
+    return parse_batch_text(req.raw_text, filename=req.filename, drug_lookup_fn=lookup_drug)
+
+
+def _execute_batch_rows(
+    parsed_rows,
+    include_tier2: bool,
+    conditions: AssayConditions,
+) -> BatchPredictResponse:
+    t0 = time.perf_counter()
+    results = adapter.predict_batch(
+        parsed_rows,
+        include_tier2=include_tier2,
+        conditions=conditions,
+    )
+    succeeded = sum(1 for r in results if r.status == "ok")
+    failed = len(results) - succeeded
+    return BatchPredictResponse(
+        total=len(parsed_rows),
+        succeeded=succeeded,
+        failed=failed,
+        runtime_ms=round((time.perf_counter() - t0) * 1000.0, 1),
+        adapter_mode=adapter.mode,
+        results=results,
+    )
+
+
+@app.post("/api/v1/batch", response_model=BatchPredictResponse, tags=["Batch"])
+def post_batch_predict(req: BatchPredictRequest) -> BatchPredictResponse:
+    """Run batch ADMET predictions for up to 500 peptides (JSON items or CSV/TSV/TXT/FASTA text)."""
+    if req.items is not None:
+        if len(req.items) == 0:
+            raise HTTPException(status_code=400, detail="Batch items list cannot be empty.")
+        parsed_rows = items_from_batch_request(req.items, drug_lookup_fn=lookup_drug)
+    elif req.raw_text and req.raw_text.strip():
+        parsed = parse_batch_text(req.raw_text, filename=req.filename, drug_lookup_fn=lookup_drug)
+        if parsed.total == 0:
+            raise HTTPException(status_code=400, detail="No molecules could be parsed from raw_text.")
+        parsed_rows = parsed.rows
+    else:
+        raise HTTPException(status_code=400, detail="Provide either 'items' or 'raw_text' for batch prediction.")
+
+    try:
+        return _execute_batch_rows(parsed_rows, include_tier2=req.include_tier2, conditions=req.conditions)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/batch/upload", response_model=BatchPredictResponse, tags=["Batch"])
+async def post_batch_upload(
+    file: UploadFile = File(...),
+    include_tier2: bool = Form(default=False),
+    rbc_species: str = Form(default="human"),
+    pk_context: str = Form(default="human_plasma"),
+) -> BatchPredictResponse:
+    """Upload a .csv, .tsv, .txt, or .fasta file (up to 500 molecules) and run batch prediction."""
+    raw_bytes = await file.read()
+    text = ""
+    for enc in ("utf-8-sig", "utf-8", "gbk", "latin-1"):
+        try:
+            text = raw_bytes.decode(enc)
+            break
+        except UnicodeDecodeError:
+            continue
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    parsed = parse_batch_text(text, filename=file.filename, drug_lookup_fn=lookup_drug)
+    if parsed.total == 0:
+        raise HTTPException(status_code=400, detail="No molecules found in uploaded file.")
+
+    cond = AssayConditions(
+        rbc_species=rbc_species if rbc_species in ("human", "horse", "mouse") else "human",  # type: ignore[arg-type]
+        pk_context=pk_context if pk_context in ("human_plasma", "human_sc", "human_po", "rat_iv", "mouse_sc") else "human_plasma",  # type: ignore[arg-type]
+    )
+    return _execute_batch_rows(parsed.rows, include_tier2=include_tier2, conditions=cond)
+
+
+# Mount static SPA assets and serve index.html at root
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def serve_index() -> FileResponse:
+    index_path = STATIC_DIR / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=404, detail="Frontend static/index.html not built yet.")
+    return FileResponse(str(index_path))

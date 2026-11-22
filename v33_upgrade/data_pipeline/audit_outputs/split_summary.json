@@ -1,0 +1,916 @@
+{
+  "schema": "peptide_omnipanel_v33_split_summary_v2_nonchaining",
+  "elapsed_sec": 102.48,
+  "clustering_method": {
+    "stage_a": "exact_canonical_identity_group (inchikey_14, conn_hash, canonical_smiles)",
+    "stage_b_track_s": "non_chaining_leader_sequence_identity >= 0.70 (linear canonical peptides)",
+    "stage_b_track_m": "non_chaining_taylor_butina_morgan_bits_1024 Tanimoto >= 0.70 (cyclic/short/modified peptides)",
+    "murcko_generic_collapse": false,
+    "compounds_v33_modified": false
+  },
+  "total_compounds": 46597,
+  "exact_identity_groups": 39992,
+  "track_s_identity_groups": 30374,
+  "track_m_identity_groups": 9618,
+  "track_s_clusters": 15124,
+  "track_m_clusters": 1999,
+  "total_clusters": 17123,
+  "max_cluster_size": 373,
+  "median_cluster_size": 1.0,
+  "top10_cluster_sizes": [
+    [
+      "CLU_001590",
+      373
+    ],
+    [
+      "CLU_001442",
+      361
+    ],
+    [
+      "CLU_001302",
+      351
+    ],
+    [
+      "CLU_001380",
+      316
+    ],
+    [
+      "CLU_001363",
+      313
+    ],
+    [
+      "CLU_001587",
+      308
+    ],
+    [
+      "CLU_001425",
+      273
+    ],
+    [
+      "CLU_001631",
+      271
+    ],
+    [
+      "CLU_001364",
+      269
+    ],
+    [
+      "CLU_001659",
+      221
+    ]
+  ],
+  "endpoints": {
+    "BBB": {
+      "n_rows": 844,
+      "n_clusters": 643,
+      "n_cv_rows": 675,
+      "n_holdout_rows": 169,
+      "holdout_frac": 0.2002,
+      "n_cv_clusters": 514,
+      "n_holdout_clusters": 129,
+      "max_cluster_rows": 8,
+      "fold_sizes": {
+        "fold_0": 135,
+        "fold_1": 135,
+        "fold_2": 135,
+        "fold_3": 135,
+        "fold_4": 135
+      },
+      "min_fold_size": 135,
+      "max_fold_size": 135,
+      "min_fold_frac": 0.2,
+      "max_fold_frac": 0.2,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 68,
+          "neg": 67
+        },
+        "fold_1": {
+          "pos": 67,
+          "neg": 68
+        },
+        "fold_2": {
+          "pos": 67,
+          "neg": 68
+        },
+        "fold_3": {
+          "pos": 67,
+          "neg": 68
+        },
+        "fold_4": {
+          "pos": 68,
+          "neg": 67
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 84,
+        "neg": 85
+      }
+    },
+    "CL_absolute": {
+      "n_rows": 54,
+      "n_clusters": 27,
+      "n_cv_rows": 43,
+      "n_holdout_rows": 11,
+      "holdout_frac": 0.2037,
+      "n_cv_clusters": 25,
+      "n_holdout_clusters": 2,
+      "max_cluster_rows": 10,
+      "fold_sizes": {
+        "fold_0": 9,
+        "fold_1": 9,
+        "fold_2": 9,
+        "fold_3": 8,
+        "fold_4": 8
+      },
+      "min_fold_size": 8,
+      "max_fold_size": 9,
+      "min_fold_frac": 0.186,
+      "max_fold_frac": 0.2093,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 0.9542,
+        "fold_1": 0.8555,
+        "fold_2": 0.9138,
+        "fold_3": 0.8129,
+        "fold_4": 0.901
+      },
+      "holdout_y_median": 0.0792
+    },
+    "CL_per_kg": {
+      "n_rows": 206,
+      "n_clusters": 85,
+      "n_cv_rows": 165,
+      "n_holdout_rows": 41,
+      "holdout_frac": 0.199,
+      "n_cv_clusters": 68,
+      "n_holdout_clusters": 17,
+      "max_cluster_rows": 22,
+      "fold_sizes": {
+        "fold_0": 38,
+        "fold_1": 32,
+        "fold_2": 32,
+        "fold_3": 32,
+        "fold_4": 31
+      },
+      "min_fold_size": 31,
+      "max_fold_size": 38,
+      "min_fold_frac": 0.1879,
+      "max_fold_frac": 0.2303,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 0.9542,
+        "fold_1": 0.4051,
+        "fold_2": 0.569,
+        "fold_3": 0.6974,
+        "fold_4": 0.7709
+      },
+      "holdout_y_median": 0.5441
+    },
+    "Caco2": {
+      "n_rows": 1580,
+      "n_clusters": 274,
+      "n_cv_rows": 1265,
+      "n_holdout_rows": 315,
+      "holdout_frac": 0.1994,
+      "n_cv_clusters": 215,
+      "n_holdout_clusters": 59,
+      "max_cluster_rows": 224,
+      "fold_sizes": {
+        "fold_0": 273,
+        "fold_1": 248,
+        "fold_2": 248,
+        "fold_3": 248,
+        "fold_4": 248
+      },
+      "min_fold_size": 248,
+      "max_fold_size": 273,
+      "min_fold_frac": 0.196,
+      "max_fold_frac": 0.2158,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": -5.89,
+        "fold_1": -5.98,
+        "fold_2": -5.96,
+        "fold_3": -5.9683,
+        "fold_4": -6.0
+      },
+      "holdout_y_median": -5.96
+    },
+    "Cmax": {
+      "n_rows": 74,
+      "n_clusters": 21,
+      "n_cv_rows": 57,
+      "n_holdout_rows": 17,
+      "holdout_frac": 0.2297,
+      "n_cv_clusters": 16,
+      "n_holdout_clusters": 5,
+      "max_cluster_rows": 19,
+      "fold_sizes": {
+        "fold_0": 19,
+        "fold_1": 10,
+        "fold_2": 9,
+        "fold_3": 10,
+        "fold_4": 9
+      },
+      "min_fold_size": 9,
+      "max_fold_size": 19,
+      "min_fold_frac": 0.1579,
+      "max_fold_frac": 0.3333,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.5016,
+        "fold_1": 0.0615,
+        "fold_2": 0.2648,
+        "fold_3": 0.2989,
+        "fold_4": 0.7412
+      },
+      "holdout_y_median": 1.4898
+    },
+    "F": {
+      "n_rows": 124,
+      "n_clusters": 58,
+      "n_cv_rows": 99,
+      "n_holdout_rows": 25,
+      "holdout_frac": 0.2016,
+      "n_cv_clusters": 49,
+      "n_holdout_clusters": 9,
+      "max_cluster_rows": 15,
+      "fold_sizes": {
+        "fold_0": 20,
+        "fold_1": 19,
+        "fold_2": 20,
+        "fold_3": 20,
+        "fold_4": 20
+      },
+      "min_fold_size": 19,
+      "max_fold_size": 20,
+      "min_fold_frac": 0.1919,
+      "max_fold_frac": 0.202,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 0.46,
+        "fold_1": 0.226,
+        "fold_2": 0.224,
+        "fold_3": 0.2305,
+        "fold_4": 0.385
+      },
+      "holdout_y_median": 0.28
+    },
+    "LogD7.4": {
+      "n_rows": 678,
+      "n_clusters": 100,
+      "n_cv_rows": 553,
+      "n_holdout_rows": 125,
+      "holdout_frac": 0.1844,
+      "n_cv_clusters": 75,
+      "n_holdout_clusters": 25,
+      "max_cluster_rows": 179,
+      "fold_sizes": {
+        "fold_0": 179,
+        "fold_1": 94,
+        "fold_2": 94,
+        "fold_3": 93,
+        "fold_4": 93
+      },
+      "min_fold_size": 93,
+      "max_fold_size": 179,
+      "min_fold_frac": 0.1682,
+      "max_fold_frac": 0.3237,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 3.0634,
+        "fold_1": 2.8639,
+        "fold_2": 2.8691,
+        "fold_3": 2.8557,
+        "fold_4": 2.8712
+      },
+      "holdout_y_median": 2.8755
+    },
+    "MDCK": {
+      "n_rows": 168,
+      "n_clusters": 58,
+      "n_cv_rows": 134,
+      "n_holdout_rows": 34,
+      "holdout_frac": 0.2024,
+      "n_cv_clusters": 51,
+      "n_holdout_clusters": 7,
+      "max_cluster_rows": 25,
+      "fold_sizes": {
+        "fold_0": 27,
+        "fold_1": 27,
+        "fold_2": 27,
+        "fold_3": 27,
+        "fold_4": 26
+      },
+      "min_fold_size": 26,
+      "max_fold_size": 27,
+      "min_fold_frac": 0.194,
+      "max_fold_frac": 0.2015,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": -5.585,
+        "fold_1": -5.8972,
+        "fold_2": -5.7447,
+        "fold_3": -5.6383,
+        "fold_4": -5.9063
+      },
+      "holdout_y_median": -5.7959
+    },
+    "MIC_C_albicans": {
+      "n_rows": 468,
+      "n_clusters": 250,
+      "n_cv_rows": 374,
+      "n_holdout_rows": 94,
+      "holdout_frac": 0.2009,
+      "n_cv_clusters": 201,
+      "n_holdout_clusters": 49,
+      "max_cluster_rows": 25,
+      "fold_sizes": {
+        "fold_0": 75,
+        "fold_1": 75,
+        "fold_2": 74,
+        "fold_3": 75,
+        "fold_4": 75
+      },
+      "min_fold_size": 74,
+      "max_fold_size": 75,
+      "min_fold_frac": 0.1979,
+      "max_fold_frac": 0.2005,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.3979,
+        "fold_1": 1.2041,
+        "fold_2": 1.2093,
+        "fold_3": 1.2622,
+        "fold_4": 1.2993
+      },
+      "holdout_y_median": 1.2779
+    },
+    "MIC_E_coli": {
+      "n_rows": 2210,
+      "n_clusters": 903,
+      "n_cv_rows": 1768,
+      "n_holdout_rows": 442,
+      "holdout_frac": 0.2,
+      "n_cv_clusters": 729,
+      "n_holdout_clusters": 174,
+      "max_cluster_rows": 106,
+      "fold_sizes": {
+        "fold_0": 354,
+        "fold_1": 354,
+        "fold_2": 353,
+        "fold_3": 354,
+        "fold_4": 353
+      },
+      "min_fold_size": 353,
+      "max_fold_size": 354,
+      "min_fold_frac": 0.1997,
+      "max_fold_frac": 0.2002,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.2041,
+        "fold_1": 1.2041,
+        "fold_2": 1.2041,
+        "fold_3": 1.2041,
+        "fold_4": 1.2041
+      },
+      "holdout_y_median": 1.2041
+    },
+    "MIC_P_aeruginosa": {
+      "n_rows": 1161,
+      "n_clusters": 490,
+      "n_cv_rows": 929,
+      "n_holdout_rows": 232,
+      "holdout_frac": 0.1998,
+      "n_cv_clusters": 392,
+      "n_holdout_clusters": 98,
+      "max_cluster_rows": 42,
+      "fold_sizes": {
+        "fold_0": 186,
+        "fold_1": 186,
+        "fold_2": 185,
+        "fold_3": 186,
+        "fold_4": 186
+      },
+      "min_fold_size": 185,
+      "max_fold_size": 186,
+      "min_fold_frac": 0.1991,
+      "max_fold_frac": 0.2002,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.3083,
+        "fold_1": 1.3891,
+        "fold_2": 1.3682,
+        "fold_3": 1.3513,
+        "fold_4": 1.2773
+      },
+      "holdout_y_median": 1.3621
+    },
+    "MIC_S_aureus": {
+      "n_rows": 2131,
+      "n_clusters": 857,
+      "n_cv_rows": 1705,
+      "n_holdout_rows": 426,
+      "holdout_frac": 0.1999,
+      "n_cv_clusters": 685,
+      "n_holdout_clusters": 172,
+      "max_cluster_rows": 60,
+      "fold_sizes": {
+        "fold_0": 341,
+        "fold_1": 341,
+        "fold_2": 341,
+        "fold_3": 341,
+        "fold_4": 341
+      },
+      "min_fold_size": 341,
+      "max_fold_size": 341,
+      "min_fold_frac": 0.2,
+      "max_fold_frac": 0.2,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.1931,
+        "fold_1": 1.1219,
+        "fold_2": 1.1991,
+        "fold_3": 1.2581,
+        "fold_4": 1.1761
+      },
+      "holdout_y_median": 1.2304
+    },
+    "PAMPA": {
+      "n_rows": 8581,
+      "n_clusters": 627,
+      "n_cv_rows": 6865,
+      "n_holdout_rows": 1716,
+      "holdout_frac": 0.2,
+      "n_cv_clusters": 502,
+      "n_holdout_clusters": 125,
+      "max_cluster_rows": 434,
+      "fold_sizes": {
+        "fold_0": 1373,
+        "fold_1": 1373,
+        "fold_2": 1373,
+        "fold_3": 1373,
+        "fold_4": 1373
+      },
+      "min_fold_size": 1373,
+      "max_fold_size": 1373,
+      "min_fold_frac": 0.2,
+      "max_fold_frac": 0.2,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": -5.74,
+        "fold_1": -5.73,
+        "fold_2": -5.73,
+        "fold_3": -5.73,
+        "fold_4": -5.73
+      },
+      "holdout_y_median": -5.74
+    },
+    "PPB": {
+      "n_rows": 162,
+      "n_clusters": 68,
+      "n_cv_rows": 130,
+      "n_holdout_rows": 32,
+      "holdout_frac": 0.1975,
+      "n_cv_clusters": 56,
+      "n_holdout_clusters": 12,
+      "max_cluster_rows": 19,
+      "fold_sizes": {
+        "fold_0": 27,
+        "fold_1": 26,
+        "fold_2": 26,
+        "fold_3": 26,
+        "fold_4": 25
+      },
+      "min_fold_size": 25,
+      "max_fold_size": 27,
+      "min_fold_frac": 0.1923,
+      "max_fold_frac": 0.2077,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 1,
+      "fold_y_medians": {
+        "fold_0": 0.853,
+        "fold_1": 0.791,
+        "fold_2": 0.752,
+        "fold_3": 0.7776,
+        "fold_4": 0.819
+      },
+      "holdout_y_median": 0.83
+    },
+    "RRCK": {
+      "n_rows": 167,
+      "n_clusters": 33,
+      "n_cv_rows": 137,
+      "n_holdout_rows": 30,
+      "holdout_frac": 0.1796,
+      "n_cv_clusters": 26,
+      "n_holdout_clusters": 7,
+      "max_cluster_rows": 47,
+      "fold_sizes": {
+        "fold_0": 47,
+        "fold_1": 22,
+        "fold_2": 23,
+        "fold_3": 22,
+        "fold_4": 23
+      },
+      "min_fold_size": 22,
+      "max_fold_size": 47,
+      "min_fold_frac": 0.1606,
+      "max_fold_frac": 0.3431,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": -5.46,
+        "fold_1": -5.435,
+        "fold_2": -5.75,
+        "fold_3": -5.55,
+        "fold_4": -5.5
+      },
+      "holdout_y_median": -5.655
+    },
+    "Vd_per_kg": {
+      "n_rows": 166,
+      "n_clusters": 81,
+      "n_cv_rows": 133,
+      "n_holdout_rows": 33,
+      "holdout_frac": 0.1988,
+      "n_cv_clusters": 67,
+      "n_holdout_clusters": 14,
+      "max_cluster_rows": 11,
+      "fold_sizes": {
+        "fold_0": 27,
+        "fold_1": 27,
+        "fold_2": 27,
+        "fold_3": 26,
+        "fold_4": 26
+      },
+      "min_fold_size": 26,
+      "max_fold_size": 27,
+      "min_fold_frac": 0.1955,
+      "max_fold_frac": 0.203,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": -0.2676,
+        "fold_1": -0.3979,
+        "fold_2": -0.3979,
+        "fold_3": -0.3054,
+        "fold_4": -0.3162
+      },
+      "holdout_y_median": -0.3915
+    },
+    "cytotoxicity_cls": {
+      "n_rows": 2934,
+      "n_clusters": 1286,
+      "n_cv_rows": 2347,
+      "n_holdout_rows": 587,
+      "holdout_frac": 0.2001,
+      "n_cv_clusters": 1033,
+      "n_holdout_clusters": 253,
+      "max_cluster_rows": 97,
+      "fold_sizes": {
+        "fold_0": 469,
+        "fold_1": 470,
+        "fold_2": 470,
+        "fold_3": 469,
+        "fold_4": 469
+      },
+      "min_fold_size": 469,
+      "max_fold_size": 470,
+      "min_fold_frac": 0.1998,
+      "max_fold_frac": 0.2003,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 154,
+          "neg": 315
+        },
+        "fold_1": {
+          "pos": 155,
+          "neg": 315
+        },
+        "fold_2": {
+          "pos": 155,
+          "neg": 315
+        },
+        "fold_3": {
+          "pos": 154,
+          "neg": 315
+        },
+        "fold_4": {
+          "pos": 155,
+          "neg": 314
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 193,
+        "neg": 394
+      }
+    },
+    "half_life_cls": {
+      "n_rows": 3204,
+      "n_clusters": 837,
+      "n_cv_rows": 2563,
+      "n_holdout_rows": 641,
+      "holdout_frac": 0.2001,
+      "n_cv_clusters": 671,
+      "n_holdout_clusters": 166,
+      "max_cluster_rows": 115,
+      "fold_sizes": {
+        "fold_0": 513,
+        "fold_1": 512,
+        "fold_2": 513,
+        "fold_3": 513,
+        "fold_4": 512
+      },
+      "min_fold_size": 512,
+      "max_fold_size": 513,
+      "min_fold_frac": 0.1998,
+      "max_fold_frac": 0.2002,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 263,
+          "neg": 250
+        },
+        "fold_1": {
+          "pos": 262,
+          "neg": 250
+        },
+        "fold_2": {
+          "pos": 262,
+          "neg": 251
+        },
+        "fold_3": {
+          "pos": 262,
+          "neg": 251
+        },
+        "fold_4": {
+          "pos": 262,
+          "neg": 250
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 328,
+        "neg": 313
+      }
+    },
+    "half_life_reg": {
+      "n_rows": 3078,
+      "n_clusters": 839,
+      "n_cv_rows": 2462,
+      "n_holdout_rows": 616,
+      "holdout_frac": 0.2001,
+      "n_cv_clusters": 672,
+      "n_holdout_clusters": 167,
+      "max_cluster_rows": 117,
+      "fold_sizes": {
+        "fold_0": 493,
+        "fold_1": 493,
+        "fold_2": 492,
+        "fold_3": 492,
+        "fold_4": 492
+      },
+      "min_fold_size": 492,
+      "max_fold_size": 493,
+      "min_fold_frac": 0.1998,
+      "max_fold_frac": 0.2002,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 0.1367,
+        "fold_1": 0.0,
+        "fold_2": 0.0237,
+        "fold_3": 0.0,
+        "fold_4": 0.0764
+      },
+      "holdout_y_median": 0.0
+    },
+    "hemolysis_HC50": {
+      "n_rows": 5559,
+      "n_clusters": 1337,
+      "n_cv_rows": 4447,
+      "n_holdout_rows": 1112,
+      "holdout_frac": 0.2,
+      "n_cv_clusters": 1071,
+      "n_holdout_clusters": 266,
+      "max_cluster_rows": 85,
+      "fold_sizes": {
+        "fold_0": 890,
+        "fold_1": 890,
+        "fold_2": 889,
+        "fold_3": 889,
+        "fold_4": 889
+      },
+      "min_fold_size": 889,
+      "max_fold_size": 890,
+      "min_fold_frac": 0.1999,
+      "max_fold_frac": 0.2001,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 2.0043,
+        "fold_1": 2.0296,
+        "fold_2": 2.0043,
+        "fold_3": 2.0043,
+        "fold_4": 2.0
+      },
+      "holdout_y_median": 2.0127
+    },
+    "hemolysis_cls": {
+      "n_rows": 20506,
+      "n_clusters": 6320,
+      "n_cv_rows": 16405,
+      "n_holdout_rows": 4101,
+      "holdout_frac": 0.2,
+      "n_cv_clusters": 5059,
+      "n_holdout_clusters": 1261,
+      "max_cluster_rows": 349,
+      "fold_sizes": {
+        "fold_0": 3281,
+        "fold_1": 3281,
+        "fold_2": 3281,
+        "fold_3": 3281,
+        "fold_4": 3281
+      },
+      "min_fold_size": 3281,
+      "max_fold_size": 3281,
+      "min_fold_frac": 0.2,
+      "max_fold_frac": 0.2,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 978,
+          "neg": 2303
+        },
+        "fold_1": {
+          "pos": 979,
+          "neg": 2302
+        },
+        "fold_2": {
+          "pos": 979,
+          "neg": 2302
+        },
+        "fold_3": {
+          "pos": 979,
+          "neg": 2302
+        },
+        "fold_4": {
+          "pos": 978,
+          "neg": 2303
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 1223,
+        "neg": 2878
+      }
+    },
+    "overall_peptide_toxicity": {
+      "n_rows": 11036,
+      "n_clusters": 7261,
+      "n_cv_rows": 8828,
+      "n_holdout_rows": 2208,
+      "holdout_frac": 0.2001,
+      "n_cv_clusters": 5810,
+      "n_holdout_clusters": 1451,
+      "max_cluster_rows": 64,
+      "fold_sizes": {
+        "fold_0": 1766,
+        "fold_1": 1766,
+        "fold_2": 1765,
+        "fold_3": 1766,
+        "fold_4": 1765
+      },
+      "min_fold_size": 1765,
+      "max_fold_size": 1766,
+      "min_fold_frac": 0.1999,
+      "max_fold_frac": 0.2,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 883,
+          "neg": 883
+        },
+        "fold_1": {
+          "pos": 883,
+          "neg": 883
+        },
+        "fold_2": {
+          "pos": 883,
+          "neg": 882
+        },
+        "fold_3": {
+          "pos": 883,
+          "neg": 883
+        },
+        "fold_4": {
+          "pos": 882,
+          "neg": 883
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 1104,
+        "neg": 1104
+      }
+    },
+    "solubility_cls": {
+      "n_rows": 3722,
+      "n_clusters": 1304,
+      "n_cv_rows": 2977,
+      "n_holdout_rows": 745,
+      "holdout_frac": 0.2002,
+      "n_cv_clusters": 1043,
+      "n_holdout_clusters": 261,
+      "max_cluster_rows": 15,
+      "fold_sizes": {
+        "fold_0": 595,
+        "fold_1": 596,
+        "fold_2": 595,
+        "fold_3": 596,
+        "fold_4": 595
+      },
+      "min_fold_size": 595,
+      "max_fold_size": 596,
+      "min_fold_frac": 0.1999,
+      "max_fold_frac": 0.2002,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_class_counts": {
+        "fold_0": {
+          "pos": 371,
+          "neg": 224
+        },
+        "fold_1": {
+          "pos": 371,
+          "neg": 225
+        },
+        "fold_2": {
+          "pos": 371,
+          "neg": 224
+        },
+        "fold_3": {
+          "pos": 371,
+          "neg": 225
+        },
+        "fold_4": {
+          "pos": 370,
+          "neg": 225
+        }
+      },
+      "holdout_class_counts": {
+        "pos": 464,
+        "neg": 281
+      }
+    },
+    "solubility_reg": {
+      "n_rows": 298,
+      "n_clusters": 97,
+      "n_cv_rows": 238,
+      "n_holdout_rows": 60,
+      "holdout_frac": 0.2013,
+      "n_cv_clusters": 78,
+      "n_holdout_clusters": 19,
+      "max_cluster_rows": 31,
+      "fold_sizes": {
+        "fold_0": 53,
+        "fold_1": 46,
+        "fold_2": 46,
+        "fold_3": 47,
+        "fold_4": 46
+      },
+      "min_fold_size": 46,
+      "max_fold_size": 53,
+      "min_fold_frac": 0.1933,
+      "max_fold_frac": 0.2227,
+      "fold_balance_pass": true,
+      "clamped_oob_bounds": 0,
+      "fold_y_medians": {
+        "fold_0": 1.9466,
+        "fold_1": 2.1704,
+        "fold_2": 2.0878,
+        "fold_3": 2.314,
+        "fold_4": 2.4157
+      },
+      "holdout_y_median": 2.3406
+    }
+  }
+}

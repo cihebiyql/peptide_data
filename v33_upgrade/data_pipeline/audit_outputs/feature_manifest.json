@@ -1,0 +1,191 @@
+{
+  "schema": "peptide_omnipanel_v33_compact_feature_bank_v1",
+  "rdkit_version": "2026.09.1",
+  "numpy_version": "2.2.6",
+  "n_compounds_total": 46598,
+  "n_smiles_valid": 43943,
+  "n_seq_valid": 44773,
+  "case17_indices": {
+    "Leuprolide": 9194,
+    "Bivalirudin": 15008,
+    "Glucagon": 44317,
+    "Teriparatide": 27265,
+    "Exenatide": 18743,
+    "Liraglutide": 14552,
+    "Semaglutide": 35506,
+    "Tirzepatide": 46597,
+    "Cyclosporine_A": 26244,
+    "Oxytocin": 40330,
+    "Octreotide": 44629,
+    "Linaclotide": 38575,
+    "Ziconotide": 44452,
+    "Daptomycin": 13602,
+    "Caspofungin": 19174,
+    "Insulin_detemir": 16618,
+    "Insulin_degludec": 14107
+  },
+  "physchem_core": {
+    "file": "/data/qlyu/v33_upgrade/features/physchem_core.npz",
+    "sha256": "a6981a31f01a8c2081180ec471087844c572d9a31c40135c2b5e41369610775c",
+    "size_bytes": 7327603,
+    "shape": [
+      46598,
+      83
+    ],
+    "dtype": "float32",
+    "n_rdkit_desc": 38,
+    "n_mod_desc": 10,
+    "n_seq_desc": 35,
+    "feature_names": [
+      "MolWt",
+      "Log10_MolWt",
+      "ExactMolWt",
+      "MolLogP",
+      "MolMR",
+      "TPSA",
+      "TPSA_per_MW",
+      "LabuteASA",
+      "NumHDonors",
+      "NumHAcceptors",
+      "HBD_per_HBA",
+      "NumRotatableBonds",
+      "RotB_per_Heavy",
+      "FractionCSP3",
+      "HeavyAtomCount",
+      "RingCount",
+      "NumAromaticRings",
+      "NumAliphaticRings",
+      "NumSaturatedRings",
+      "NumHeteroatoms",
+      "Hetero_per_Heavy",
+      "NHOHCount",
+      "NOCount",
+      "FormalCharge",
+      "AbsFormalCharge",
+      "QED",
+      "BertzCT",
+      "Kappa1",
+      "Kappa2",
+      "HallKierAlpha",
+      "Chi0v",
+      "Chi1v",
+      "NumAmideBonds",
+      "ChiralCenterCount",
+      "PosIonizableCount",
+      "NegIonizableCount",
+      "EstNetCharge_pH74",
+      "LogP_per_TPSA",
+      "is_cyclic",
+      "macrocycle_ring_size",
+      "n_disulfide",
+      "n_nmethyl",
+      "n_d_aa_approx",
+      "fatty_diacid_len",
+      "fatty_monoacyl_len",
+      "has_peg",
+      "has_c_amidation",
+      "has_n_acetylation",
+      "aa_frac_A",
+      "aa_frac_C",
+      "aa_frac_D",
+      "aa_frac_E",
+      "aa_frac_F",
+      "aa_frac_G",
+      "aa_frac_H",
+      "aa_frac_I",
+      "aa_frac_K",
+      "aa_frac_L",
+      "aa_frac_M",
+      "aa_frac_N",
+      "aa_frac_P",
+      "aa_frac_Q",
+      "aa_frac_R",
+      "aa_frac_S",
+      "aa_frac_T",
+      "aa_frac_V",
+      "aa_frac_W",
+      "aa_frac_Y",
+      "seq_len",
+      "log10_seq_len",
+      "seq_net_charge_pH74",
+      "seq_charge_density",
+      "seq_hydrophobicity_kd",
+      "seq_hydrophobicity_eisenberg",
+      "seq_muH_alpha_100",
+      "seq_muH_beta_160",
+      "seq_aromatic_frac",
+      "seq_basic_frac",
+      "seq_acidic_frac",
+      "seq_polar_frac",
+      "seq_aliphatic_frac",
+      "seq_boman_index",
+      "seq_isoelectric_point"
+    ]
+  },
+  "fp_compact": {
+    "file": "/data/qlyu/v33_upgrade/features/fp_compact.npz",
+    "sha256": "aa9691e9b4b5e6220b0be06fc61e6c213f6b42006c1326461b173789b00f0b51",
+    "size_bytes": 44305928,
+    "arrays": {
+      "morgan_count_r2_1024": {
+        "shape": [
+          46598,
+          1024
+        ],
+        "dtype": "uint16",
+        "params": "radius=2,fpSize=1024,includeChirality=True,count"
+      },
+      "atompair_1024": {
+        "shape": [
+          46598,
+          1024
+        ],
+        "dtype": "uint16",
+        "params": "fpSize=1024,includeChirality=True,count"
+      },
+      "maccs_167": {
+        "shape": [
+          46598,
+          167
+        ],
+        "dtype": "uint8",
+        "params": "MACCSkeys 167 bits"
+      },
+      "torsion_512": {
+        "shape": [
+          46598,
+          512
+        ],
+        "dtype": "uint16",
+        "params": "fpSize=512,includeChirality=True,count"
+      }
+    }
+  },
+  "morgan_bits_1024": {
+    "file": "/data/qlyu/v33_upgrade/features/morgan_bits_1024.npz",
+    "sha256": "442e8d3b6b8f49edef6786b29ed46d7268370a89aa259cd4b39280e96d1c5401",
+    "size_bytes": 6251573,
+    "arrays": {
+      "morgan_bits_1024": {
+        "shape": [
+          46598,
+          1024
+        ],
+        "dtype": "uint8"
+      },
+      "morgan_bits_packed": {
+        "shape": [
+          46598,
+          128
+        ],
+        "dtype": "uint8"
+      }
+    }
+  },
+  "compound_index": {
+    "file": "/data/qlyu/v33_upgrade/features/compound_index.tsv",
+    "sha256": "800e73ddf2306aa796d1566bfbd66d032d085e632474f5158a2ce5692afa871d",
+    "size_bytes": 3190491
+  },
+  "elapsed_sec": 3423.67
+}

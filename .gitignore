@@ -5,3 +5,26 @@ __pycache__/
 .DS_Store
 Thumbs.db
 _pepadmet_paper/
+
+# V33 / V33.1 large binary weights, caches, features & local artifacts (never commit)
+*.pt
+*.pth
+*.joblib
+*.npz
+*.safetensors
+*.sqlite
+*.db
+*.bin
+*.exe
+*.pyd
+*.pem
+*.log
+*.tar.gz
+*.whl
+v33_upgrade/**/_local_cache/
+v33_upgrade/**/_cache/
+v33_upgrade/**/staging/
+v33_upgrade/**/serving_models/
+v33_upgrade/**/multitask_checkpoints/
+v33_upgrade/**/halflife_specialist/
+v33_upgrade/**/embeddings_delta/
