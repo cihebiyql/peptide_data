@@ -295,18 +295,92 @@ def test_batch_fasta_and_csv_and_upload():
     assert r_up.json()["succeeded"] == 2
 
 
-def test_spa_root_serves_subpath_safe_html_without_hardcoded_v32_counts():
+def test_spa_root_serves_subpath_safe_html_without_internal_codenames():
     res = client.get("/")
     assert res.status_code == 200
     html = res.text
     assert "OmniPanel" in html
-    # Subpath-safe relative asset references (no leading slash)
-    assert 'href="static/styles.css"' in html
-    assert 'src="static/app.js"' in html
+    assert 'href="static/styles.css?v=1.0' in html
+    assert 'src="static/app.js?v=1.0' in html
     assert 'href="docs"' in html
-    # Zero hardcoded stale V32 counts anywhere in HTML
-    assert "58,932" not in html
-    assert "213,800" not in html
+    # Zero hardcoded stale counts, zero internal codenames (V32/V33), zero institution naming
+    for forbidden in ("58,932", "213,800", "V32", "V33", "中检院", "叶老师", "NIFDC"):
+        assert forbidden not in html, f"Found forbidden UI string: {forbidden}"
+    # Bilingual toggle, Dark/Light theme toggle, Tasks Center tab, and Return Context Bar must exist
+    assert 'data-tab="tasks"' in html
+    assert 'id="btn-theme-toggle"' in html
+    assert 'data-lang="zh"' in html and 'data-lang="en"' in html
+    assert 'id="detail-context-bar"' in html
+
+
+def test_async_task_center_lifecycle_and_exports():
+    """Verify POST /api/v1/jobs -> polling -> GET detail -> export summary/full CSV & JSON -> delete."""
+    import time
+
+    headers = {"X-Client-Id": "pytest_task_session_01"}
+    r_create = client.post(
+        "/api/v1/jobs",
+        headers=headers,
+        json={
+            "title": "17 Cases Mini Test",
+            "raw_text": "name,query\nSemaglutide,Semaglutide\nMicafungin,Micafungin\nCyclosporine A,Cyclosporine A\n",
+            "include_tier2": True,
+        },
+    )
+    assert r_create.status_code == 200
+    job = r_create.json()
+    job_id = job["job_id"]
+    assert job["total"] == 3
+    assert job["title"] == "17 Cases Mini Test"
+
+    # Wait briefly for background worker thread to complete 3 offline-fallback items
+    detail = None
+    for _ in range(40):
+        r_det = client.get(f"/api/v1/jobs/{job_id}", headers=headers)
+        assert r_det.status_code == 200
+        detail = r_det.json()
+        if detail["status"] in ("completed", "partial", "failed"):
+            break
+        time.sleep(0.1)
+
+    assert detail is not None and detail["status"] == "completed"
+    assert detail["succeeded"] == 3 and detail["failed"] == 0
+    assert len(detail["results"]) == 3
+    # Verify rich per-molecule fields required for instant 0ms Batch/Task -> Detail drill-down
+    first = detail["results"][0]
+    assert first["physchem"] is not None and first["physchem"]["mw"] > 4000
+    assert first["drug_reference"] is not None
+    assert len(first["predictions"]) >= 46
+    assert detail["summary"]["n_acylation_anchors"] == 1
+
+    # Client isolation: another client must NOT see this job
+    r_other = client.get(f"/api/v1/jobs/{job_id}", headers={"X-Client-Id": "other_client_99"})
+    assert r_other.status_code == 404
+
+    # List endpoint returns our job
+    r_list = client.get("/api/v1/jobs", headers=headers)
+    assert r_list.status_code == 200
+    assert any(j["job_id"] == job_id for j in r_list.json()["jobs"])
+
+    # Export summary CSV, full 46-endpoint wide CSV, and JSON
+    r_sum_csv = client.get(f"/api/v1/jobs/{job_id}/export?format=summary_csv", headers=headers)
+    assert r_sum_csv.status_code == 200 and "Semaglutide" in r_sum_csv.text
+    r_full_csv = client.get(f"/api/v1/jobs/{job_id}/export?format=full_csv", headers=headers)
+    assert r_full_csv.status_code == 200 and "PAMPA_value" in r_full_csv.text and "MIC_E_coli_value" in r_full_csv.text
+    r_json = client.get(f"/api/v1/jobs/{job_id}/export?format=json", headers=headers)
+    assert r_json.status_code == 200 and r_json.json()["job_id"] == job_id
+
+    # Clean up test task
+    r_del = client.delete(f"/api/v1/jobs/{job_id}", headers=headers)
+    assert r_del.status_code == 200 and r_del.json()["deleted"] is True
+
+
+def test_examples_have_no_institution_or_internal_version_labels():
+    res = client.get("/api/v1/examples")
+    assert res.status_code == 200
+    raw = res.text
+    for forbidden in ("中检院", "叶老师", "NIFDC", "Prof. Ye", "V32", "V33"):
+        assert forbidden not in raw, f"Found forbidden label in /api/v1/examples: {forbidden}"
 
 
 def test_adapter_manifest_path_env_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

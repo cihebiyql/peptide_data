@@ -1,4 +1,4 @@
-"""Built-in curated dictionary of all 17 Case17 clinical peptide drugs (NIFDC / Prof. Ye),
+"""Built-in curated dictionary of 17 classic clinical peptide cases,
 the complete FDA Echinocandin cyclic lipopeptide class (4 drugs), and 5 classic AMPs (25 total)."""
 
 from __future__ import annotations
@@ -15,21 +15,21 @@ EXAMPLE_CATEGORIES: list[dict[str, str]] = [
     },
     {
         "id": "echinocandin",
-        "title_en": "Echinocandin Cyclic Lipopeptides (FDA 4/4)",
-        "title_zh": "棘白菌素类环肽 · 中检院重点",
-        "badge": "NIFDC Focus",
+        "title_en": "Echinocandin Cyclic Lipopeptides (4)",
+        "title_zh": "棘白菌素类环肽 (4)",
+        "badge": "Echinocandin",
     },
     {
         "id": "cyclic_macrocycle",
         "title_en": "Macrocycles, Disulfides & Cyclic Lipopeptides",
         "title_zh": "环肽、大环与二硫键药物",
-        "badge": "Case17 Cyclic",
+        "badge": "Cyclic",
     },
     {
         "id": "linear_clinical",
         "title_en": "Linear Clinical Peptide Therapeutics",
         "title_zh": "线性临床多肽药物",
-        "badge": "Case17 Linear",
+        "badge": "Linear",
     },
     {
         "id": "amp_sequences",
@@ -526,17 +526,23 @@ Daptomycin,Daptomycin
 BATCH_PRESETS: dict[str, dict[str, str]] = {
     "demo_7": {
         "label": "Mixed Benchmark (7)",
+        "label_zh": "综合示例 (7)",
         "description": "7-peptide clinical, echinocandin & AMP benchmark",
+        "description_zh": "7 个临床多肽、棘白菌素与抗菌肽综合示例",
         "csv": BATCH_DEMO_SAMPLE,
     },
     "case17_17": {
-        "label": "Case17 Clinical (17 · 中检院案例)",
-        "description": "All 17 classic clinical peptide drugs (NIFDC / Prof. Ye benchmark)",
+        "label": "17 Clinical Cases (17)",
+        "label_zh": "17 个案例 (17)",
+        "description": "17 classic clinical peptide cases",
+        "description_zh": "17 个经典多肽药物案例",
         "csv": BATCH_CASE17_SAMPLE,
     },
     "echinocandin_6": {
         "label": "Echinocandins & Macrocycles (6)",
-        "description": "Complete FDA Echinocandin class (4/4) + Cyclosporine A + Daptomycin",
+        "label_zh": "棘白菌素与大环肽 (6)",
+        "description": "Echinocandin cyclic lipopeptides (4) + Cyclosporine A + Daptomycin",
+        "description_zh": "4 个棘白菌素环肽 + 环孢素 A + 达托霉素",
         "csv": BATCH_ECHINOCANDIN_SAMPLE,
     },
 }

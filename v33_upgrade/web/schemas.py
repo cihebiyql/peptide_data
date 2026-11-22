@@ -309,23 +309,40 @@ class BatchParseResponse(BaseModel):
 
 
 class BatchMoleculeResult(BaseModel):
-    """Condensed per-molecule result row inside batch prediction response."""
+    """Per-molecule result row inside batch prediction and task center responses."""
 
     index: int
     name: str
     status: Literal["ok", "error"]
     error: Optional[str] = None
     resolved_type: Optional[str] = None
+    modality_track: Optional[str] = None
     sequence: Optional[str] = None
     smiles: Optional[str] = None
+    canonical_smiles: Optional[str] = None
+    drug_reference: Optional[dict[str, Any]] = None
+    physchem: Optional[PhysChemSummary] = None
     mw: Optional[float] = None
     logp: Optional[float] = None
     net_charge_ph74: Optional[float] = None
     modifications: list[str] = Field(default_factory=list)
+    modification_badges: list[ModificationBadge] = Field(default_factory=list)
     mechanism_anchor: Optional[MechanismAnchor] = None
     radar: list[RadarAxis] = Field(default_factory=list)
     key_metrics: dict[str, Any] = Field(default_factory=dict)
     predictions: list[EndpointPrediction] = Field(default_factory=list)
+    summary: dict[str, Any] = Field(default_factory=dict)
+
+
+class JobCreateRequest(BaseModel):
+    """Request to create an asynchronous background prediction task."""
+
+    title: Optional[str] = Field(default=None, description="Optional user-facing task name.")
+    items: Optional[list[BatchItemInput]] = None
+    raw_text: Optional[str] = None
+    filename: Optional[str] = None
+    include_tier2: bool = True
+    conditions: AssayConditions = Field(default_factory=AssayConditions)
 
 
 class BatchPredictResponse(BaseModel):

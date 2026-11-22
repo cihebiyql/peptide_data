@@ -1,14 +1,16 @@
-"""FastAPI scientific web platform & REST API for Peptide OmniPanel V33."""
+"""FastAPI scientific web platform, async Task Center & REST API for Peptide OmniPanel."""
 
 from __future__ import annotations
 
 import os
+import re
 import time
 from pathlib import Path
+from typing import Optional
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from rdkit import rdBase
 
@@ -24,6 +26,7 @@ from .drug_library import (
     QUICK_EXAMPLES,
     lookup_drug,
 )
+from .job_store import JobManager
 from .schemas import (
     AssayConditions,
     BatchParseResponse,
@@ -31,6 +34,7 @@ from .schemas import (
     BatchPredictResponse,
     EndpointsResponse,
     HealthResponse,
+    JobCreateRequest,
     PredictRequest,
     PredictResponse,
     RenderSvgRequest,
@@ -39,13 +43,14 @@ from .schemas import (
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 ROOT_PATH = os.environ.get("V33_ROOT_PATH", "").strip()
+CLIENT_ID_RE = re.compile(r"^[A-Za-z0-9_\-]{6,64}$")
 
 app = FastAPI(
-    title="Peptide OmniPanel V33 API",
+    title="Peptide OmniPanel API",
     description=(
-        "Publication-grade scientific ADMET, PK, permeability, safety, and antimicrobial prediction "
-        "platform powered by the V33 4-foundation-model super-ensemble (tiered endpoints, "
-        "calibrated probabilities, conformal UQ, and exact Tanimoto AD). "
+        "Publication-grade peptide & cyclic-peptide ADMET, pharmacokinetics, safety, and antimicrobial "
+        "prediction platform powered by a 4-foundation-model super-ensemble (46 tiered endpoints, "
+        "calibrated probabilities, conformal uncertainty intervals, exact Tanimoto AD, and async task tracking). "
         "Scope: internal_research_only."
     ),
     version=__version__,
@@ -62,11 +67,19 @@ app.add_middleware(
 )
 
 adapter = OmniPanelAdapter()
+job_manager = JobManager(adapter=adapter)
+
+
+def _resolve_client_id(header_id: Optional[str], query_id: Optional[str] = None) -> str:
+    cid = (header_id or query_id or "").strip()
+    if cid and CLIENT_ID_RE.fullmatch(cid):
+        return cid
+    return "default-session"
 
 
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["System"])
 def get_health() -> HealthResponse:
-    """Service liveness, active V33 adapter mode, RDKit version, and audited dataset KPIs."""
+    """Service liveness, engine readiness, RDKit version, and audited dataset KPIs."""
     if adapter.remote_url and not adapter.remote_healthy:
         adapter.refresh_remote_health()
     catalog = adapter.get_catalog()
@@ -92,7 +105,7 @@ def get_health() -> HealthResponse:
 
 @app.get("/api/v1/endpoints", response_model=EndpointsResponse, tags=["Catalog"])
 def get_endpoints() -> EndpointsResponse:
-    """List all 24 audited Tier-1 and Tier-2 V33 endpoints directly from `v33_manifest.json`."""
+    """List all audited Tier-1 and Tier-2 endpoints and validation transparency metadata."""
     if adapter.remote_url and not adapter.remote_healthy:
         adapter.refresh_remote_health()
     tp = adapter.get_transparency_payload()
@@ -170,10 +183,13 @@ def post_render_svg(req: RenderSvgRequest) -> RenderSvgResponse:
 
 
 @app.post("/api/v1/predict", response_model=PredictResponse, tags=["Inference"])
-def post_predict(req: PredictRequest) -> PredictResponse:
-    """Run full 24-endpoint V33 ADMET/PK/MIC prediction for one peptide."""
+def post_predict(
+    req: PredictRequest,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> PredictResponse:
+    """Run full-panel ADMET/PK/Antimicrobial prediction for one peptide (optionally logged to Task Center)."""
     try:
-        return adapter.predict(
+        resp = adapter.predict(
             query=req.query,
             sequence=req.sequence,
             smiles=req.smiles,
@@ -187,6 +203,19 @@ def post_predict(req: PredictRequest) -> PredictResponse:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    if x_client_id and CLIENT_ID_RE.fullmatch(x_client_id.strip()):
+        try:
+            job_id = job_manager.record_single_prediction(
+                client_id=x_client_id.strip(),
+                pred=resp,
+                include_tier2=req.include_tier2,
+                conditions=req.conditions,
+            )
+            resp.summary["job_id"] = job_id
+        except Exception:
+            pass
+    return resp
 
 
 @app.post("/api/v1/batch/parse", response_model=BatchParseResponse, tags=["Batch"])
@@ -233,7 +262,7 @@ def _execute_batch_rows(
 
 @app.post("/api/v1/batch", response_model=BatchPredictResponse, tags=["Batch"])
 def post_batch_predict(req: BatchPredictRequest) -> BatchPredictResponse:
-    """Run batch ADMET predictions for up to 500 peptides (JSON items or CSV/TSV/TXT/FASTA text)."""
+    """Run synchronous batch ADMET predictions for up to 500 peptides (JSON items or CSV/TSV/TXT/FASTA text)."""
     if req.items is not None:
         if len(req.items) == 0:
             raise HTTPException(status_code=400, detail="Batch items list cannot be empty.")
@@ -259,7 +288,7 @@ async def post_batch_upload(
     rbc_species: str = Form(default="human"),
     pk_context: str = Form(default="human_plasma"),
 ) -> BatchPredictResponse:
-    """Upload a .csv, .tsv, .txt, or .fasta file (up to 500 molecules) and run batch prediction."""
+    """Upload a .csv, .tsv, .txt, or .fasta file (up to 500 molecules) and run synchronous batch prediction."""
     raw_bytes = await file.read()
     text = ""
     for enc in ("utf-8-sig", "utf-8", "gbk", "latin-1"):
@@ -280,6 +309,119 @@ async def post_batch_upload(
         pk_context=pk_context if pk_context in ("human_plasma", "human_sc", "human_po", "rat_iv", "mouse_sc") else "human_plasma",  # type: ignore[arg-type]
     )
     return _execute_batch_rows(parsed.rows, include_tier2=include_tier2, conditions=cond)
+
+
+# ==================== ASYNC TASK CENTER ENDPOINTS ====================
+
+
+@app.post("/api/v1/jobs", tags=["Tasks"])
+def post_create_job(
+    req: JobCreateRequest,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> JSONResponse:
+    """Submit a background batch prediction task with live progress tracking in the Task Center."""
+    if req.items is not None:
+        if len(req.items) == 0:
+            raise HTTPException(status_code=400, detail="Batch items list cannot be empty.")
+        parsed_rows = items_from_batch_request(req.items, drug_lookup_fn=lookup_drug)
+    elif req.raw_text and req.raw_text.strip():
+        parsed = parse_batch_text(req.raw_text, filename=req.filename, drug_lookup_fn=lookup_drug)
+        if parsed.total == 0:
+            raise HTTPException(status_code=400, detail="No molecules could be parsed from raw_text.")
+        parsed_rows = parsed.rows
+    else:
+        raise HTTPException(status_code=400, detail="Provide either 'items' or 'raw_text' to create a task.")
+
+    client_id = _resolve_client_id(x_client_id)
+    title = (req.title or "").strip() or (Path(req.filename).stem if req.filename else f"Batch ({len(parsed_rows)})")
+    meta = job_manager.submit_batch_job(
+        client_id=client_id,
+        parsed_rows=parsed_rows,
+        include_tier2=req.include_tier2,
+        conditions=req.conditions,
+        title=title,
+    )
+    return JSONResponse(meta)
+
+
+@app.get("/api/v1/jobs", tags=["Tasks"])
+def get_list_jobs(
+    limit: int = Query(default=50, ge=1, le=100),
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+    client_id: Optional[str] = Query(default=None),
+) -> JSONResponse:
+    """List prediction tasks for the active browser session (newest first)."""
+    cid = _resolve_client_id(x_client_id, client_id)
+    jobs = job_manager.list_jobs(client_id=cid, limit=limit)
+    active_count = sum(1 for j in jobs if j["status"] in ("queued", "running"))
+    return JSONResponse({"jobs": jobs, "active_count": active_count, "total": len(jobs)})
+
+
+@app.get("/api/v1/jobs/{job_id}", tags=["Tasks"])
+def get_job_detail(
+    job_id: str,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+    client_id: Optional[str] = Query(default=None),
+) -> JSONResponse:
+    """Fetch full task status, progress, analytics summary, and all completed molecule predictions."""
+    cid = _resolve_client_id(x_client_id, client_id)
+    detail = job_manager.get_job_detail(job_id=job_id, client_id=cid)
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"Task '{job_id}' not found.")
+    return JSONResponse(detail)
+
+
+@app.post("/api/v1/jobs/{job_id}/cancel", tags=["Tasks"])
+def post_cancel_job(
+    job_id: str,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> JSONResponse:
+    """Request graceful cancellation of a queued or running background task."""
+    cid = _resolve_client_id(x_client_id)
+    meta = job_manager.cancel_job(job_id=job_id, client_id=cid)
+    if meta is None:
+        raise HTTPException(status_code=404, detail=f"Task '{job_id}' not found.")
+    return JSONResponse(meta)
+
+
+@app.delete("/api/v1/jobs/{job_id}", tags=["Tasks"])
+def delete_job(
+    job_id: str,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> JSONResponse:
+    """Delete a task from this session's Task Center history."""
+    cid = _resolve_client_id(x_client_id)
+    deleted = job_manager.delete_job(job_id=job_id, client_id=cid)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"Task '{job_id}' not found.")
+    return JSONResponse({"deleted": True, "job_id": job_id})
+
+
+@app.get("/api/v1/jobs/{job_id}/export", tags=["Tasks"])
+def export_job(
+    job_id: str,
+    format: str = Query(default="summary_csv", pattern="^(summary_csv|full_csv|json)$"),
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+    client_id: Optional[str] = Query(default=None),
+) -> Response:
+    """Download completed task results as Summary CSV, Full 46-Endpoint Wide CSV, or JSON."""
+    cid = _resolve_client_id(x_client_id, client_id)
+    detail = job_manager.get_job_detail(job_id=job_id, client_id=cid)
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"Task '{job_id}' not found.")
+    safe_id = re.sub(r"[^A-Za-z0-9_\-]+", "_", job_id)
+    if format == "json":
+        return JSONResponse(
+            detail,
+            headers={"Content-Disposition": f'attachment; filename="omnipanel_{safe_id}.json"'},
+        )
+    csv_text = job_manager.export_job_csv(detail, full_wide=(format == "full_csv"))
+    suffix = "full_46ep" if format == "full_csv" else "summary"
+    return Response(
+        content=csv_text.encode("utf-8-sig"),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="omnipanel_{safe_id}_{suffix}.csv"'},
+    )
 
 
 # Mount static SPA assets and serve index.html at root

@@ -1,21 +1,22 @@
-# Peptide OmniPanel V33.1 — Peptide / Cyclic-Peptide ADMET, PK & Antimicrobial Platform
+# Peptide OmniPanel 1.0 — Peptide / Cyclic-Peptide ADMET, PK & Antimicrobial Platform
 
 > **Live Platform (Public HTTPS, Self-Contained on `node2`)**: <https://lmmd.ecust.edu.cn/peptide-omnipanel/> (OpenAPI `/docs`)  
 > **Scientific Scope**: `internal_research_only` — Early-stage preclinical prioritization & hypothesis generation; not validated for clinical or regulatory decisions.
 
-## Peptide OmniPanel V33.1 Release (2026-11-22)
+## Peptide OmniPanel 1.0 Release (2026-11-22)
 
-**Peptide OmniPanel V33.1** upgrades the platform into a **46-endpoint, 4-foundation-model super-ensemble** covering canonical 20-AA peptides, cyclic macrocycles, echinocandins, disulfide-knotted peptides, and lipidated long-acting therapeutics — with zero-holdout-peeking grouped cluster validation, Platt/isotonic probability calibration, adaptive 80%/90% conformal uncertainty quantification, censored-aware AFT/Tobit diagnostics, exact Morgan Tanimoto applicability domain + Top-3 training analogs, and a modern FastAPI + SPA web platform.
+**Peptide OmniPanel 1.0** delivers a unified **46-endpoint, 4-foundation-model super-ensemble** covering canonical 20-AA peptides, cyclic macrocycles, echinocandins, disulfide-knotted peptides, and lipidated long-acting therapeutics — with zero-holdout-peeking grouped cluster validation, Platt/isotonic probability calibration, adaptive 80%/90% conformal uncertainty quantification, censored-aware AFT/Tobit diagnostics, exact Morgan Tanimoto applicability domain + Top-3 training analogs, and a modern bilingual FastAPI + SPA platform with persistent async Task Center and light/dark themes.
 
-| Metric | V33.1 Audited Value |
+| Metric | Audited Value |
 |---|---:|
 | **Unified Experimental Endpoints** | **46** (**24 Tier-1** Core ADMET/PK/Safety + **22 Tier-2** ESKAPE/Clinical MIC, MBC, MFC, Biofilm MBIC/MBEC & LC) |
-| **Curated Peptide Corpus** | **50,994** unique peptides (`50,995` unified incl. Case17) · **82,327** harmonized observations · **4,535** censored/interval bounds |
+| **Curated Peptide Corpus** | **50,994** unique peptides (`50,995` unified incl. 17 clinical cases) · **82,327** harmonized observations · **4,535** censored/interval bounds |
 | **4-Foundation-Model Representations** | `ncAA-RepDistill v2` + `ESM-C 600M` (4-region pure-PyTorch standalone) + `PeptideCLM-2` + `ChemBERTa-MTR` |
 | **Core 24-EP Untouched 20% Holdout** | 6 Cls ROC-AUC **0.8883** (`Brier 0.1259`, `ECE 0.0377`) · 18 Reg MAE **0.5053** / Spearman **0.6235** (`80.8% / 90.6%` conformal cov.) |
 | **Expansion 22-EP Untouched 20% Holdout** | Dual MAE **0.5171** · SMILES-only MAE **0.5094** · 4-FM Fusion beats CPU on **17/22** endpoints (`76.5% / 88.7%` cov.) |
-| **Strict Leave-Case17-Out (FDA 17 Drugs)** | Pure-ML T½ **Spearman 0.903 / R² 0.763** (+ Acylation Anchor **MAE 0.299 / R² 0.781**) · PPB **Spearman 0.709** · Hemolysis FP **0/17** |
-| **Built-In Curated Web Examples** | **25** peptides (all **17 NIFDC / Prof. Ye Case17** clinical drugs + **4/4 FDA Echinocandins** + **5 classic AMPs**) + 3 Batch presets |
+| **Strict Leave-17-Cases-Out (Clinical Benchmark)** | Pure-ML T½ **Spearman 0.903 / R² 0.763** (+ Acylation Anchor **MAE 0.299 / R² 0.781**) · PPB **Spearman 0.709** · Hemolysis FP **0/17** |
+| **Web Platform UX (`v1.0`)** | **Persistent Async Task Center** (SQLite WAL, chunked progress/ETA, 5 KPI cards, 5 column-group presets, quick screening filters, multi-peptide radar overlay, Summary + 46-EP Wide CSV/JSON exports) · **0 ms Batch ↔ Detail ↔ Next/Prev/Return** loop · **Instant 中文 / EN** · **Light / Dark Theme** |
+| **Built-In Curated Web Examples** | **25** peptides (**17 Clinical Cases** + **4/4 FDA Echinocandins** + **5 classic AMPs**) + 3 Batch presets |
 | **Production Runtime (`node2`)** | 100% self-contained on `node2` (`128` CPU cores, `0 MiB` GPU VRAM, `0` external cluster dependency) |
 
 ### V33.1 Directory Layout (`v33_upgrade/`)
@@ -24,8 +25,8 @@
 - `v33_upgrade/expansion_v331/` — V33.1 incremental 22-endpoint expansion (`efflux_ratio`, `cytotoxicity_CC50`, `hemolysis_MHC`, `Vd_absolute`, 9 ESKAPE/clinical MICs, 5 bactericidal MBCs, `MFC_C_albicans`, `MBIC_biofilm`, `MBEC_biofilm`, `LC_antimicrobial`) with verified bit-for-bit zero regression on the 24 core endpoints
 - `v33_upgrade/models_cpu/`, `models_gpu/`, `models_fusion/`, `models_gpu_deep/` — Multi-family CPU GBDT/GPR/AFT, 4-FM embedding extractors, multimodal fusion, and deep multi-task / HalfLifeAttentionNet code
 - `v33_upgrade/bundle/` — Portable inference server (`v33_inference_service.py`), standalone pure-PyTorch `esmc_worker.py`, live encoders, verification suite, and sanitized audited `v33_manifest.json`
-- `v33_upgrade/web/` — FastAPI REST API + subpath-safe SPA (`drug_library.py`, `adapter.py`, `static/`, `tests/test_web_api.py`, `deploy/`)
-- `v33_upgrade/reports/` — Complete V33 & V33.1 technical reports, interactive dashboard (`v33_upgrade_dashboard.html`), and live HTTPS verification screenshots (`reports/screenshots/v331_*.png`)
+- `v33_upgrade/web/` — FastAPI REST API + subpath-safe bilingual/dark-mode SPA + SQLite async Task Center (`job_store.py`, `drug_library.py`, `adapter.py`, `static/i18n.js`, `static/`, `tests/test_web_api.py`, `deploy/`)
+- `v33_upgrade/reports/` — Complete technical reports, interactive dashboard (`v33_upgrade_dashboard.html`), and live HTTPS verification screenshots (`reports/screenshots/v10_*.png`)
 
 ### Quick Local Verification (Public Repo, Offline Manifest Mode)
 

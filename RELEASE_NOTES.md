@@ -61,6 +61,13 @@
 
 - **端点扩充（24 → 46 端点，零回退）**：在完整保留 V33.0 核心 24 端点比特级不变（96/96 `max_abs_diff = 0.0`）的基础上，基于严格零泄漏清洗与无跨菌种污染的 DBAASP 多重集精确桥接新增 **22 个实验端点**（Tier 1 核心 ADMET/PK/安全增至 **24 个**：新增 `efflux_ratio`、`cytotoxicity_CC50`、`hemolysis_MHC`、`Vd_absolute`；Tier 2 抗菌/杀菌/抗真菌/抗生物膜增至 **22 个**：覆盖 WHO ESKAPE 全谱 MIC、5 菌种杀菌 MBC、`MFC_C_albicans`、`MBIC_biofilm`、`MBEC_biofilm`、`LC_antimicrobial`），总数据规模达 **50,994 唯一肽 / 82,327 条记录 / 4,535 条删失记录**。
 - **4 基座模型超集成与零偷看验证**：融合 `ncAA-RepDistill v2` + `ESM-C 600M`（纯 PyTorch 独立实现）+ `PeptideCLM-2` + `ChemBERTa-MTR` 与 CPU GBDT / Deep Multi-Task，在严格 Leave-Case17-Out 中实现纯 ML 半衰期 `Spearman 0.903 / R² 0.763`（联合脂化锚定 `MAE 0.299 / R² 0.781`）、临床 PPB `Spearman 0.709`、FDA 临床药溶血误报 `0/17`。
-- **现代 FastAPI + SPA 网站与 25 个精选示例库**：新增可折叠 5 分类 25 示例库（完整涵盖中检院叶老师 17 个经典临床多肽 Case17、4/4 FDA 棘白菌素环肽 `Caspofungin / Micafungin / Anidulafungin / Rezafungin` 与 5 条经典抗菌肽）及 3 套 Batch 批量预设。
+- **现代 FastAPI + SPA 网站与 25 个精选示例库**：新增可折叠 5 分类 25 示例库（完整涵盖 17 个经典临床多肽案例、4/4 FDA 棘白菌素环肽 `Caspofungin / Micafungin / Anidulafungin / Rezafungin` 与 5 条经典抗菌肽）及 3 套 Batch 批量预设。
 - **`node2` 100% 独立部署上线**：所有模型、预训练权重、特征/嵌入缓存与推理服务全部迁至 `node2` 本地运行（零 `node23`/`node1` 运行时依赖、零 `sudo`、`0 MiB` GPU 显存），公网 HTTPS <https://lmmd.ecust.edu.cn/peptide-omnipanel/> API 与无头浏览器验证全部通过。
 - 详见 `v33_upgrade/reports/v33_champion_summary.md`、`v33_upgrade/reports/v331_endpoint_expansion.md` 与 `v33_upgrade/reports/v331_node2_deployment.md`。
+
+## 2026-11-22 · Peptide OmniPanel 1.0 网站体验全面升级（任务中心 + 无缝跳转闭环 + 中英双语 + 明暗主题）
+
+- **全新持久化异步「任务中心 / Task Center」（`job_store.py` + `POST/GET/DELETE /api/v1/jobs`）**：SQLite WAL 持久化存储、后台线程池分块执行并实时回传进度与 ETA、支持中断/取消/删除任务；内置 5 项筛选概览 KPI、5 套领域列组视图（核心总览 / PK / 膜渗透与理化 / 安全与毒性 / 抗菌活性）、4 项快捷风险筛选、多肽六维雷达图叠加对比，以及「摘要 CSV / 全 46 端点宽表 CSV / 完整 JSON」一键导出；单分子预测也会自动归档至任务记录。
+- **批量/任务结果 ↔ 单分子详情无缝闭环**：点击任意分子以 `0 ms` 缓存直开完整 46 端点详情页（2D 结构异步增量绘制），顶部粘性导航条支持 `← 返回任务结果`（自动恢复原标签页、滚动位置并高亮上次查看行）、`‹ 上一个` / `下一个 ›` 快速翻阅、下拉直达、`←`/`→`/`Esc` 快捷键及浏览器前进后退。
+- **统一品牌 `Peptide OmniPanel v1.0`**：界面全面去除内部开发代号（`V32`/`V33`/`v33_remote`）及机构/个人名称，统一采用中性临床基准表述（`17 个案例` / `17 Clinical Cases`）。
+- **全站即时中英双语（`中文 / English`）与明暗主题（`Light / Dark`）**：顶栏一键切换并持久化至 `localStorage`，含暗色模式 SVG 雷达图自适应及 RDKit 二维化学结构亮底衬板。

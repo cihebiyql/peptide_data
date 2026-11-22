@@ -27,6 +27,7 @@ os.environ["V33_MANIFEST_PATH"] = os.environ.get(
     str(V33_DIR / "v33_runtime" / "bundle" / "v33_manifest.json"),
 )
 os.environ["V33_ROOT_PATH"] = os.environ.get("V33_ROOT_PATH", "/peptide-omnipanel")
+os.environ["OMNIPANEL_JOBS_DIR"] = os.environ.get("OMNIPANEL_JOBS_DIR", str(V33_DIR / "jobs_store"))
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 

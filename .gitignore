@@ -13,6 +13,8 @@ _pepadmet_paper/
 *.npz
 *.safetensors
 *.sqlite
+*.sqlite-*
+jobs_store/
 *.db
 *.bin
 *.exe

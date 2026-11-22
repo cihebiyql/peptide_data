@@ -156,7 +156,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": 0.0,
         "ci_bar_max": 1.0,
         "input_requirements": "SMILES or Sequence + PK matrix",
-        "scope_note": "Fraction bound [0,1]; strong ranking concordance on clinical peptides (Case17 Spearman 0.709).",
+        "scope_note": "Fraction bound [0,1]; strong ranking concordance on clinical peptides (17-Case Spearman 0.709).",
     },
     "CL_per_kg": {
         "display_en": "Systemic Clearance (CL/kg)",
@@ -244,7 +244,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": 0.0,
         "ci_bar_max": 1.0,
         "input_requirements": "SMILES or Sequence + RBC species",
-        "scope_note": "Platt-calibrated erythrocyte lysis probability; 0/17 FDA peptide false positives in Leave-Case17-Out.",
+        "scope_note": "Platt-calibrated erythrocyte lysis probability; 0/17 false positives on the 17 clinical peptide cases.",
     },
     "hemolysis_HC50": {
         "display_en": "Hemolysis HC50",
@@ -268,7 +268,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": 0.0,
         "ci_bar_max": 1.0,
         "input_requirements": "SMILES or Sequence",
-        "scope_note": "Calibrated normal mammalian cell cytotoxicity risk classifier (new V33 endpoint).",
+        "scope_note": "Calibrated normal mammalian cell cytotoxicity risk classifier.",
     },
     "LogD7.4": {
         "display_en": "Distribution Coefficient (LogD7.4)",
@@ -575,7 +575,7 @@ _FAMILY_LABELS = {
 
 def format_winning_family(winning_family: str, weights: dict[str, float]) -> str:
     """Render concise human-readable champion family & weights string from manifest/live payload."""
-    base = _FAMILY_LABELS.get(winning_family, winning_family or "V33")
+    base = _FAMILY_LABELS.get(winning_family, winning_family or "Super-Ensemble")
     if not weights:
         return base
     active = sorted(
@@ -1554,7 +1554,7 @@ class OmniPanelAdapter:
             top5_tc = float(r["top5_tanimoto"]) if r.get("top5_tanimoto") is not None else None
 
             weights = {k: round(float(v), 4) for k, v in (r.get("weights") or {}).items()}
-            w_fam = str(r.get("winning_family") or tr_doc.get("winning_family") or "v33")
+            w_fam = str(r.get("winning_family") or tr_doc.get("winning_family") or "super_ensemble")
             metric_key = "roc_auc" if is_cls else "spearman"
             metric_name = "ROC-AUC" if is_cls else "Spearman"
             cv_m = tr_doc.get("cv_metrics") or {}
@@ -1634,7 +1634,7 @@ class OmniPanelAdapter:
                 route_used = (hl_p.conditions_used or {}).get("cond_route") or v33_cond.get("pk_route", "IV")
                 anchor.ml_baseline_route = route_used
                 anchor.ml_baseline_note = (
-                    f"Pure-ML V33 super-ensemble ({route_used}) predicts {anchor.ml_baseline_h:.2f} h directly from structure & embeddings; "
+                    f"Pure-ML super-ensemble ({route_used}) predicts {anchor.ml_baseline_h:.2f} h directly from structure & embeddings; "
                     "paired transparently with the literature-anchored fatty-acylation PK class window."
                 )
 
@@ -1835,7 +1835,7 @@ class OmniPanelAdapter:
                     raw_val = 0.5
 
             if ep_doc.get("censored_head") and counts.get("n_censored_total", 0) > 0:
-                cens_note = f"Trained with {counts['n_censored_total']} censored records; AFT/Tobit diagnostic head available in live V33."
+                cens_note = f"Trained with {counts['n_censored_total']} censored records; AFT/Tobit diagnostic head available in live engine."
 
             # 2. Compute real conformal q80/q90 intervals directly from manifest conformal spec
             bounds = ep_doc.get("bounds")
@@ -1891,7 +1891,7 @@ class OmniPanelAdapter:
             assay_ctx = ", ".join(f"{k.replace('cond_', '')}={v}" for k, v in cond_used.items()) if cond_used else None
             note_txt = ui.get("scope_note", "")
             if source_tag == "offline_fallback":
-                note_txt = f"[Offline fallback — connect V33_REMOTE_URL for live super-ensemble] {note_txt}"
+                note_txt = f"[Offline preview mode — live inference engine disconnected] {note_txt}"
 
             pred_obj = EndpointPrediction(
                 endpoint=ep,
@@ -1951,7 +1951,7 @@ class OmniPanelAdapter:
                 anchor.ml_baseline_h = round(float(hl_p.value), 2)
                 anchor.ml_baseline_route = route
                 anchor.ml_baseline_note = (
-                    f"Leave-Case17-Out V33 pure-ML ({route}) predicts {anchor.ml_baseline_h:.2f} h; "
+                    f"Holdout pure-ML super-ensemble ({route}) predicts {anchor.ml_baseline_h:.2f} h; "
                     "paired transparently with the literature-anchored fatty-acylation PK class window."
                 )
 
@@ -2156,7 +2156,7 @@ class OmniPanelAdapter:
                         index=row.index,
                         name=row.name,
                         status="error",
-                        error=err or "V33 remote batch error",
+                        error=err or "Inference batch error",
                     )
                     continue
                 pred = self._assemble_from_v33_raw(
@@ -2204,36 +2204,69 @@ class OmniPanelAdapter:
             hl_disp, hl_val = "—", None
 
         hem_cls = by_ep.get("hemolysis_cls")
+        valid_mics = [p for p in pred.predictions if p.tier == 2 and p.endpoint.startswith("MIC_") and p.value is not None and p.value > 0]
+        best_mic = min(valid_mics, key=lambda p: float(p.value or 1e9)) if valid_mics else None
         key_metrics = {
             "half_life": hl_disp,
             "half_life_val": hl_val,
             "ppb": by_ep["PPB"].value_display if "PPB" in by_ep else "—",
             "ppb_val": by_ep["PPB"].value if "PPB" in by_ep else None,
+            "cl_per_kg": by_ep["CL_per_kg"].value_display if "CL_per_kg" in by_ep else "—",
+            "cl_per_kg_val": by_ep["CL_per_kg"].value if "CL_per_kg" in by_ep else None,
+            "vd_per_kg": by_ep["Vd_per_kg"].value_display if "Vd_per_kg" in by_ep else "—",
+            "vd_per_kg_val": by_ep["Vd_per_kg"].value if "Vd_per_kg" in by_ep else None,
+            "bioavail_f": by_ep["F"].value_display if "F" in by_ep else "—",
+            "bioavail_f_val": by_ep["F"].value if "F" in by_ep else None,
+            "cmax": by_ep["Cmax"].value_display if "Cmax" in by_ep else "—",
+            "cmax_val": by_ep["Cmax"].value if "Cmax" in by_ep else None,
             "pampa": by_ep["PAMPA"].value_display if "PAMPA" in by_ep else "—",
             "pampa_val": by_ep["PAMPA"].value if "PAMPA" in by_ep else None,
             "caco2": by_ep["Caco2"].value_display if "Caco2" in by_ep else "—",
             "caco2_val": by_ep["Caco2"].value if "Caco2" in by_ep else None,
+            "mdck": by_ep["MDCK"].value_display if "MDCK" in by_ep else "—",
+            "efflux_ratio": by_ep["efflux_ratio"].value_display if "efflux_ratio" in by_ep else "—",
+            "efflux_ratio_val": by_ep["efflux_ratio"].value if "efflux_ratio" in by_ep else None,
+            "bbb": by_ep["BBB"].value_display if "BBB" in by_ep else "—",
             "hemolysis_risk": hem_cls.value_display if hem_cls else "—",
             "hemolysis_risk_val": hem_cls.value if hem_cls else None,
             "hemolysis_risk_level": hem_cls.risk_level if hem_cls else "info",
             "hc50": by_ep["hemolysis_HC50"].value_display if "hemolysis_HC50" in by_ep else "—",
+            "hc50_val": by_ep["hemolysis_HC50"].value if "hemolysis_HC50" in by_ep else None,
+            "mhc": by_ep["hemolysis_MHC"].value_display if "hemolysis_MHC" in by_ep else "—",
+            "toxicity": by_ep["overall_peptide_toxicity"].value_display if "overall_peptide_toxicity" in by_ep else "—",
+            "cyto_risk": by_ep["cytotoxicity_cls"].value_display if "cytotoxicity_cls" in by_ep else "—",
+            "cytotoxicity_cc50": by_ep["cytotoxicity_CC50"].value_display if "cytotoxicity_CC50" in by_ep else "—",
+            "cytotoxicity_cc50_val": by_ep["cytotoxicity_CC50"].value if "cytotoxicity_CC50" in by_ep else None,
             "logd": by_ep["LogD7.4"].value_display if "LogD7.4" in by_ep else "—",
             "solubility": by_ep["solubility_reg"].value_display if "solubility_reg" in by_ep else "—",
             "mic_ecoli": by_ep["MIC_E_coli"].value_display if "MIC_E_coli" in by_ep else "—",
+            "mic_saureus": by_ep["MIC_S_aureus"].value_display if "MIC_S_aureus" in by_ep else "—",
+            "mic_paeruginosa": by_ep["MIC_P_aeruginosa"].value_display if "MIC_P_aeruginosa" in by_ep else "—",
+            "mic_calbicans": by_ep["MIC_C_albicans"].value_display if "MIC_C_albicans" in by_ep else "—",
+            "mic_kpneumoniae": by_ep["MIC_K_pneumoniae"].value_display if "MIC_K_pneumoniae" in by_ep else "—",
+            "mic_abaumannii": by_ep["MIC_A_baumannii"].value_display if "MIC_A_baumannii" in by_ep else "—",
+            "best_mic": f"{best_mic.value_display} µM" if best_mic else "—",
+            "best_mic_val": best_mic.value if best_mic else None,
         }
         return BatchMoleculeResult(
             index=row.index,
             name=row.name,
             status="ok",
             resolved_type=pred.resolved_type,
+            modality_track=pred.modality_track,
             sequence=pred.sequence,
             smiles=pred.smiles,
+            canonical_smiles=pred.canonical_smiles,
+            drug_reference=pred.drug_reference,
+            physchem=pred.physchem,
             mw=pred.physchem.mw,
             logp=pred.physchem.logp,
             net_charge_ph74=pred.physchem.net_charge_ph74,
             modifications=[m.label_en for m in pred.modifications],
+            modification_badges=pred.modifications,
             mechanism_anchor=pred.mechanism_anchor,
             radar=pred.radar,
             key_metrics=key_metrics,
             predictions=pred.predictions,
+            summary=pred.summary,
         )

@@ -1,0 +1,36 @@
+{
+  "url": "https://lmmd.ecust.edu.cn/peptide-omnipanel/",
+  "checks": {
+    "home_zh_light": {
+      "load_ms": 1196.3,
+      "status_badge": "在线 · 46 端点",
+      "examples": 25,
+      "screenshot": "D:\\work\\中检院\\v33_upgrade\\reports\\screenshots\\v10_01_home_zh_light.png"
+    },
+    "en_dark_mode": {
+      "theme": "dark",
+      "lang": "en",
+      "tasks_tab_label": "Tasks",
+      "tier1": 24,
+      "tier2": 22,
+      "screenshot": "D:\\work\\中检院\\v33_upgrade\\reports\\screenshots\\v10_02_home_en_dark.png"
+    },
+    "task_center_and_loop": {
+      "job_wait_s": 2.0,
+      "kpi_count": 5,
+      "rows": 17,
+      "low_hem_filtered": 14,
+      "drill_down_ms": 68.1,
+      "next_switch_ms": 26.3,
+      "returned_highlighted": "Tirzepatide",
+      "screenshots": [
+        "D:\\work\\中检院\\v33_upgrade\\reports\\screenshots\\v10_03_tasks_center_17cases.png",
+        "D:\\work\\中检院\\v33_upgrade\\reports\\screenshots\\v10_04_tasks_center_dark.png",
+        "D:\\work\\中检院\\v33_upgrade\\reports\\screenshots\\v10_05_detail_with_return_bar.png"
+      ]
+    }
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "bad_responses": []
+}
