@@ -176,10 +176,20 @@ def _apply_frozen_conformal(
     pred: np.ndarray,
     conf_spec: Dict[str, Any],
     max_tanimoto: np.ndarray,
+    top5_tanimoto: Optional[np.ndarray] = None,
+    phys_block: Optional[np.ndarray] = None,
+    calibrator: Any = None,
 ) -> Dict[str, np.ndarray]:
     p = np.asarray(pred, dtype=np.float64)
     mode = conf_spec.get("mode", "standard")
-    if mode == "mondrian_ad_eb":
+    if mode == "cqr_lgb_cw":
+        if calibrator is not None and phys_block is not None:
+            return calibrator.predict_intervals(p, phys_block, max_tanimoto, top5_tanimoto=top5_tanimoto)
+        fb = conf_spec.get("fallback_mondrian_cw")
+        if fb:
+            conf_spec = fb
+            mode = fb.get("mode", "mondrian_ad_eb_cw")
+    if mode in ("mondrian_ad_eb", "mondrian_ad_eb_cw"):
         thr = conf_spec.get("ad_thresholds") or {"in_domain": 0.65, "borderline": 0.40}
         t_in = float(thr.get("in_domain", 0.65))
         t_bo = float(thr.get("borderline", 0.40))
@@ -518,6 +528,18 @@ class V33InferenceEngine:
                 if rp.exists():
                     self.mt46_models.append(load_mt46_checkpoint(rp, device="cpu"))
 
+        # Load compact node2-portable Cluster-Weighted CQR calibrators (`cqr_lgb_cw`, ~12 MB total)
+        self.conformal_calibrators: Dict[Tuple[str, str], Any] = {}
+        for ep_name, ep_doc in self.manifest["endpoints"].items():
+            if ep_doc.get("task_type") != "regression":
+                continue
+            for tr_name in ("dual_modality", "smiles_only"):
+                conf = (ep_doc.get(tr_name) or {}).get("conformal") or {}
+                if conf.get("mode") == "cqr_lgb_cw" and conf.get("calibrator_file"):
+                    cp = BUNDLE_DIR / conf["calibrator_file"]
+                    if cp.exists():
+                        self.conformal_calibrators[(ep_name, tr_name)] = joblib.load(cp)
+
         # Read-only PyTorch eval() + no_grad() is thread-safe without a global mutex;
         # cap per-estimator threads to 1 so EP_WORKERS parallel endpoint threads do not oversubscribe CPU/OpenMP.
         self._tune_estimator_threads(n_jobs=1)
@@ -526,7 +548,8 @@ class V33InferenceEngine:
         self.startup_sec = round(time.time() - self.t_boot, 2)
         print(
             f"[engine] READY in {self.startup_sec}s (models={time.time()-t_m:.1f}s | cpu={len(self.cpu_models)} "
-            f"| fusion={len(self.fusion_models)} | deep_ckpts={n_ckpts} | mt46_folds={len(self.mt46_models)} | RSS={_get_rss_mb():.1f} MB)",
+            f"| fusion={len(self.fusion_models)} | deep_ckpts={n_ckpts} | mt46_folds={len(self.mt46_models)} "
+            f"| cqr_calibrators={len(self.conformal_calibrators)} | RSS={_get_rss_mb():.1f} MB)",
             flush=True,
         )
 
@@ -566,9 +589,12 @@ class V33InferenceEngine:
                 _walk(getattr(obj, "models"))
             elif hasattr(obj, "base_estimator"):
                 _walk(getattr(obj, "base_estimator"))
+            elif hasattr(obj, "fold_models_"):
+                _walk(getattr(obj, "fold_models_"))
 
         _walk(self.cpu_models)
         _walk(self.fusion_models)
+        _walk(self.conformal_calibrators)
 
     def _ensure_esmc_worker(self, port: int) -> None:
         from v33_live_encoders import ESMCWorkerClient
@@ -632,6 +658,7 @@ class V33InferenceEngine:
                 "fusion_bundles": len(self.fusion_models),
                 "deep_endpoints": len(self.deep_models),
                 "mt46_folds": len(self.mt46_models),
+                "cqr_calibrators": len(self.conformal_calibrators),
             },
             "rss_mb": _get_rss_mb(),
             "startup_sec": self.startup_sec,
@@ -1030,7 +1057,19 @@ class V33InferenceEngine:
                 else:
                     final_val = raw_pred
                     max_t_vec = np.array([ad_by_ep[ep][int(p)]["max_tanimoto"] for p in pos_idx], dtype=np.float64)
-                    ivs = _apply_frozen_conformal(final_val, tr_doc["conformal"], max_tanimoto=max_t_vec)
+                    top5_t_vec = np.array([ad_by_ep[ep][int(p)]["top5_mean_tanimoto"] for p in pos_idx], dtype=np.float64)
+                    cal_obj = self.conformal_calibrators.get((ep, track))
+                    phys_blk = None
+                    if cal_obj is not None:
+                        if track == "smiles_only":
+                            phys_blk = np.nan_to_num(mini_bank.physchem[pos_idx, :48].astype(np.float32), nan=0.0, posinf=0.0, neginf=0.0)
+                        else:
+                            fl = np.stack([mini_bank.smiles_valid[pos_idx].astype(np.float32), mini_bank.seq_valid[pos_idx].astype(np.float32)], axis=1)
+                            phys_blk = np.nan_to_num(np.concatenate([mini_bank.physchem[pos_idx, :83].astype(np.float32), fl], axis=1), nan=0.0, posinf=0.0, neginf=0.0)
+                    ivs = _apply_frozen_conformal(
+                        final_val, tr_doc["conformal"], max_tanimoto=max_t_vec,
+                        top5_tanimoto=top5_t_vec, phys_block=phys_blk, calibrator=cal_obj,
+                    )
 
                 # Censored-aware diagnostic prediction on key censored endpoints
                 cens_pred_vec = None

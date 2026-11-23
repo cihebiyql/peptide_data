@@ -107,11 +107,11 @@ def test_endpoints_catalog_zero_fabricated_metrics():
     assert eps["cytotoxicity_cls"]["cv_score_v32"] is None
     assert eps["MIC_S_aureus"]["cv_score_v32"] is None
 
-    # Verify Case17 clinical benchmark and 4-FM dominance summary are present and real
+    # Verify Case17 clinical benchmark (v33.3 strict 19-cluster-excluded + clean stacker OOF)
     c17 = data["case17_scorecard"]
-    assert c17["half_life_pure_ml_route_matched_log10"]["spearman"] == pytest.approx(0.9029, abs=1e-3)
-    assert c17["half_life_with_mechanism_anchor_log10"]["mae"] == pytest.approx(0.2987, abs=1e-3)
-    assert c17["ppb_dual"]["spearman"] == pytest.approx(0.7093, abs=1e-3)
+    assert c17["half_life_pure_ml_route_matched_log10"]["spearman"] == pytest.approx(0.8941, abs=1e-3)
+    assert c17["half_life_with_mechanism_anchor_log10"]["mae"] == pytest.approx(0.2796, abs=1e-3)
+    assert c17["ppb_dual"]["spearman"] == pytest.approx(0.7004, abs=1e-3)
     assert c17["hemolysis_false_positive_check"]["n_drugs_gt_0_50"] == 0
 
     ex_res = client.get("/api/v1/examples")
@@ -453,14 +453,17 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
 
     manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["version"] == "v33.2"
+    assert manifest["version"] == "v33.3"
     reg_eps = [ep for ep, v in manifest["endpoints"].items() if v["task_type"] == "regression"]
     assert len(reg_eps) == 40
     for ep in reg_eps:
         for tr in ("dual_modality", "smiles_only"):
             conf = manifest["endpoints"][ep][tr]["conformal"]
-            assert conf["mode"] == "mondrian_ad_eb"
-            assert set(conf["q80_by_tier"].keys()) == {"In-Domain", "Borderline", "OOD"}
+            assert conf["mode"] in ("mondrian_ad_eb_cw", "cqr_lgb_cw")
+            if conf["mode"] == "mondrian_ad_eb_cw":
+                assert set(conf["q80_by_tier"].keys()) == {"In-Domain", "Borderline", "OOD"}
+            else:
+                assert conf.get("calibrator_file") and set(conf["fallback_mondrian_cw"]["q80_by_tier"].keys()) == {"In-Domain", "Borderline", "OOD"}
     # Route A strict zero-holdout-peeking & zero train-serve mismatch: no unified_mt46 loaded
     assert manifest["serving_inventory"].get("mt46_checkpoint_refs") == []
     assert manifest["serving_inventory"].get("mt46_promoted_endpoints") == []
@@ -522,7 +525,8 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     ep_data = client.get("/api/v1/endpoints").json()
     by_ep = {e["endpoint"]: e for e in ep_data["endpoints"]}
     assert by_ep["PPB"]["uq_reliability"] == "low"
-    assert by_ep["Cmax"]["uq_reliability"] == "moderate"
+    assert by_ep["Cmax"]["uq_reliability"] == "low"
+    assert by_ep["CL_per_kg"]["uq_reliability"] == "moderate"
     assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
     assert by_ep["hemolysis_cls"]["uq_reliability"] is None
 
