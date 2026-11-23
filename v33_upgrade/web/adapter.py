@@ -2460,17 +2460,25 @@ class OmniPanelAdapter:
         )
 
     def warmup_curated_examples(self) -> int:
-        """Pre-warm all 25 curated examples in background so demo/quick-example clicks respond in <20 ms."""
+        """Pre-warm all 25 curated examples in a single vectorized /batch call so quick examples respond in <20 ms."""
         if self.mode != "v33_remote" or not self.remote_url:
             return 0
-        warmed = 0
         default_cond = AssayConditions().to_v33_conditions()
+        resolved_list: list[ResolvedInput] = []
         for entry in DRUG_LIBRARY:
             try:
                 q = entry["sequence"] if (not entry.get("smiles") and entry.get("sequence")) else entry["display_name"]
-                resolved = self.resolve_query(query=q)
-                self._call_v33_remote_single(resolved, include_tier2=True, v33_cond=default_cond)
-                warmed += 1
+                resolved_list.append(self.resolve_query(query=q))
             except Exception:
                 continue
-        return warmed
+        if not resolved_list:
+            return 0
+        try:
+            batch_out = self._call_v33_remote_batch(
+                resolved_list,
+                include_tier2=True,
+                v33_cond=default_cond,
+            )
+            return sum(1 for raw_v33, _hit, err in batch_out if raw_v33 is not None and not err)
+        except Exception:
+            return 0
