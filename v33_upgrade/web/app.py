@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+import secrets
 import threading
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -60,13 +61,22 @@ job_manager = JobManager(adapter=adapter)
 def _start_background_warmup() -> None:
     if os.environ.get("V33_WARMUP_EXAMPLES", "0").strip().lower() not in ("1", "true", "yes"):
         return
+    refresh_sec = max(300.0, float(os.environ.get("V33_WARMUP_REFRESH_SEC", "43200")))
 
     def _runner() -> None:
-        try:
-            n = adapter.warmup_curated_examples()
-            print(f"[OmniPanel] Pre-warmed {n}/25 curated examples into 24h TTL cache.", flush=True)
-        except Exception as exc:
-            print(f"[OmniPanel] Warmup skipped/partial: {exc}", flush=True)
+        while True:
+            try:
+                if adapter.remote_url and not adapter.remote_healthy:
+                    adapter.refresh_remote_health()
+                if adapter.mode == "v33_remote":
+                    n = adapter.warmup_curated_examples()
+                    print(f"[OmniPanel] Pre-warmed {n}/25 curated examples into 24h TTL cache.", flush=True)
+                    if n > 0:
+                        time.sleep(refresh_sec)
+                        continue
+            except Exception as exc:
+                print(f"[OmniPanel] Warmup attempt deferred: {exc}", flush=True)
+            time.sleep(20.0)
 
     threading.Thread(target=_runner, name="omnipanel-warmup", daemon=True).start()
 
@@ -105,7 +115,8 @@ def _resolve_client_id(header_id: Optional[str], query_id: Optional[str] = None)
     cid = (header_id or query_id or "").strip()
     if cid and CLIENT_ID_RE.fullmatch(cid):
         return cid
-    return "default-session"
+    # Never share a single anonymous bucket across unrelated callers
+    return f"anon-{secrets.token_hex(8)}"
 
 
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["System"])
@@ -354,12 +365,19 @@ def post_batch_predict(req: BatchPredictRequest) -> BatchPredictResponse:
 
 @app.post("/api/v1/batch/upload", response_model=BatchPredictResponse, tags=["Batch"])
 async def post_batch_upload(
+    request: Request,
     file: UploadFile = File(...),
     include_tier2: bool = Form(default=False),
     rbc_species: str = Form(default="human"),
     pk_context: str = Form(default="human_plasma"),
 ) -> BatchPredictResponse:
     """Upload a .csv, .tsv, .txt, or .fasta file (<=2 MB, up to 500 molecules) and run synchronous batch prediction."""
+    cl_hdr = request.headers.get("content-length")
+    if cl_hdr and cl_hdr.isdigit() and int(cl_hdr) > MAX_UPLOAD_BYTES + 65536:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Uploaded file exceeds maximum allowed size ({MAX_UPLOAD_BYTES // (1024 * 1024)} MB).",
+        )
     chunks: list[bytes] = []
     total_bytes = 0
     while True:

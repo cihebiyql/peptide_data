@@ -1,9 +1,11 @@
-# Plan B-1 Audited Report: Small-N Foundation/Shrinkage Modeling & CQR/Mondrian Conformal Calibration
+# Plan B-1 Audited Report: Small-N Foundation/Shrinkage Modeling & AD-Stratified Empirical Intervals / CQR
+
+> **Production Status (v33.2 Route A)**: Deliverable 1 (Small-N `TabPFN v2` / `MultiBlockCompositeGPR`) is **ARCHIVED RESEARCH-ONLY**. For Deliverable 2, **`mondrian_ad_eb` is deployed uniformly across all `80/80` regression tracks** as a pure-JSON zero-dependency **engineering trade-off** (whereas nested-OOF selected `mondrian_ad_eb` on `48/80` tracks and `cqr_lgb` achieved higher overall holdout coverage at the cost of `.joblib`/LightGBM artifacts). `mondrian_ad_eb` provides empirically calibrated AD-stratified EB-shrunk intervals (not an exact finite-sample conformal guarantee); all `12/80` tracks with `cov80 < 70%` (`7/40` dual + `5/40` SMILES) and underpowered/moderate tracks are explicitly flagged in `v33_manifest.json` and the web UI.
 
 - **Generated at**: `2026-11-22 22:47:23 +0800`
 - **Compute Hardware**: `node23` 64-core CPU ONLY (0 GPU usage; `node1` GPUs, local RTX 5080, `node2` live production, and frozen `v33_upgrade` directories untouched)
 - **Zero-Leakage Protocol**: Frozen non-chaining dual-track cluster splits (`is_holdout == 0` 5-fold CV, untouched 20% `is_holdout == 1` holdout, strict `case17_excluded == 0` Leave-Case17-Out). All model & calibration selections locked strictly on inner nested 5-fold OOF BEFORE single holdout evaluation.
-- **TabPFN v2 Status**: `tabpfn available in isolated tabpfn_venv (deferred post-fork import) using offline <WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt`
+- **TabPFN v2 Status**: `tabpfn available in isolated tabpfn_venv (deferred post-fork import) using offline ${WORK_DIR}/.cache/tabpfn/tabpfn-v2-regressor.ckpt`
 
 ---
 
@@ -81,8 +83,8 @@
 
 ### 1.5 Promoted `node2`-Portable 5-Fold `.joblib` Artifacts (`node23`)
 
-- `CL_per_kg`: `<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/CL_per_kg_smalln_portable.joblib` — verified modules: `['builtins']` (0 `catboost`, 0 `tabpfn`, 0 `torch`)
-- `MIC_L_monocytogenes`: `<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/MIC_L_monocytogenes_smalln_portable.joblib` — verified modules: `['builtins', 'numpy', 'smalln_models']` (0 `catboost`, 0 `tabpfn`, 0 `torch`)
+- `CL_per_kg`: `${WORK_DIR}/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/CL_per_kg_smalln_portable.joblib` — verified modules: `['builtins']` (0 `catboost`, 0 `tabpfn`, 0 `torch`)
+- `MIC_L_monocytogenes`: `${WORK_DIR}/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/MIC_L_monocytogenes_smalln_portable.joblib` — verified modules: `['builtins', 'numpy', 'smalln_models']` (0 `catboost`, 0 `tabpfn`, 0 `torch`)
 
 ### 1.6 Strict Leave-Case17-Out FDA Clinical Drug Benchmark (`PPB`, n=14 FDA Anchors)
 
@@ -203,4 +205,4 @@
 - [x] **Zero cluster leakage**: Cluster disjointness asserted on all 40 endpoints (`set(cv_clusters) ∩ set(ho_clusters) == ∅`); inner hyperparameter tuning uses cluster-aware GroupKFold.
 - [x] **Strict Leave-Case17-Out**: All 7 small-N PK endpoints refitted strictly on `case17_excluded == 0`.
 - [x] **Strict `node2` portability**: Every promoted Small-N `.joblib` and Conformal calibrator `.joblib` verified via recursive object walker to contain ZERO `catboost`, ZERO `tabpfn`, and ZERO `torch` references (pure `numpy`/`scipy`/`sklearn`/`lightgbm` + `smalln_models.py`).
-- [x] **Zero mutation of frozen directories**: All outputs written exclusively under `<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/` and mirrored to `D:\work\中检院\v33_upgrade\v2_upgrade\smalln_cqr\`.
+- [x] **Zero mutation of frozen directories**: All outputs written exclusively under `${WORK_DIR}/v33_upgrade/v2_upgrade/smalln_cqr/` and mirrored to `D:\work\中检院\v33_upgrade\v2_upgrade\smalln_cqr\`.

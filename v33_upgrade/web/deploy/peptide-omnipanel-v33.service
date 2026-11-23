@@ -7,8 +7,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=mode2
-Group=mode2
+User=<DEPLOY_USER>
+Group=<DEPLOY_USER>
 WorkingDirectory=/var/www/peptide-omnipanel/v33_next
 Environment=PYTHONUNBUFFERED=1
 Environment=V33_REMOTE_URL=http://127.0.0.1:8902

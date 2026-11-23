@@ -12,7 +12,7 @@
     {
       "endpoint": "AC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_ac50_native_runs_v2",
+      "controller": "peptide_modeling_work_ac50_native_runs_v2",
       "task_id": "TASK_AC50_NATIVE_6830ccaf49010e62a369534a",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -318,7 +318,7 @@
     {
       "endpoint": "CL_absolute",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_cl_absolute_primary_runs_v3",
+      "controller": "peptide_modeling_work_cl_absolute_primary_runs_v3",
       "task_id": "TASK_45a0e3adb3737d0e0d00579d",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -415,7 +415,7 @@
     {
       "endpoint": "CL_per_kg",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_pk_quality_nested_ee_runs_v1",
+      "controller": "peptide_modeling_work_pk_quality_nested_ee_runs_v1",
       "task_id": "TASK_41f3151c98457e9ac15c09d3",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -518,7 +518,7 @@
     {
       "endpoint": "CL_per_mg_protein",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_clint_quarantine_runs_v2",
+      "controller": "peptide_modeling_work_clint_quarantine_runs_v2",
       "task_id": "TASK_d9fe27fb90efc229ca43dd24",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -611,7 +611,7 @@
     {
       "endpoint": "CL_renal_absolute",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_renal_absolute_native_runs_v1",
+      "controller": "peptide_modeling_work_renal_absolute_native_runs_v1",
       "task_id": "TASK_RENAL_ABSOLUTE_NATIVE_b0e47e12d9821d488c138588",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -743,7 +743,7 @@
     {
       "endpoint": "CL_renal_per_kg",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_renal_kg_native_runs_v1",
+      "controller": "peptide_modeling_work_renal_kg_native_runs_v1",
       "task_id": "TASK_RENAL_KG_ANNOTATION_b77ceacb6b28f7f632f34c97",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -942,7 +942,7 @@
     {
       "endpoint": "Cmax",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_conditional_cmax_runs_v1",
+      "controller": "peptide_modeling_work_conditional_cmax_runs_v1",
       "task_id": "TASK_4488716d940dc0b9523882a4",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -1240,7 +1240,7 @@
     {
       "endpoint": "GI50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_internal6_runs_v1",
+      "controller": "peptide_modeling_work_internal6_runs_v1",
       "task_id": "TASK_20d664277483bfbfd5c34cbf",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -1333,7 +1333,7 @@
     {
       "endpoint": "HC10",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_hc10_canonical_runs_v1",
+      "controller": "peptide_modeling_work_hc10_canonical_runs_v1",
       "task_id": "TASK_HC10_CANONICAL_c99e21b39f34e4cfe3d82059",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -1628,7 +1628,7 @@
     {
       "endpoint": "IC50_inhibitor",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_infection_ic50_runs_v1",
+      "controller": "peptide_modeling_work_infection_ic50_runs_v1",
       "task_id": "TASK_37624504324ad5a0df870b92",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -2025,7 +2025,7 @@
     {
       "endpoint": "LC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_internal6_runs_v1",
+      "controller": "peptide_modeling_work_internal6_runs_v1",
       "task_id": "TASK_396f114baaa33f84e581a49d",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -2224,7 +2224,7 @@
     {
       "endpoint": "LD50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_microbial_ld50_ee_runs_v1",
+      "controller": "peptide_modeling_work_microbial_ld50_ee_runs_v1",
       "task_id": "TASK_d9b4e7ffc2ef5a5f985b834f",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -2592,7 +2592,7 @@
     {
       "endpoint": "MFC",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_mfc_primary_ee_runs_v1",
+      "controller": "peptide_modeling_work_mfc_primary_ee_runs_v1",
       "task_id": "TASK_86bbc0d5bbbb01127107b67d",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -2700,7 +2700,7 @@
     {
       "endpoint": "MHC",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_mhc_mass_runs_v1",
+      "controller": "peptide_modeling_work_mhc_mass_runs_v1",
       "task_id": "TASK_67b85544a120a8b9c1a82659",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -2805,7 +2805,7 @@
     {
       "endpoint": "MHC10",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_mhc10_native_runs_v1",
+      "controller": "peptide_modeling_work_mhc10_native_runs_v1",
       "task_id": "TASK_MHC10_NATIVE_4acc191c1781762b876225a0",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -3132,7 +3132,7 @@
     {
       "endpoint": "MIC90",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_mic90_source_runs_v1",
+      "controller": "peptide_modeling_work_mic90_source_runs_v1",
       "task_id": "TASK_864ca3b1af452924e8e49c9d",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -3365,7 +3365,7 @@
     {
       "endpoint": "PPB",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_pk_quality_nested_ee_runs_v1",
+      "controller": "peptide_modeling_work_pk_quality_nested_ee_runs_v1",
       "task_id": "TASK_c137ddd6a2221c1e61a39211",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -3649,7 +3649,7 @@
     {
       "endpoint": "Vd_absolute",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_vd_absolute_native_runs_v1",
+      "controller": "peptide_modeling_work_vd_absolute_native_runs_v1",
       "task_id": "TASK_VD_ABSOLUTE_NATIVE_83c52b8c0afb06f712070e93",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -3783,7 +3783,7 @@
     {
       "endpoint": "Vd_per_kg",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_conditional_volume_runs_v1",
+      "controller": "peptide_modeling_work_conditional_volume_runs_v1",
       "task_id": "TASK_2c371ac8bb2a6f537bbf61a1",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -4013,7 +4013,7 @@
     {
       "endpoint": "cytotoxicity_CC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_cc50_safety_runs_v1",
+      "controller": "peptide_modeling_work_cc50_safety_runs_v1",
       "task_id": "TASK_99a7446bada8ae7ef0fb100c",
       "scope": "common",
       "protocol": "internal5_no_holdout",
@@ -4208,7 +4208,7 @@
     {
       "endpoint": "cytotoxicity_IC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_acs_cell_ic50_runs_v1",
+      "controller": "peptide_modeling_work_acs_cell_ic50_runs_v1",
       "task_id": "TASK_4d6ddfde8d5839eaa40adb25",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -4322,7 +4322,7 @@
     {
       "endpoint": "cytotoxicity_LC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_lc50_aib_runs_v1",
+      "controller": "peptide_modeling_work_lc50_aib_runs_v1",
       "task_id": "TASK_52934babf94b9b8dfe0898fc",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -4803,7 +4803,7 @@
     {
       "endpoint": "hemolysis_HC10",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_hc10_secondary_ee_runs_v1",
+      "controller": "peptide_modeling_work_hc10_secondary_ee_runs_v1",
       "task_id": "TASK_7cef7669a799a95d1c68fe80",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -4893,7 +4893,7 @@
     {
       "endpoint": "hemolysis_HC50",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_rbc50_registered_runs_v1",
+      "controller": "peptide_modeling_work_rbc50_registered_runs_v1",
       "task_id": "TASK_RBC50_REGISTERED_270d2dbf870da342cf2e85e8",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -5204,7 +5204,7 @@
     {
       "endpoint": "hemolysis_MHC10",
       "task_kind": "regression",
-      "controller": "peptide_modeling_qlyu_mhc10_followup_runs_v2",
+      "controller": "peptide_modeling_work_mhc10_followup_runs_v2",
       "task_id": "TASK_a6776cdc37c9d693d9ed675c",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -5304,7 +5304,7 @@
     {
       "endpoint": "hemolysis_SOURCE_DEFINED_BINARY",
       "task_kind": "classification",
-      "controller": "peptide_modeling_qlyu_dramp_hemolysis_native_binary_runs_v1",
+      "controller": "peptide_modeling_work_dramp_hemolysis_native_binary_runs_v1",
       "task_id": "TASK_DRAMP_NATIVE_BINARY_e4dc11dc410d800c40f828e6",
       "scope": "common",
       "protocol": "group_holdout_inner5",
@@ -5851,7 +5851,7 @@
       "test_records": 25,
       "audit_state": "verified_v24",
       "task_id": "TASK_AC50_NATIVE_6830ccaf49010e62a369534a",
-      "source_result": "/tmp/peptide_modeling_qlyu_ac50_native_runs_v2/round_000_seed_42/results/full/TASK_AC50_NATIVE_6830ccaf49010e62a369534a_common.json"
+      "source_result": "/tmp/peptide_modeling_work_ac50_native_runs_v2/round_000_seed_42/results/full/TASK_AC50_NATIVE_6830ccaf49010e62a369534a_common.json"
     },
     {
       "endpoint": "BBB",
@@ -5893,7 +5893,7 @@
       "test_records": 254,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_d526430b1240fa5bb0269651",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_d526430b1240fa5bb0269651_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_d526430b1240fa5bb0269651_common.json"
     },
     {
       "endpoint": "CC50",
@@ -5928,7 +5928,7 @@
       "test_records": 4,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_b78e6beac928168cff5b0af2",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b78e6beac928168cff5b0af2_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b78e6beac928168cff5b0af2_common.json"
     },
     {
       "endpoint": "CL_absolute",
@@ -5962,7 +5962,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_45a0e3adb3737d0e0d00579d",
-      "source_result": "/tmp/peptide_modeling_qlyu_cl_absolute_primary_runs_v3/round_000_seed_42/results/internal_cv/TASK_45a0e3adb3737d0e0d00579d.json"
+      "source_result": "/tmp/peptide_modeling_work_cl_absolute_primary_runs_v3/round_000_seed_42/results/internal_cv/TASK_45a0e3adb3737d0e0d00579d.json"
     },
     {
       "endpoint": "CL_per_kg",
@@ -6000,7 +6000,7 @@
       "test_records": 4,
       "audit_state": "verified_v24",
       "task_id": "TASK_41f3151c98457e9ac15c09d3",
-      "source_result": "/tmp/peptide_modeling_qlyu_pk_quality_nested_ee_runs_v1/round_000_seed_42/results/full/TASK_41f3151c98457e9ac15c09d3_common.json"
+      "source_result": "/tmp/peptide_modeling_work_pk_quality_nested_ee_runs_v1/round_000_seed_42/results/full/TASK_41f3151c98457e9ac15c09d3_common.json"
     },
     {
       "endpoint": "CL_per_mg_protein",
@@ -6031,7 +6031,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_d9fe27fb90efc229ca43dd24",
-      "source_result": "/tmp/peptide_modeling_qlyu_clint_quarantine_runs_v2/round_000_seed_42/results/internal_cv/TASK_d9fe27fb90efc229ca43dd24.json"
+      "source_result": "/tmp/peptide_modeling_work_clint_quarantine_runs_v2/round_000_seed_42/results/internal_cv/TASK_d9fe27fb90efc229ca43dd24.json"
     },
     {
       "endpoint": "CL_renal_absolute",
@@ -6062,7 +6062,7 @@
       "test_records": null,
       "audit_state": "training_complete_independent_audit_paused",
       "task_id": "TASK_RENAL_ABSOLUTE_NATIVE_b0e47e12d9821d488c138588",
-      "source_result": "/tmp/peptide_modeling_qlyu_renal_absolute_native_runs_v1/round_000_seed_42/results/internal_cv/TASK_RENAL_ABSOLUTE_NATIVE_b0e47e12d9821d488c138588.json"
+      "source_result": "/tmp/peptide_modeling_work_renal_absolute_native_runs_v1/round_000_seed_42/results/internal_cv/TASK_RENAL_ABSOLUTE_NATIVE_b0e47e12d9821d488c138588.json"
     },
     {
       "endpoint": "CL_renal_per_kg",
@@ -6091,7 +6091,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_RENAL_KG_ANNOTATION_b77ceacb6b28f7f632f34c97",
-      "source_result": "/tmp/peptide_modeling_qlyu_renal_kg_native_runs_v1/round_000_seed_42/results/internal_cv/TASK_RENAL_KG_ANNOTATION_b77ceacb6b28f7f632f34c97.json"
+      "source_result": "/tmp/peptide_modeling_work_renal_kg_native_runs_v1/round_000_seed_42/results/internal_cv/TASK_RENAL_KG_ANNOTATION_b77ceacb6b28f7f632f34c97.json"
     },
     {
       "endpoint": "Caco2",
@@ -6129,7 +6129,7 @@
       "test_records": 360,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_7edf033bca42a427a036ddd9",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_7edf033bca42a427a036ddd9_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_7edf033bca42a427a036ddd9_full_structure.json"
     },
     {
       "endpoint": "Cmax",
@@ -6163,7 +6163,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_4488716d940dc0b9523882a4",
-      "source_result": "/tmp/peptide_modeling_qlyu_conditional_cmax_runs_v1/round_000_seed_42/results/internal_cv/TASK_4488716d940dc0b9523882a4.json"
+      "source_result": "/tmp/peptide_modeling_work_conditional_cmax_runs_v1/round_000_seed_42/results/internal_cv/TASK_4488716d940dc0b9523882a4.json"
     },
     {
       "endpoint": "EC50",
@@ -6201,7 +6201,7 @@
       "test_records": 105,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_16d8b313ae1227c6c540034c",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_16d8b313ae1227c6c540034c_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_16d8b313ae1227c6c540034c_full_structure.json"
     },
     {
       "endpoint": "F",
@@ -6239,7 +6239,7 @@
       "test_records": 7,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_6ea5ebe67ad3b8c95514be0f",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_6ea5ebe67ad3b8c95514be0f_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_6ea5ebe67ad3b8c95514be0f_common.json"
     },
     {
       "endpoint": "GI50",
@@ -6270,7 +6270,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_20d664277483bfbfd5c34cbf",
-      "source_result": "/tmp/peptide_modeling_qlyu_internal6_runs_v1/round_000_seed_42/results/internal_cv/TASK_20d664277483bfbfd5c34cbf.json"
+      "source_result": "/tmp/peptide_modeling_work_internal6_runs_v1/round_000_seed_42/results/internal_cv/TASK_20d664277483bfbfd5c34cbf.json"
     },
     {
       "endpoint": "HC10",
@@ -6304,7 +6304,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_HC10_CANONICAL_c99e21b39f34e4cfe3d82059",
-      "source_result": "/tmp/peptide_modeling_qlyu_hc10_canonical_runs_v1/round_000_seed_42/results/internal_cv/TASK_HC10_CANONICAL_c99e21b39f34e4cfe3d82059.json"
+      "source_result": "/tmp/peptide_modeling_work_hc10_canonical_runs_v1/round_000_seed_42/results/internal_cv/TASK_HC10_CANONICAL_c99e21b39f34e4cfe3d82059.json"
     },
     {
       "endpoint": "HC50",
@@ -6337,7 +6337,7 @@
       "test_records": 4,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_3d12cc5675137e567d71455a",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_3d12cc5675137e567d71455a_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_3d12cc5675137e567d71455a_common.json"
     },
     {
       "endpoint": "IC50",
@@ -6373,7 +6373,7 @@
       "test_records": 377,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_e51c5f1a913284d709b8ef1c",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e51c5f1a913284d709b8ef1c_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e51c5f1a913284d709b8ef1c_full_structure.json"
     },
     {
       "endpoint": "IC50_inhibitor",
@@ -6402,7 +6402,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_37624504324ad5a0df870b92",
-      "source_result": "/tmp/peptide_modeling_qlyu_infection_ic50_runs_v1/round_000_seed_42/results/internal_cv/TASK_37624504324ad5a0df870b92.json"
+      "source_result": "/tmp/peptide_modeling_work_infection_ic50_runs_v1/round_000_seed_42/results/internal_cv/TASK_37624504324ad5a0df870b92.json"
     },
     {
       "endpoint": "Kd",
@@ -6435,7 +6435,7 @@
       "test_records": 55,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_d2275840ed79c2af5dbb05f9",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_d2275840ed79c2af5dbb05f9_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_d2275840ed79c2af5dbb05f9_full_structure.json"
     },
     {
       "endpoint": "Ki",
@@ -6473,7 +6473,7 @@
       "test_records": 155,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_ab5dcaeba84b87409a911411",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_ab5dcaeba84b87409a911411_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_ab5dcaeba84b87409a911411_full_structure.json"
     },
     {
       "endpoint": "Km",
@@ -6509,7 +6509,7 @@
       "test_records": 24,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_068cc84ca80702b915e681c3",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_068cc84ca80702b915e681c3_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_068cc84ca80702b915e681c3_common.json"
     },
     {
       "endpoint": "LC50",
@@ -6543,7 +6543,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_396f114baaa33f84e581a49d",
-      "source_result": "/tmp/peptide_modeling_qlyu_internal6_runs_v1/round_000_seed_42/results/internal_cv/TASK_396f114baaa33f84e581a49d.json"
+      "source_result": "/tmp/peptide_modeling_work_internal6_runs_v1/round_000_seed_42/results/internal_cv/TASK_396f114baaa33f84e581a49d.json"
     },
     {
       "endpoint": "LC_lemma",
@@ -6577,7 +6577,7 @@
       "test_records": 7,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_e0c464cea36a0f133e1a12c8",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e0c464cea36a0f133e1a12c8_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e0c464cea36a0f133e1a12c8_common.json"
     },
     {
       "endpoint": "LD50",
@@ -6606,7 +6606,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_d9b4e7ffc2ef5a5f985b834f",
-      "source_result": "/tmp/peptide_modeling_qlyu_microbial_ld50_ee_runs_v1/round_000_seed_42/results/internal_cv/TASK_d9b4e7ffc2ef5a5f985b834f.json"
+      "source_result": "/tmp/peptide_modeling_work_microbial_ld50_ee_runs_v1/round_000_seed_42/results/internal_cv/TASK_d9b4e7ffc2ef5a5f985b834f.json"
     },
     {
       "endpoint": "LogD7.4",
@@ -6644,7 +6644,7 @@
       "test_records": 17,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_81f99302dae3e90cd68aa04d",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_81f99302dae3e90cd68aa04d_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_81f99302dae3e90cd68aa04d_full_structure.json"
     },
     {
       "endpoint": "MBC",
@@ -6682,7 +6682,7 @@
       "test_records": 6,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_3bec3a15b485c3b7961ffea0",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_3bec3a15b485c3b7961ffea0_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_3bec3a15b485c3b7961ffea0_common.json"
     },
     {
       "endpoint": "MDCK",
@@ -6715,7 +6715,7 @@
       "test_records": 16,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_bc3a278133ad20cb9ca1ba54",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_bc3a278133ad20cb9ca1ba54_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_bc3a278133ad20cb9ca1ba54_full_structure.json"
     },
     {
       "endpoint": "MFC",
@@ -6748,7 +6748,7 @@
       "test_records": 13,
       "audit_state": "verified_v24",
       "task_id": "TASK_86bbc0d5bbbb01127107b67d",
-      "source_result": "/tmp/peptide_modeling_qlyu_mfc_primary_ee_runs_v1/round_000_seed_42/results/full/TASK_86bbc0d5bbbb01127107b67d_common.json"
+      "source_result": "/tmp/peptide_modeling_work_mfc_primary_ee_runs_v1/round_000_seed_42/results/full/TASK_86bbc0d5bbbb01127107b67d_common.json"
     },
     {
       "endpoint": "MHC",
@@ -6786,7 +6786,7 @@
       "test_records": 7,
       "audit_state": "verified_v24",
       "task_id": "TASK_67b85544a120a8b9c1a82659",
-      "source_result": "/tmp/peptide_modeling_qlyu_mhc_mass_runs_v1/round_000_seed_42/results/full/TASK_67b85544a120a8b9c1a82659_common.json"
+      "source_result": "/tmp/peptide_modeling_work_mhc_mass_runs_v1/round_000_seed_42/results/full/TASK_67b85544a120a8b9c1a82659_common.json"
     },
     {
       "endpoint": "MHC10",
@@ -6824,7 +6824,7 @@
       "test_records": 5,
       "audit_state": "verified_v24",
       "task_id": "TASK_MHC10_NATIVE_4acc191c1781762b876225a0",
-      "source_result": "/tmp/peptide_modeling_qlyu_mhc10_native_runs_v1/round_000_seed_42/results/full/TASK_MHC10_NATIVE_4acc191c1781762b876225a0_common.json"
+      "source_result": "/tmp/peptide_modeling_work_mhc10_native_runs_v1/round_000_seed_42/results/full/TASK_MHC10_NATIVE_4acc191c1781762b876225a0_common.json"
     },
     {
       "endpoint": "MIC",
@@ -6862,7 +6862,7 @@
       "test_records": 20,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_b280c4bd3d1f012796beac3a",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b280c4bd3d1f012796beac3a_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b280c4bd3d1f012796beac3a_common.json"
     },
     {
       "endpoint": "MIC50",
@@ -6900,7 +6900,7 @@
       "test_records": 8,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_dbc7a91e5505bd0d9484f124",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_dbc7a91e5505bd0d9484f124_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_dbc7a91e5505bd0d9484f124_common.json"
     },
     {
       "endpoint": "MIC90",
@@ -6934,7 +6934,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_864ca3b1af452924e8e49c9d",
-      "source_result": "/tmp/peptide_modeling_qlyu_mic90_source_runs_v1/round_000_seed_42/results/internal_cv/TASK_864ca3b1af452924e8e49c9d.json"
+      "source_result": "/tmp/peptide_modeling_work_mic90_source_runs_v1/round_000_seed_42/results/internal_cv/TASK_864ca3b1af452924e8e49c9d.json"
     },
     {
       "endpoint": "PAMPA",
@@ -6972,7 +6972,7 @@
       "test_records": 2091,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_8cb5d06f30b84762345a521a",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_8cb5d06f30b84762345a521a_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_8cb5d06f30b84762345a521a_full_structure.json"
     },
     {
       "endpoint": "PPB",
@@ -7005,7 +7005,7 @@
       "test_records": 19,
       "audit_state": "verified_v24",
       "task_id": "TASK_c137ddd6a2221c1e61a39211",
-      "source_result": "/tmp/peptide_modeling_qlyu_pk_quality_nested_ee_runs_v1/round_000_seed_42/results/full/TASK_c137ddd6a2221c1e61a39211_common.json"
+      "source_result": "/tmp/peptide_modeling_work_pk_quality_nested_ee_runs_v1/round_000_seed_42/results/full/TASK_c137ddd6a2221c1e61a39211_common.json"
     },
     {
       "endpoint": "Papp",
@@ -7043,7 +7043,7 @@
       "test_records": 25,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_24d94285b2fb3d4f31a7c423",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_24d94285b2fb3d4f31a7c423_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_24d94285b2fb3d4f31a7c423_full_structure.json"
     },
     {
       "endpoint": "RRCK",
@@ -7081,7 +7081,7 @@
       "test_records": 43,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_e4b23f9d167391922dd54f76",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e4b23f9d167391922dd54f76_full_structure.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e4b23f9d167391922dd54f76_full_structure.json"
     },
     {
       "endpoint": "Vd_absolute",
@@ -7117,7 +7117,7 @@
       "test_records": 6,
       "audit_state": "verified_v24",
       "task_id": "TASK_VD_ABSOLUTE_NATIVE_83c52b8c0afb06f712070e93",
-      "source_result": "/tmp/peptide_modeling_qlyu_vd_absolute_native_runs_v1/round_000_seed_42/results/full/TASK_VD_ABSOLUTE_NATIVE_83c52b8c0afb06f712070e93_common.json"
+      "source_result": "/tmp/peptide_modeling_work_vd_absolute_native_runs_v1/round_000_seed_42/results/full/TASK_VD_ABSOLUTE_NATIVE_83c52b8c0afb06f712070e93_common.json"
     },
     {
       "endpoint": "Vd_per_kg",
@@ -7151,7 +7151,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_2c371ac8bb2a6f537bbf61a1",
-      "source_result": "/tmp/peptide_modeling_qlyu_conditional_volume_runs_v1/round_000_seed_42/results/internal_cv/TASK_2c371ac8bb2a6f537bbf61a1.json"
+      "source_result": "/tmp/peptide_modeling_work_conditional_volume_runs_v1/round_000_seed_42/results/internal_cv/TASK_2c371ac8bb2a6f537bbf61a1.json"
     },
     {
       "endpoint": "Vdss_per_kg",
@@ -7189,7 +7189,7 @@
       "test_records": 4,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_53ce130bf906f0d89932da24",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_53ce130bf906f0d89932da24_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_53ce130bf906f0d89932da24_common.json"
     },
     {
       "endpoint": "cytotoxicity_CC50",
@@ -7218,7 +7218,7 @@
       "test_records": null,
       "audit_state": "verified_v24",
       "task_id": "TASK_99a7446bada8ae7ef0fb100c",
-      "source_result": "/tmp/peptide_modeling_qlyu_cc50_safety_runs_v1/round_000_seed_42/results/internal_cv/TASK_99a7446bada8ae7ef0fb100c.json"
+      "source_result": "/tmp/peptide_modeling_work_cc50_safety_runs_v1/round_000_seed_42/results/internal_cv/TASK_99a7446bada8ae7ef0fb100c.json"
     },
     {
       "endpoint": "cytotoxicity_EC50",
@@ -7254,7 +7254,7 @@
       "test_records": 9,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_c95631a5f37b457b543c0867",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_c95631a5f37b457b543c0867_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_c95631a5f37b457b543c0867_common.json"
     },
     {
       "endpoint": "cytotoxicity_IC50",
@@ -7288,7 +7288,7 @@
       "test_records": 9,
       "audit_state": "verified_v24",
       "task_id": "TASK_4d6ddfde8d5839eaa40adb25",
-      "source_result": "/tmp/peptide_modeling_qlyu_acs_cell_ic50_runs_v1/round_000_seed_42/results/full/TASK_4d6ddfde8d5839eaa40adb25_common.json"
+      "source_result": "/tmp/peptide_modeling_work_acs_cell_ic50_runs_v1/round_000_seed_42/results/full/TASK_4d6ddfde8d5839eaa40adb25_common.json"
     },
     {
       "endpoint": "cytotoxicity_LC50",
@@ -7322,7 +7322,7 @@
       "test_records": 4,
       "audit_state": "verified_v24",
       "task_id": "TASK_52934babf94b9b8dfe0898fc",
-      "source_result": "/tmp/peptide_modeling_qlyu_lc50_aib_runs_v1/round_000_seed_42/results/full/TASK_52934babf94b9b8dfe0898fc_common.json"
+      "source_result": "/tmp/peptide_modeling_work_lc50_aib_runs_v1/round_000_seed_42/results/full/TASK_52934babf94b9b8dfe0898fc_common.json"
     },
     {
       "endpoint": "half_life",
@@ -7362,7 +7362,7 @@
       "test_records": 21,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_8220a742640624bb5cd8cbfa",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_8220a742640624bb5cd8cbfa_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_8220a742640624bb5cd8cbfa_common.json"
     },
     {
       "endpoint": "half_life",
@@ -7395,7 +7395,7 @@
       "test_records": 113,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_206a34570899ec89c7a31466",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_206a34570899ec89c7a31466_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_206a34570899ec89c7a31466_common.json"
     },
     {
       "endpoint": "hemolysis",
@@ -7439,7 +7439,7 @@
       "test_records": 606,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_b79e14f0de4d47244abde115",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b79e14f0de4d47244abde115_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_b79e14f0de4d47244abde115_common.json"
     },
     {
       "endpoint": "hemolysis_EC50",
@@ -7477,7 +7477,7 @@
       "test_records": 6,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_af40a3d6874e880d048a0e39",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_af40a3d6874e880d048a0e39_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_af40a3d6874e880d048a0e39_common.json"
     },
     {
       "endpoint": "hemolysis_HC10",
@@ -7510,7 +7510,7 @@
       "test_records": 4,
       "audit_state": "verified_v24",
       "task_id": "TASK_7cef7669a799a95d1c68fe80",
-      "source_result": "/tmp/peptide_modeling_qlyu_hc10_secondary_ee_runs_v1/round_000_seed_42/results/full/TASK_7cef7669a799a95d1c68fe80_common.json"
+      "source_result": "/tmp/peptide_modeling_work_hc10_secondary_ee_runs_v1/round_000_seed_42/results/full/TASK_7cef7669a799a95d1c68fe80_common.json"
     },
     {
       "endpoint": "hemolysis_HC50",
@@ -7543,7 +7543,7 @@
       "test_records": 8,
       "audit_state": "verified_v24",
       "task_id": "TASK_RBC50_REGISTERED_270d2dbf870da342cf2e85e8",
-      "source_result": "/tmp/peptide_modeling_qlyu_rbc50_registered_runs_v1/round_000_seed_42/results/full/TASK_RBC50_REGISTERED_270d2dbf870da342cf2e85e8_common.json"
+      "source_result": "/tmp/peptide_modeling_work_rbc50_registered_runs_v1/round_000_seed_42/results/full/TASK_RBC50_REGISTERED_270d2dbf870da342cf2e85e8_common.json"
     },
     {
       "endpoint": "hemolysis_LC50",
@@ -7578,7 +7578,7 @@
       "test_records": 11,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_0624a36c902e8f530e92e6d4",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_0624a36c902e8f530e92e6d4_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_0624a36c902e8f530e92e6d4_common.json"
     },
     {
       "endpoint": "hemolysis_MHC",
@@ -7614,7 +7614,7 @@
       "test_records": 6,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_93592333bea04ea04d15f9ac",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_93592333bea04ea04d15f9ac_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_93592333bea04ea04d15f9ac_common.json"
     },
     {
       "endpoint": "hemolysis_MHC10",
@@ -7652,7 +7652,7 @@
       "test_records": 7,
       "audit_state": "verified_v24",
       "task_id": "TASK_a6776cdc37c9d693d9ed675c",
-      "source_result": "/tmp/peptide_modeling_qlyu_mhc10_followup_runs_v2/round_000_seed_42/results/full/TASK_a6776cdc37c9d693d9ed675c_common.json"
+      "source_result": "/tmp/peptide_modeling_work_mhc10_followup_runs_v2/round_000_seed_42/results/full/TASK_a6776cdc37c9d693d9ed675c_common.json"
     },
     {
       "endpoint": "hemolysis_SOURCE_DEFINED_BINARY",
@@ -7691,7 +7691,7 @@
       "test_records": 5,
       "audit_state": "verified_endpoint_standalone",
       "task_id": "TASK_DRAMP_NATIVE_BINARY_e4dc11dc410d800c40f828e6",
-      "source_result": "/tmp/peptide_modeling_qlyu_dramp_hemolysis_native_binary_runs_v1/round_000_seed_42/results/full/TASK_DRAMP_NATIVE_BINARY_e4dc11dc410d800c40f828e6_common.json"
+      "source_result": "/tmp/peptide_modeling_work_dramp_hemolysis_native_binary_runs_v1/round_000_seed_42/results/full/TASK_DRAMP_NATIVE_BINARY_e4dc11dc410d800c40f828e6_common.json"
     },
     {
       "endpoint": "overall_peptide_toxicity",
@@ -7735,7 +7735,7 @@
       "test_records": 3311,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_605cc80b705465e8f0598ba7",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_605cc80b705465e8f0598ba7_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_605cc80b705465e8f0598ba7_common.json"
     },
     {
       "endpoint": "permeability",
@@ -7768,7 +7768,7 @@
       "test_records": 9,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_7d11414e5d314e077cb1f81a",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_7d11414e5d314e077cb1f81a_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_7d11414e5d314e077cb1f81a_common.json"
     },
     {
       "endpoint": "solubility",
@@ -7812,7 +7812,7 @@
       "test_records": 401,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_68eadc58cb9e89a9308ce16b",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_68eadc58cb9e89a9308ce16b_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_68eadc58cb9e89a9308ce16b_common.json"
     },
     {
       "endpoint": "solubility",
@@ -7846,7 +7846,7 @@
       "test_records": 11,
       "audit_state": "verified_main_required_seeds",
       "task_id": "TASK_e52bbd1d908737fc21bc103f",
-      "source_result": "\\tmp\\peptide_modeling_qlyu_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e52bbd1d908737fc21bc103f_common.json"
+      "source_result": "\\tmp\\peptide_modeling_work_multiseed20h_campaign_v1\\round_000_seed_42\\results\\full\\TASK_e52bbd1d908737fc21bc103f_common.json"
     }
   ],
   "nested_cytotoxicity": [

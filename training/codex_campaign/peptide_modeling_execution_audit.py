@@ -355,7 +355,7 @@ def freeze_entry(root, journal_path, journal, actual):
 
 def discover(root=Path("/tmp")):
     entries = []
-    for directory in sorted(Path(root).glob("peptide_modeling_qlyu_*")):
+    for directory in sorted(Path(root).glob("peptide_modeling_work_*")):
         if not directory.is_dir():
             continue
         for name in JOURNALS:

@@ -11,7 +11,7 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="node23")
-    parser.add_argument("--remote-root", default="/tmp/peptide_modeling_qlyu_expanded5_v1")
+    parser.add_argument("--remote-root", default="/tmp/peptide_modeling_work_expanded5_v1")
     parser.add_argument("--campaign", action="store_true", help="Read the multi-seed journal")
     parser.add_argument(
         "--run-dir",

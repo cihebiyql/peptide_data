@@ -250,7 +250,9 @@ class EndpointPrediction(BaseModel):
     holdout_score: Optional[float] = None
     v32_cv_score: Optional[float] = None
     conformal_coverage_80: Optional[float] = None
+    conformal_coverage_90: Optional[float] = None
     uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
+    uq_note: Optional[str] = None
     brier_holdout: Optional[float] = None
     ece_holdout: Optional[float] = None
     censored_note: Optional[str] = None
@@ -333,8 +335,8 @@ class BatchItemInput(BaseModel):
 class BatchPredictRequest(BaseModel):
     """Batch prediction request accepting structured items or raw pasted/file text."""
 
-    items: Optional[list[BatchItemInput]] = None
-    raw_text: Optional[str] = None
+    items: Optional[list[BatchItemInput]] = Field(default=None, max_length=500)
+    raw_text: Optional[str] = Field(default=None, max_length=2_000_000)
     filename: Optional[str] = None
     include_tier2: bool = False
     conditions: AssayConditions = Field(default_factory=AssayConditions)
@@ -387,15 +389,15 @@ class BatchMoleculeResult(BaseModel):
     key_metrics: dict[str, Any] = Field(default_factory=dict)
     predictions: list[EndpointPrediction] = Field(default_factory=list)
     summary: dict[str, Any] = Field(default_factory=dict)
-    prediction_source: str = "v33_remote"
+    prediction_source: str = "none"
 
 
 class JobCreateRequest(BaseModel):
     """Request to create an asynchronous background prediction task."""
 
     title: Optional[str] = Field(default=None, description="Optional user-facing task name.")
-    items: Optional[list[BatchItemInput]] = None
-    raw_text: Optional[str] = None
+    items: Optional[list[BatchItemInput]] = Field(default=None, max_length=500)
+    raw_text: Optional[str] = Field(default=None, max_length=2_000_000)
     filename: Optional[str] = None
     include_tier2: bool = True
     conditions: AssayConditions = Field(default_factory=AssayConditions)

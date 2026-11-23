@@ -1553,8 +1553,10 @@ function buildEndpointItemHtml(p) {
   const calOrCovLabel = t(state.lang, p.kind === "classification" ? "dm_brier_ece" : "dm_cov80");
   const uqLowPill =
     p.kind !== "classification" && p.uq_reliability === "low"
-      ? ` <span class="mod-badge tone-amber" style="font-size:10.5px;padding:1px 6px;" title="${escapeHtml(t(state.lang, "uq_low_tip"))}">⚠ ${escapeHtml(t(state.lang, "uq_low_badge"))}</span>`
-      : "";
+      ? ` <span class="mod-badge tone-amber" style="font-size:10.5px;padding:1px 6px;" title="${escapeHtml(p.uq_note || t(state.lang, "uq_low_tip"))}">⚠ ${escapeHtml(t(state.lang, "uq_low_badge"))}</span>`
+      : p.kind !== "classification" && p.uq_reliability === "moderate"
+        ? ` <span class="mod-badge tone-slate" style="font-size:10.5px;padding:1px 6px;" title="${escapeHtml(p.uq_note || t(state.lang, "uq_mod_tip"))}">${escapeHtml(t(state.lang, "uq_mod_badge"))}</span>`
+        : "";
   const calOrCovVal =
     p.kind === "classification"
       ? p.brier_holdout != null && p.ece_holdout != null
@@ -1607,6 +1609,11 @@ function buildEndpointItemHtml(p) {
 }
 
 // ==================== SINGLE EXPORT & SVG MODAL ====================
+function csvSafe(val) {
+  const s = String(val ?? "");
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
 function exportSingleCsv() {
   const d = state.lastPrediction;
   if (!d) return;
@@ -1622,7 +1629,7 @@ function exportSingleCsv() {
       p.conformal_coverage_80 ?? "", p.uq_reliability ?? "",
       p.ad_status, p.max_tanimoto ?? "", p.risk_label, p.winning_family ?? "",
       p.cv_score ?? "", p.holdout_score ?? "",
-    ].map((x) => `"${String(x).replace(/"/g, '""')}"`);
+    ].map((x) => `"${csvSafe(x).replace(/"/g, '""')}"`);
     lines.push(row.join(","));
   });
   downloadBlob("\uFEFF" + lines.join("\n"), `${slugify(d.query_name)}_omnipanel.csv`, "text/csv;charset=utf-8");
@@ -2617,11 +2624,13 @@ function renderValidationTable() {
         }
       } else if (e.conformal_coverage_80 != null) {
         const covPct = (e.conformal_coverage_80 * 100).toFixed(1) + "%";
-        const lowBadge =
+        const uqBadge =
           e.uq_reliability === "low"
             ? `<div style="margin-top:2px;"><span class="mod-badge tone-amber" style="font-size:10px;padding:1px 5px;" title="${escapeHtml(t(state.lang, "uq_low_tip"))}">⚠ ${escapeHtml(t(state.lang, "uq_low_badge"))}</span></div>`
-            : "";
-        covOrCal = `<span title="80% Empirical Cov (90%: ${e.conformal_coverage_90 != null ? (e.conformal_coverage_90 * 100).toFixed(1) + "%" : "—"})">${covPct}</span>${lowBadge}`;
+            : e.uq_reliability === "moderate"
+              ? `<div style="margin-top:2px;"><span class="mod-badge tone-slate" style="font-size:10px;padding:1px 5px;" title="${escapeHtml(t(state.lang, "uq_mod_tip"))}">${escapeHtml(t(state.lang, "uq_mod_badge"))}</span></div>`
+              : "";
+        covOrCal = `<span title="80% Empirical Cov (90%: ${e.conformal_coverage_90 != null ? (e.conformal_coverage_90 * 100).toFixed(1) + "%" : "—"})">${covPct}</span>${uqBadge}`;
       }
 
       const namePrimary = state.lang === "zh" ? e.display_zh : e.display_en;

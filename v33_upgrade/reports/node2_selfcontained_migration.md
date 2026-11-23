@@ -1,7 +1,7 @@
 # Peptide OmniPanel V33 — Wave 4 Self-Contained Migration onto `node2`
 
 **Date**: 2026-11-22  
-**Target Host**: `node2` (`<APP_HOST>`, user `mode2`, 128 CPU cores, 251 GiB RAM, 474 GiB SSD free)  
+**Target Host**: `node2` (`<APP_HOST>`, user `<DEPLOY_USER>`, 128 CPU cores, 251 GiB RAM, 474 GiB SSD free)  
 **Public URL**: `https://lmmd.ecust.edu.cn/peptide-omnipanel/`  
 **Runtime Dependency on `node23` / `node1`**: **ZERO (100% self-contained on `node2`)**  
 **GPU VRAM Used by V33 on `node2`**: **0 MiB** (`CUDA_VISIBLE_DEVICES=""`)  
@@ -11,7 +11,7 @@
 
 ## 1. Self-Contained `node2` Directory Layout (`17 GB` total)
 
-Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `mode2:mode2`):
+Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `<DEPLOY_USER>:<DEPLOY_USER>`):
 
 | Path on `node2` | Size | Contents |
 |---|---:|---|
@@ -33,9 +33,9 @@ Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `mode2:m
 
 | Host | Verification Result |
 |---|---|
-| **`node1`** | **0** V33 tunnel processes (`v33_tunnel.sh` and `ssh -R 127.0.0.1:8902:10.0.0.3:8902` terminated; no V33 crontab). Legacy V32 `:8901` tunnel (`omnigrid_tunnel.sh`, PID `2526506`) left untouched as requested. |
+| **`node1`** | **0** V33 tunnel processes (`v33_tunnel.sh` and `ssh -R 127.0.0.1:8902:<COMPUTE_HOST>:8902` terminated; no V33 crontab). Legacy V32 `:8901` tunnel (`omnigrid_tunnel.sh`, PID `2526506`) left untouched as requested. |
 | **`node23`** | **0** V33 processes (`v33_inference_service.py` and `esmc_worker.py` terminated; TCP `:8902` and `:18902` closed). Training archive `<WORK_DIR>/v33_upgrade/` left untouched read-only. |
-| **`node2`** | All listening ports owned strictly by local `mode2` Python processes:<br>• `127.0.0.1:7862` — PID `3456260` (`peptide-omnigrid.service`, RSS `121 MB`)<br>• `127.0.0.1:8902` — PID `3455227` (`v33_inference_service.py`, RSS `23.2 GiB` / `23,755 MB`)<br>• `127.0.0.1:18902` — PID `3455323` (`esmc_worker.py`, RSS `2.51 GiB`)<br>• `127.0.0.1:7861` — PID `2362` (legacy V31 service, untouched)<br>• RAM available: **187 GiB / 251 GiB** free<br>• GPU VRAM: GPU 0 `15173 MiB` / GPU 1 `7050 MiB` (unchanged; **0 MiB** used by V33 PIDs) |
+| **`node2`** | All listening ports owned strictly by local `<DEPLOY_USER>` Python processes:<br>• `127.0.0.1:7862` — PID `3456260` (`peptide-omnigrid.service`, RSS `121 MB`)<br>• `127.0.0.1:8902` — PID `3455227` (`v33_inference_service.py`, RSS `23.2 GiB` / `23,755 MB`)<br>• `127.0.0.1:18902` — PID `3455323` (`esmc_worker.py`, RSS `2.51 GiB`)<br>• `127.0.0.1:7861` — PID `2362` (legacy V31 service, untouched)<br>• RAM available: **187 GiB / 251 GiB** free<br>• GPU VRAM: GPU 0 `15173 MiB` / GPU 1 `7050 MiB` (unchanged; **0 MiB** used by V33 PIDs) |
 
 ---
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 # Launch parallel endpoint workers: 8 concurrent processes, each gets ~8 cores
-OUTDIR=<WORK_DIR>/s3/parallel_logs
+OUTDIR=${WORK_DIR}/s3/parallel_logs
 mkdir -p $OUTDIR
 
-WORKER=<WORK_DIR>/s3/node23_parallel_worker.py
-ENDPOINTS=$(ls <WORK_DIR>/s3_per/*__clean.tsv | sed 's/.*\///;s/__clean.tsv//' | sort)
+WORKER=${WORK_DIR}/s3/node23_parallel_worker.py
+ENDPOINTS=$(ls ${WORK_DIR}/s3_per/*__clean.tsv | sed 's/.*\///;s/__clean.tsv//' | sort)
 
 echo "Starting parallel workers for all endpoints..."
 echo "Endpoints: $ENDPOINTS"
@@ -15,7 +15,7 @@ RUNNING=0
 
 for EP in $ENDPOINTS; do
     # Skip if already done
-    if [ -f "<WORK_DIR>/s3/complete/ckpt/${EP}.json" ]; then
+    if [ -f "${WORK_DIR}/s3/complete/ckpt/${EP}.json" ]; then
         echo "[SKIP] $EP (already done)"
         continue
     fi
@@ -42,5 +42,5 @@ wait
 
 echo ""
 echo "All endpoints complete!"
-echo "Results in <WORK_DIR>/s3/complete/models/"
-ls -la <WORK_DIR>/s3/complete/models/
+echo "Results in ${WORK_DIR}/s3/complete/models/"
+ls -la ${WORK_DIR}/s3/complete/models/

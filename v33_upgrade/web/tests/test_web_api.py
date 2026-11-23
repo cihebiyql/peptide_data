@@ -518,19 +518,24 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     )
     assert r_big.status_code == 413
 
-    # N3: Manifest & /api/v1/endpoints expose uq_reliability and flag low-coverage PPB (<70%)
+    # N3: Manifest & /api/v1/endpoints expose 3-tier uq_reliability (low / moderate / calibrated)
     ep_data = client.get("/api/v1/endpoints").json()
     by_ep = {e["endpoint"]: e for e in ep_data["endpoints"]}
     assert by_ep["PPB"]["uq_reliability"] == "low"
+    assert by_ep["Cmax"]["uq_reliability"] == "moderate"
     assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
     assert by_ep["hemolysis_cls"]["uq_reliability"] is None
 
-    # N5: CSV exports (both summary & full wide) must carry `prediction_source` column
+    # N5 + CSV formula injection + error row prediction_source + anonymous session isolation
     headers = {"X-Client-Id": "pytest_audit_n5_01"}
     r_job = client.post(
         "/api/v1/jobs",
         headers=headers,
-        json={"title": "CSV Source Check", "raw_text": "Semaglutide\nCyclosporine A\n", "include_tier2": False},
+        json={
+            "title": "CSV Source Check",
+            "raw_text": "name,query\n=SUM(A1:A2),Semaglutide\nBadMol,???invalid###\n",
+            "include_tier2": False,
+        },
     )
     assert r_job.status_code == 200
     jid = r_job.json()["job_id"]
@@ -542,10 +547,18 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
         time.sleep(0.1)
     r_sum = client.get(f"/api/v1/jobs/{jid}/export?format=summary_csv", headers=headers)
     assert r_sum.status_code == 200 and "prediction_source" in r_sum.text.splitlines()[0]
+    assert "'=SUM(A1:A2)" in r_sum.text
+    assert ",error,error," in r_sum.text
     r_wide = client.get(f"/api/v1/jobs/{jid}/export?format=full_csv", headers=headers)
     wide_hdr = r_wide.text.splitlines()[0]
     assert r_wide.status_code == 200 and "prediction_source" in wide_hdr and "PAMPA_ci80_low" in wide_hdr and "PAMPA_uq_reliability" in wide_hdr
     client.delete(f"/api/v1/jobs/{jid}", headers=headers)
+
+    # Anonymous requests without X-Client-Id must NOT see each other's jobs
+    r_anon1 = client.post("/api/v1/jobs", json={"title": "Anon Secret", "raw_text": "Semaglutide\n", "include_tier2": False})
+    assert r_anon1.status_code == 200
+    r_anon2 = client.get("/api/v1/jobs")
+    assert r_anon2.status_code == 200 and r_anon2.json()["total"] == 0
 
     # N5: When strict_remote=True and remote engine is offline, /predict must return 503 (never fabricated values)
     from v33_upgrade.web import app as web_app_mod

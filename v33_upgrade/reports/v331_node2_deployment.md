@@ -2,11 +2,11 @@
 
 **Date**: 2026-11-22  
 **Release**: **Peptide OmniPanel V33.1** (**46 endpoints** = 24 Tier 1 + 22 Tier 2; **50,995** unified compounds / **50,994** unique curated compounds; **82,327** harmonized rows; **4,535** censored-aware records; **25** curated clinical & research examples incl. 17/17 Case17 + 4/4 FDA Echinocandins + 5 AMPs)  
-**Target Host**: `node2` (`<APP_HOST>`, user `mode2`, 128 CPU cores, 251 GiB RAM, 879 GiB SSD)  
+**Target Host**: `node2` (`<APP_HOST>`, user `<DEPLOY_USER>`, 128 CPU cores, 251 GiB RAM, 879 GiB SSD)  
 **Public URL**: `https://lmmd.ecust.edu.cn/peptide-omnipanel/`  
 **Runtime Dependency on `node23` / `node1`**: **ZERO (100% self-contained on `node2`)**  
 **GPU VRAM Used by V33.1 on `node2`**: **0 MiB** (`CUDA_VISIBLE_DEVICES=""`)  
-**`sudo` Used**: **None** (`systemd` respawn via `mode2`-owned `peptide-omnigrid.service` uvicorn PID)
+**`sudo` Used**: **None** (`systemd` respawn via `<DEPLOY_USER>`-owned `peptide-omnigrid.service` uvicorn PID)
 
 ---
 

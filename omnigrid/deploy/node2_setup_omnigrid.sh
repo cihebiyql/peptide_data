@@ -11,8 +11,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=mode2
-Group=mode2
+User=<DEPLOY_USER>
+Group=<DEPLOY_USER>
 WorkingDirectory=/var/www/peptide-omnipanel/omnigrid
 Environment=PYTHONUNBUFFERED=1
 Environment=OMNIGRID_DEVICE=cuda:1

@@ -18,33 +18,47 @@ Reads from pristine backup `bundle/v33_manifest_v331_backup.json` and writes `bu
 from __future__ import annotations
 
 import json
+import math
+import os
 import shutil
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
-ROOT = Path(r"D:\work\中检院\v33_upgrade")
+ROOT = Path(__file__).resolve().parents[1]
 BUNDLE_DIR = ROOT / "bundle"
 MANIFEST_PATH = BUNDLE_DIR / "v33_manifest.json"
 BACKUP_PATH = BUNDLE_DIR / "v33_manifest_v331_backup.json"
 CQR_CAL_PATH = ROOT / "v2_upgrade" / "smalln_cqr" / "cqr_mondrian_calibration.json"
 CQR_SUM_PATH = ROOT / "v2_upgrade" / "smalln_cqr" / "smalln_cqr_summary.json"
 GNN_SUM_PATH = ROOT / "v2_upgrade" / "gpu_sota" / "gnn_atom_attr" / "gnn_atom_attr_summary.json"
+SRC_PREFIX = os.environ.get("V33_SRC_PREFIX", "/data/" + "qlyu/v33_upgrade/")
+FORBIDDEN_TOKEN = os.environ.get("V33_FORBIDDEN_PATH_TOKEN", "/data/" + "qlyu")
 
 # Route A: ZERO post-hoc holdout-filtered MT46 tracks promoted to production
 PROMOTED_MT46_TRACKS: List[tuple[str, str]] = []
 
 
+def _wilson_ci95(p: float, n: int) -> List[float]:
+    if n <= 0:
+        return [0.0, 1.0]
+    z = 1.959964
+    denom = 1.0 + (z * z) / n
+    center = (p + (z * z) / (2.0 * n)) / denom
+    half = (z / denom) * math.sqrt(max(0.0, (p * (1.0 - p)) / n + (z * z) / (4.0 * n * n)))
+    return [round(max(0.0, center - half), 4), round(min(1.0, center + half), 4)]
+
+
 def _sanitize_paths(obj: Any) -> Any:
-    """Guarantee ZERO <WORK_DIR> paths remain anywhere in runtime manifest."""
+    """Guarantee ZERO internal cluster paths remain anywhere in runtime manifest."""
     if isinstance(obj, dict):
         return {k: _sanitize_paths(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [_sanitize_paths(v) for v in obj]
     if isinstance(obj, str):
-        if obj.startswith("<WORK_DIR>/v33_upgrade/"):
-            return obj[len("<WORK_DIR>/v33_upgrade/") :]
+        if obj.startswith(SRC_PREFIX):
+            return obj[len(SRC_PREFIX) :]
         return obj
     return obj
 
@@ -124,8 +138,9 @@ def main() -> None:
 
     # 1. Promote strictly zero-leakage AD-Stratified Empirical-Bayes Intervals (`mondrian_ad_eb`) across ALL 40 regression endpoints
     n_mondrian = 0
-    n_uq_low_dual = 0
-    n_uq_low_smiles = 0
+    n_cov80_lt_70_dual = 0
+    n_cov80_lt_70_smiles = 0
+    uq_counts = {"dual_modality": Counter(), "smiles_only": Counter()}
     d2_eps = cqr_sum["deliverable2_conformal"]["endpoints"]
     for ep, doc in manifest["endpoints"].items():
         if doc.get("task_type") != "regression":
@@ -139,30 +154,38 @@ def main() -> None:
             m_spec = dict(cal_ep[track])
             old_conf = dict(tr_doc.get("conformal") or {})
             ho_m = d2_ep[track]["holdout_metrics"]["mondrian_ad_eb"]
+            n_eval = int(ho_m["n_eval"])
             cov80 = float(ho_m["cov80"])
+            cov90 = float(ho_m["cov90"])
+            cov80_ci95 = _wilson_ci95(cov80, n_eval)
+            over_covered = cov80 >= 0.88
             n_eff_cl = int(m_spec.get("n_eff_clusters") or 0)
             if cov80 < 0.70:
+                if track == "dual_modality":
+                    n_cov80_lt_70_dual += 1
+                else:
+                    n_cov80_lt_70_smiles += 1
+            if cov80 < 0.70 or cov90 < 0.80:
                 uq_rel = "low"
                 uq_note = (
-                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (<70%; n_eff_clusters={n_eff_cl}); "
-                    "interpret interval as heuristic rank-order uncertainty only."
+                    f"Post-hoc holdout diagnostic: cov80={cov80 * 100:.1f}% (95% CI {cov80_ci95[0]*100:.1f}-{cov80_ci95[1]*100:.1f}%, n_eval={n_eval}), "
+                    f"cov90={cov90 * 100:.1f}%, n_eff_clusters={n_eff_cl}; interpret interval heuristically for rank ordering only."
                 )
-                if track == "dual_modality":
-                    n_uq_low_dual += 1
-                else:
-                    n_uq_low_smiles += 1
-            elif cov80 < 0.75 or n_eff_cl < 30:
+            elif cov80 < 0.75 or cov90 < 0.85 or n_eff_cl < 30 or n_eval < 25:
                 uq_rel = "moderate"
+                extra = " (coverage estimate underpowered: n_eval<25)" if n_eval < 25 else ""
                 uq_note = (
-                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (n_eff_clusters={n_eff_cl}); "
-                    "AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee)."
+                    f"Post-hoc holdout diagnostic: cov80={cov80 * 100:.1f}% (95% CI {cov80_ci95[0]*100:.1f}-{cov80_ci95[1]*100:.1f}%, n_eval={n_eval}), "
+                    f"cov90={cov90 * 100:.1f}%, n_eff_clusters={n_eff_cl}{extra}; AD-stratified EB-shrunk interval."
                 )
             else:
                 uq_rel = "calibrated"
+                oc_tag = " (conservative/over-covered >=88%)" if over_covered else ""
                 uq_note = (
-                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (n_eff_clusters={n_eff_cl}); "
-                    "AD-stratified EB-shrunk interval."
+                    f"Post-hoc holdout diagnostic: cov80={cov80 * 100:.1f}% (95% CI {cov80_ci95[0]*100:.1f}-{cov80_ci95[1]*100:.1f}%, n_eval={n_eval}), "
+                    f"cov90={cov90 * 100:.1f}%, n_eff_clusters={n_eff_cl}{oc_tag}; AD-stratified EB-shrunk interval."
                 )
+            uq_counts[track][uq_rel] += 1
 
             tr_doc["conformal"] = {
                 "mode": "mondrian_ad_eb",
@@ -181,6 +204,8 @@ def main() -> None:
                 "bounds": m_spec.get("bounds") if m_spec.get("bounds") is not None else doc.get("bounds"),
                 "uq_reliability": uq_rel,
                 "uq_note": uq_note,
+                "uq_diagnostic_scope": "post_hoc_holdout_diagnostic_flag",
+                "over_covered": over_covered,
                 "legacy_v331_mode": old_conf.get("mode", "standard"),
                 "legacy_v331_q80": old_conf.get("q80"),
                 "legacy_v331_q90": old_conf.get("q90"),
@@ -188,15 +213,17 @@ def main() -> None:
 
             old_cov = dict(tr_doc.get("conformal_holdout_coverage") or {})
             tr_doc["conformal_holdout_coverage"] = {
-                "n_eval": int(ho_m["n_eval"]),
+                "n_eval": n_eval,
                 "cov80": cov80,
-                "cov90": float(ho_m["cov90"]),
+                "cov80_ci95": cov80_ci95,
+                "cov90": cov90,
                 "w80": float(ho_m["w80"]),
                 "w90": float(ho_m["w90"]),
                 "by_tier": ho_m["by_tier"],
                 "method": "mondrian_ad_eb",
                 "uq_reliability": uq_rel,
                 "uq_note": uq_note,
+                "over_covered": over_covered,
                 "legacy_v331_cov80": old_cov.get("cov80"),
                 "legacy_v331_cov90": old_cov.get("cov90"),
             }
@@ -238,15 +265,21 @@ def main() -> None:
             "method_label": "AD-stratified Empirical-Bayes shrunk interval (empirically calibrated on nested 5-fold OOF residuals; not an exact finite-sample conformal guarantee)",
             "deployment_policy": "uniform_mondrian_ad_eb_json_zero_dep",
             "deployment_policy_note": (
-                "Nested-OOF selected mondrian_ad_eb on 48/80 tracks (baseline 13, studentized_cvplus 11, cqr_lgb 8); "
-                "deployed uniformly across all 80 regression tracks for pure-JSON zero-dependency serving, with holdout coverage reported identically from mondrian_ad_eb."
+                "Engineering trade-off for pure-JSON zero-dependency serving: nested-OOF selected mondrian_ad_eb on 48/80 tracks "
+                "(baseline 13, studentized_cvplus 11, cqr_lgb 8); deployed uniformly across all 80 regression tracks with holdout "
+                "coverage reported identically from mondrian_ad_eb. Note: cqr_lgb achieved higher overall holdout coverage "
+                "(79.2%/91.0% dual, min 52.2%) at the cost of .joblib/LightGBM runtime artifacts."
             ),
             "n_regression_endpoints": n_mondrian,
-            "n_low_reliability_tracks_cov80_lt_70": {"dual_modality": n_uq_low_dual, "smiles_only": n_uq_low_smiles},
+            "n_low_reliability_tracks_cov80_lt_70": {"dual_modality": n_cov80_lt_70_dual, "smiles_only": n_cov80_lt_70_smiles},
+            "uq_reliability_counts": {k: dict(v) for k, v in uq_counts.items()},
+            "uq_diagnostic_scope": "post_hoc_holdout_diagnostic_flag_not_out_of_sample_guarantee",
             "residual_alignment": "exact_100pct_frozen_wave5a",
             "pure_json_zero_overhead": True,
-            "pooled_ood_cov80_dual": {"before": 0.642, "after": 0.760, "delta_pp": 11.8},
-            "pooled_ood_cov80_smiles": {"before": 0.539, "after": 0.742, "delta_pp": 20.3},
+            "overall_holdout_dual": {"cov80_before": 0.7630, "cov80_after": 0.7647, "cov90_before": 0.8880, "cov90_after": 0.8820, "severe_lt_70_before": 6, "severe_lt_70_after": 7},
+            "overall_holdout_smiles": {"cov80_before": 0.7794, "cov80_after": 0.7834, "cov90_before": 0.8847, "cov90_after": 0.8842, "severe_lt_70_before": 5, "severe_lt_70_after": 5},
+            "pooled_ood_cov80_dual": {"before": 0.642, "after": 0.760, "delta_pp": 11.8, "n_ood": 204, "n_total": 7052},
+            "pooled_ood_cov80_smiles": {"before": 0.539, "after": 0.742, "delta_pp": 20.3, "n_ood": 128, "n_total": 6976},
             "mean_width80_dual": {"before": 1.479, "after": 1.470},
         },
         "mt46_deep_transfer": {
@@ -272,12 +305,13 @@ def main() -> None:
         assert manifest["endpoints"][ep]["smiles_only"]["weights"] == prev["smiles"], f"SMILES weights changed for {ep}!"
 
     out_text = json.dumps(manifest, indent=2, ensure_ascii=False)
-    assert "<WORK_DIR>" not in out_text, "Found residual <WORK_DIR> path in manifest!"
+    assert FORBIDDEN_TOKEN not in out_text, f"Found residual {FORBIDDEN_TOKEN} path in manifest!"
     MANIFEST_PATH.write_text(out_text, encoding="utf-8")
     print(
         f"[OK] Wrote Route A {MANIFEST_PATH} (version={manifest['version']}, "
-        f"mondrian={n_mondrian}/40 100%-aligned, mt46_promoted=0, all_46_weights_unchanged=46/46, "
-        f"overall_summary_synced=PASS, zero_<WORK_DIR>=PASS)"
+        f"mondrian={n_mondrian}/40 100%-aligned, cov80<0.70={n_cov80_lt_70_dual}+{n_cov80_lt_70_smiles}/80, "
+        f"uq_counts={ {k: dict(v) for k, v in uq_counts.items()} }, mt46_promoted=0, all_46_weights_unchanged=46/46, "
+        f"overall_summary_synced=PASS, zero_internal_paths=PASS)"
     )
 
 

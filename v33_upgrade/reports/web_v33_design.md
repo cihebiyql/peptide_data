@@ -51,10 +51,10 @@ Wave 3B replaced all legacy prototype/synthetic UI metrics with a 100% authorita
          │  V33_REMOTE_URL=http://127.0.0.1:8902
          │  (Parallel to UNTOUCHED live V31 :7861, V32 :7862, V32 tunnel :8901)
          ▼
-[node1 reverse tunnel]   <WORK_DIR>/v33_tunnel.sh  (-R 127.0.0.1:8902:10.0.0.3:8902)
+[node1 reverse tunnel]   <WORK_DIR>/v33_tunnel.sh  (-R 127.0.0.1:8902:<COMPUTE_HOST>:8902)
          │  (Parallel to UNTOUCHED <WORK_DIR>/omnigrid_tunnel.sh on :8901)
          ▼
-[node23: 10.0.0.3:8902]  Live V33 Super-Ensemble Engine (4 warm FMs, 24 endpoints, 0 GPU)
+[node23: <COMPUTE_HOST>:8902]  Live V33 Super-Ensemble Engine (4 warm FMs, 24 endpoints, 0 GPU)
 ```
 
 ### Staging Isolation Verification
@@ -65,7 +65,7 @@ Wave 3B replaced all legacy prototype/synthetic UI metrics with a 100% authorita
 - **New V33 Staged Web Platform (`node2:7863` under `/var/www/peptide-omnipanel/v33_next/`)**: Verified `HTTP 200` (`adapter_mode: "v33_remote", endpoints_total: 24, tier1_endpoints: 20, tier2_endpoints: 4, rdkit_version: "2026.03.6"`).
 - **Ready-to-Apply Deployment Templates** (mirrored in both `D:\work\中检院\v33_upgrade\web\deploy\` and `node2:/var/www/peptide-omnipanel/v33_next/deploy/`):
   - `peptide-next.location.conf` — Nginx location snippet exposing `/peptide-next/ -> http://127.0.0.1:7863/`.
-  - `peptide-omnipanel-v33.service` — `systemd` unit running as `mode2` with `V33_ROOT_PATH=/peptide-next`.
+  - `peptide-omnipanel-v33.service` — `systemd` unit running as `<DEPLOY_USER>` with `V33_ROOT_PATH=/peptide-next`.
   - `cutover_notes.md` — Exact staging enablement, production cutover, and instant rollback commands for root/sudo.
 
 ---

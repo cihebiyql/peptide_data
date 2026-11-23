@@ -1,4 +1,6 @@
-# Plan B-2: GPU SOTA Upgrades Report (Local RTX 5080 — Zero-Leakage & `node2`-CPU-Portable)
+# Plan B-2: GPU SOTA Upgrades Report (Local RTX 5080 — Zero-Leakage & CPU-Portable)
+
+> **Production Status (v33.2 Route A)**: **Upgrade 1 (`MultiTaskPeptideNet46`) is ARCHIVED RESEARCH-ONLY (`0 / 92` endpoint tracks served in production)** following independent audit of `unified_mt46` vs per-endpoint train-serve mismatch and pure-OOF regression (`+0.00180` dual HO MAE); all 46 production endpoints preserve strict OOF-selected Wave 5A weights (`0.0` diff). **Upgrade 2 (3D Chameleonic)** is archived research-only. **Upgrade 3 (Pure-PyTorch E-GAT)** is deployed solely as a **qualitative 2D graph surrogate visualization** (`0.35·y_add` residual branch), distinct from the 4-FM super-ensemble main predictions.
 
 - **Generated:** `2026-11-23 01:41:08 +0800`
 - **Hardware:** `Local Windows RTX 5080 (16,303 MiB VRAM, bf16) for Upgrades 1 & 3 + local CPU for Upgrade 2 3D conformer extraction + node23 64-core CPU (125 GB RAM) for Upgrade 2 11-endpoint benchmark under local memory guardrail (zero node1 GPU / node2 live interference)`

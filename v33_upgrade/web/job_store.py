@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-from .adapter import OmniPanelAdapter
+from .adapter import EngineBusyError, OmniPanelAdapter
 from .schemas import AssayConditions, BatchMoleculeResult, BatchParsedRow, PredictResponse
 
 DEFAULT_JOBS_DIR = Path(
@@ -42,8 +42,15 @@ def _utc_iso() -> str:
 
 def _new_job_id() -> str:
     stamp = datetime.now(timezone.utc).strftime("%m%d-%H%M")
-    suffix = uuid.uuid4().hex[:4].upper()
+    suffix = uuid.uuid4().hex[:8].upper()
     return f"T-{stamp}-{suffix}"
+
+
+def _csv_safe(val: Any) -> Any:
+    """Neutralize spreadsheet CSV formula injection on leading = + - @ \\t \\r characters."""
+    if isinstance(val, str) and val and val[0] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + val
+    return val
 
 
 def _compute_batch_analytics(results: list[dict[str, Any]]) -> dict[str, Any]:
@@ -247,11 +254,31 @@ class JobManager:
                 chunk = parsed_rows[start : start + CHUNK_SIZE]
                 self._update_job(job_id, current_item=chunk[0].name)
 
-                chunk_res: list[BatchMoleculeResult] = self.adapter.predict_batch(
-                    chunk,
-                    include_tier2=include_tier2,
-                    conditions=conditions,
-                )
+                chunk_res: list[BatchMoleculeResult] = []
+                busy_delays = (5.0, 10.0, 20.0)
+                for attempt in range(len(busy_delays) + 1):
+                    try:
+                        chunk_res = self.adapter.predict_batch(
+                            chunk,
+                            include_tier2=include_tier2,
+                            conditions=conditions,
+                        )
+                        break
+                    except EngineBusyError as busy_exc:
+                        if attempt < len(busy_delays) and not cancel_evt.is_set():
+                            time.sleep(busy_delays[attempt])
+                            continue
+                        chunk_res = [
+                            BatchMoleculeResult(
+                                index=row.index,
+                                name=row.name,
+                                status="error",
+                                error=str(busy_exc),
+                                prediction_source="error",
+                            )
+                            for row in chunk
+                        ]
+                        break
                 for item in chunk_res:
                     d = item.model_dump()
                     results_dicts.append(d)
@@ -498,23 +525,26 @@ class JobManager:
                 km = r.get("key_metrics") or {}
                 writer.writerow(
                     [
-                        r.get("index", ""),
-                        r.get("name", ""),
-                        r.get("status", ""),
-                        _row_source(r),
-                        r.get("mw", ""),
-                        r.get("logp", ""),
-                        r.get("net_charge_ph74", ""),
-                        km.get("half_life", ""),
-                        km.get("ppb", ""),
-                        km.get("pampa", ""),
-                        km.get("caco2", ""),
-                        km.get("efflux_ratio", ""),
-                        km.get("hemolysis_risk", ""),
-                        km.get("hc50", ""),
-                        km.get("cytotoxicity_cc50", ""),
-                        km.get("logd", ""),
-                        km.get("solubility", ""),
+                        _csv_safe(v)
+                        for v in [
+                            r.get("index", ""),
+                            r.get("name", ""),
+                            r.get("status", ""),
+                            _row_source(r),
+                            r.get("mw", ""),
+                            r.get("logp", ""),
+                            r.get("net_charge_ph74", ""),
+                            km.get("half_life", ""),
+                            km.get("ppb", ""),
+                            km.get("pampa", ""),
+                            km.get("caco2", ""),
+                            km.get("efflux_ratio", ""),
+                            km.get("hemolysis_risk", ""),
+                            km.get("hc50", ""),
+                            km.get("cytotoxicity_cc50", ""),
+                            km.get("logd", ""),
+                            km.get("solubility", ""),
+                        ]
                     ]
                 )
             return buf.getvalue()
@@ -571,5 +601,5 @@ class JobManager:
                         p.get("uq_reliability", ""),
                     ]
                 )
-            writer.writerow(row)
+            writer.writerow([_csv_safe(v) for v in row])
         return buf.getvalue()

@@ -7,7 +7,7 @@
 本轮检查用户提供的：
 
 ```text
-C:\Users\ciheb\Downloads\mozi-main.zip
+<LOCAL_HOME>\Downloads\mozi-main.zip
 ```
 
 目标是回答：
@@ -24,7 +24,7 @@ C:\Users\ciheb\Downloads\mozi-main.zip
 
 | 项目 | 结果 |
 |---|---|
-| 原路径 | `C:\Users\ciheb\Downloads\mozi-main.zip` |
+| 原路径 | `<LOCAL_HOME>\Downloads\mozi-main.zip` |
 | WSL 路径 | `/mnt/c/Users/ciheb/Downloads/mozi-main.zip` |
 | 大小 | 24,452,328 bytes |
 | SHA-256 | `e852570ee1268be5d8dfa14708fa7bf15f5b45d9331c12e7f8a65f89d13f915f` |

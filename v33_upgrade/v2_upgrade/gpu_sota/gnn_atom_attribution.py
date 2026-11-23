@@ -481,7 +481,7 @@ class EGATv2Layer(nn.Module):
 
 
 class TaskWeightAndSumHead(nn.Module):
-    """Task-specific WeightAndSum + Softmax Attention Readout with exact additive atom importance."""
+    """Task-specific WeightAndSum + Softmax Attention Readout with additive per-atom decomposition of the 0.35*y_add residual branch only (not of the full prediction)."""
 
     def __init__(self, d_node: int, task_type: str, dropout: float = 0.20):
         super().__init__()
@@ -494,7 +494,7 @@ class TaskWeightAndSumHead(nn.Module):
             nn.GELU(),
             nn.Linear(d_node // 2, 1),
         )
-        # Direct additive per-atom contribution head (interpretable local pharmacophore score!)
+        # Per-atom scalar head for the 0.35*y_add residual branch (qualitative surrogate visualization)
         self.atom_contrib = nn.Linear(d_node, 1)
 
         # Graph-level prediction head over [WeightAndSum, SoftmaxPool, MaxPool, global_ctx]
@@ -529,7 +529,7 @@ class TaskWeightAndSumHead(nn.Module):
         g_att = _scatter_sum_2d(h_atom * atom_soft.unsqueeze(-1), batch_idx, num_graphs)
         g_max = _scatter_max_2d(h_atom, batch_idx, num_graphs)
 
-        # Direct additive WeightAndSum scalar residual (grounds attribution directly in prediction!)
+        # Additive WeightAndSum scalar residual (visualized 0.35*y_add branch; full prediction adds nonlinear graph_mlp)
         local_c = self.atom_contrib(h_atom).squeeze(-1)  # (N_atoms,)
         add_num = torch.zeros((num_graphs,), device=h_atom.device, dtype=local_c.dtype)
         add_num.index_add_(0, batch_idx, local_c * atom_sig)

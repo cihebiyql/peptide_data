@@ -1,19 +1,22 @@
 """Production entrypoint for self-contained Peptide OmniPanel V33 on node2.
 
-Runs via existing systemd unit `peptide-omnigrid.service` (User=mode2, 127.0.0.1:7862),
+Runs via existing systemd unit `peptide-omnigrid.service` (User=<DEPLOY_USER>, 127.0.0.1:7862),
 which Nginx `/peptide-omnipanel/` proxies. Zero external cluster runtime dependency.
 
 Features:
   - Strict live-inference mode (`V33_STRICT_REMOTE=1`): never silently falls back to hardcoded heuristics.
   - Public health path redaction (`V33_PUBLIC_HEALTH_REDACT=1`).
-  - Background startup warmup of all 25 curated examples into 24h TTL cache (`V33_WARMUP_EXAMPLES=1`).
-  - Self-healing watchdog thread that monitors `127.0.0.1:8902` every 30s and relaunches the local
-    inference engine (via user systemd unit if installed, or `run_local_engine.sh`) if it ever exits.
+  - Periodic startup + 12h refresh warmup of all 25 curated examples into 24h TTL cache (`V33_WARMUP_EXAMPLES=1`).
+  - Staggered-burst safe concurrency (`V33_WEB_MAX_CONCURRENT=2`, `V33_WEB_QUEUE_TIMEOUT=10`): worst-case
+    latency stays safely below the 60s upstream gateway timeout while returning clean HTTP 429 on bursts.
+  - Watchdog delegates restarts cleanly to user-level systemd (`v33-inference-engine.service`, Linger=yes)
+    with explicit `XDG_RUNTIME_DIR` / `DBUS_SESSION_BUS_ADDRESS` and a 210s grace window (>132s engine startup)
+    so it never races or spawns a duplicate 26 GB engine.
 """
 from __future__ import annotations
 
-import fcntl
 import os
+import pwd
 import socket
 import subprocess
 import sys
@@ -39,14 +42,15 @@ os.environ["OMNIPANEL_GNN_CKPT"] = os.environ.get(
 os.environ["V33_STRICT_REMOTE"] = os.environ.get("V33_STRICT_REMOTE", "1")
 os.environ["V33_PUBLIC_HEALTH_REDACT"] = os.environ.get("V33_PUBLIC_HEALTH_REDACT", "1")
 os.environ["V33_WARMUP_EXAMPLES"] = os.environ.get("V33_WARMUP_EXAMPLES", "1")
+os.environ["V33_WARMUP_REFRESH_SEC"] = os.environ.get("V33_WARMUP_REFRESH_SEC", "43200")
 os.environ["V33_CACHE_TTL_SEC"] = os.environ.get("V33_CACHE_TTL_SEC", "86400")
 os.environ["V33_CACHE_MAXSIZE"] = os.environ.get("V33_CACHE_MAXSIZE", "1024")
-os.environ["V33_WEB_MAX_CONCURRENT"] = os.environ.get("V33_WEB_MAX_CONCURRENT", "4")
-os.environ["V33_WEB_QUEUE_TIMEOUT"] = os.environ.get("V33_WEB_QUEUE_TIMEOUT", "25")
+os.environ["V33_WEB_MAX_CONCURRENT"] = os.environ.get("V33_WEB_MAX_CONCURRENT", "2")
+os.environ["V33_WEB_QUEUE_TIMEOUT"] = os.environ.get("V33_WEB_QUEUE_TIMEOUT", "10")
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 
-def _port_open(host: str, port: int, timeout: float = 0.8) -> bool:
+def _port_open(host: str, port: int, timeout: float = 1.0) -> bool:
     try:
         with socket.create_connection((host, port), timeout=timeout):
             return True
@@ -54,80 +58,61 @@ def _port_open(host: str, port: int, timeout: float = 0.8) -> bool:
         return False
 
 
-def _pid_is_v33_engine(pid: int) -> bool:
+def _user_systemd_env() -> dict[str, str]:
+    uid = os.getuid()
+    runtime_dir = f"/run/user/{uid}"
+    env = dict(os.environ)
+    env.setdefault("XDG_RUNTIME_DIR", runtime_dir)
+    env.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={runtime_dir}/bus")
     try:
-        cmdline = Path(f"/proc/{pid}/cmdline").read_bytes().decode("utf-8", errors="ignore")
-        return "v33_inference_service.py" in cmdline
+        env.setdefault("HOME", pwd.getpwuid(uid).pw_dir)
     except Exception:
-        return False
+        pass
+    return env
 
 
 def ensure_local_v33_engine() -> None:
-    """Idempotently start local V33 inference engine if not already listening or booting."""
+    """Ask user-level systemd (`v33-inference-engine.service`) to start :8902 without spawning duplicate processes."""
     if _port_open("127.0.0.1", 8902):
         return
-
-    # Prefer user-level systemd unit if present and reachable
     user_unit = Path.home() / ".config" / "systemd" / "user" / "v33-inference-engine.service"
-    if user_unit.exists():
-        try:
-            r = subprocess.run(
-                ["systemctl", "--user", "start", "v33-inference-engine.service"],
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            if r.returncode == 0:
-                print("[OmniPanel V33] Triggered user systemd v33-inference-engine.service", flush=True)
-                return
-        except Exception:
-            pass
-
-    launcher = V33_DIR / "run_local_engine.sh"
-    if not launcher.exists():
-        print(f"[OmniPanel V33] WARNING: {launcher} not found; skipping auto-launch.", flush=True)
+    if not user_unit.exists():
+        print("[OmniPanel Watchdog] :8902 unreachable and user systemd unit missing; manual inspection required.", flush=True)
         return
-
-    lock_path = V33_DIR / "v33_engine.lock"
-    pid_path = V33_DIR / "v33_engine.pid"
-    log_path = V33_DIR / "v33_engine.log"
-
-    with lock_path.open("w", encoding="utf-8") as lock_fh:
-        fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX)
-        if _port_open("127.0.0.1", 8902):
-            return
-        if pid_path.exists():
-            try:
-                old_pid = int(pid_path.read_text(encoding="utf-8").strip())
-                if old_pid > 0 and _pid_is_v33_engine(old_pid):
-                    return
-            except Exception:
-                pass
-
-        print(f"[OmniPanel V33] Auto-launching local V33 engine via {launcher} (log={log_path})...", flush=True)
-        log_fh = log_path.open("a", encoding="utf-8")
-        proc = subprocess.Popen(
-            ["/bin/bash", str(launcher)],
-            cwd=str(V33_DIR),
-            stdout=log_fh,
-            stderr=subprocess.STDOUT,
-            start_new_session=True,
+    try:
+        r = subprocess.run(
+            ["systemctl", "--user", "start", "v33-inference-engine.service"],
+            env=_user_systemd_env(),
+            capture_output=True,
+            text=True,
+            timeout=15,
         )
-        pid_path.write_text(f"{proc.pid}\n", encoding="utf-8")
-        print(f"[OmniPanel V33] Local V33 engine started in background (pid={proc.pid}).", flush=True)
-        time.sleep(0.5)
+        if r.returncode == 0:
+            print("[OmniPanel Watchdog] Requested user systemd start for v33-inference-engine.service.", flush=True)
+        else:
+            print(f"[OmniPanel Watchdog] systemctl --user start failed (rc={r.returncode}): {r.stderr.strip()}", flush=True)
+    except Exception as exc:
+        print(f"[OmniPanel Watchdog] systemctl --user error: {exc}", flush=True)
 
 
 def _start_engine_watchdog() -> None:
-    """Supervise local :8902 engine from within the root-systemd-managed web service."""
+    """Monitor :8902 and only intervene after >210s continuous downtime (>132s normal cold boot)."""
 
     def _loop() -> None:
+        down_since: float | None = None
         while True:
             time.sleep(30.0)
             try:
-                if not _port_open("127.0.0.1", 8902, timeout=1.5):
-                    print("[OmniPanel Watchdog] :8902 unreachable; ensuring local V33 engine...", flush=True)
-                    ensure_local_v33_engine()
+                if _port_open("127.0.0.1", 8902, timeout=1.5):
+                    down_since = None
+                else:
+                    now = time.time()
+                    if down_since is None:
+                        down_since = now
+                        print("[OmniPanel Watchdog] :8902 down; waiting 210s grace period for user-systemd recovery.", flush=True)
+                    elif now - down_since >= 210.0:
+                        ensure_local_v33_engine()
+                        down_since = now
             except Exception as exc:
                 print(f"[OmniPanel Watchdog] check error: {exc}", flush=True)
 
@@ -146,7 +131,7 @@ def main() -> None:
     print(
         f"[OmniPanel V33] Launching FastAPI on 127.0.0.1:7862 "
         f"(root_path={os.environ['V33_ROOT_PATH']}, strict_remote={os.environ['V33_STRICT_REMOTE']}, "
-        f"warmup={os.environ['V33_WARMUP_EXAMPLES']})",
+        f"max_conc={os.environ['V33_WEB_MAX_CONCURRENT']}, queue_timeout={os.environ['V33_WEB_QUEUE_TIMEOUT']}s)",
         flush=True,
     )
     uvicorn.run(

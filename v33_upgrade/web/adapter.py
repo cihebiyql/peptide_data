@@ -157,7 +157,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": -1.5,
         "ci_bar_max": 2.0,
         "input_requirements": "SMILES or Sequence + PK route/species",
-        "scope_note": "Weight-normalized total systemic clearance (mL/min/kg); interpret with 80% conformal interval.",
+        "scope_note": "Weight-normalized total systemic clearance (mL/min/kg); interpret with 80% AD-stratified empirical interval.",
     },
     "CL_absolute": {
         "display_en": "Absolute Clearance (CL)",
@@ -189,7 +189,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": -2.5,
         "ci_bar_max": 2.5,
         "input_requirements": "SMILES or Sequence + PK route/species",
-        "scope_note": "Small-n dose-normalized Cmax screening prior (µM); interpret strictly with 80% conformal interval.",
+        "scope_note": "Small-n dose-normalized Cmax screening prior (µM); interpret strictly with 80% AD-stratified empirical interval.",
     },
     "PAMPA": {
         "display_en": "PAMPA Passive Permeability",
@@ -197,7 +197,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": -8.5,
         "ci_bar_max": -4.5,
         "input_requirements": "SMILES or Sequence (CycPeptMPDB harmonized)",
-        "scope_note": "High-volume passive membrane permeability benchmark with conformal UQ and censored-head diagnostics.",
+        "scope_note": "High-volume passive membrane permeability benchmark with AD-stratified empirical UQ and censored-head diagnostics.",
     },
     "Caco2": {
         "display_en": "Caco-2 Permeability",
@@ -205,7 +205,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": -8.5,
         "ci_bar_max": -4.5,
         "input_requirements": "SMILES or Sequence",
-        "scope_note": "Apical-to-basolateral intestinal permeability (cm/s); adaptive Tanimoto-distance conformal intervals.",
+        "scope_note": "Apical-to-basolateral intestinal permeability (cm/s); AD-stratified empirical intervals.",
     },
     "MDCK": {
         "display_en": "MDCK Permeability",
@@ -269,7 +269,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_min": -3.0,
         "ci_bar_max": 5.5,
         "input_requirements": "SMILES or Sequence",
-        "scope_note": "Octanol-buffer distribution at pH 7.4; adaptive Tanimoto-distance conformal intervals.",
+        "scope_note": "Octanol-buffer distribution at pH 7.4; AD-stratified empirical intervals.",
     },
     "solubility_reg": {
         "display_en": "Aqueous Solubility (Quant.)",
@@ -942,9 +942,11 @@ class OmniPanelAdapter:
         cache_size = int(os.environ.get("V33_CACHE_MAXSIZE", "1024"))
         self.cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
         self._gnn_cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
-        max_conc = max(1, int(os.environ.get("V33_WEB_MAX_CONCURRENT", "4")))
+        max_conc = max(1, int(os.environ.get("V33_WEB_MAX_CONCURRENT", "2")))
         self._predict_sem = threading.BoundedSemaphore(max_conc)
-        self._predict_queue_timeout = float(os.environ.get("V33_WEB_QUEUE_TIMEOUT", "25.0"))
+        self._predict_queue_timeout = float(os.environ.get("V33_WEB_QUEUE_TIMEOUT", "10.0"))
+        self._inflight_lock = threading.Lock()
+        self._inflight: dict[str, dict[str, Any]] = {}
         self._gnn_lock = threading.Lock()
         self._gnn_engine: Optional[Any] = None
         self._gnn_checked: bool = False
@@ -1289,10 +1291,7 @@ class OmniPanelAdapter:
                     holdout_score_v33=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                     conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                     conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
-                    uq_reliability=cov.get("uq_reliability") or (
-                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
-                        else ("calibrated" if cov.get("cov80") is not None else None)
-                    ),
+                    uq_reliability=None if is_cls else self._resolve_uq_reliability(cov, dm.get("conformal") or {}),
                     brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                     ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                     has_censored_head=bool(doc.get("censored_head")),
@@ -1447,8 +1446,36 @@ class OmniPanelAdapter:
         )
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
+    @staticmethod
+    def _resolve_uq_reliability(cov: dict[str, Any], conf: dict[str, Any]) -> Optional[str]:
+        if cov.get("uq_reliability") in ("calibrated", "moderate", "low"):
+            return str(cov["uq_reliability"])
+        if conf.get("uq_reliability") in ("calibrated", "moderate", "low"):
+            return str(conf["uq_reliability"])
+        cov80 = cov.get("cov80")
+        if cov80 is None:
+            return None
+        c80 = float(cov80)
+        c90 = float(cov["cov90"]) if cov.get("cov90") is not None else 0.90
+        n_eff = int(conf.get("n_eff_clusters") or 100)
+        n_eval = int(cov.get("n_eval") or 100)
+        if c80 < 0.70 or c90 < 0.80:
+            return "low"
+        if c80 < 0.75 or c90 < 0.85 or n_eff < 30 or n_eval < 25:
+            return "moderate"
+        return "calibrated"
+
+    @staticmethod
+    def _is_timeout_exc(exc: BaseException) -> bool:
+        if isinstance(exc, TimeoutError):
+            return True
+        reason = getattr(exc, "reason", None)
+        if isinstance(reason, TimeoutError):
+            return True
+        return "timed out" in str(exc).lower()
+
     # -----------------------------------------------------------------------
-    # Remote V33 HTTP Calls (`node23:8902`)
+    # Remote V33 HTTP Calls (`127.0.0.1:8902`)
     # -----------------------------------------------------------------------
     def _call_v33_remote_single(
         self,
@@ -1456,7 +1483,7 @@ class OmniPanelAdapter:
         include_tier2: bool,
         v33_cond: dict[str, str],
     ) -> tuple[dict[str, Any], bool]:
-        """Query live V33 engine with TTL cache; returns (raw_v33_response, cache_hit)."""
+        """Query live V33 engine with TTL cache + single-flight dedup; returns (raw_v33_response, cache_hit)."""
         # Prefer explicit smiles when present; for pure sequence inputs send sequence (engine builds SMILES & runs dual_modality)
         send_smiles = resolved.smiles if resolved.smiles else None
         send_seq = resolved.sequence if resolved.sequence else None
@@ -1467,6 +1494,26 @@ class OmniPanelAdapter:
         cached = self.cache.get(ckey)
         if cached is not None:
             return cached, True
+
+        # Single-flight deduplication: concurrent requests for the same uncached molecule share one engine call
+        is_leader = False
+        with self._inflight_lock:
+            cached = self.cache.get(ckey)
+            if cached is not None:
+                return cached, True
+            flight = self._inflight.get(ckey)
+            if flight is None:
+                flight = {"event": threading.Event(), "data": None, "error": None}
+                self._inflight[ckey] = flight
+                is_leader = True
+
+        if not is_leader:
+            finished = flight["event"].wait(timeout=55.0)
+            if not finished:
+                raise EngineBusyError("Concurrent identical prediction still running; please retry shortly.")
+            if flight["error"] is not None:
+                raise flight["error"]
+            return flight["data"], True
 
         assert self.remote_url is not None
         req_body: dict[str, Any] = {
@@ -1485,37 +1532,49 @@ class OmniPanelAdapter:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
-        if not acquired:
-            raise EngineBusyError("Inference server is busy handling concurrent requests; please retry in a few seconds.")
         try:
-            with urllib.request.urlopen(req, timeout=120.0) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            err_body = exc.read().decode("utf-8", errors="replace")
-            if exc.code == 400:
-                try:
-                    msg = json.loads(err_body).get("error", err_body)
-                except Exception:
-                    msg = err_body
-                raise InputValidationError(f"V33 engine rejected input: {msg}") from exc
-            if exc.code == 429:
-                raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
-            raise RuntimeError(f"V33 remote inference HTTP {exc.code}: {err_body[:300]}") from exc
+            acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+            if not acquired:
+                raise EngineBusyError("Inference server is busy handling concurrent requests; please retry in a few seconds.")
+            try:
+                with urllib.request.urlopen(req, timeout=52.0) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+            except urllib.error.HTTPError as exc:
+                err_body = exc.read().decode("utf-8", errors="replace")
+                if exc.code == 400:
+                    try:
+                        msg = json.loads(err_body).get("error", err_body)
+                    except Exception:
+                        msg = err_body
+                    raise InputValidationError(f"V33 engine rejected input: {msg}") from exc
+                if exc.code == 429:
+                    raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
+                raise RuntimeError(f"V33 remote inference HTTP {exc.code}: {err_body[:300]}") from exc
+            except Exception as exc:
+                if self._is_timeout_exc(exc):
+                    # Request-level read timeout must NOT poison global remote_healthy/mode for other callers
+                    raise EngineBusyError("Inference engine timed out on this request; please retry shortly.") from exc
+                self.remote_healthy = False
+                self.mode = "v33_offline_fallback"
+                if self.strict_remote:
+                    raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
+                raise RuntimeError(f"V33 remote inference unavailable ({self.remote_url}): {exc}") from exc
+            finally:
+                self._predict_sem.release()
+
+            if data.get("status") != "ok":
+                raise InputValidationError(str(data.get("error") or "V33 prediction failed."))
+
+            self.cache.set(ckey, data)
+            flight["data"] = data
+            return data, False
         except Exception as exc:
-            self.remote_healthy = False
-            self.mode = "v33_offline_fallback"
-            if self.strict_remote:
-                raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
-            raise RuntimeError(f"V33 remote inference unavailable ({self.remote_url}): {exc}") from exc
+            flight["error"] = exc
+            raise
         finally:
-            self._predict_sem.release()
-
-        if data.get("status") != "ok":
-            raise InputValidationError(str(data.get("error") or "V33 prediction failed."))
-
-        self.cache.set(ckey, data)
-        return data, False
+            flight["event"].set()
+            with self._inflight_lock:
+                self._inflight.pop(ckey, None)
 
     def _call_v33_remote_batch(
         self,
@@ -1568,18 +1627,20 @@ class OmniPanelAdapter:
         if not acquired:
             raise EngineBusyError("Inference server is busy handling concurrent requests; please retry shortly.")
         try:
-            with urllib.request.urlopen(req, timeout=300.0) as resp:
+            with urllib.request.urlopen(req, timeout=240.0) as resp:
                 batch_data = json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
             if exc.code == 429:
                 raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
             raise RuntimeError(f"V33 remote batch HTTP {exc.code}") from exc
         except Exception as exc:
+            if self._is_timeout_exc(exc):
+                raise EngineBusyError("Batch inference timed out; please retry shortly.") from exc
             self.remote_healthy = False
             self.mode = "v33_offline_fallback"
             if self.strict_remote:
                 raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
-            raise
+            raise RuntimeError(f"V33 remote batch unavailable ({self.remote_url}): {exc}") from exc
         finally:
             self._predict_sem.release()
 
@@ -1742,12 +1803,11 @@ class OmniPanelAdapter:
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
+                conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
                 uq_reliability=None if is_cls else (
-                    r.get("uq_reliability") or cov.get("uq_reliability") or (
-                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
-                        else ("calibrated" if cov.get("cov80") is not None else None)
-                    )
+                    r.get("uq_reliability") or self._resolve_uq_reliability(cov, tr_doc.get("conformal") or {})
                 ),
+                uq_note=None if is_cls else (cov.get("uq_note") or (tr_doc.get("conformal") or {}).get("uq_note")),
                 brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                 ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                 censored_note=r.get("censored_note"),
@@ -2076,12 +2136,9 @@ class OmniPanelAdapter:
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
-                uq_reliability=None if is_cls else (
-                    cov.get("uq_reliability") or (
-                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
-                        else ("calibrated" if cov.get("cov80") is not None else None)
-                    )
-                ),
+                conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
+                uq_reliability=None,
+                uq_note=None,
                 brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                 ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                 censored_note=cens_note,
@@ -2300,6 +2357,7 @@ class OmniPanelAdapter:
                     name=row.name,
                     status="error",
                     error=row.error or "Invalid input",
+                    prediction_source="error",
                 )
                 continue
             try:
@@ -2317,6 +2375,7 @@ class OmniPanelAdapter:
                     name=row.name,
                     status="error",
                     error=str(exc),
+                    prediction_source="error",
                 )
 
         if not valid_entries:
@@ -2340,6 +2399,7 @@ class OmniPanelAdapter:
                         name=row.name,
                         status="error",
                         error=err or "Inference batch error",
+                        prediction_source="error",
                     )
                     continue
                 pred = self._assemble_from_v33_raw(

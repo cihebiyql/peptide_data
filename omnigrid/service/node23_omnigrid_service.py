@@ -23,7 +23,7 @@ os.environ.setdefault('OMP_NUM_THREADS', '4')
 os.environ.setdefault('OPENBLAS_NUM_THREADS', '4')
 
 MANIFEST = json.loads((BASE / 'deploy_manifest.json').read_text())
-FEAT_MANIFEST = json.loads(Path('/tmp/peptide_modeling_qlyu_multiseed20h_campaign_v1/round_000_seed_42/features/manifest.json').read_text())
+FEAT_MANIFEST = json.loads(Path('/tmp/peptide_modeling_work_multiseed20h_campaign_v1/round_000_seed_42/features/manifest.json').read_text())
 GROUP_NAMES = {g: d['feature_names'] for g, d in FEAT_MANIFEST['groups'].items()}
 # estate/erg live only in the later overlay manifest; derive canonical names from the engine
 if 'estate' not in GROUP_NAMES:

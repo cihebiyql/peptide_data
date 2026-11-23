@@ -25,7 +25,7 @@
    - **Tabular / Optuna / RDKit / PyTorch (`node1` & `node23` shared NFS)**: `/usr/bin/python3` (Python 3.10.12 + `<WORK_DIR>/.local/lib/python3.10/site-packages`: `rdkit 2026.09.1`, `lightgbm 4.7.0`, `xgboost 3.2.0`, `optuna 5.0.0`, `sklearn 1.7.2`, `torch 2.5.1+cu121`, `transformers 4.44.2`).
    - **PyG / Uni-Mol / FastAPI / Uvicorn / `fair-esm` (`node1` & `node23`)**: `<WORK_DIR>/anaconda3/envs/cuda12.1/bin/python` (Python 3.11.13: `torch 2.6.0+cu124`, `torch_geometric 2.6.1`, `unimol_tools`, `rdkit 2024.03.2`, `lightgbm 4.6.0`, `xgboost 3.1.2`, `transformers 4.48.1`, `esm 2.0.0`, `fastapi 0.128.0`, `uvicorn 0.40.0`).
    - **ESM-C 600M (`esm>=3`) / ESMFold2 (`node1`)**: `<WORK_DIR>/esmfold2-env312/bin/python` (Python 3.12: `torch 2.11.0+cu130`, `esm 3.4.2`, `rdkit 2026.9.1`, `transformers 5.22.0.dev0`).
-   - **Local Windows Web Dev & Playwright Testing**: `py -3.11` (`C:\Users\ciheb\AppData\Local\Programs\Python\Python311\python.exe`, Python 3.11.9: `rdkit 2026.09.1`, `fastapi 0.165.0`, `uvicorn 0.54.0`, `torch 2.11.0+cu128`, `lightgbm 4.7.0`, `xgboost 3.2.0`, `pytest 9.2.0`, `playwright` + Chromium in `%LOCALAPPDATA%\ms-playwright`). **Do NOT use `D:\work\中检院\.venv` (it is a Linux venv) or bare `python` (`hermes-agent\venv`, lacks `rdkit`/`pytest`).**
+   - **Local Windows Web Dev & Playwright Testing**: `py -3.11` (`<LOCAL_HOME>\AppData\Local\Programs\Python\Python311\python.exe`, Python 3.11.9: `rdkit 2026.09.1`, `fastapi 0.165.0`, `uvicorn 0.54.0`, `torch 2.11.0+cu128`, `lightgbm 4.7.0`, `xgboost 3.2.0`, `pytest 9.2.0`, `playwright` + Chromium in `%LOCALAPPDATA%\ms-playwright`). **Do NOT use `D:\work\中检院\.venv` (it is a Linux venv) or bare `python` (`hermes-agent\venv`, lacks `rdkit`/`pytest`).**
    - **Missing Everywhere on `node1`/`node23`**: `catboost`, `chemprop`, `tabpfn` (though `<WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt` 44 MB is cached on disk).
 
 ---
@@ -52,7 +52,7 @@
 | **ESMFold2 / ESMFold2-Fast / ESMFold-v1** | `<WORK_DIR>/.cache/huggingface/hub/models--biohub--ESMFold2` (25 GB), `.../esmfold2/assets/biohub-ESMFold2-Fast@45fe8656` (25 GB), `models--facebook--esmfold_v1` (7.9 GB) | 7.9 – 25 GB | **READY (HEAVY)**. 3D structure prediction only; too slow for 40k-scale feature extraction or real-time web inference. Use only for selected showcase drugs / small endpoints if GPUs free up. |
 | **PepLand** | `<WORK_DIR>/projects/AA_peptide/pepland/cpkt/{model,linear_pred_atoms,linear_pred_bonds,linear_pred_pharms}/data/model.pth` | ~10s MB | **READY**. Fragment/pharmacophore heterogeneous GNN pretrained specifically on canonical + non-canonical peptides. Requires `dgl`/legacy env audit before reuse. |
 | **SaProt-650M-AF2 / all-MiniLM / ESM2-15B** | `<WORK_DIR>/.cache/huggingface/hub/models--*` | 4 KB | **EMPTY STUBS — NOT USABLE OFFLINE**. |
-| **TabPFN v2 weights** | `<WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt` | 44 MB | **WEIGHTS ONLY**. No `tabpfn` Python package installed in `qlyu` envs (would require `pip install tabpfn` in an isolated venv, high payoff for small-N endpoints N=20–500!). |
+| **TabPFN v2 weights** | `<WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt` | 44 MB | **WEIGHTS ONLY**. No `tabpfn` Python package installed in `<WORK_USER>` envs (would require `pip install tabpfn` in an isolated venv, high payoff for small-N endpoints N=20–500!). |
 
 ### 1.2 Survey of Existing Modeling Codebases (`node1` & Local Windows)
 
@@ -88,7 +88,7 @@
 
 ## 2. Python / Conda Environment Audit (`node1`, `node23`, `node2`, Local Windows)
 
-> **Critical Infrastructure Note**: `<WORK_DIR>` (including `<WORK_DIR>/anaconda3`, `<WORK_DIR>/.local`, `<WORK_DIR>/software`, `<WORK_DIR>/esmfold2-env312`, `<WORK_DIR>/ncaa-venv`) is **shared NFS** (`10.0.0.131:/data`) mounted identically on both `node1` and `node23`. Cold imports of large packages (`torch`, `torch_geometric`, `sklearn`, `lightgbm`) over NFS take **8–30 seconds**; keep workers long-lived rather than spawning per-sample processes.
+> **Critical Infrastructure Note**: `<WORK_DIR>` (including `<WORK_DIR>/anaconda3`, `<WORK_DIR>/.local`, `<WORK_DIR>/software`, `<WORK_DIR>/esmfold2-env312`, `<WORK_DIR>/ncaa-venv`) is **shared NFS** (`<STORAGE_HOST>:/data`) mounted identically on both `node1` and `node23`. Cold imports of large packages (`torch`, `torch_geometric`, `sklearn`, `lightgbm`) over NFS take **8–30 seconds**; keep workers long-lived rather than spawning per-sample processes.
 
 ### 2.1 Verified Import Matrix — `node1` & `node23` (16 Target Packages)
 
@@ -106,7 +106,7 @@
 | `tabpfn` | — | — | — | — | — | — |
 | `esm` | — | **2.0.0** (`fair-esm` active; `esm 3.1.6` dist-info present) | **3.4.2** (`EvolutionaryScale`) | **2.0.0** (`fair-esm`) | **2.0.0** (`fair-esm`) | — |
 | `transformers` | **4.44.2** (OK) | **4.48.1** (OK) | **5.22.0.dev0** | — | — | — |
-| `unimol_tools` | — | **OK** (editable `/home/qlyu/dd_model/Uni-Mol/unimol_tools`) | — | — | — | — |
+| `unimol_tools` | — | **OK** (editable `${WORK_DIR}/dd_model/Uni-Mol/unimol_tools`) | — | — | — | — |
 | `scipy` | **1.15.3** (OK) | **1.11.4** (OK) | **1.18.1** | **1.17.1** | **1.17.1** | installed |
 | `fastapi` | — | **0.128.0** (OK) | — | — | — | — |
 | `uvicorn` | — | **0.40.0** (OK) | — | — | — | — |
@@ -117,7 +117,7 @@
 - `<WORK_DIR>/anaconda3/envs/boltz/bin/python`: `torch 2.6.0`, `rdkit 2024.3.2`, `sklearn 1.6.1`, `scipy 1.13.1`.
 - `<WORK_DIR>/anaconda3/envs/esmfold2/bin/python`: `torch 2.15.0`, `transformers 5.22.1`.
 - `<WORK_DIR>/software/micromamba-root/envs/torch-cu126-py311/bin/python`: `torch 2.9.1+cu126`, `transformers 4.57.3`, `sklearn 1.8.0`.
-- **Confirmed Absent Across All ~45 `qlyu` Envs**: `catboost`, `chemprop`, `tabpfn`. *(Can be installed into a new isolated venv under `<WORK_DIR>/v33_venv` if Wave-2 wants CatBoost/TabPFN/Chemprop without touching existing envs.)*
+- **Confirmed Absent Across All ~45 `<WORK_USER>` Envs**: `catboost`, `chemprop`, `tabpfn`. *(Can be installed into a new isolated venv under `<WORK_DIR>/v33_venv` if Wave-2 wants CatBoost/TabPFN/Chemprop without touching existing envs.)*
 
 ---
 
@@ -193,13 +193,13 @@
 ### 5.1 `node23` (CPU Compute + OmniGrid Backend)
 - **Hardware & Disk**: 64 CPU cores, 125 GiB RAM (116 GiB available), **NO GPU**.
   - `/` & `/tmp` (`/dev/sda3`): **236 GiB free** / 549 GiB (55% used) — ample fast local scratch!
-  - `<WORK_DIR>` (`10.0.0.131:/data` NFS): **2.7 TiB free** / 73 TiB (**97% used** — shared cluster volume; keep artifacts tidy).
+  - `<WORK_DIR>` (`<STORAGE_HOST>:/data` NFS): **2.7 TiB free** / 73 TiB (**97% used** — shared cluster volume; keep artifacts tidy).
 - **Live Service (`http://127.0.0.1:8901/health`)**:
   - **HEALTHY — HTTP 200**: `{"ok": true, "models_cached": 152, "entries": 57, "endpoints": 55}` *(Note: `curl` is not installed on `node23`; probe via `/usr/bin/python3` `urllib.request`)*.
-  - Running as `qlyu` PID `1052187` (`bash <WORK_DIR>/s3/omnigrid/run_service.sh` -> PID `1237413` `python3 <WORK_DIR>/s3/omnigrid/node23_omnigrid_service.py`).
+  - Running as `<WORK_USER>` PID `1052187` (`bash <WORK_DIR>/s3/omnigrid/run_service.sh` -> PID `1237413` `python3 <WORK_DIR>/s3/omnigrid/node23_omnigrid_service.py`).
   - **Important Architecture & Fragility Findings**:
     - Implemented using Python stdlib `ThreadingHTTPServer` (NOT FastAPI/Uvicorn), because `/usr/bin/python3` lacks `fastapi`/`uvicorn`.
-    - Reads `<WORK_DIR>/s3/omnigrid/deploy_manifest.json` (11 MB), `engine/` (frozen feature extractors), `halflife_anchor.joblib`, AND **hardcodes `FEAT_MANIFEST` at `/tmp/peptide_modeling_qlyu_multiseed20h_campaign_v1/round_000_seed_42/features/manifest.json`** (volatile `/tmp` dependency — V33 should store its manifest under `<WORK_DIR>/`!).
+    - Reads `<WORK_DIR>/s3/omnigrid/deploy_manifest.json` (11 MB), `engine/` (frozen feature extractors), `halflife_anchor.joblib`, AND **hardcodes `FEAT_MANIFEST` at `/tmp/peptide_modeling_work_multiseed20h_campaign_v1/round_000_seed_42/features/manifest.json`** (volatile `/tmp` dependency — V33 should store its manifest under `<WORK_DIR>/`!).
     - `service.log` shows occasional RDKit SMILES parse errors when raw Chinese drug names (e.g. `卡泊芬净`) are sent without name-to-SMILES resolution.
 - **RDKit & FastAPI/Uvicorn Verification on `node23`**:
   - `/usr/bin/python3` (3.10.12): `rdkit 2026.09.1` smoke test PASSED (`MW=89.094`), `lightgbm 4.7.0`, `xgboost 3.2.0`, `optuna 5.0.0`, `sklearn 1.7.2`, `scipy 1.15.3`, `torch 2.5.1+cu121`, `transformers 4.44.2` all import cleanly. No `fastapi`/`uvicorn`.
@@ -208,15 +208,15 @@
 ### 5.2 Local Windows (`D:\work\中检院`) — Dev & Playwright Testing
 - **Node / npm**: `node v24.14.1` (`C:\Program Files\nodejs\node.exe`), `npm 11.11.0` (`npx playwright` is NOT installed globally/locally in Node; use Python Playwright).
 - **Python Interpreters**:
-  - **RECOMMENDED**: `py -3.11` -> `C:\Users\ciheb\AppData\Local\Programs\Python\Python311\python.exe` (Python 3.11.9)
+  - **RECOMMENDED**: `py -3.11` -> `<LOCAL_HOME>\AppData\Local\Programs\Python\Python311\python.exe` (Python 3.11.9)
     - Verified installed: **`rdkit 2026.09.1`, `fastapi 0.165.0`, `uvicorn 0.54.0`, `starlette 1.10.0`, `jinja2 3.1.6`, `httpx 0.28.1`, `torch 2.11.0+cu128`, `lightgbm 4.7.0`, `xgboost 3.2.0`, `scikit-learn 1.9.0`, `scipy 1.17.1`, `pandas 2.3.3`, `numpy 2.4.6`, `pytest 9.2.0`, `playwright` (with Chromium builds `1208/1223/1234/1243` + headless shells already cached in `%LOCALAPPDATA%\ms-playwright`)**.
   - **DO NOT USE**:
     - `D:\work\中检院\.venv`: **Linux venv** (`home = /root/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/bin`, has `lib64/`, no Windows `Scripts\python.exe`).
-    - Default `PATH` `python`: points to `C:\Users\ciheb\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe` (has `fastapi 0.133.1`, `uvicorn 0.41.0`, `playwright`, but **missing `rdkit` and `pytest`**).
+    - Default `PATH` `python`: points to `<LOCAL_HOME>\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe` (has `fastapi 0.133.1`, `uvicorn 0.41.0`, `playwright`, but **missing `rdkit` and `pytest`**).
     - `uv` managed Pythons (`3.10.20`, `3.12.13`): bare stdlib only.
 
 ### 5.3 `node2` (`<DEPLOY_USER>@<APP_HOST>`, Read-Only Production Web Audit)
-- **Host & Hardware**: `mode2-R6240A0`, `/` has **490 GiB free** / 879 GiB (42% used).
+- **Host & Hardware**: `<APP_HOSTNAME>`, `/` has **490 GiB free** / 879 GiB (42% used).
   - **GPUs**: 2× RTX 4090 — GPU 0: `15,173 / 24,564 MiB` (0% util), GPU 1: `8,901 / 24,564 MiB` (0% util; serves ESM2-650M for OmniPanel/OmniGrid).
 - **Directory Layout (`/var/www/peptide-omnipanel/`)**:
   - `app/` (`src/`, `pyproject.toml`, `requirements.txt`, `.venv/`)
@@ -224,8 +224,8 @@
   - `scripts/run_peptide_omnipanel_v31_web.py` + `run_server.sh` (V31 Gradio on `127.0.0.1:7861`, `cuda:1`)
   - `esm2_650m/`, `models/release_peptide18_a3_20260722/`, `run_exports/`, `run_history/`, `nginx/`, `wheels/`
 - **Active Systemd Services**:
-  - `peptide-omnipanel.service`: active running (`127.0.0.1:7861`, `cuda:1`, user `mode2`).
-  - `peptide-omnigrid.service`: active running (`127.0.0.1:7862`, `cuda:1`, user `mode2`, runs `/var/www/peptide-omnipanel/app/.venv/bin/python /var/www/peptide-omnipanel/omnigrid/app.py`).
+  - `peptide-omnipanel.service`: active running (`127.0.0.1:7861`, `cuda:1`, user `<DEPLOY_USER>`).
+  - `peptide-omnigrid.service`: active running (`127.0.0.1:7862`, `cuda:1`, user `<DEPLOY_USER>`, runs `/var/www/peptide-omnipanel/app/.venv/bin/python /var/www/peptide-omnipanel/omnigrid/app.py`).
 - **Installed Packages in `/var/www/peptide-omnipanel/app/.venv/bin/python` (Python 3.10.12)**:
   - **Web / ASGI (READY for V33 FastAPI!)**: `fastapi 0.141.1`, `uvicorn 0.53.0`, `starlette 0.52.1`, `pydantic 2.12.3`, `Jinja2 3.1.6`, `aiofiles 24.1.0`, `httpx 0.28.1`, `python-multipart 0.0.32`, `gradio 5.50.0`.
   - **ML / Chem / PLM**: `rdkit 2026.03.6`, `torch 2.6.0+cu124`, `transformers 4.57.6`, `lightgbm 4.6.0`, `scikit-learn 1.7.2`, `scipy 1.15.3`, `numpy 2.2.6`, `pandas 2.3.3`.

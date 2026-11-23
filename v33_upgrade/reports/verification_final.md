@@ -3,7 +3,7 @@
 - **Audit Wave**: Wave 3C (Independent Skeptical Final Verification — Strict Read-Only)
 - **Audit Date**: 2026-11-22 CST
 - **Scope**: `internal_research_only`
-- **Audited Environment**: Local Windows (`D:\work\中检院\v33_upgrade\`), `node23` (`10.0.0.3:8902` live V33 inference engine & authoritative bundle), `node1` (SSH tunnel + shared RTX 4090 GPU compliance), `node2` (`<APP_HOST>:7863` staged FastAPI+SPA platform & live V31/V32 production isolation)
+- **Audited Environment**: Local Windows (`D:\work\中检院\v33_upgrade\`), `node23` (`<COMPUTE_HOST>:8902` live V33 inference engine & authoritative bundle), `node1` (SSH tunnel + shared RTX 4090 GPU compliance), `node2` (`<APP_HOST>:7863` staged FastAPI+SPA platform & live V31/V32 production isolation)
 - **Overall Staging Sign-Off**: **GO (APPROVED FOR STAGING — 6/6 GATES PASSED, ZERO BLOCKING DEFECTS)**
 
 ---
@@ -207,8 +207,8 @@ All 5 screenshots in [`D:\work\中检院\v33_upgrade\reports\screenshots\`](file
 Hard rule audited: *Max 2 GPUs on `node1`, only after 2 consecutive `nvidia-smi` samples (5–10 s apart) confirm BOTH `< 50% VRAM (< 12,282 MiB)` AND `< 50% Util`.*
 
 1. **Live `node1` Audit (`2026-11-22 07:39 CST`)**:
-   - `nvidia-smi --query-compute-apps`: **0** `qlyu` V33 GPU compute processes on `node1` (all active compute processes belong to other users `zwdong`, `yxzhang`, `wxsong`, `jhu`, etc.).
-   - `ps -ef | grep qlyu`: The ONLY V33 process on `node1` is the lightweight SSH reverse tunnel (`bash <WORK_DIR>/v33_tunnel.sh` + `ssh -N -R 127.0.0.1:8902:10.0.0.3:8902`, `0%` CPU, `0` GPU), running alongside the untouched V32 tunnel (`omnigrid_tunnel.sh`).
+   - `nvidia-smi --query-compute-apps`: **0** `<WORK_USER>` V33 GPU compute processes on `node1` (all active compute processes belong to other users `zwdong`, `yxzhang`, `wxsong`, `jhu`, etc.).
+   - `ps -ef | grep <WORK_USER>`: The ONLY V33 process on `node1` is the lightweight SSH reverse tunnel (`bash <WORK_DIR>/v33_tunnel.sh` + `ssh -N -R 127.0.0.1:8902:<COMPUTE_HOST>:8902`, `0%` CPU, `0` GPU), running alongside the untouched V32 tunnel (`omnigrid_tunnel.sh`).
 2. **Historical `embedding_manifest.json` & `gpu_compliance_log.jsonl` Audit (`223` Checks)**:
    - Enforced programmatically by [`gpu_gate.py`](file:///D:/work/中检院/v33_upgrade/models_gpu/gpu_gate.py):
      - **`219 / 223` checks** found no eligible GPU → **`selected_gpus = []`** (correctly refused to launch on `node1`).

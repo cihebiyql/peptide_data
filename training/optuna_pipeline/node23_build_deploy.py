@@ -17,7 +17,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 KNOWN_GROUPS = ['morgan','descriptors','graph_modifications','sequence','esm2','morgan_r3',
                 'atompair','torsion','maccs','rdkit_full','dpc','sequence_extra',
                 'rdkit_path','pattern','layered','estate','erg']
-TMP_BASE = '/tmp/peptide_modeling_qlyu_'
+TMP_BASE = '/tmp/peptide_modeling_work_'
 DATA_BASE = '<WORK_DIR>/peptide_modeling_multiseed20h_v1/'
 
 def sha(p):
