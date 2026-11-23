@@ -41,28 +41,38 @@ def main() -> None:
     assert h["v33_remote_healthy"] is True
     assert h["endpoints_total"] == 46
 
-    # Check live Semaglutide prediction (smiles_only track: efflux_ratio + MBC_S_aureus MT46 + Mondrian + Atom Attribution SVG)
+    # Check /endpoints overall_summary consistency & MBC_E_faecalis Chinese metadata
+    eps_doc = api_json("api/v1/endpoints")
+    from collections import Counter
+    actual_fam = dict(Counter(e["winning_family"] for e in eps_doc["endpoints"]))
+    assert eps_doc["overall_summary"]["dual_modality_winning_family_counts"] == actual_fam, (
+        f"overall_summary mismatch: {eps_doc['overall_summary']['dual_modality_winning_family_counts']} vs {actual_fam}"
+    )
+    mbc_ef = next(e for e in eps_doc["endpoints"] if e["endpoint"] == "MBC_E_faecalis")
+    assert "粪肠球菌" in mbc_ef["display_zh"]
+    print(f"[API] /endpoints PASS: 46 EPs, overall_summary synced={actual_fam}, MBC_E_faecalis={mbc_ef['display_zh']}")
+
+    # Check live Semaglutide prediction (Route A: strict zero-holdout-peeking Wave 5A weights + Mondrian + honest 2D Graph Surrogate SVG)
     p_sema = api_json("api/v1/predict", {"query": "Semaglutide", "include_tier2": True, "include_svg": True})
     assert p_sema["adapter_mode"] == "v33_remote"
-    assert p_sema["atom_attribution_svg"] and "<svg" in p_sema["atom_attribution_svg"]
+    assert p_sema["atom_attribution_svg"] and "2D Graph Surrogate" in p_sema["atom_attribution_svg"]
+    assert "Surrogate:" in p_sema["atom_attribution_svg"]
+    assert p_sema["atom_attribution_endpoint"] == "PAMPA"
     assert len(p_sema["atom_attribution_endpoints"]) == 8
     by_ep = {p["endpoint"]: p for p in p_sema["predictions"]}
-    assert "mt46" in (by_ep["efflux_ratio"]["weights"] or {}), f"MT46 missing on efflux_ratio (smiles_only): {by_ep['efflux_ratio']['weights']}"
-    assert "mt46" in (by_ep["MBC_S_aureus"]["weights"] or {}), f"MT46 missing on MBC_S_aureus (smiles_only): {by_ep['MBC_S_aureus']['weights']}"
+    assert "mt46" not in (by_ep["efflux_ratio"]["weights"] or {})
     print(
         f"[API] Semaglutide ({p_sema['modality_track']}) PASS: efflux_ratio={by_ep['efflux_ratio']['value_display']} "
-        f"(weights={by_ep['efflux_ratio']['weights']}), "
-        f"MBC_S_aureus weights={by_ep['MBC_S_aureus']['weights']}, "
-        f"attr_ep={p_sema['atom_attribution_endpoint']}"
+        f"(weights={by_ep['efflux_ratio']['weights']}), attr_ep={p_sema['atom_attribution_endpoint']} (2D Graph Surrogate)"
     )
 
-    # Check live Exenatide prediction (dual_modality track: efflux_ratio + cytotoxicity_CC50 + hemolysis_MHC + MIC_Salmonella + MIC_B_subtilis MT46!)
+    # Check live Exenatide prediction (dual_modality track, zero MT46 train-serve mismatch)
     p_exen = api_json("api/v1/predict", {"query": "Exenatide", "include_tier2": True, "include_svg": False})
     ex_ep = {p["endpoint"]: p for p in p_exen["predictions"]}
     for mt_ep in ("efflux_ratio", "cytotoxicity_CC50", "hemolysis_MHC", "MIC_Salmonella", "MIC_B_subtilis"):
-        assert "mt46" in (ex_ep[mt_ep]["weights"] or {}), f"MT46 missing on {mt_ep} (dual_modality): {ex_ep[mt_ep]['weights']}"
+        assert "mt46" not in (ex_ep[mt_ep]["weights"] or {})
     print(
-        f"[API] Exenatide ({p_exen['modality_track']}) PASS: 5/5 dual_modality MT46 heads verified! "
+        f"[API] Exenatide ({p_exen['modality_track']}) PASS: 46/46 strict Wave 5A weights + Mondrian AD-EB verified! "
         f"(CC50={ex_ep['cytotoxicity_CC50']['value_display']}, MHC={ex_ep['hemolysis_MHC']['value_display']}, "
         f"efflux={ex_ep['efflux_ratio']['value_display']})"
     )

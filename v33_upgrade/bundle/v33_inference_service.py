@@ -807,13 +807,12 @@ class V33InferenceEngine:
         cond_rows = [cond_dict] * len(idx)
 
         preds = []
-        with self.deep_lock:
-            for model, ckpt in models_5:
-                mu, _ = predict_from_numpy(
-                    model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
-                    cond_rows=cond_rows, eval_mode=track, device="cpu",
-                )
-                preds.append(mu)
+        for model, ckpt in models_5:
+            mu, _ = predict_from_numpy(
+                model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
+                cond_rows=cond_rows, eval_mode=track, device="cpu",
+            )
+            preds.append(mu)
         out = np.mean(np.stack(preds, axis=0), axis=0)
         deep_cache[ckey] = out
         return out
@@ -854,14 +853,13 @@ class V33InferenceEngine:
         cond_rows = [cond_dict] * len(idx)
 
         preds = []
-        with self.deep_lock:
-            for model, ckpt in self.mt46_models:
-                mu, _ = predict_mt46_from_numpy(
-                    model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
-                    cond_rows=cond_rows, canonical_conditions=cond_dict, bounds=bounds,
-                    eval_mode=track, device="cpu",
-                )
-                preds.append(mu)
+        for model, ckpt in self.mt46_models:
+            mu, _ = predict_mt46_from_numpy(
+                model, ckpt, ep, phys, nc_s, nc_f, nc_p, pc, cb, esmc_4, sv, qv,
+                cond_rows=cond_rows, canonical_conditions=cond_dict, bounds=bounds,
+                eval_mode=track, device="cpu",
+            )
+            preds.append(mu)
         out = np.mean(np.stack(preds, axis=0), axis=0)
         deep_cache[ckey] = out
         return out

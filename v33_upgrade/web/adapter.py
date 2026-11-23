@@ -96,7 +96,6 @@ V33_ENDPOINT_ORDER: tuple[str, ...] = (
     "cytotoxicity_CC50",
     # Tier 1 — Physicochemical & In Vitro
     "LogD7.4",
-    "LogP",
     "solubility_reg",
     "solubility_cls",
     # Tier 2 — Reference-Strain Antimicrobial MICs (ESKAPE + Clinical)
@@ -118,18 +117,12 @@ V33_ENDPOINT_ORDER: tuple[str, ...] = (
     "MBC_S_aureus",
     "MBC_P_aeruginosa",
     "MBC_A_baumannii",
-    "MBC_B_subtilis",
-    "MBC_K_pneumoniae",
-    "MBC_S_epidermidis",
+    "MBC_E_faecalis",
     "LC_antimicrobial",
-    "LC_lemma",
     # Tier 2 — Antifungal Fungicidal & Anti-Biofilm
     "MFC_C_albicans",
-    "MFC",
     "MBIC_biofilm",
-    "MBIC",
     "MBEC_biofilm",
-    "MBEC",
 )
 
 # Presentation-only metadata (UI bar scale bounds & scientific scope disclosures — NO numeric metrics here!)
@@ -343,14 +336,6 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "input_requirements": "SMILES or Sequence + PK route/species",
         "scope_note": "Total-body distribution volume (L); complements weight-normalized Vd/kg for clinical PBPK scaling.",
     },
-    "LogP": {
-        "display_en": "Partition Coefficient (LogP)",
-        "display_zh": "实验油水分配系数 LogP",
-        "ci_bar_min": -3.0,
-        "ci_bar_max": 5.5,
-        "input_requirements": "SMILES or Sequence (experimental shake-flask/HPLC)",
-        "scope_note": "Experimental octanol-water partition coefficient (strictly excluding calculated CLogP/ALogP).",
-    },
     "hemolysis_MHC": {
         "display_en": "Hemolysis MHC / HC10",
         "display_zh": "最小/10%溶血浓度 MHC/HC10",
@@ -473,29 +458,13 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "input_requirements": "Sequence or SMILES (Bactericidal assay)",
         "scope_note": "Minimum bactericidal concentration against ESKAPE A. baumannii (µM).",
     },
-    "MBC_B_subtilis": {
-        "display_en": "B. subtilis Bactericidal MBC",
-        "display_zh": "枯草芽孢杆菌最小杀菌浓度 MBC",
+    "MBC_E_faecalis": {
+        "display_en": "E. faecalis Bactericidal MBC",
+        "display_zh": "粪肠球菌最小杀菌浓度 MBC",
         "ci_bar_min": -1.0,
         "ci_bar_max": 3.0,
         "input_requirements": "Sequence or SMILES (Bactericidal assay)",
-        "scope_note": "Minimum bactericidal concentration against Gram-positive B. subtilis (µM).",
-    },
-    "MBC_K_pneumoniae": {
-        "display_en": "K. pneumoniae Bactericidal MBC",
-        "display_zh": "肺炎克雷伯菌最小杀菌浓度 MBC",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.0,
-        "input_requirements": "Sequence or SMILES (Bactericidal assay)",
-        "scope_note": "Minimum bactericidal concentration against ESKAPE K. pneumoniae (µM).",
-    },
-    "MBC_S_epidermidis": {
-        "display_en": "S. epidermidis Bactericidal MBC",
-        "display_zh": "表皮葡萄球菌最小杀菌浓度 MBC",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.0,
-        "input_requirements": "Sequence or SMILES (Bactericidal assay)",
-        "scope_note": "Minimum bactericidal concentration against S. epidermidis (µM).",
+        "scope_note": "Minimum bactericidal concentration (99.9% killing) against Gram-positive Enterococcus faecalis (µM).",
     },
     "MFC_C_albicans": {
         "display_en": "C. albicans Fungicidal MFC",
@@ -505,23 +474,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "input_requirements": "Sequence or SMILES (Fungicidal assay)",
         "scope_note": "Minimum fungicidal concentration against Candida albicans (µM).",
     },
-    "MFC": {
-        "display_en": "Antifungal Fungicidal MFC",
-        "display_zh": "真菌最小杀菌浓度 MFC",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.0,
-        "input_requirements": "Sequence or SMILES (Species-conditioned antifungal)",
-        "scope_note": "Species-conditioned minimum fungicidal concentration across fungal reference strains (µM).",
-    },
     "MBIC_biofilm": {
-        "display_en": "Biofilm Inhibition (MBIC)",
-        "display_zh": "最小生物膜抑制浓度 MBIC",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.0,
-        "input_requirements": "Sequence or SMILES (Anti-biofilm assay)",
-        "scope_note": "Minimum biofilm inhibitory concentration (µM); lower values indicate stronger biofilm prevention.",
-    },
-    "MBIC": {
         "display_en": "Biofilm Inhibition (MBIC)",
         "display_zh": "最小生物膜抑制浓度 MBIC",
         "ci_bar_min": -1.0,
@@ -537,23 +490,7 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "input_requirements": "Sequence or SMILES (Mature biofilm assay)",
         "scope_note": "Minimum biofilm eradication concentration (µM) against preformed bacterial biofilms.",
     },
-    "MBEC": {
-        "display_en": "Biofilm Eradication (MBEC)",
-        "display_zh": "最小生物膜清除浓度 MBEC",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.2,
-        "input_requirements": "Sequence or SMILES (Mature biofilm assay)",
-        "scope_note": "Minimum biofilm eradication concentration (µM) against preformed bacterial biofilms.",
-    },
     "LC_antimicrobial": {
-        "display_en": "Antimicrobial Lethal Conc. (LC)",
-        "display_zh": "抗菌致死浓度 LC (DBAASP)",
-        "ci_bar_min": -1.0,
-        "ci_bar_max": 3.0,
-        "input_requirements": "Sequence or SMILES (Species-conditioned bactericidal)",
-        "scope_note": "Minimum lethal concentration in DBAASP antimicrobial killing assays (µM).",
-    },
-    "LC_lemma": {
         "display_en": "Antimicrobial Lethal Conc. (LC)",
         "display_zh": "抗菌致死浓度 LC (DBAASP)",
         "ci_bar_min": -1.0,
@@ -1082,14 +1019,30 @@ class OmniPanelAdapter:
 
     @staticmethod
     def _default_attribution_endpoint(physchem: PhysChemSummary, mod_badges: list[Any]) -> str:
+        """Select the most faithful 2D-graph surrogate endpoint (avoid unconditional half_life_reg)."""
         mod_keys = {getattr(b, "key", "") for b in (mod_badges or [])}
-        if "fatty_diacid" in mod_keys or "fatty_acyl" in mod_keys:
-            return "half_life_reg"
         if "macrocycle" in mod_keys or len(physchem.macrocycle_rings) > 0:
             return "PAMPA"
         if physchem.net_charge_ph74 >= 2.0:
-            return "hemolysis_cls"
+            return "hemolysis_HC50"
         return "PAMPA"
+
+    @staticmethod
+    def _format_gnn_surrogate_value(ep: str, gnn_pred: Optional[dict[str, Any]]) -> Optional[str]:
+        if not gnn_pred or gnn_pred.get("value") is None:
+            return None
+        v = float(gnn_pred["value"])
+        tt = str(gnn_pred.get("task_type") or "regression")
+        unit = str(gnn_pred.get("unit") or "")
+        if tt == "classification":
+            return f"{v * 100.0:.1f}%"
+        if unit == "log10(cm/s)":
+            return f"{10.0 ** max(-15.0, min(15.0, v)):.2e} cm/s"
+        if unit == "log10(uM)":
+            return f"{10.0 ** max(-15.0, min(15.0, v)):.3g} µM"
+        if unit == "log10(h)":
+            return f"{10.0 ** max(-15.0, min(15.0, v)):.3g} h"
+        return f"{v:.3g}"
 
     def compute_atom_attribution(
         self,
@@ -1099,7 +1052,7 @@ class OmniPanelAdapter:
         height: int = 460,
         prediction_text: Optional[str] = None,
     ) -> Optional[dict[str, Any]]:
-        """Run cached 5-fold Pure-PyTorch E-GAT attribution & render publication-grade RDKit SVG."""
+        """Run cached 5-fold Pure-PyTorch E-GAT 2D-graph surrogate attribution & render RDKit SVG."""
         eng = self._get_gnn_engine()
         if eng is None or resolved.mol is None:
             return None
@@ -1114,8 +1067,8 @@ class OmniPanelAdapter:
             res = cached
             cache_hit = True
         else:
-            with self._gnn_lock:
-                res = eng.predict_and_attribute(smi, is_sequence=False, endpoints=eng.endpoints)
+            # Read-only PyTorch eval() + no_grad() is thread-safe on CPU without serializing behind a global lock
+            res = eng.predict_and_attribute(smi, is_sequence=False, endpoints=eng.endpoints)
             self._gnn_cache.set(smi, res)
 
         weights = res["atom_weights"][ep]
@@ -1123,7 +1076,16 @@ class OmniPanelAdapter:
         gnn_pred = res["predictions"].get(ep)
         ep_label = (ENDPOINT_UI_META.get(ep) or {}).get("display_en") or GNN_8_TASK_META.get(ep, {}).get("label", ep)
 
-        # Render publication-grade SVG with cool-to-warm perceptual palette
+        # Always label the GNN surrogate's own prediction explicitly (never misattribute ensemble pred to GNN!)
+        surr_disp = self._format_gnn_surrogate_value(ep, gnn_pred)
+        badge_parts: list[str] = []
+        if prediction_text:
+            badge_parts.append(prediction_text)
+        if surr_disp:
+            badge_parts.append(f"Surrogate: {surr_disp}")
+        combined_badge = " · ".join(badge_parts) if badge_parts else None
+
+        # Render publication-grade SVG with signed cool-neutral-warm perceptual palette
         svg_str = render_atom_attribution_svg(
             resolved.mol,
             weights=weights,
@@ -1131,11 +1093,11 @@ class OmniPanelAdapter:
             width=width,
             height=height,
             title=f"{resolved.query_name} · {ep_label}",
-            prediction_text=prediction_text,
+            prediction_text=combined_badge,
         )
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
-        # Top-8 highest-contribution heavy atoms
-        order = sorted(range(len(weights)), key=lambda i: weights[i], reverse=True)[:8]
+        # Top-8 highest-magnitude contributing heavy atoms (distance from neutral 0.50)
+        order = sorted(range(len(weights)), key=lambda i: abs(weights[i] - 0.5), reverse=True)[:8]
         top_atoms = [
             {"atom_index": int(i), "symbol": str(symbols[i]), "weight": round(float(weights[i]), 4)}
             for i in order
@@ -2235,7 +2197,7 @@ class OmniPanelAdapter:
                 pred_badge = None
                 if ep_pred is not None:
                     u_part = f" {ep_pred.unit}" if ep_pred.unit and ep_pred.unit not in ("probability", "fraction", "fraction_bound") else ""
-                    pred_badge = f"Pred: {ep_pred.value_display}{u_part}"
+                    pred_badge = f"Ensemble: {ep_pred.value_display}{u_part}"
                 attr = self.compute_atom_attribution(
                     resolved=resolved,
                     endpoint=def_ep,

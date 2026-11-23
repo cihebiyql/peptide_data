@@ -1,5 +1,5 @@
 /**
- * Peptide OmniPanel 1.1 — Frontend SPA Controller
+ * Peptide OmniPanel 1.2 — Frontend SPA Controller
  * Features:
  *  - Atmospheric DeepSeek-Harness Hero, Procedural Molecular Canvas & Scroll Reveals
  *  - 4 Clinical Modality Showcase Cards, Interactive Human ADMET Barrier Map & 4-FM Animated Pipeline
@@ -541,7 +541,7 @@ function hydrateHealthUi(data, { forceStatic = false } = {}) {
   pill.classList.remove("offline", "fallback");
   if (data.adapter_mode === "v33_remote" || data.v33_remote_healthy) {
     txt.textContent = t(state.lang, "status_online", { n: data.endpoints_total });
-    pill.title = `Peptide OmniPanel 1.1 · RDKit ${data.rdkit_version}`;
+    pill.title = `Peptide OmniPanel 1.2 · RDKit ${data.rdkit_version}`;
   } else {
     pill.classList.add("fallback");
     txt.textContent = t(state.lang, "status_fallback", { n: data.endpoints_total });

@@ -448,7 +448,9 @@ def test_all_25_curated_examples_and_echinocandins():
 
 
 def test_mondrian_conformal_manifest_and_live_atom_attribution():
-    """Verify Plan B Mondrian AD-EB conformal manifest metadata + live Pure-PyTorch E-GAT atom attribution API."""
+    """Verify Route A zero-leakage Mondrian AD-EB conformal manifest + synced overall_summary + 2D Graph Surrogate E-GAT API."""
+    from collections import Counter
+
     manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["version"] == "v33.2"
@@ -459,10 +461,16 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
             conf = manifest["endpoints"][ep][tr]["conformal"]
             assert conf["mode"] == "mondrian_ad_eb"
             assert set(conf["q80_by_tier"].keys()) == {"In-Domain", "Borderline", "OOD"}
-    # Promoted MT46 tracks verified present
-    assert manifest["endpoints"]["efflux_ratio"]["dual_modality"]["weights"].get("mt46", 0) > 0.3
-    assert manifest["endpoints"]["cytotoxicity_CC50"]["dual_modality"]["weights"].get("mt46", 0) > 0.2
-    assert manifest["endpoints"]["hemolysis_MHC"]["dual_modality"]["weights"].get("mt46", 0) > 0.3
+    # Route A strict zero-holdout-peeking & zero train-serve mismatch: no unified_mt46 loaded
+    assert manifest["serving_inventory"].get("mt46_checkpoint_refs") == []
+    assert manifest["serving_inventory"].get("mt46_promoted_endpoints") == []
+    # Top-level overall_summary winning-family counts must match 46 endpoints 100%
+    actual_dual = dict(Counter(v["dual_modality"]["winning_family"] for v in manifest["endpoints"].values()))
+    assert manifest["overall_summary"]["dual_modality_winning_family_counts"] == actual_dual
+    # Verify MBC_E_faecalis UI metadata is present (no English fallback)
+    ep_res = client.get("/api/v1/endpoints").json()
+    mbc_ef = next(e for e in ep_res["endpoints"] if e["endpoint"] == "MBC_E_faecalis")
+    assert "粪肠球菌" in mbc_ef["display_zh"]
 
     # Test POST /api/v1/atom-attribution if checkpoint is available in workspace
     res = client.post(
@@ -472,15 +480,18 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
     if res.status_code == 200:
         d = res.json()
         assert "<svg" in d["svg"]
+        assert "2D Graph Surrogate" in d["svg"]
+        assert "Surrogate:" in d["svg"]
         assert d["endpoint"] == "PAMPA"
         assert d["n_atoms"] == 85
         assert len(d["top_atoms"]) >= 5
         assert len(d["available_endpoints"]) == 8
-        # Also verify /predict auto-attaches atom_attribution_svg when include_svg=True
-        rp = client.post("/api/v1/predict", json={"query": "Cyclosporine A", "include_svg": True})
+        # Also verify /predict auto-attaches atom_attribution_svg when include_svg=True (never unconditional half_life_reg default)
+        rp = client.post("/api/v1/predict", json={"query": "Semaglutide", "include_svg": True})
         assert rp.status_code == 200
         dp = rp.json()
-        assert dp["atom_attribution_svg"] and "<svg" in dp["atom_attribution_svg"]
+        assert dp["atom_attribution_svg"] and "2D Graph Surrogate" in dp["atom_attribution_svg"]
+        assert dp["atom_attribution_endpoint"] == "PAMPA"
         assert len(dp["atom_attribution_endpoints"]) == 8
     else:
         assert res.status_code == 503

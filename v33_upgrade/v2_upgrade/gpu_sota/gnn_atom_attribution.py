@@ -624,29 +624,23 @@ class PurePyTorchEGATNet(nn.Module):
 
 
 def _normalize_atom_scores(sig: np.ndarray, local_c: np.ndarray) -> np.ndarray:
-    """Deterministic gradient-free per-atom importance score strictly in [0.0, 1.0].
+    """Signed, magnitude-calibrated per-atom contribution score in [0.0, 1.0] centered at 0.50 (neutral).
 
-    Combines task-specific WeightAndSum gate attention `sig` with magnitude of the grounded
-    additive pharmacophore contribution `|sig * local_c|`, smoothly normalized per molecule.
+    Preserves the sign of the grounded additive WeightAndSum contribution `sig * local_c`:
+      - < 0.50 (blue): negative / suppressing contribution
+      - ~ 0.50 (neutral): weak / negligible contribution (scale floor 0.35 prevents false crimson hotspots on low-signal peptides)
+      - > 0.50 (amber -> crimson): positive / enhancing contribution
     """
-    sig = np.asarray(sig, dtype=np.float64)
-    mag = np.abs(sig * np.asarray(local_c, dtype=np.float64))
-    if len(sig) <= 1:
-        return np.clip(sig, 0.0, 1.0)
-
-    def _robust_minmax(v: np.ndarray) -> np.ndarray:
-        lo = float(np.percentile(v, 5))
-        hi = float(np.percentile(v, 98))
-        if hi - lo < 1e-8:
-            lo, hi = float(v.min()), float(v.max())
-        if hi - lo < 1e-8:
-            return np.full_like(v, 0.5)
-        return np.clip((v - lo) / (hi - lo), 0.0, 1.0)
-
-    s1 = _robust_minmax(sig)
-    s2 = _robust_minmax(mag)
-    comb = 0.55 * s1 + 0.45 * s2
-    return np.clip(comb, 0.0, 1.0)
+    sig_a = np.asarray(sig, dtype=np.float64)
+    lc_a = np.asarray(local_c, dtype=np.float64)
+    if len(sig_a) == 0:
+        return np.array([], dtype=np.float64)
+    signed = sig_a * lc_a
+    # Robust magnitude scale with a 0.35 floor so flat/low-signal peptides remain muted near neutral 0.50
+    p95 = float(np.percentile(np.abs(signed), 95)) if len(signed) > 1 else float(abs(signed[0]))
+    scale = max(p95, 0.35)
+    norm_signed = np.clip(signed / scale, -1.0, 1.0)
+    return np.clip(0.5 + 0.5 * norm_signed, 0.0, 1.0)
 
 
 # =============================================================================
@@ -723,11 +717,8 @@ class GNNAtomAttributionEngine:
         for ep in target_eps:
             meta = GNN_8_TASK_META[ep]
             p_arr = np.asarray(preds_accum[ep], dtype=np.float64)
-            w_mean = np.mean(weights_accum[ep], axis=0)
-            # Re-stretch ensemble mean cleanly into [0, 1] while preserving exact monotonicity
-            if len(w_mean) > 1 and (w_mean.max() - w_mean.min()) > 1e-8:
-                w_mean = (w_mean - w_mean.min()) / (w_mean.max() - w_mean.min())
-            w_mean = np.clip(w_mean, 0.0, 1.0)
+            # Keep signed neutral-centered [0, 1] ensemble mean WITHOUT forcible min-max rescaling
+            w_mean = np.clip(np.mean(weights_accum[ep], axis=0), 0.0, 1.0)
             atom_weights[ep] = [round(float(v), 4) for v in w_mean]
             rec: Dict[str, Any] = {
                 "value": round(float(p_arr.mean()), 5),
@@ -832,7 +823,7 @@ def render_atom_attribution_svg(
             rdDepictor.SetPreferCoordGen(False)
             AllChem.Compute2DCoords(mol_obj)
 
-    header_h = 46
+    header_h = 54
     footer_h = 54
     draw_h = max(240, height - header_h - footer_h)
 
@@ -903,16 +894,16 @@ def render_atom_attribution_svg(
   <rect x="0" y="0" width="{width}" height="{height}" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.2"/>
   <rect x="0" y="0" width="{width}" height="{header_h}" rx="10" fill="#F8FAFC"/>
   <line x1="0" y1="{header_h}" x2="{width}" y2="{header_h}" stroke="#E2E8F0" stroke-width="1"/>
-  <text x="18" y="29" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#0F172A">{_xml_escape(hdr_title)}</text>
-  <text x="{width - 18}" y="29" text-anchor="end" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="500" fill="#475569">Pure-PyTorch E-GAT WeightAndSum (n={n_atoms} atoms){_xml_escape(pred_badge)}</text>
+  <text x="18" y="23" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14.5" font-weight="600" fill="#0F172A">{_xml_escape(hdr_title)}</text>
+  <text x="18" y="42" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11.5" font-weight="500" fill="#475569">2D Graph Surrogate (E-GAT, n={n_atoms}){_xml_escape(pred_badge)}</text>
   <g transform="translate(0, {header_h})">
     {inner_mol_svg}
   </g>
   <line x1="16" y1="{header_h + draw_h + 2}" x2="{width - 16}" y2="{header_h + draw_h + 2}" stroke="#F1F5F9" stroke-width="1"/>
   <rect x="{legend_x}" y="{legend_y}" width="{legend_w}" height="12" rx="6" fill="url(#{grad_id})" stroke="#CBD5E1" stroke-width="0.8"/>
-  <text x="{legend_x}" y="{legend_y + 27}" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">0.00 Low</text>
-  <text x="{legend_x + legend_w // 2}" y="{legend_y + 27}" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">0.50 Moderate</text>
-  <text x="{legend_x + legend_w}" y="{legend_y + 27}" text-anchor="end" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#991B1B">1.00 High Contribution</text>
+  <text x="{legend_x}" y="{legend_y + 27}" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" fill="#1E40AF">Negative (−)</text>
+  <text x="{legend_x + legend_w // 2}" y="{legend_y + 27}" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">Neutral (0)</text>
+  <text x="{legend_x + legend_w}" y="{legend_y + 27}" text-anchor="end" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#991B1B">Positive (+)</text>
 </svg>
 """
     return svg_doc

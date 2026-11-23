@@ -1,7 +1,7 @@
 {
   "schema": "peptide_omnipanel_v33_authoritative_manifest_v1",
   "version": "v33.2",
-  "generated_at": "2026-11-23 01:48:49 +0800",
+  "generated_at": "2026-11-23 15:30:38 +0800",
   "selection_protocol": {
     "zero_holdout_peeking": true,
     "super_ensemble_adoption_margin": 0.0005,
@@ -33,16 +33,16 @@
   },
   "overall_summary": {
     "dual_modality_winning_family_counts": {
-      "cpu": 1,
+      "cpu": 3,
       "deep": 3,
-      "fusion": 7,
-      "super_ensemble": 13
+      "fusion": 22,
+      "super_ensemble": 18
     },
     "smiles_only_winning_family_counts": {
-      "cpu": 3,
+      "cpu": 7,
       "deep": 2,
-      "fusion": 10,
-      "super_ensemble": 9
+      "fusion": 25,
+      "super_ensemble": 12
     },
     "classification_6_holdout_dual_means": {
       "cpu_roc_auc": 0.86725,
@@ -62,10 +62,10 @@
       "fusion_spearman": 0.61745,
       "deep_spearman": 0.58595,
       "v33_champion_spearman": 0.62346,
-      "v33_conformal_cov80": 0.76051,
-      "v33_conformal_cov90": 0.88883,
-      "v33_conformal_cov80_medium_large_10": 0.80841,
-      "v33_conformal_cov90_medium_large_10": 0.90633
+      "v33_conformal_cov80": 0.76078,
+      "v33_conformal_cov90": 0.88408,
+      "v33_conformal_cov80_medium_large_10": 0.80376,
+      "v33_conformal_cov90_medium_large_10": 0.90177
     },
     "v331_expansion_22_summary": {
       "n_new_endpoints": 22,
@@ -83,8 +83,20 @@
       "mean_holdout_dual_spearman": 0.46644,
       "mean_holdout_dual_r2": 0.19677,
       "mean_holdout_smiles_mae": 0.50935,
-      "mean_conformal_cov80": 0.76505,
-      "mean_conformal_cov90": 0.88737
+      "mean_conformal_cov80": 0.76795,
+      "mean_conformal_cov90": 0.88022
+    },
+    "all_46_dual_modality_winning_family_counts": {
+      "cpu": 3,
+      "deep": 3,
+      "fusion": 22,
+      "super_ensemble": 18
+    },
+    "all_46_smiles_only_winning_family_counts": {
+      "cpu": 7,
+      "deep": 2,
+      "fusion": 25,
+      "super_ensemble": 12
     }
   },
   "representation_ablation_summary": {
@@ -422,21 +434,8 @@
       "v33_models",
       "xgboost"
     ],
-    "mt46_checkpoint_refs": [
-      "models_gpu_deep/mt46_checkpoints/unified_mt46_fold0.pt",
-      "models_gpu_deep/mt46_checkpoints/unified_mt46_fold1.pt",
-      "models_gpu_deep/mt46_checkpoints/unified_mt46_fold2.pt",
-      "models_gpu_deep/mt46_checkpoints/unified_mt46_fold3.pt",
-      "models_gpu_deep/mt46_checkpoints/unified_mt46_fold4.pt"
-    ],
-    "mt46_promoted_endpoints": [
-      "MBC_S_aureus",
-      "MIC_B_subtilis",
-      "MIC_Salmonella",
-      "cytotoxicity_CC50",
-      "efflux_ratio",
-      "hemolysis_MHC"
-    ],
+    "mt46_checkpoint_refs": [],
+    "mt46_promoted_endpoints": [],
     "gnn_atom_attribution_ckpt": "bundle/gnn_8ep_5fold_fp16.pt",
     "gnn_atom_attribution_endpoints": [
       "PAMPA",
@@ -21102,12 +21101,10 @@
         }
       },
       "smiles_only": {
-        "winning_family": "super_ensemble",
-        "is_super_ensemble": true,
+        "winning_family": "fusion",
+        "is_super_ensemble": false,
         "weights": {
-          "cpu": 0.34244,
-          "fusion": 0.35822,
-          "mt46": 0.29934
+          "fusion": 1.0
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": -0.00108,
@@ -21115,30 +21112,30 @@
           "n_total": 441,
           "n_exact": 358,
           "n_censored": 83,
-          "mae": 0.52489,
-          "rmse": 0.66798,
-          "r2": 0.23615,
-          "spearman": 0.46251,
-          "pearson": 0.49096,
-          "censored_concordance": 0.07229,
-          "censored_violation_mae": 0.71152,
-          "all_row_hinge_mae": 0.56001,
-          "censored_c_index": 0.66172
+          "mae": 0.52905,
+          "rmse": 0.66737,
+          "r2": 0.23755,
+          "spearman": 0.45518,
+          "pearson": 0.48763,
+          "censored_concordance": 0.08434,
+          "censored_violation_mae": 0.78162,
+          "all_row_hinge_mae": 0.57659,
+          "censored_c_index": 0.6511
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 110,
           "n_exact": 99,
           "n_censored": 11,
-          "mae": 0.641,
-          "rmse": 0.83971,
-          "r2": 0.0037,
-          "spearman": 0.29988,
-          "pearson": 0.28246,
+          "mae": 0.65474,
+          "rmse": 0.83631,
+          "r2": 0.01175,
+          "spearman": 0.29237,
+          "pearson": 0.29412,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.69568,
-          "all_row_hinge_mae": 0.64647,
-          "censored_c_index": 0.61774
+          "censored_violation_mae": 0.75549,
+          "all_row_hinge_mae": 0.66481,
+          "censored_c_index": 0.61391
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -21268,11 +21265,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.7677,
           "legacy_v331_cov90": 0.8081
-        },
-        "legacy_v331_weights": {
-          "fusion": 1.0
-        },
-        "legacy_v331_winning_family": "fusion"
+        }
       },
       "censored_head": {
         "dual_modality": {
@@ -24008,9 +24001,8 @@
         "winning_family": "super_ensemble",
         "is_super_ensemble": true,
         "weights": {
-          "cpu": 0.22124,
-          "fusion": 0.51896,
-          "mt46": 0.2598
+          "cpu": 0.2801,
+          "fusion": 0.7199
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": 0.00099,
@@ -24018,30 +24010,30 @@
           "n_total": 1180,
           "n_exact": 1133,
           "n_censored": 47,
-          "mae": 0.44232,
-          "rmse": 0.57164,
-          "r2": 0.40582,
-          "spearman": 0.63459,
-          "pearson": 0.64615,
+          "mae": 0.44496,
+          "rmse": 0.57459,
+          "r2": 0.39967,
+          "spearman": 0.62914,
+          "pearson": 0.6402,
           "censored_concordance": 0.10638,
-          "censored_violation_mae": 0.59842,
-          "all_row_hinge_mae": 0.44854,
-          "censored_c_index": 0.72593
+          "censored_violation_mae": 0.6411,
+          "all_row_hinge_mae": 0.45277,
+          "censored_c_index": 0.72235
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 295,
           "n_exact": 279,
           "n_censored": 16,
-          "mae": 0.55703,
-          "rmse": 0.77882,
-          "r2": 0.1646,
-          "spearman": 0.41693,
-          "pearson": 0.41157,
+          "mae": 0.55945,
+          "rmse": 0.77983,
+          "r2": 0.16243,
+          "spearman": 0.41419,
+          "pearson": 0.40454,
           "censored_concordance": 0.0625,
-          "censored_violation_mae": 1.03081,
-          "all_row_hinge_mae": 0.58272,
-          "censored_c_index": 0.63967
+          "censored_violation_mae": 0.99566,
+          "all_row_hinge_mae": 0.58311,
+          "censored_c_index": 0.64052
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -24178,12 +24170,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.7061,
           "legacy_v331_cov90": 0.7885
-        },
-        "legacy_v331_weights": {
-          "cpu": 0.2801,
-          "fusion": 0.7199
-        },
-        "legacy_v331_winning_family": "super_ensemble"
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -28341,9 +28328,8 @@
         "winning_family": "super_ensemble",
         "is_super_ensemble": true,
         "weights": {
-          "cpu": 0.46957,
-          "fusion": 0.26051,
-          "mt46": 0.26992
+          "cpu": 0.44036,
+          "fusion": 0.55964
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": 0.0012,
@@ -28351,30 +28337,30 @@
           "n_total": 575,
           "n_exact": 505,
           "n_censored": 70,
-          "mae": 0.53226,
-          "rmse": 0.68119,
-          "r2": 0.25516,
-          "spearman": 0.50633,
-          "pearson": 0.51744,
+          "mae": 0.5353,
+          "rmse": 0.6817,
+          "r2": 0.25404,
+          "spearman": 0.48998,
+          "pearson": 0.50573,
           "censored_concordance": 0.01429,
-          "censored_violation_mae": 0.7631,
-          "all_row_hinge_mae": 0.56036,
-          "censored_c_index": 0.70081
+          "censored_violation_mae": 0.95079,
+          "all_row_hinge_mae": 0.58589,
+          "censored_c_index": 0.68776
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 144,
           "n_exact": 135,
           "n_censored": 9,
-          "mae": 0.53701,
-          "rmse": 0.70508,
-          "r2": 0.26437,
-          "spearman": 0.5412,
-          "pearson": 0.52473,
+          "mae": 0.5498,
+          "rmse": 0.70309,
+          "r2": 0.2685,
+          "spearman": 0.5467,
+          "pearson": 0.53977,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.8119,
-          "all_row_hinge_mae": 0.55419,
-          "censored_c_index": 0.69723
+          "censored_violation_mae": 0.85749,
+          "all_row_hinge_mae": 0.56903,
+          "censored_c_index": 0.69813
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -28504,12 +28490,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.7704,
           "legacy_v331_cov90": 0.9259
-        },
-        "legacy_v331_weights": {
-          "cpu": 0.44036,
-          "fusion": 0.55964
-        },
-        "legacy_v331_winning_family": "super_ensemble"
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -29571,12 +29552,10 @@
       },
       "v32_reference": null,
       "dual_modality": {
-        "winning_family": "super_ensemble",
-        "is_super_ensemble": true,
+        "winning_family": "fusion",
+        "is_super_ensemble": false,
         "weights": {
-          "cpu": 0.3634,
-          "fusion": 0.35844,
-          "mt46": 0.27816
+          "fusion": 1.0
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": 0.00036,
@@ -29584,30 +29563,30 @@
           "n_total": 2678,
           "n_exact": 1996,
           "n_censored": 682,
-          "mae": 0.40645,
-          "rmse": 0.60437,
-          "r2": 0.41208,
-          "spearman": 0.61037,
-          "pearson": 0.65283,
-          "censored_concordance": 0.26833,
-          "censored_violation_mae": 0.3063,
-          "all_row_hinge_mae": 0.38094,
-          "censored_c_index": 0.74978
+          "mae": 0.41407,
+          "rmse": 0.60428,
+          "r2": 0.41224,
+          "spearman": 0.59649,
+          "pearson": 0.65532,
+          "censored_concordance": 0.21848,
+          "censored_violation_mae": 0.34401,
+          "all_row_hinge_mae": 0.39623,
+          "censored_c_index": 0.74031
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 669,
           "n_exact": 478,
           "n_censored": 191,
-          "mae": 0.39309,
-          "rmse": 0.54863,
-          "r2": 0.55844,
-          "spearman": 0.67737,
-          "pearson": 0.7665,
+          "mae": 0.40572,
+          "rmse": 0.5621,
+          "r2": 0.53649,
+          "spearman": 0.65232,
+          "pearson": 0.75312,
           "censored_concordance": 0.20942,
-          "censored_violation_mae": 0.25334,
-          "all_row_hinge_mae": 0.35319,
-          "censored_c_index": 0.78225
+          "censored_violation_mae": 0.28749,
+          "all_row_hinge_mae": 0.37196,
+          "censored_c_index": 0.76454
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -29744,11 +29723,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.7992,
           "legacy_v331_cov90": 0.8996
-        },
-        "legacy_v331_weights": {
-          "fusion": 1.0
-        },
-        "legacy_v331_winning_family": "fusion"
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -30195,12 +30170,10 @@
       },
       "v32_reference": null,
       "dual_modality": {
-        "winning_family": "super_ensemble",
-        "is_super_ensemble": true,
+        "winning_family": "fusion",
+        "is_super_ensemble": false,
         "weights": {
-          "cpu": 0.29586,
-          "fusion": 0.31757,
-          "mt46": 0.38657
+          "fusion": 1.0
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": -0.00429,
@@ -30208,30 +30181,30 @@
           "n_total": 138,
           "n_exact": 124,
           "n_censored": 14,
-          "mae": 0.3572,
-          "rmse": 0.4887,
-          "r2": 0.50326,
-          "spearman": 0.60681,
-          "pearson": 0.71382,
+          "mae": 0.37085,
+          "rmse": 0.49758,
+          "r2": 0.48505,
+          "spearman": 0.56928,
+          "pearson": 0.6968,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.37647,
-          "all_row_hinge_mae": 0.35916,
-          "censored_c_index": 0.75412
+          "censored_violation_mae": 0.72481,
+          "all_row_hinge_mae": 0.40676,
+          "censored_c_index": 0.68441
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 33,
           "n_exact": 32,
           "n_censored": 1,
-          "mae": 0.34723,
-          "rmse": 0.39991,
-          "r2": 0.71892,
-          "spearman": 0.74109,
-          "pearson": 0.88983,
+          "mae": 0.35987,
+          "rmse": 0.43316,
+          "r2": 0.67024,
+          "spearman": 0.64155,
+          "pearson": 0.84254,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.57807,
-          "all_row_hinge_mae": 0.35422,
-          "censored_c_index": 0.78011
+          "censored_violation_mae": 0.72065,
+          "all_row_hinge_mae": 0.3708,
+          "censored_c_index": 0.72562
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -30368,19 +30341,13 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.875,
           "legacy_v331_cov90": 0.9688
-        },
-        "legacy_v331_weights": {
-          "fusion": 1.0
-        },
-        "legacy_v331_winning_family": "fusion"
+        }
       },
       "smiles_only": {
-        "winning_family": "super_ensemble",
-        "is_super_ensemble": true,
+        "winning_family": "cpu",
+        "is_super_ensemble": false,
         "weights": {
-          "cpu": 0.5555,
-          "fusion": 0.09679,
-          "mt46": 0.34771
+          "cpu": 1.0
         },
         "best_single_family": "cpu",
         "nested_super_delta_over_best_single": -0.01284,
@@ -30388,30 +30355,30 @@
           "n_total": 138,
           "n_exact": 124,
           "n_censored": 14,
-          "mae": 0.38274,
-          "rmse": 0.5174,
-          "r2": 0.44319,
-          "spearman": 0.55587,
-          "pearson": 0.67295,
+          "mae": 0.38402,
+          "rmse": 0.50581,
+          "r2": 0.46786,
+          "spearman": 0.53453,
+          "pearson": 0.68581,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.41991,
-          "all_row_hinge_mae": 0.38651,
-          "censored_c_index": 0.73112
+          "censored_violation_mae": 0.58472,
+          "all_row_hinge_mae": 0.40438,
+          "censored_c_index": 0.69707
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 33,
           "n_exact": 32,
           "n_censored": 1,
-          "mae": 0.36893,
-          "rmse": 0.42253,
-          "r2": 0.68622,
-          "spearman": 0.6872,
-          "pearson": 0.8757,
+          "mae": 0.40727,
+          "rmse": 0.47885,
+          "r2": 0.597,
+          "spearman": 0.57007,
+          "pearson": 0.82403,
           "censored_concordance": 0.0,
-          "censored_violation_mae": 0.47655,
-          "all_row_hinge_mae": 0.37219,
-          "censored_c_index": 0.78011
+          "censored_violation_mae": 0.48583,
+          "all_row_hinge_mae": 0.40965,
+          "censored_c_index": 0.71702
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -30548,11 +30515,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.9375
-        },
-        "legacy_v331_weights": {
-          "cpu": 1.0
-        },
-        "legacy_v331_winning_family": "cpu"
+        }
       },
       "censored_head": {
         "dual_modality": {
@@ -30823,11 +30786,10 @@
       },
       "v32_reference": null,
       "dual_modality": {
-        "winning_family": "super_ensemble",
-        "is_super_ensemble": true,
+        "winning_family": "fusion",
+        "is_super_ensemble": false,
         "weights": {
-          "fusion": 0.61357,
-          "mt46": 0.38643
+          "fusion": 1.0
         },
         "best_single_family": "fusion",
         "nested_super_delta_over_best_single": -0.00151,
@@ -30835,30 +30797,30 @@
           "n_total": 397,
           "n_exact": 276,
           "n_censored": 121,
-          "mae": 0.38435,
-          "rmse": 0.52319,
-          "r2": 0.63868,
-          "spearman": 0.76223,
-          "pearson": 0.8059,
-          "censored_concordance": 0.41322,
-          "censored_violation_mae": 0.30617,
-          "all_row_hinge_mae": 0.36052,
-          "censored_c_index": 0.82953
+          "mae": 0.41027,
+          "rmse": 0.56054,
+          "r2": 0.58526,
+          "spearman": 0.71534,
+          "pearson": 0.76961,
+          "censored_concordance": 0.28099,
+          "censored_violation_mae": 0.41453,
+          "all_row_hinge_mae": 0.41157,
+          "censored_c_index": 0.80748
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 99,
           "n_exact": 55,
           "n_censored": 44,
-          "mae": 0.47378,
-          "rmse": 0.5582,
-          "r2": 0.34607,
-          "spearman": 0.56743,
-          "pearson": 0.61711,
-          "censored_concordance": 0.38636,
-          "censored_violation_mae": 0.34374,
-          "all_row_hinge_mae": 0.41598,
-          "censored_c_index": 0.7686
+          "mae": 0.48303,
+          "rmse": 0.56905,
+          "r2": 0.32041,
+          "spearman": 0.55048,
+          "pearson": 0.59616,
+          "censored_concordance": 0.20455,
+          "censored_violation_mae": 0.45217,
+          "all_row_hinge_mae": 0.46932,
+          "censored_c_index": 0.73722
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
@@ -30995,11 +30957,7 @@
           "method": "mondrian_ad_eb",
           "legacy_v331_cov80": 0.8,
           "legacy_v331_cov90": 0.9455
-        },
-        "legacy_v331_weights": {
-          "fusion": 1.0
-        },
-        "legacy_v331_winning_family": "fusion"
+        }
       },
       "smiles_only": {
         "winning_family": "cpu",
@@ -31552,9 +31510,11 @@
     "n_ad_reference_compounds": 50994
   },
   "plan_b_upgrades": {
+    "audit_compliance": "route_a_strict_zero_holdout_peeking",
     "conformal_calibration": {
       "mode": "mondrian_ad_eb",
       "n_regression_endpoints": 40,
+      "residual_alignment": "exact_100pct_frozen_wave5a",
       "pure_json_zero_overhead": true,
       "pooled_ood_cov80_dual": {
         "before": 0.642,
@@ -31572,96 +31532,13 @@
       }
     },
     "mt46_deep_transfer": {
-      "n_promoted_tracks": 7,
-      "promoted_tracks": [
-        {
-          "endpoint": "efflux_ratio",
-          "track": "dual_modality",
-          "weights": {
-            "cpu": 0.29586,
-            "fusion": 0.31757,
-            "mt46": 0.38657
-          },
-          "delta_cv_mae": -0.01365,
-          "delta_ho_mae": -0.01264,
-          "delta_ho_spearman": 0.09954
-        },
-        {
-          "endpoint": "efflux_ratio",
-          "track": "smiles_only",
-          "weights": {
-            "cpu": 0.5555,
-            "fusion": 0.09679,
-            "mt46": 0.34771
-          },
-          "delta_cv_mae": -0.00128,
-          "delta_ho_mae": -0.03834,
-          "delta_ho_spearman": 0.11713
-        },
-        {
-          "endpoint": "cytotoxicity_CC50",
-          "track": "dual_modality",
-          "weights": {
-            "cpu": 0.3634,
-            "fusion": 0.35844,
-            "mt46": 0.27816
-          },
-          "delta_cv_mae": -0.00762,
-          "delta_ho_mae": -0.01263,
-          "delta_ho_spearman": 0.02505
-        },
-        {
-          "endpoint": "hemolysis_MHC",
-          "track": "dual_modality",
-          "weights": {
-            "fusion": 0.61357,
-            "mt46": 0.38643
-          },
-          "delta_cv_mae": -0.02592,
-          "delta_ho_mae": -0.00925,
-          "delta_ho_spearman": 0.01695
-        },
-        {
-          "endpoint": "MIC_Salmonella",
-          "track": "dual_modality",
-          "weights": {
-            "cpu": 0.46957,
-            "fusion": 0.26051,
-            "mt46": 0.26992
-          },
-          "delta_cv_mae": -0.00304,
-          "delta_ho_mae": -0.01279,
-          "delta_ho_spearman": -0.0055
-        },
-        {
-          "endpoint": "MIC_B_subtilis",
-          "track": "dual_modality",
-          "weights": {
-            "cpu": 0.22124,
-            "fusion": 0.51896,
-            "mt46": 0.2598
-          },
-          "delta_cv_mae": -0.00264,
-          "delta_ho_mae": -0.00242,
-          "delta_ho_spearman": 0.00274
-        },
-        {
-          "endpoint": "MBC_S_aureus",
-          "track": "smiles_only",
-          "weights": {
-            "cpu": 0.34244,
-            "fusion": 0.35822,
-            "mt46": 0.29934
-          },
-          "delta_cv_mae": -0.00416,
-          "delta_ho_mae": -0.01374,
-          "delta_ho_spearman": 0.00751
-        }
-      ],
-      "core24_point_prediction_diff": 0.0
+      "status": "archived_research_only",
+      "n_promoted_tracks": 0,
+      "reason": "Deferred after independent audit flagged post-hoc holdout filtering and unified-vs-per-endpoint train-serve mismatch; all 46 endpoints preserve strict OOF-selected Wave 5A point weights (0.0 diff)."
     },
     "gnn_atom_attribution": {
-      "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum",
+      "role": "2D Graph Surrogate Attribution (E-GAT)",
+      "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum (signed magnitude-calibrated)",
       "checkpoint": "gnn_8ep_5fold_fp16.pt",
       "checkpoint_mb": 17.47,
       "endpoints": [

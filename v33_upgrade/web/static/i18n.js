@@ -132,7 +132,7 @@ export const TRANSLATIONS = {
     svg_tab_motifs: "修饰高亮",
     svg_tab_attr: "原子归因热图",
     svg_attr_pending: "当后端返回原子归因热图时自动启用",
-    svg_attr_caption: "Pure-PyTorch E-GAT 原子级归因热图 · 红=高贡献药效团 / 蓝=低权重区域",
+    svg_attr_caption: "2D 图代理模型 (E-GAT) 原子贡献热图 · 红=正向推高(+) / 蓝=负向降低(−)（主预测由 4-FM 超集成给出）",
     svg_attr_loading: "正在计算 E-GAT 原子归因热图…",
     api_desc_attr: "实时计算 8 大核心端点的 Pure-PyTorch E-GAT 原子级可解释性归因热图 SVG",
 
@@ -475,7 +475,7 @@ export const TRANSLATIONS = {
     svg_tab_motifs: "Motif Highlights",
     svg_tab_attr: "Atom Attribution",
     svg_attr_pending: "Auto-enables when live atom attribution is available",
-    svg_attr_caption: "Pure-PyTorch E-GAT atom attribution · Crimson = high pharmacophore weight / Blue = low",
+    svg_attr_caption: "2D Graph Surrogate (E-GAT) atom contribution · Crimson = positive (+) / Blue = negative (−); main value from 4-FM ensemble",
     svg_attr_loading: "Computing E-GAT atom attribution heatmap…",
     api_desc_attr: "Live Pure-PyTorch E-GAT per-atom attribution heatmap SVG across 8 core endpoints (<100 ms)",
 

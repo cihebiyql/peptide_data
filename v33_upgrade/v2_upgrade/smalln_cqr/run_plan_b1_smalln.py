@@ -1003,7 +1003,7 @@ def _worker_run_endpoint(args: Tuple[str, bool, int]) -> Dict[str, Any]:
     promoted_dir.mkdir(parents=True, exist_ok=True)
     joblib_path = None
     joblib_modules: List[str] = []
-    if res_dual["portable"]["promoted"] or res_smi["portable"]["promoted"]:
+    if res_dual["portable_bundle"] is not None or res_smi["portable_bundle"] is not None:
         payload = {
             "schema": "v33_plan_b1_smalln_endpoint_v1",
             "endpoint": ep,
