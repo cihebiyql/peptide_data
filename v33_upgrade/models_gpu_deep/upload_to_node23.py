@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync verified V33 GPU Deep artifacts to node23:/data/qlyu/v33_upgrade/models_gpu_deep/
+"""Sync verified V33 GPU Deep artifacts to node23:<WORK_DIR>/v33_upgrade/models_gpu_deep/
 and verify remote file completeness & exact row counts.
 """
 from __future__ import annotations
@@ -12,7 +12,7 @@ from pathlib import Path
 from deep_data import ALL_ENDPOINTS, OUT_ROOT
 
 REMOTE_HOST = "node23"
-REMOTE_DIR = "/data/qlyu/v33_upgrade/models_gpu_deep"
+REMOTE_DIR = "<WORK_DIR>/v33_upgrade/models_gpu_deep"
 
 
 def main() -> None:

@@ -1,11 +1,14 @@
 """Production entrypoint for self-contained Peptide OmniPanel V33 on node2.
 
 Runs via existing systemd unit `peptide-omnigrid.service` (User=mode2, 127.0.0.1:7862),
-which Nginx `/peptide-omnipanel/` already proxies. Zero `node23` / `node1` runtime dependency.
+which Nginx `/peptide-omnipanel/` proxies. Zero external cluster runtime dependency.
 
-On startup (including after any future node2 reboot), ensures the local V33 super-ensemble
-inference engine (`127.0.0.1:8902`) is running via `/var/www/peptide-omnipanel/v33_next/run_local_engine.sh`
-before launching the FastAPI web app on `127.0.0.1:7862`.
+Features:
+  - Strict live-inference mode (`V33_STRICT_REMOTE=1`): never silently falls back to hardcoded heuristics.
+  - Public health path redaction (`V33_PUBLIC_HEALTH_REDACT=1`).
+  - Background startup warmup of all 25 curated examples into 24h TTL cache (`V33_WARMUP_EXAMPLES=1`).
+  - Self-healing watchdog thread that monitors `127.0.0.1:8902` every 30s and relaunches the local
+    inference engine (via user systemd unit if installed, or `run_local_engine.sh`) if it ever exits.
 """
 from __future__ import annotations
 
@@ -14,6 +17,7 @@ import os
 import socket
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -32,6 +36,13 @@ os.environ["OMNIPANEL_GNN_CKPT"] = os.environ.get(
     "OMNIPANEL_GNN_CKPT",
     str(V33_DIR / "v33_runtime" / "bundle" / "gnn_8ep_5fold_fp16.pt"),
 )
+os.environ["V33_STRICT_REMOTE"] = os.environ.get("V33_STRICT_REMOTE", "1")
+os.environ["V33_PUBLIC_HEALTH_REDACT"] = os.environ.get("V33_PUBLIC_HEALTH_REDACT", "1")
+os.environ["V33_WARMUP_EXAMPLES"] = os.environ.get("V33_WARMUP_EXAMPLES", "1")
+os.environ["V33_CACHE_TTL_SEC"] = os.environ.get("V33_CACHE_TTL_SEC", "86400")
+os.environ["V33_CACHE_MAXSIZE"] = os.environ.get("V33_CACHE_MAXSIZE", "1024")
+os.environ["V33_WEB_MAX_CONCURRENT"] = os.environ.get("V33_WEB_MAX_CONCURRENT", "4")
+os.environ["V33_WEB_QUEUE_TIMEOUT"] = os.environ.get("V33_WEB_QUEUE_TIMEOUT", "25")
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 
@@ -52,10 +63,25 @@ def _pid_is_v33_engine(pid: int) -> bool:
 
 
 def ensure_local_v33_engine() -> None:
-    """Idempotently start local node2 V33 inference engine if not already listening or booting."""
+    """Idempotently start local V33 inference engine if not already listening or booting."""
     if _port_open("127.0.0.1", 8902):
-        print("[OmniPanel V33] Local V33 inference engine already listening on 127.0.0.1:8902", flush=True)
         return
+
+    # Prefer user-level systemd unit if present and reachable
+    user_unit = Path.home() / ".config" / "systemd" / "user" / "v33-inference-engine.service"
+    if user_unit.exists():
+        try:
+            r = subprocess.run(
+                ["systemctl", "--user", "start", "v33-inference-engine.service"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            if r.returncode == 0:
+                print("[OmniPanel V33] Triggered user systemd v33-inference-engine.service", flush=True)
+                return
+        except Exception:
+            pass
 
     launcher = V33_DIR / "run_local_engine.sh"
     if not launcher.exists():
@@ -74,10 +100,6 @@ def ensure_local_v33_engine() -> None:
             try:
                 old_pid = int(pid_path.read_text(encoding="utf-8").strip())
                 if old_pid > 0 and _pid_is_v33_engine(old_pid):
-                    print(
-                        f"[OmniPanel V33] Local V33 inference engine (pid={old_pid}) is already warming up.",
-                        flush=True,
-                    )
                     return
             except Exception:
                 pass
@@ -93,18 +115,38 @@ def ensure_local_v33_engine() -> None:
         )
         pid_path.write_text(f"{proc.pid}\n", encoding="utf-8")
         print(f"[OmniPanel V33] Local V33 engine started in background (pid={proc.pid}).", flush=True)
-        # Brief pause so fast checks see the spawned PID; adapter.py auto-reconnects once /health is 200
         time.sleep(0.5)
+
+
+def _start_engine_watchdog() -> None:
+    """Supervise local :8902 engine from within the root-systemd-managed web service."""
+
+    def _loop() -> None:
+        while True:
+            time.sleep(30.0)
+            try:
+                if not _port_open("127.0.0.1", 8902, timeout=1.5):
+                    print("[OmniPanel Watchdog] :8902 unreachable; ensuring local V33 engine...", flush=True)
+                    ensure_local_v33_engine()
+            except Exception as exc:
+                print(f"[OmniPanel Watchdog] check error: {exc}", flush=True)
+
+    threading.Thread(target=_loop, name="v33-engine-watchdog", daemon=True).start()
 
 
 import uvicorn  # noqa: E402
 
 
 def main() -> None:
-    ensure_local_v33_engine()
+    if _port_open("127.0.0.1", 8902):
+        print("[OmniPanel V33] Local V33 inference engine already listening on 127.0.0.1:8902", flush=True)
+    else:
+        ensure_local_v33_engine()
+    _start_engine_watchdog()
     print(
         f"[OmniPanel V33] Launching FastAPI on 127.0.0.1:7862 "
-        f"(root_path={os.environ['V33_ROOT_PATH']}, remote={os.environ['V33_REMOTE_URL']})",
+        f"(root_path={os.environ['V33_ROOT_PATH']}, strict_remote={os.environ['V33_STRICT_REMOTE']}, "
+        f"warmup={os.environ['V33_WARMUP_EXAMPLES']})",
         flush=True,
     )
     uvicorn.run(

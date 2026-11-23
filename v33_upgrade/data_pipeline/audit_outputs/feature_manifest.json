@@ -25,7 +25,7 @@
     "Insulin_degludec": 14107
   },
   "physchem_core": {
-    "file": "/data/qlyu/v33_upgrade/features/physchem_core.npz",
+    "file": "<WORK_DIR>/v33_upgrade/features/physchem_core.npz",
     "sha256": "a6981a31f01a8c2081180ec471087844c572d9a31c40135c2b5e41369610775c",
     "size_bytes": 7327603,
     "shape": [
@@ -123,7 +123,7 @@
     ]
   },
   "fp_compact": {
-    "file": "/data/qlyu/v33_upgrade/features/fp_compact.npz",
+    "file": "<WORK_DIR>/v33_upgrade/features/fp_compact.npz",
     "sha256": "aa9691e9b4b5e6220b0be06fc61e6c213f6b42006c1326461b173789b00f0b51",
     "size_bytes": 44305928,
     "arrays": {
@@ -162,7 +162,7 @@
     }
   },
   "morgan_bits_1024": {
-    "file": "/data/qlyu/v33_upgrade/features/morgan_bits_1024.npz",
+    "file": "<WORK_DIR>/v33_upgrade/features/morgan_bits_1024.npz",
     "sha256": "442e8d3b6b8f49edef6786b29ed46d7268370a89aa259cd4b39280e96d1c5401",
     "size_bytes": 6251573,
     "arrays": {
@@ -183,7 +183,7 @@
     }
   },
   "compound_index": {
-    "file": "/data/qlyu/v33_upgrade/features/compound_index.tsv",
+    "file": "<WORK_DIR>/v33_upgrade/features/compound_index.tsv",
     "sha256": "800e73ddf2306aa796d1566bfbd66d032d085e632474f5158a2ce5692afa871d",
     "size_bytes": 3190491
   },

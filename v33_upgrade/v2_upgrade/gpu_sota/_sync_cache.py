@@ -34,23 +34,23 @@ def pull_tar(remote_cmd: str, dest_dir: Path) -> None:
 def main() -> None:
     t0 = time.time()
     pull_tar(
-        "tar -C /data/qlyu/v33_upgrade/expansion_v331 -cf - "
+        "tar -C <WORK_DIR>/v33_upgrade/expansion_v331 -cf - "
         "data/compounds_v331_merged.tsv data/v331_split_summary.json data/endpoints "
         "features/compound_index.tsv features/feature_manifest.json features/morgan_bits_1024.npz features/physchem_core.npz "
         "embeddings",
         CACHE / "expansion_v331",
     )
     pull_tar(
-        "tar -C /data/qlyu/v33_upgrade/expansion_v331 --exclude='*.joblib' -cf - models_cpu models_fusion",
+        "tar -C <WORK_DIR>/v33_upgrade/expansion_v331 --exclude='*.joblib' -cf - models_cpu models_fusion",
         CACHE / "expansion_v331",
     )
     pull_tar(
-        "tar -C /data/qlyu/v33_upgrade/models_cpu --exclude='*.joblib' -cf - "
+        "tar -C <WORK_DIR>/v33_upgrade/models_cpu --exclude='*.joblib' -cf - "
         "PAMPA Caco2 MDCK RRCK F PPB LogD7.4 half_life_reg CL_per_kg Vd_per_kg",
         CACHE / "core_models_cpu",
     )
     pull_tar(
-        "tar -C /data/qlyu/v33_upgrade/models_fusion --exclude='*.joblib' -cf - "
+        "tar -C <WORK_DIR>/v33_upgrade/models_fusion --exclude='*.joblib' -cf - "
         "PAMPA Caco2 MDCK RRCK F PPB LogD7.4 half_life_reg CL_per_kg Vd_per_kg",
         CACHE / "core_models_fusion",
     )

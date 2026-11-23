@@ -3,9 +3,9 @@
 - **Audit Date**: 2026-11-21 CST
 - **Overall Gate Verdict**: **PASS (ALL HARD ASSERTIONS 100% PASSED; 1 MINOR RAW-STAGE OOB BOUND CAUGHT & FIXED IN FINAL ENDPOINTS; 3 UPSTREAM SOURCE NUANCES DOCUMENTED HONESTLY)**
 - **Audited Scripts & Outputs**:
-  - Updated split & clustering script: [`03_cluster_and_split.py`](file:///D:/work/中检院/v33_upgrade/data_pipeline/03_cluster_and_split.py) (deployed to `node23:/data/qlyu/v33_upgrade/scripts/03_cluster_and_split.py`)
-  - Updated independent verifier: [`05_verify_all.py`](file:///D:/work/中检院/v33_upgrade/data_pipeline/05_verify_all.py) (deployed to `node23:/data/qlyu/v33_upgrade/scripts/05_verify_all.py`)
-  - Verified remote dataset: `node23:/data/qlyu/v33_upgrade/data/endpoints/*.tsv` (24 files, 69,111 rows)
+  - Updated split & clustering script: [`03_cluster_and_split.py`](file:///D:/work/中检院/v33_upgrade/data_pipeline/03_cluster_and_split.py) (deployed to `node23:<WORK_DIR>/v33_upgrade/scripts/03_cluster_and_split.py`)
+  - Updated independent verifier: [`05_verify_all.py`](file:///D:/work/中检院/v33_upgrade/data_pipeline/05_verify_all.py) (deployed to `node23:<WORK_DIR>/v33_upgrade/scripts/05_verify_all.py`)
+  - Verified remote dataset: `node23:<WORK_DIR>/v33_upgrade/data/endpoints/*.tsv` (24 files, 69,111 rows)
   - Downloaded JSON receipts: [`split_summary.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/split_summary.json), [`verification_report.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/verification_report.json)
 
 ---
@@ -108,7 +108,7 @@ Inspecting Wave-1's [`03_cluster_and_split.py`](file:///D:/work/中检院/v33_up
 
 ## 5. Gate Sign-Off
 
-Data Cleaning 2.0 on `node23:/data/qlyu/v33_upgrade/` is **CLEARED FOR WAVE-2 MODEL TRAINING**:
+Data Cleaning 2.0 on `node23:<WORK_DIR>/v33_upgrade/` is **CLEARED FOR WAVE-2 MODEL TRAINING**:
 - **24/24 endpoints** verified leak-free and fold-balanced (`10%–35%` rule, zero exceptions).
 - **69,111 rows** verified finite, physically bounded, sentinel-free, and condition-labeled.
 - **46,598-compound feature bank** SHA-256 verified and frozen untouched alongside `compounds_v33.tsv`.

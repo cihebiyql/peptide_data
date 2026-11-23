@@ -17,9 +17,9 @@ import optuna
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 warnings.filterwarnings('ignore')
 csv.field_size_limit(10_000_000)
-DATA = Path('/data/qlyu/s3')
+DATA = Path('<WORK_DIR>/s3')
 CACHE = DATA / 'feat_cache'
-PER = Path('/data/qlyu/s3_per')
+PER = Path('<WORK_DIR>/s3_per')
 OUT = DATA / 'complete'
 CKPT = OUT / 'checkpoint.json'
 (OUT / 'models').mkdir(parents=True, exist_ok=True)

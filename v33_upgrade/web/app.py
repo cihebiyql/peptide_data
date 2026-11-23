@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import os
 import re
+import threading
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
@@ -15,7 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from rdkit import rdBase
 
 from . import __version__
-from .adapter import OmniPanelAdapter
+from .adapter import EngineBusyError, EngineUnavailableError, OmniPanelAdapter
 from .batch_parser import MAX_BATCH_SIZE, items_from_batch_request, parse_batch_text
 from .chem_utils import InputValidationError, compute_physchem, render_molecule_svg
 from .drug_library import (
@@ -47,19 +49,48 @@ from .schemas import (
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 ROOT_PATH = os.environ.get("V33_ROOT_PATH", "").strip()
 CLIENT_ID_RE = re.compile(r"^[A-Za-z0-9_\-]{6,64}$")
+MAX_UPLOAD_BYTES = int(os.environ.get("V33_MAX_UPLOAD_BYTES", str(2 * 1024 * 1024)))
+ENABLE_DOCS = os.environ.get("V33_ENABLE_DOCS", "1").strip().lower() not in ("0", "false", "no")
+REDACT_HEALTH_PATHS = os.environ.get("V33_PUBLIC_HEALTH_REDACT", "0").strip().lower() in ("1", "true", "yes")
+
+adapter = OmniPanelAdapter()
+job_manager = JobManager(adapter=adapter)
+
+
+def _start_background_warmup() -> None:
+    if os.environ.get("V33_WARMUP_EXAMPLES", "0").strip().lower() not in ("1", "true", "yes"):
+        return
+
+    def _runner() -> None:
+        try:
+            n = adapter.warmup_curated_examples()
+            print(f"[OmniPanel] Pre-warmed {n}/25 curated examples into 24h TTL cache.", flush=True)
+        except Exception as exc:
+            print(f"[OmniPanel] Warmup skipped/partial: {exc}", flush=True)
+
+    threading.Thread(target=_runner, name="omnipanel-warmup", daemon=True).start()
+
+
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    _start_background_warmup()
+    yield
+
 
 app = FastAPI(
     title="Peptide OmniPanel API",
     description=(
         "Publication-grade peptide & cyclic-peptide ADMET, pharmacokinetics, safety, and antimicrobial "
         "prediction platform powered by a 4-foundation-model super-ensemble (46 tiered endpoints, "
-        "calibrated probabilities, conformal uncertainty intervals, exact Tanimoto AD, and async task tracking). "
+        "calibrated probabilities, AD-stratified empirical uncertainty intervals, exact Tanimoto AD, and async task tracking). "
         "Scope: internal_research_only."
     ),
     version=__version__,
     root_path=ROOT_PATH,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/docs" if ENABLE_DOCS else None,
+    redoc_url="/redoc" if ENABLE_DOCS else None,
+    openapi_url="/openapi.json" if ENABLE_DOCS else None,
+    lifespan=_lifespan,
 )
 
 app.add_middleware(
@@ -68,9 +99,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-adapter = OmniPanelAdapter()
-job_manager = JobManager(adapter=adapter)
 
 
 def _resolve_client_id(header_id: Optional[str], query_id: Optional[str] = None) -> str:
@@ -91,11 +119,11 @@ def get_health() -> HealthResponse:
         version=__version__,
         adapter_mode=adapter.mode,
         bundle_loaded=bool(adapter.manifest),
-        bundle_path=str(adapter.manifest_path) if adapter.manifest_path else None,
-        v33_remote_url=adapter.remote_url,
+        bundle_path=None if REDACT_HEALTH_PATHS else (str(adapter.manifest_path) if adapter.manifest_path else None),
+        v33_remote_url=None if REDACT_HEALTH_PATHS else adapter.remote_url,
         v33_remote_healthy=adapter.remote_healthy,
         manifest_loaded=bool(adapter.manifest),
-        manifest_path=str(adapter.manifest_path) if adapter.manifest_path else None,
+        manifest_path=None if REDACT_HEALTH_PATHS else (str(adapter.manifest_path) if adapter.manifest_path else None),
         rdkit_version=rdBase.rdkitVersion,
         endpoints_total=len(catalog),
         tier1_endpoints=sum(1 for e in catalog if e.tier == 1),
@@ -236,6 +264,10 @@ def post_predict(
         )
     except InputValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
@@ -312,6 +344,10 @@ def post_batch_predict(req: BatchPredictRequest) -> BatchPredictResponse:
 
     try:
         return _execute_batch_rows(parsed_rows, include_tier2=req.include_tier2, conditions=req.conditions)
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
@@ -323,8 +359,21 @@ async def post_batch_upload(
     rbc_species: str = Form(default="human"),
     pk_context: str = Form(default="human_plasma"),
 ) -> BatchPredictResponse:
-    """Upload a .csv, .tsv, .txt, or .fasta file (up to 500 molecules) and run synchronous batch prediction."""
-    raw_bytes = await file.read()
+    """Upload a .csv, .tsv, .txt, or .fasta file (<=2 MB, up to 500 molecules) and run synchronous batch prediction."""
+    chunks: list[bytes] = []
+    total_bytes = 0
+    while True:
+        chunk = await file.read(65536)
+        if not chunk:
+            break
+        total_bytes += len(chunk)
+        if total_bytes > MAX_UPLOAD_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail=f"Uploaded file exceeds maximum allowed size ({MAX_UPLOAD_BYTES // (1024 * 1024)} MB).",
+            )
+        chunks.append(chunk)
+    raw_bytes = b"".join(chunks)
     text = ""
     for enc in ("utf-8-sig", "utf-8", "gbk", "latin-1"):
         try:
@@ -343,7 +392,14 @@ async def post_batch_upload(
         rbc_species=rbc_species if rbc_species in ("human", "horse", "mouse") else "human",  # type: ignore[arg-type]
         pk_context=pk_context if pk_context in ("human_plasma", "human_sc", "human_po", "rat_iv", "mouse_sc") else "human_plasma",  # type: ignore[arg-type]
     )
-    return _execute_batch_rows(parsed.rows, include_tier2=include_tier2, conditions=cond)
+    try:
+        return _execute_batch_rows(parsed.rows, include_tier2=include_tier2, conditions=cond)
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 # ==================== ASYNC TASK CENTER ENDPOINTS ====================

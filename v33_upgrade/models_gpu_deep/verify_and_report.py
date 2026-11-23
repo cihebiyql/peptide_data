@@ -291,7 +291,7 @@ def generate_report(summary: Dict[str, Any], verif: Dict[str, Any]) -> None:
     lines.append("")
     lines.append(f"- **Generated**: {summary['generated_at']} | **Total Runtime**: `{summary['total_elapsed_sec']:.1f}s`")
     lines.append(f"- **Compute Hardware**: Local idle `{st.get('gpu_name', 'RTX 5080')}` (`{st.get('vram_total_mib', 16303)} MiB`, PyTorch `{st.get('torch_version')}`, `bf16` TensorCores, peak allocated `{gpu_info['peak_torch_allocated_mib']} MiB`; **ZERO** contention with `node1` shared GPUs)")
-    lines.append("- **Authoritative Artifacts (`node23`)**: `/data/qlyu/v33_upgrade/models_gpu_deep/` (`gpu_deep_summary.json`, 24 standardized endpoint folders with row-aligned `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, plus inference-ready fp16 PyTorch checkpoints in `multitask_checkpoints/` and `halflife_specialist/`)")
+    lines.append("- **Authoritative Artifacts (`node23`)**: `<WORK_DIR>/v33_upgrade/models_gpu_deep/` (`gpu_deep_summary.json`, 24 standardized endpoint folders with row-aligned `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, plus inference-ready fp16 PyTorch checkpoints in `multitask_checkpoints/` and `halflife_specialist/`)")
     lines.append(f"- **Verification Gate**: **PASSED** (`24/24` endpoints, `55,299 OOF + 13,812 HO = 69,111` exact-aligned rows, `408/408` Leave-Case17-Out predictions, `{verif['ckpt_count']}` checkpoints totaling `{verif['total_ckpt_mib']} MiB`, `smiles_only` exact sequence invariance max diff `{verif['smiles_only_invariance_max_diff']['multitask']:.2e}` / `{verif['smiles_only_invariance_max_diff']['halflife_specialist']:.2e}`)")
     lines.append("")
     lines.append("---")
@@ -545,7 +545,7 @@ def generate_report(summary: Dict[str, Any], verif: Dict[str, Any]) -> None:
     lines.append(f"- **Telemetry**: Start `{st.get('vram_used_mib')} / {st.get('vram_total_mib')} MiB` (`{st.get('gpu_util_pct')}%` util, `{st.get('temp_c')}°C`) → Peak PyTorch allocation **`{gpu_info['peak_torch_allocated_mib']} MiB`** (entire 46,598-compound 4-embedding bank resident in VRAM!) → End `{en.get('vram_used_mib')} / {en.get('vram_total_mib')} MiB` (`{en.get('temp_c')}°C`).")
     lines.append("- **Authoritative Artifact Paths**:")
     lines.append("  - Local: `D:\\work\\中检院\\v33_upgrade\\models_gpu_deep\\` (`gpu_deep_summary.json`, 24 `<endpoint>/` directories, `multitask_checkpoints/`, `halflife_specialist/`)")
-    lines.append("  - Remote (`node23`): `/data/qlyu/v33_upgrade/models_gpu_deep/` (exact mirrored predictions, metrics, summary, and inference-ready PyTorch checkpoints ready for Wave 3A Super-Ensemble Fusion!)")
+    lines.append("  - Remote (`node23`): `<WORK_DIR>/v33_upgrade/models_gpu_deep/` (exact mirrored predictions, metrics, summary, and inference-ready PyTorch checkpoints ready for Wave 3A Super-Ensemble Fusion!)")
     lines.append("")
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)

@@ -6,8 +6,8 @@ import numpy as np
 
 sys.stdout.reconfigure(encoding="utf-8") if hasattr(sys.stdout, "reconfigure") else None
 csv.field_size_limit(10_000_000)
-DATA = Path('/data/qlyu/s3')
-PER = Path('/data/qlyu/s3_per')
+DATA = Path('<WORK_DIR>/s3')
+PER = Path('<WORK_DIR>/s3_per')
 CACHE = DATA / 'feat_cache'
 CACHE.mkdir(exist_ok=True)
 

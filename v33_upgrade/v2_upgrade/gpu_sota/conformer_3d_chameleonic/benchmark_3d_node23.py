@@ -32,7 +32,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 EXP_BASE = V33_BASE / "expansion_v331"
 OUT_3D_DIR = V33_BASE / "v2_upgrade" / "gpu_sota" / "conformer_3d_chameleonic"
 

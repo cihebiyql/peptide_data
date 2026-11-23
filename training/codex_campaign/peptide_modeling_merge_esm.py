@@ -262,7 +262,7 @@ def merge_experiment(base_run, esm_dir, output_run):
     config["training"]["n_trials"] = 20
     config.setdefault("resources", {})["max_parallel_tasks"] = 2
     config["resources"]["remote_durable_root"] = (
-        "/data/qlyu/peptide_modeling_20261113_v1/experiments/esm2"
+        "<WORK_DIR>/peptide_modeling_20261113_v1/experiments/esm2"
     )
     config["resources"]["remote_training_scratch"] = "/tmp/peptide_modeling_qlyu_20261113_v1_es2"
     config["include_full_coverage"] = False

@@ -37,14 +37,14 @@ PROMOTED_MT46_TRACKS: List[tuple[str, str]] = []
 
 
 def _sanitize_paths(obj: Any) -> Any:
-    """Guarantee ZERO /data/qlyu paths remain anywhere in runtime manifest."""
+    """Guarantee ZERO <WORK_DIR> paths remain anywhere in runtime manifest."""
     if isinstance(obj, dict):
         return {k: _sanitize_paths(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [_sanitize_paths(v) for v in obj]
     if isinstance(obj, str):
-        if obj.startswith("/data/qlyu/v33_upgrade/"):
-            return obj[len("/data/qlyu/v33_upgrade/") :]
+        if obj.startswith("<WORK_DIR>/v33_upgrade/"):
+            return obj[len("<WORK_DIR>/v33_upgrade/") :]
         return obj
     return obj
 
@@ -122,8 +122,10 @@ def main() -> None:
         for ep, doc in manifest["endpoints"].items()
     }
 
-    # 1. Promote strictly zero-leakage Mondrian AD-EB Conformal Calibration across ALL 40 regression endpoints
+    # 1. Promote strictly zero-leakage AD-Stratified Empirical-Bayes Intervals (`mondrian_ad_eb`) across ALL 40 regression endpoints
     n_mondrian = 0
+    n_uq_low_dual = 0
+    n_uq_low_smiles = 0
     d2_eps = cqr_sum["deliverable2_conformal"]["endpoints"]
     for ep, doc in manifest["endpoints"].items():
         if doc.get("task_type") != "regression":
@@ -136,6 +138,32 @@ def main() -> None:
             tr_doc = doc[track]
             m_spec = dict(cal_ep[track])
             old_conf = dict(tr_doc.get("conformal") or {})
+            ho_m = d2_ep[track]["holdout_metrics"]["mondrian_ad_eb"]
+            cov80 = float(ho_m["cov80"])
+            n_eff_cl = int(m_spec.get("n_eff_clusters") or 0)
+            if cov80 < 0.70:
+                uq_rel = "low"
+                uq_note = (
+                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (<70%; n_eff_clusters={n_eff_cl}); "
+                    "interpret interval as heuristic rank-order uncertainty only."
+                )
+                if track == "dual_modality":
+                    n_uq_low_dual += 1
+                else:
+                    n_uq_low_smiles += 1
+            elif cov80 < 0.75 or n_eff_cl < 30:
+                uq_rel = "moderate"
+                uq_note = (
+                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (n_eff_clusters={n_eff_cl}); "
+                    "AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee)."
+                )
+            else:
+                uq_rel = "calibrated"
+                uq_note = (
+                    f"Empirical holdout 80% coverage is {cov80 * 100:.1f}% (n_eff_clusters={n_eff_cl}); "
+                    "AD-stratified EB-shrunk interval."
+                )
+
             tr_doc["conformal"] = {
                 "mode": "mondrian_ad_eb",
                 "q80": float(m_spec["q80_global"]),
@@ -151,21 +179,24 @@ def main() -> None:
                 "tier_counts": m_spec["tier_counts"],
                 "tier_eb_weights": m_spec["tier_eb_weights"],
                 "bounds": m_spec.get("bounds") if m_spec.get("bounds") is not None else doc.get("bounds"),
+                "uq_reliability": uq_rel,
+                "uq_note": uq_note,
                 "legacy_v331_mode": old_conf.get("mode", "standard"),
                 "legacy_v331_q80": old_conf.get("q80"),
                 "legacy_v331_q90": old_conf.get("q90"),
             }
 
-            ho_m = d2_ep[track]["holdout_metrics"]["mondrian_ad_eb"]
             old_cov = dict(tr_doc.get("conformal_holdout_coverage") or {})
             tr_doc["conformal_holdout_coverage"] = {
                 "n_eval": int(ho_m["n_eval"]),
-                "cov80": float(ho_m["cov80"]),
+                "cov80": cov80,
                 "cov90": float(ho_m["cov90"]),
                 "w80": float(ho_m["w80"]),
                 "w90": float(ho_m["w90"]),
                 "by_tier": ho_m["by_tier"],
                 "method": "mondrian_ad_eb",
+                "uq_reliability": uq_rel,
+                "uq_note": uq_note,
                 "legacy_v331_cov80": old_cov.get("cov80"),
                 "legacy_v331_cov90": old_cov.get("cov90"),
             }
@@ -201,9 +232,17 @@ def main() -> None:
     manifest["generated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S +0800")
     manifest["plan_b_upgrades"] = {
         "audit_compliance": "route_a_strict_zero_holdout_peeking",
+        "weight_rounding_note": "Manifest weights are serialized to 5 decimals (±1e-5); inference renormalizes active weights to 1.0.",
         "conformal_calibration": {
             "mode": "mondrian_ad_eb",
+            "method_label": "AD-stratified Empirical-Bayes shrunk interval (empirically calibrated on nested 5-fold OOF residuals; not an exact finite-sample conformal guarantee)",
+            "deployment_policy": "uniform_mondrian_ad_eb_json_zero_dep",
+            "deployment_policy_note": (
+                "Nested-OOF selected mondrian_ad_eb on 48/80 tracks (baseline 13, studentized_cvplus 11, cqr_lgb 8); "
+                "deployed uniformly across all 80 regression tracks for pure-JSON zero-dependency serving, with holdout coverage reported identically from mondrian_ad_eb."
+            ),
             "n_regression_endpoints": n_mondrian,
+            "n_low_reliability_tracks_cov80_lt_70": {"dual_modality": n_uq_low_dual, "smiles_only": n_uq_low_smiles},
             "residual_alignment": "exact_100pct_frozen_wave5a",
             "pure_json_zero_overhead": True,
             "pooled_ood_cov80_dual": {"before": 0.642, "after": 0.760, "delta_pp": 11.8},
@@ -216,8 +255,8 @@ def main() -> None:
             "reason": "Deferred after independent audit flagged post-hoc holdout filtering and unified-vs-per-endpoint train-serve mismatch; all 46 endpoints preserve strict OOF-selected Wave 5A point weights (0.0 diff).",
         },
         "gnn_atom_attribution": {
-            "role": "2D Graph Surrogate Attribution (E-GAT)",
-            "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum (signed magnitude-calibrated)",
+            "role": "Qualitative 2D Graph Surrogate Visualization (E-GAT)",
+            "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum (visualizes the 0.35*y_add residual branch; main predictions come from the 4-FM super-ensemble)",
             "checkpoint": "gnn_8ep_5fold_fp16.pt",
             "checkpoint_mb": 17.47,
             "endpoints": inv["gnn_atom_attribution_endpoints"],
@@ -233,12 +272,12 @@ def main() -> None:
         assert manifest["endpoints"][ep]["smiles_only"]["weights"] == prev["smiles"], f"SMILES weights changed for {ep}!"
 
     out_text = json.dumps(manifest, indent=2, ensure_ascii=False)
-    assert "/data/qlyu" not in out_text, "Found residual /data/qlyu path in manifest!"
+    assert "<WORK_DIR>" not in out_text, "Found residual <WORK_DIR> path in manifest!"
     MANIFEST_PATH.write_text(out_text, encoding="utf-8")
     print(
         f"[OK] Wrote Route A {MANIFEST_PATH} (version={manifest['version']}, "
         f"mondrian={n_mondrian}/40 100%-aligned, mt46_promoted=0, all_46_weights_unchanged=46/46, "
-        f"overall_summary_synced=PASS, zero_/data/qlyu=PASS)"
+        f"overall_summary_synced=PASS, zero_<WORK_DIR>=PASS)"
     )
 
 

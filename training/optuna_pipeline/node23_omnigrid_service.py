@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 import joblib
 
-BASE = Path('/data/qlyu/s3/omnigrid')
+BASE = Path('<WORK_DIR>/s3/omnigrid')
 ENGINE = BASE / 'engine'
 sys.path.insert(0, str(ENGINE))
 os.environ.setdefault('OMP_NUM_THREADS', '4')
@@ -131,7 +131,7 @@ def predict_one(model_obj, model_kind_tag, X):
 
 ESM2_SNAPSHOTS = [
     Path.home() / '.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots',
-    Path('/data/qlyu/.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots'),
+    Path('<WORK_DIR>/.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots'),
 ]
 def compute_esm2_cpu(sequence):
     import torch

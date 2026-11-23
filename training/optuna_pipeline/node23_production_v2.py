@@ -12,8 +12,8 @@ from rdkit.Chem.QED import qed
 
 csv.field_size_limit(10_000_000)
 RDLogger.DisableLog('rdApp.*')
-DATA = Path('/data/qlyu/s3')
-PER = Path('/data/qlyu/s3_per')
+DATA = Path('<WORK_DIR>/s3')
+PER = Path('<WORK_DIR>/s3_per')
 OUT = DATA / 'production_v3'
 (OUT / 'models').mkdir(parents=True, exist_ok=True)
 DESC_COLS = ['MolWt','cLogP','TPSA','HBD','HBA','RotB','Rings','HeavyAtoms','FracCsp3','FormalCharge','QED']

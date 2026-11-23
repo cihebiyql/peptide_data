@@ -3,7 +3,7 @@
 - **Audit Wave**: Wave 3C (Independent Skeptical Final Verification — Strict Read-Only)
 - **Audit Date**: 2026-11-22 CST
 - **Scope**: `internal_research_only`
-- **Audited Environment**: Local Windows (`D:\work\中检院\v33_upgrade\`), `node23` (`10.0.0.3:8902` live V33 inference engine & authoritative bundle), `node1` (SSH tunnel + shared RTX 4090 GPU compliance), `node2` (`172.21.43.16:7863` staged FastAPI+SPA platform & live V31/V32 production isolation)
+- **Audited Environment**: Local Windows (`D:\work\中检院\v33_upgrade\`), `node23` (`10.0.0.3:8902` live V33 inference engine & authoritative bundle), `node1` (SSH tunnel + shared RTX 4090 GPU compliance), `node2` (`<APP_HOST>:7863` staged FastAPI+SPA platform & live V31/V32 production isolation)
 - **Overall Staging Sign-Off**: **GO (APPROVED FOR STAGING — 6/6 GATES PASSED, ZERO BLOCKING DEFECTS)**
 
 ---
@@ -26,11 +26,11 @@
 **Verdict: PASS**
 
 ### 1.1 Cross-Artifact Count & Hash Reconciliation
-Three independent manifest copies were hashed and cross-checked directly against [`verification_report.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/verification_report.json) and `node23:/data/qlyu/v33_upgrade/embeddings/embedding_manifest.json`:
+Three independent manifest copies were hashed and cross-checked directly against [`verification_report.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/verification_report.json) and `node23:<WORK_DIR>/v33_upgrade/embeddings/embedding_manifest.json`:
 
 - **Manifest Identity (Bit-for-Bit Identical Across All 3 Hosts)**:
   - Local [`v33_manifest.json`](file:///D:/work/中检院/v33_upgrade/bundle/v33_manifest.json): `495,755` bytes, SHA-256 `433696c2bc0effacad81bf9cdeafd3a81339d8139791817d3a16b524461c5034`
-  - `node23:/data/qlyu/v33_upgrade/bundle/v33_manifest.json`: `495,755` bytes, SHA-256 `433696c2bc0effacad81bf9cdeafd3a81339d8139791817d3a16b524461c5034`
+  - `node23:<WORK_DIR>/v33_upgrade/bundle/v33_manifest.json`: `495,755` bytes, SHA-256 `433696c2bc0effacad81bf9cdeafd3a81339d8139791817d3a16b524461c5034`
   - `node2:/var/www/peptide-omnipanel/v33_next/v33_manifest.json`: `495,755` bytes, SHA-256 `433696c2bc0effacad81bf9cdeafd3a81339d8139791817d3a16b524461c5034`
 - **Recursive NaN/Inf Audit**: `0` NaN or Inf floating-point values across the entire `v33_manifest.json` document tree.
 
@@ -59,7 +59,7 @@ Every artifact checksum recorded in `v33_manifest.json["sha256_checksums"]` and 
 - `v32_reference_snapshot.json` (`28,112` bytes): SHA-256 `51007d1acbb1a0d5…` — **MATCH**
 - `serving_models/`: Exact file-set match (`43 / 43` pruned `.joblib` files, `10,459.97 MB`), **43 / 43 SHA-256 hashes MATCH** (`46 / 46` total bundle checksums verified, **`0` failures**).
 - `deep_checkpoint_refs`: **110 / 110** `.pt` checkpoints verified present on disk and non-empty (`0` missing).
-- Pretrained foundation-model embedding caches (`node23:/data/qlyu/v33_upgrade/embeddings/`):
+- Pretrained foundation-model embedding caches (`node23:<WORK_DIR>/v33_upgrade/embeddings/`):
   - `ncaa_repdistill_v2.npz` (`46,598` rows, `43,943` valid): SHA-256 **MATCH**, `zero_nan_inf = True`
   - `peptideclm2.npz` (`46,598` rows, `43,943` valid): SHA-256 **MATCH**, `zero_nan_inf = True`
   - `esmc_600m_multiregion.npz` (`46,598` rows, `44,773` valid): SHA-256 **MATCH**, `zero_nan_inf = True`
@@ -72,7 +72,7 @@ Every artifact checksum recorded in `v33_manifest.json["sha256_checksums"]` and 
 **Verdict: PASS**
 
 ### 2.1 Full 24-Endpoint Raw TSV Recomputation vs. `v33_manifest.json`
-Rather than spot-checking 8 endpoints, we independently recomputed **all 24 endpoints** directly from raw prediction TSVs on `node23:/data/qlyu/v33_upgrade/bundle/champion_predictions/<ep>/{oof_champion.tsv, holdout_champion.tsv}` across both tracks (`dual_modality`, `smiles_only`) and all 18 regression Conformal 80% / 90% empirical coverages (`lo80/hi80/lo90/hi90`):
+Rather than spot-checking 8 endpoints, we independently recomputed **all 24 endpoints** directly from raw prediction TSVs on `node23:<WORK_DIR>/v33_upgrade/bundle/champion_predictions/<ep>/{oof_champion.tsv, holdout_champion.tsv}` across both tracks (`dual_modality`, `smiles_only`) and all 18 regression Conformal 80% / 90% empirical coverages (`lo80/hi80/lo90/hi90`):
 
 - **Dual-Modality (24 endpoints × OOF & Holdout + 18 Conformal coverages)**: **`max_diff = 0.000005`**, **0 mismatches** above `1e-3`.
 - **SMILES-Only Track A (24 endpoints × OOF & Holdout)**: On the 4 endpoints with `<100%` valid SMILES (`half_life_cls` 92.57%, `half_life_reg` 93.89%, `hemolysis_cls` 88.21%, `solubility_cls` 99.65%), filtering `holdout_champion.tsv` and `oof_champion.tsv` to `smiles_valid == 1` via `compound_index.tsv` (`595`, `573`, `3,629`, and `743` holdout rows respectively) reproduces `v33_manifest.json["smiles_only"]` with **`max_diff = 0.000005` (`0` mismatches)**.
@@ -119,7 +119,7 @@ Rather than spot-checking 8 endpoints, we independently recomputed **all 24 endp
   - Newly added endpoints (`cytotoxicity_cls`, `MIC_S_aureus`, `MIC_P_aeruginosa`, `MIC_C_albicans`) are strictly `null` (`—` in UI); V32 CV-only endpoints (`CL_absolute`, `Cmax`) have `holdout_* = null` and are flagged `internal5_no_holdout` (`*` in UI). **Zero fabricated metrics.**
 
 ### 2.3 Strict Leave-Case17-Out Clinical Benchmark Recomputation
-Independently recomputed from raw `node23:/data/qlyu/v33_upgrade/bundle/champion_predictions/{half_life_reg,PPB,hemolysis_cls}/case17_champion.tsv` (**0 per-drug discrepancies** vs `v33_manifest.json["case17_scorecard"]["drugs"]`):
+Independently recomputed from raw `node23:<WORK_DIR>/v33_upgrade/bundle/champion_predictions/{half_life_reg,PPB,hemolysis_cls}/case17_champion.tsv` (**0 per-drug discrepancies** vs `v33_manifest.json["case17_scorecard"]["drugs"]`):
 
 | Clinical Benchmark Metric | `n` | Recomputed (Raw TSV) | `v33_manifest.json` | Match |
 |---|---:|---|---|---|
@@ -194,8 +194,8 @@ All 5 screenshots in [`D:\work\中检院\v33_upgrade\reports\screenshots\`](file
 | Live V32 Inference Engine | `node23:0.0.0.0:8901` | **INTACT** | PID `1237413`; `GET http://127.0.0.1:8901/health` → **HTTP `200`** (`{"ok": true, "models_cached": 152, "entries": 57, "endpoints": 55}`) |
 | Production Nginx Config | `node2:/etc/nginx/snippets/peptide-omnipanel.location.conf` | **INTACT** | `stat` mtime `2026-11-15 23:10:37 +0800` (`653` bytes); still routes `/peptide-omnipanel/` → `http://127.0.0.1:7862/` |
 | Legacy Local Dataset | `D:\work\中检院\data\dataset_reclean_20261113_v1\` | **INTACT** | `3,150` entries, latest mtime `2026-11-13 18:50:50` |
-| Legacy `node23` S3 Dir | `node23:/data/qlyu/s3/` | **INTACT** | Latest entry mtime `2026-11-19 14:56:05` |
-| Legacy `node23` Modeling Dir | `node23:/data/qlyu/peptide_modeling_multiseed20h_v1/` | **INTACT** | Latest entry mtime `2026-11-15 16:17:25` |
+| Legacy `node23` S3 Dir | `node23:<WORK_DIR>/s3/` | **INTACT** | Latest entry mtime `2026-11-19 14:56:05` |
+| Legacy `node23` Modeling Dir | `node23:<WORK_DIR>/peptide_modeling_multiseed20h_v1/` | **INTACT** | Latest entry mtime `2026-11-15 16:17:25` |
 | Web API Unit Test Suite | [`test_web_api.py`](file:///D:/work/中检院/v33_upgrade/web/tests/test_web_api.py) | **PASS** | `py -3.11 -m pytest -v` → **11/11 PASSED** (`1.78 s`, 0 failures) |
 
 ---
@@ -208,7 +208,7 @@ Hard rule audited: *Max 2 GPUs on `node1`, only after 2 consecutive `nvidia-smi`
 
 1. **Live `node1` Audit (`2026-11-22 07:39 CST`)**:
    - `nvidia-smi --query-compute-apps`: **0** `qlyu` V33 GPU compute processes on `node1` (all active compute processes belong to other users `zwdong`, `yxzhang`, `wxsong`, `jhu`, etc.).
-   - `ps -ef | grep qlyu`: The ONLY V33 process on `node1` is the lightweight SSH reverse tunnel (`bash /data/qlyu/v33_tunnel.sh` + `ssh -N -R 127.0.0.1:8902:10.0.0.3:8902`, `0%` CPU, `0` GPU), running alongside the untouched V32 tunnel (`omnigrid_tunnel.sh`).
+   - `ps -ef | grep qlyu`: The ONLY V33 process on `node1` is the lightweight SSH reverse tunnel (`bash <WORK_DIR>/v33_tunnel.sh` + `ssh -N -R 127.0.0.1:8902:10.0.0.3:8902`, `0%` CPU, `0` GPU), running alongside the untouched V32 tunnel (`omnigrid_tunnel.sh`).
 2. **Historical `embedding_manifest.json` & `gpu_compliance_log.jsonl` Audit (`223` Checks)**:
    - Enforced programmatically by [`gpu_gate.py`](file:///D:/work/中检院/v33_upgrade/models_gpu/gpu_gate.py):
      - **`219 / 223` checks** found no eligible GPU → **`selected_gpus = []`** (correctly refused to launch on `node1`).

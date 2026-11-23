@@ -10,11 +10,11 @@
   - 无脂化 → 不适用（用 ML 模型行）
 验证：对 10 锚点 + 2 留出药物打印判定。"""
 import sys, json, re
-sys.path.insert(0, '/data/qlyu/s3/omnigrid/engine')
+sys.path.insert(0, '<WORK_DIR>/s3/omnigrid/engine')
 from rdkit import Chem
 
-smiles_map = json.load(open('/data/qlyu/s3/omnigrid/anchor_smiles.json'))
-qf = json.load(open('/data/qlyu/s3/omnigrid/query_features.json'))
+smiles_map = json.load(open('<WORK_DIR>/s3/omnigrid/anchor_smiles.json'))
+qf = json.load(open('<WORK_DIR>/s3/omnigrid/query_features.json'))
 
 def acylation_class(smiles):
     mol = Chem.MolFromSmiles(smiles)
@@ -64,5 +64,5 @@ for name, th, smi in TESTS:
 json.dump({'rule': 'diacid>=16 weekly 120-168h; diacid 12-15 depot 25h; monoacyl>=14 daily 5-13h; else ML',
            'weekly_anchors': ['dulaglutide 120h', 'efpeglenatide 160h', 'albiglutide 168h'],
            'note': 'semaglutide/tirzepatide labels NOT used in anchoring (held out)'},
-          open('/data/qlyu/s3/omnigrid/halflife_anchor_rule.json', 'w'), ensure_ascii=False, indent=1)
+          open('<WORK_DIR>/s3/omnigrid/halflife_anchor_rule.json', 'w'), ensure_ascii=False, indent=1)
 print('\nsaved halflife_anchor_rule.json')

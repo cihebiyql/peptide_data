@@ -1,7 +1,7 @@
 # Peptide OmniPanel V33 — CPU Modeling, Censored AFT, Small-Sample GPR/Stacking & Calibration Benchmark
 
 - **Generated**: 2026-11-21 CST | **Compute**: `node23` (64-core CPU parallel suite, total runtime `9648.6s`)
-- **Authoritative Artifacts (`node23`)**: `/data/qlyu/v33_upgrade/models_cpu/` (`cpu_benchmark_summary.json` + 24 endpoint directories with `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, `models_5fold.joblib`)
+- **Authoritative Artifacts (`node23`)**: `<WORK_DIR>/v33_upgrade/models_cpu/` (`cpu_benchmark_summary.json` + 24 endpoint directories with `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, `models_5fold.joblib`)
 - **Data & Split Integrity**: Strictly trained & selected ONLY on inner 5-fold cluster-grouped CV (`is_holdout==0`, 24/24 fold-balanced, zero cluster/SMILES/InChIKey leakage); 20% outer holdout (`is_holdout==1`) untouched until final evaluation; Case17 clinical drugs evaluated strictly leave-Case17-out (`case17_excluded==0`).
 
 ---
@@ -229,8 +229,8 @@ Every V33 prediction below comes from a dedicated **leave-Case17-out** 5-fold re
 
 ## 8. Standardized Output Inventory (Ready for Wave 2D GPU Fusion)
 
-- Master summary: `node23:/data/qlyu/v33_upgrade/models_cpu/cpu_benchmark_summary.json`
-- Per-endpoint directories (`node23:/data/qlyu/v33_upgrade/models_cpu/<endpoint>/`, all 24 endpoints):
+- Master summary: `node23:<WORK_DIR>/v33_upgrade/models_cpu/cpu_benchmark_summary.json`
+- Per-endpoint directories (`node23:<WORK_DIR>/v33_upgrade/models_cpu/<endpoint>/`, all 24 endpoints):
   - `oof_predictions.tsv` (exact row-for-row alignment with `data/endpoints/<endpoint>.tsv` CV rows; 55,299 total rows)
   - `holdout_predictions.tsv` (exact row-for-row alignment with holdout rows; 13,812 total rows; includes calibrated probabilities / 80% & 90% conformal intervals / Tanimoto AD)
   - `case17_predictions.tsv` (strict leave-Case17-out predictions for all 17 clinical drugs + AD + conformal intervals + mechanism anchors)

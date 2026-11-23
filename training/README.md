@@ -42,7 +42,7 @@
 ## 模型权重（不在本仓库）
 
 170 个模型（joblib）合计约 34 GB，超出 GitHub 限制，持久保存在内网
-`node23:/data/qlyu/peptide_modeling_multiseed20h_v1/`。运行时由
+`node23:<WORK_DIR>/peptide_modeling_multiseed20h_v1/`。运行时由
 `omnigrid/configs/deploy_manifest.json` 中的路径清单引用；如需外发，
 建议打包为 tar 分卷并附 SHA256（不放入 git）。
 

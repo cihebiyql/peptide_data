@@ -2,7 +2,7 @@
 """In-VRAM Multimodal Data Bank, Strict Zero-Leakage Cluster Masking, and Condition Encoding
 for Peptide OmniPanel V33 Deep Multi-Task & Attention Neural Architectures.
 
-Strictly reads from local cache (mirrored read-only from node23:/data/qlyu/v33_upgrade/).
+Strictly reads from local cache (mirrored read-only from node23:<WORK_DIR>/v33_upgrade/).
 Never modifies data/, features/, embeddings/, models_cpu/, or models_fusion/.
 """
 from __future__ import annotations

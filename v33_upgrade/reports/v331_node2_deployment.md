@@ -2,7 +2,7 @@
 
 **Date**: 2026-11-22  
 **Release**: **Peptide OmniPanel V33.1** (**46 endpoints** = 24 Tier 1 + 22 Tier 2; **50,995** unified compounds / **50,994** unique curated compounds; **82,327** harmonized rows; **4,535** censored-aware records; **25** curated clinical & research examples incl. 17/17 Case17 + 4/4 FDA Echinocandins + 5 AMPs)  
-**Target Host**: `node2` (`172.21.43.16`, user `mode2`, 128 CPU cores, 251 GiB RAM, 879 GiB SSD)  
+**Target Host**: `node2` (`<APP_HOST>`, user `mode2`, 128 CPU cores, 251 GiB RAM, 879 GiB SSD)  
 **Public URL**: `https://lmmd.ecust.edu.cn/peptide-omnipanel/`  
 **Runtime Dependency on `node23` / `node1`**: **ZERO (100% self-contained on `node2`)**  
 **GPU VRAM Used by V33.1 on `node2`**: **0 MiB** (`CUDA_VISIBLE_DEVICES=""`)  
@@ -20,8 +20,8 @@ Wave 5A's `v33_inference_service.py` (copied back from `node23`) had reverted Wa
   `cbe7ee9a23cf979a07c20d5ab9daa494a8d8893a12ea5ea4248bb11e65eaceff`.
 
 ### 1.2 Manifest Path Rewrite & Pre-Flight Audit
-- Rewrote all 111 `/data/qlyu/v33_upgrade` prefixes in `node2`'s `v33_manifest.json` cleanly to `/var/www/peptide-omnipanel/v33_next/v33_runtime` (updated both `/var/www/peptide-omnipanel/v33_next/v33_runtime/bundle/v33_manifest.json` and `/var/www/peptide-omnipanel/v33_next/v33_manifest.json`).
-- `grep -c "/data/qlyu"` returns **`0`** across `v33_runtime/bundle/v33_manifest.json`, `v33_next/v33_manifest.json`, `run_local_engine.sh`, and `/var/www/peptide-omnipanel/omnigrid/app.py`.
+- Rewrote all 111 `<WORK_DIR>/v33_upgrade` prefixes in `node2`'s `v33_manifest.json` cleanly to `/var/www/peptide-omnipanel/v33_next/v33_runtime` (updated both `/var/www/peptide-omnipanel/v33_next/v33_runtime/bundle/v33_manifest.json` and `/var/www/peptide-omnipanel/v33_next/v33_manifest.json`).
+- `grep -c "<WORK_DIR>"` returns **`0`** across `v33_runtime/bundle/v33_manifest.json`, `v33_next/v33_manifest.json`, `run_local_engine.sh`, and `/var/www/peptide-omnipanel/omnigrid/app.py`.
 - Pre-flight check on `node2` verified **0 missing files** across all **84 `.joblib` bundles** (`42` CPU + `42` Fusion) and **110 `.pt` deep checkpoints**.
 
 ### 1.3 Delta Assets Synced onto `node2` (`19G` total under `/var/www/peptide-omnipanel/v33_next/`)
@@ -55,7 +55,7 @@ Existing Wave 4 assets (`pretrained/` 3.8 GB, `extra_site/` 238 MB, `models_cpu/
 
 | Host | Live Runtime Audit |
 |---|---|
-| **`node2` (`172.21.43.16`)** | • `127.0.0.1:8902` — PID `3490268` (`v33_inference_service.py`, RSS **`27,195.4 MB`** / `26.56 GiB` post-test; `26,151.5 MB` at boot)<br>• `127.0.0.1:18902` — PID `3490282` (`esmc_worker.py`, RSS **`2,579.8 MB`** / `2.52 GiB`)<br>• `127.0.0.1:7862` — PID `3491133` (`peptide-omnigrid.service`, RSS **`158.5 MB`**)<br>• System RAM available: **`185 GiB / 251 GiB`** free<br>• SSD free (`/var/www/peptide-omnipanel`): **`472 GiB / 879 GiB`** (`44%` used)<br>• GPU VRAM used by V33.1 PIDs (`3490268`, `3490282`, `3491133`): **`0 MiB`** (`nvidia-smi` confirmed zero V33 PIDs on any GPU) |
+| **`node2` (`<APP_HOST>`)** | • `127.0.0.1:8902` — PID `3490268` (`v33_inference_service.py`, RSS **`27,195.4 MB`** / `26.56 GiB` post-test; `26,151.5 MB` at boot)<br>• `127.0.0.1:18902` — PID `3490282` (`esmc_worker.py`, RSS **`2,579.8 MB`** / `2.52 GiB`)<br>• `127.0.0.1:7862` — PID `3491133` (`peptide-omnigrid.service`, RSS **`158.5 MB`**)<br>• System RAM available: **`185 GiB / 251 GiB`** free<br>• SSD free (`/var/www/peptide-omnipanel`): **`472 GiB / 879 GiB`** (`44%` used)<br>• GPU VRAM used by V33.1 PIDs (`3490268`, `3490282`, `3491133`): **`0 MiB`** (`nvidia-smi` confirmed zero V33 PIDs on any GPU) |
 | **`node1`** | **`0`** V33 processes (`v33_inference|esmc_worker|v33_tunnel`), **`0`** `:8902`/`:18902` listeners |
 | **`node23`** | **`0`** V33 processes (`v33_inference|esmc_worker|v33_tunnel`), **`0`** `:8902`/`:18902` listeners |
 

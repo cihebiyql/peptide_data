@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mirror final Plan B-2 GPU SOTA artifacts (checkpoints, predictions, scripts, reports)
 from local Windows D:\work\中检院\v33_upgrade\v2_upgrade\gpu_sota\ to
-node23:/data/qlyu/v33_upgrade/v2_upgrade/gpu_sota/ via single binary tar stream over SSH,
+node23:<WORK_DIR>/v33_upgrade/v2_upgrade/gpu_sota/ via single binary tar stream over SSH,
 excluding _cache/ and _logs/!
 """
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 
 LOCAL_ROOT = Path(r"D:\work\中检院\v33_upgrade\v2_upgrade\gpu_sota")
 REMOTE_HOST = "node23"
-REMOTE_DIR = "/data/qlyu/v33_upgrade/v2_upgrade/gpu_sota"
+REMOTE_DIR = "<WORK_DIR>/v33_upgrade/v2_upgrade/gpu_sota"
 
 
 def main() -> None:

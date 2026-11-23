@@ -2,7 +2,7 @@
 
 - **Generated**: 2026-11-22 03:10:42 +0800 | **Total Runtime**: `3140.7s`
 - **Compute Hardware**: Local idle `NVIDIA GeForce RTX 5080` (`16303 MiB`, PyTorch `2.11.0+cu128`, `bf16` TensorCores, peak allocated `1229.3 MiB`; **ZERO** contention with `node1` shared GPUs)
-- **Authoritative Artifacts (`node23`)**: `/data/qlyu/v33_upgrade/models_gpu_deep/` (`gpu_deep_summary.json`, 24 standardized endpoint folders with row-aligned `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, plus inference-ready fp16 PyTorch checkpoints in `multitask_checkpoints/` and `halflife_specialist/`)
+- **Authoritative Artifacts (`node23`)**: `<WORK_DIR>/v33_upgrade/models_gpu_deep/` (`gpu_deep_summary.json`, 24 standardized endpoint folders with row-aligned `oof_predictions.tsv`, `holdout_predictions.tsv`, `case17_predictions.tsv`, `metrics.json`, plus inference-ready fp16 PyTorch checkpoints in `multitask_checkpoints/` and `halflife_specialist/`)
 - **Verification Gate**: **PASSED** (`24/24` endpoints, `55,299 OOF + 13,812 HO = 69,111` exact-aligned rows, `408/408` Leave-Case17-Out predictions, `145` checkpoints totaling `1977.78 MiB`, `smiles_only` exact sequence invariance max diff `0.00e+00` / `0.00e+00`)
 
 ---
@@ -166,5 +166,5 @@ Every GPU Deep prediction below comes from a dedicated **Leave-Case17-Out** 5-fo
   - **Complementary CPU/GBDT strengths for stacking**: `PAMPA`, `Caco2`, `RRCK`, `Vd_per_kg`, `hemolysis_cls`, and `cytotoxicity_cls` remain strong anchors for CPU GBDT/GPR and Wave 2D-1 GPU Fusion; combining orthogonal deep multi-task neural predictions with tree/kernel/fusion predictions in Wave 3A will maximize both exact accuracy and censored fidelity across all 24 endpoints.
 - **Authoritative Artifact Paths**:
   - Local: `D:\work\中检院\v33_upgrade\models_gpu_deep\` (`gpu_deep_summary.json`, 24 `<endpoint>/` directories, `multitask_checkpoints/`, `halflife_specialist/`)
-  - Remote (`node23`): `/data/qlyu/v33_upgrade/models_gpu_deep/` (exact mirrored predictions, metrics, summary, and inference-ready PyTorch checkpoints ready for Wave 3A Super-Ensemble Fusion!)
+  - Remote (`node23`): `<WORK_DIR>/v33_upgrade/models_gpu_deep/` (exact mirrored predictions, metrics, summary, and inference-ready PyTorch checkpoints ready for Wave 3A Super-Ensemble Fusion!)
 

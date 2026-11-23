@@ -1314,6 +1314,26 @@ function renderPredictionResult(data, { keepContext = false } = {}) {
     state.lang
   );
 
+  // Full-width warning banner whenever offline heuristic fallback is active (N5)
+  let offWarn = document.getElementById("offline-fallback-banner");
+  const resultsHost = document.getElementById("predict-results");
+  if (!offWarn && resultsHost) {
+    offWarn = document.createElement("div");
+    offWarn.id = "offline-fallback-banner";
+    offWarn.className = "mechanism-banner hidden";
+    offWarn.style.cssText =
+      "border-color:var(--amber);background:rgba(245,158,11,0.12);color:var(--ink);padding:10px 14px;margin-bottom:12px;font-size:12.5px;font-weight:600;";
+    resultsHost.insertBefore(offWarn, resultsHost.firstChild);
+  }
+  if (offWarn) {
+    if (data.adapter_mode === "v33_offline_fallback") {
+      offWarn.textContent = "⚠ " + t(state.lang, "offline_banner");
+      offWarn.classList.remove("hidden");
+    } else {
+      offWarn.classList.add("hidden");
+    }
+  }
+
   // Long-acting fatty-acylation mechanism banner
   const mechEl = document.getElementById("mechanism-banner");
   const anch = data.mechanism_anchor;
@@ -1531,13 +1551,17 @@ function buildEndpointItemHtml(p) {
   const cvDisplay = p.cv_score != null ? `${p.cv_metric_name} ${p.cv_score.toFixed(3)}` : "—";
   const holdDisplay = p.holdout_score != null ? `${p.holdout_score.toFixed(3)}` : "—";
   const calOrCovLabel = t(state.lang, p.kind === "classification" ? "dm_brier_ece" : "dm_cov80");
+  const uqLowPill =
+    p.kind !== "classification" && p.uq_reliability === "low"
+      ? ` <span class="mod-badge tone-amber" style="font-size:10.5px;padding:1px 6px;" title="${escapeHtml(t(state.lang, "uq_low_tip"))}">⚠ ${escapeHtml(t(state.lang, "uq_low_badge"))}</span>`
+      : "";
   const calOrCovVal =
     p.kind === "classification"
       ? p.brier_holdout != null && p.ece_holdout != null
         ? `${p.brier_holdout.toFixed(3)} / ${p.ece_holdout.toFixed(3)}`
         : "Platt / Iso"
       : p.conformal_coverage_80 != null
-        ? `${(p.conformal_coverage_80 * 100).toFixed(1)}%`
+        ? `${(p.conformal_coverage_80 * 100).toFixed(1)}%${uqLowPill}`
         : "—";
   const trainDisplay = p.n_train
     ? `${p.n_train.toLocaleString()} CV / ${(p.n_holdout || 0).toLocaleString()} HO${p.n_censored ? ` · ${p.n_censored} cens.` : ""}`
@@ -1587,14 +1611,15 @@ function exportSingleCsv() {
   const d = state.lastPrediction;
   if (!d) return;
   const cols = [
-    "query", "endpoint", "display_en", "display_zh", "tier", "domain", "value", "value_display", "unit",
-    "ci80_low", "ci80_high", "ad_status", "max_tanimoto", "risk_label", "winning_family", "cv_score", "holdout_score",
+    "query", "endpoint", "display_en", "display_zh", "tier", "domain", "prediction_source", "value", "value_display", "unit",
+    "ci80_low", "ci80_high", "conformal_coverage_80", "uq_reliability", "ad_status", "max_tanimoto", "risk_label", "winning_family", "cv_score", "holdout_score",
   ];
   const lines = [cols.join(",")];
   (d.predictions || []).forEach((p) => {
     const row = [
-      d.query_name, p.endpoint, p.display_en, p.display_zh, p.tier, p.domain,
+      d.query_name, p.endpoint, p.display_en, p.display_zh, p.tier, p.domain, p.prediction_source ?? d.adapter_mode ?? "",
       p.value ?? "", p.value_display, p.unit, p.ci80_low ?? "", p.ci80_high ?? "",
+      p.conformal_coverage_80 ?? "", p.uq_reliability ?? "",
       p.ad_status, p.max_tanimoto ?? "", p.risk_label, p.winning_family ?? "",
       p.cv_score ?? "", p.holdout_score ?? "",
     ].map((x) => `"${String(x).replace(/"/g, '""')}"`);
@@ -2592,7 +2617,11 @@ function renderValidationTable() {
         }
       } else if (e.conformal_coverage_80 != null) {
         const covPct = (e.conformal_coverage_80 * 100).toFixed(1) + "%";
-        covOrCal = `<span title="80% Cov (90%: ${e.conformal_coverage_90 != null ? (e.conformal_coverage_90 * 100).toFixed(1) + "%" : "—"})">${covPct}</span>`;
+        const lowBadge =
+          e.uq_reliability === "low"
+            ? `<div style="margin-top:2px;"><span class="mod-badge tone-amber" style="font-size:10px;padding:1px 5px;" title="${escapeHtml(t(state.lang, "uq_low_tip"))}">⚠ ${escapeHtml(t(state.lang, "uq_low_badge"))}</span></div>`
+            : "";
+        covOrCal = `<span title="80% Empirical Cov (90%: ${e.conformal_coverage_90 != null ? (e.conformal_coverage_90 * 100).toFixed(1) + "%" : "—"})">${covPct}</span>${lowBadge}`;
       }
 
       const namePrimary = state.lang === "zh" ? e.display_zh : e.display_en;

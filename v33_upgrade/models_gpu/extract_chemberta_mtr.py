@@ -5,8 +5,8 @@ Supports BOTH:
   - GPU inference (bf16/fp16, polite batch size, ~30s on RTX 4090)
   - Fast multi-process CPU inference on node23 (64 cores, ~2 min)
 
-Model: /data/qlyu/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca
-Output: /data/qlyu/v33_upgrade/embeddings/chemberta_mtr.npz
+Model: <WORK_DIR>/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca
+Output: <WORK_DIR>/v33_upgrade/embeddings/chemberta_mtr.npz
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common_index import EMB_DIR, load_v33_compound_table, sha256_file, verify_embedding_arrays
 
 MODEL_PATH = Path(
-    "/data/qlyu/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca"
+    "<WORK_DIR>/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca"
 )
 MAX_LEN = 512
 

@@ -13,7 +13,7 @@ import numpy as np
 
 csv.field_size_limit(10_000_000)
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 V33_DATA = V33_BASE / "data"
 EXP_BASE = V33_BASE / "expansion_v331"
 EXP_DATA = EXP_BASE / "data"

@@ -5,7 +5,7 @@ Model Bundling, and Authoritative `v33_manifest.json` Generation.
 
 Runs on `node23` with `/usr/bin/python3` (64 CPU cores, 0 GPU usage).
 Strictly read-only access to data/, features/, embeddings/, models_cpu/,
-models_fusion/, and models_gpu_deep/. Writes ONLY under /data/qlyu/v33_upgrade/bundle/.
+models_fusion/, and models_gpu_deep/. Writes ONLY under <WORK_DIR>/v33_upgrade/bundle/.
 """
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ from sklearn.metrics import (
 )
 
 # Add read-only model modules to sys.path for joblib deserialization & deep checkpoint loading
-BASE_DIR = Path("/data/qlyu/v33_upgrade")
+BASE_DIR = Path("<WORK_DIR>/v33_upgrade")
 sys.path.insert(0, str(BASE_DIR / "models_cpu"))
 sys.path.insert(0, str(BASE_DIR / "models_fusion"))
 sys.path.insert(0, str(BASE_DIR / "models_gpu_deep"))
@@ -1013,7 +1013,7 @@ def build_ad_and_analog_index(
 def build_pruned_serving_models(
     champions: Dict[str, Dict[str, Any]],
 ) -> Dict[str, Any]:
-    """Create lean pruned serving copies under /data/qlyu/v33_upgrade/bundle/serving_models/
+    """Create lean pruned serving copies under <WORK_DIR>/v33_upgrade/bundle/serving_models/
     containing ONLY the champion 5-fold estimators actually needed at inference time!
     """
     t0 = time.time()

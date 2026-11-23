@@ -47,7 +47,7 @@ def _default_esmc_dir() -> Path:
     if portable.exists():
         return portable
     return Path(
-        "/data/qlyu/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36"
+        "<WORK_DIR>/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36"
     )
 
 

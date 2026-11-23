@@ -2,7 +2,7 @@
 """
 Wave 5A — Step 03b (runs on node23):
 Concatenates READ-ONLY frozen V33 46,598-row embeddings with K-row local RTX 5080 delta embeddings
-into /data/qlyu/v33_upgrade/expansion_v331/embeddings/{ncaa_repdistill_v2,peptideclm2,chemberta_mtr,esmc_600m_multiregion}.npz.
+into <WORK_DIR>/v33_upgrade/expansion_v331/embeddings/{ncaa_repdistill_v2,peptideclm2,chemberta_mtr,esmc_600m_multiregion}.npz.
 Asserts rows 0..46597 are BIT-FOR-BIT identical to V33 and compound_keys/valid masks match expansion_v331/features!
 """
 from __future__ import annotations
@@ -12,8 +12,8 @@ import time
 from pathlib import Path
 import numpy as np
 
-V33_EMB = Path("/data/qlyu/v33_upgrade/embeddings")
-EXP_BASE = Path("/data/qlyu/v33_upgrade/expansion_v331")
+V33_EMB = Path("<WORK_DIR>/v33_upgrade/embeddings")
+EXP_BASE = Path("<WORK_DIR>/v33_upgrade/expansion_v331")
 DELTA_DIR = EXP_BASE / "embeddings_delta"
 OUT_EMB = EXP_BASE / "embeddings"
 FEAT_DIR = EXP_BASE / "features"

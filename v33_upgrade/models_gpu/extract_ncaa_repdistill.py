@@ -4,18 +4,18 @@ for all 46,598 V33 compounds.
 
 Exact verified training contract (per asset_and_method_scout.md):
   - Python: /usr/bin/python3
-  - Repo: /data/qlyu/ncaadistill
-  - Config: /data/qlyu/ncaadistill/config/phase2/phase2_repro_sweep24_e0_b0.yaml
-  - Checkpoint: /data/qlyu/ncaadistill/artifacts/checkpoints/phase2_repro_sweep24_e0_b0/best.pt
+  - Repo: <WORK_DIR>/ncaadistill
+  - Config: <WORK_DIR>/ncaadistill/config/phase2/phase2_repro_sweep24_e0_b0.yaml
+  - Checkpoint: <WORK_DIR>/ncaadistill/artifacts/checkpoints/phase2_repro_sweep24_e0_b0/best.pt
   - Weights: ckpt["ema_state_dict"] (asserting only non-trainable rope.inv_freq missing)
-  - Vocab: /data/qlyu/ncaadistill/data/raw/adaptation/vocab_smiles.txt
+  - Vocab: <WORK_DIR>/ncaadistill/data/raw/adaptation/vocab_smiles.txt
            (asserting exact SHA-256 7270675ae5db795089e44a1fa6f574b13694013ba05e315d52f28fa76d5f4b92)
   - Architecture: graph_attention (max_distance=8, per_head) + fusion_cfg (residual_distill)
   - Preprocessing: SingleInputDataset + dynamic batch trimming (collate_and_trim_smiles_batch)
                    + window-length-weighted chunk_mean for SMILES > 766 chars
   - Gate: Verifies MLM token recovery sanity test BEFORE extraction.
 
-Output: /data/qlyu/v33_upgrade/embeddings/ncaa_repdistill_v2.npz
+Output: <WORK_DIR>/v33_upgrade/embeddings/ncaa_repdistill_v2.npz
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
 from common_index import EMB_DIR, load_v33_compound_table, sha256_file, verify_embedding_arrays
 
-NCAA_REPO = Path(os.environ.get("NCAA_REPO_DIR", "/data/qlyu/ncaadistill"))
+NCAA_REPO = Path(os.environ.get("NCAA_REPO_DIR", "<WORK_DIR>/ncaadistill"))
 CONFIG_PATH = Path(os.environ.get("NCAA_CONFIG_PATH", str(NCAA_REPO / "config/phase2/phase2_repro_sweep24_e0_b0.yaml")))
 CKPT_PATH = Path(os.environ.get("NCAA_CKPT_PATH", str(NCAA_REPO / "artifacts/checkpoints/phase2_repro_sweep24_e0_b0/best.pt")))
 VOCAB_PATH = Path(os.environ.get("NCAA_VOCAB_PATH", str(NCAA_REPO / "data/raw/adaptation/vocab_smiles.txt")))

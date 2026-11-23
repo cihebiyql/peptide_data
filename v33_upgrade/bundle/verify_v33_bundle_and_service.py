@@ -16,7 +16,7 @@ Verifies:
   5. Live POST /batch with 5 diverse molecules.
   6. Untouched V32 service http://127.0.0.1:8901/health == HTTP 200.
 
-Saves structured receipt to /data/qlyu/v33_upgrade/bundle/verification_receipt.json.
+Saves structured receipt to <WORK_DIR>/v33_upgrade/bundle/verification_receipt.json.
 """
 from __future__ import annotations
 

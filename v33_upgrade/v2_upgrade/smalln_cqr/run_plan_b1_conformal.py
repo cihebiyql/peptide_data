@@ -43,7 +43,7 @@ import numpy as np
 from scipy.stats import spearmanr
 from sklearn.linear_model import HuberRegressor
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 EXP_BASE = V33_BASE / "expansion_v331"
 BUNDLE_DIR = V33_BASE / "bundle"
 OUT_DIR = V33_BASE / "v2_upgrade" / "smalln_cqr"
@@ -968,7 +968,7 @@ def _generate_markdown_report(summary: Dict[str, Any], out_md: Path) -> None:
         "- [x] **Zero cluster leakage**: Cluster disjointness asserted on all 40 endpoints (`set(cv_clusters) ∩ set(ho_clusters) == ∅`); inner hyperparameter tuning uses cluster-aware GroupKFold.",
         "- [x] **Strict Leave-Case17-Out**: All 7 small-N PK endpoints refitted strictly on `case17_excluded == 0`.",
         "- [x] **Strict `node2` portability**: Every promoted Small-N `.joblib` and Conformal calibrator `.joblib` verified via recursive object walker to contain ZERO `catboost`, ZERO `tabpfn`, and ZERO `torch` references (pure `numpy`/`scipy`/`sklearn`/`lightgbm` + `smalln_models.py`).",
-        "- [x] **Zero mutation of frozen directories**: All outputs written exclusively under `/data/qlyu/v33_upgrade/v2_upgrade/smalln_cqr/` and mirrored to `D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\smalln_cqr\\`.",
+        "- [x] **Zero mutation of frozen directories**: All outputs written exclusively under `<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/` and mirrored to `D:\\work\\中检院\\v33_upgrade\\v2_upgrade\\smalln_cqr\\`.",
         "",
     ])
     out_md.write_text("\n".join(lines), encoding="utf-8")

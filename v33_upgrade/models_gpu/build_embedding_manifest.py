@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Independent verification & manifest builder for all V33 pretrained embedding caches.
 
-Re-loads every extracted .npz archive from /data/qlyu/v33_upgrade/embeddings/,
+Re-loads every extracted .npz archive from <WORK_DIR>/v33_upgrade/embeddings/,
 independently asserts:
   1. Exact row count == 46,598 and exact 1-to-1 compound_keys match with compound_index.tsv
   2. Zero NaN/Inf globally and on valid==True rows
@@ -9,7 +9,7 @@ independently asserts:
   4. 100% coverage of all 17 Case17 reference peptide drugs
   5. Computes fresh SHA-256 hashes and consolidates .meta.json + gpu_compliance_log.jsonl
 
-Writes: /data/qlyu/v33_upgrade/embeddings/embedding_manifest.json
+Writes: <WORK_DIR>/v33_upgrade/embeddings/embedding_manifest.json
 """
 from __future__ import annotations
 

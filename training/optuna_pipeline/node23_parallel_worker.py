@@ -18,9 +18,9 @@ warnings.filterwarnings('ignore')
 csv.field_size_limit(10_000_000)
 
 EP = sys.argv[1]  # endpoint name from command line
-DATA = Path('/data/qlyu/s3')
+DATA = Path('<WORK_DIR>/s3')
 CACHE = DATA / 'feat_cache'
-PER = Path('/data/qlyu/s3_integrated')  # integrated OLD+NEW data
+PER = Path('<WORK_DIR>/s3_integrated')  # integrated OLD+NEW data
 OUT = DATA / 'complete'
 CKPT_DIR = OUT / 'ckpt'
 CKPT_DIR.mkdir(parents=True, exist_ok=True)

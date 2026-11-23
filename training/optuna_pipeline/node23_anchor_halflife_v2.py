@@ -3,14 +3,14 @@
 10 个已发表锚点 LOO 验证，司美格鲁肽/替尔泊肽留出外推。"""
 import sys, json, re
 import numpy as np
-sys.path.insert(0, '/data/qlyu/s3/omnigrid/engine')
+sys.path.insert(0, '<WORK_DIR>/s3/omnigrid/engine')
 from peptide_modeling_features import extract_structure
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import LeaveOneOut
 import joblib
 
-smiles_map = json.load(open('/data/qlyu/s3/omnigrid/anchor_smiles.json'))
-qf = json.load(open('/data/qlyu/s3/omnigrid/query_features.json'))
+smiles_map = json.load(open('<WORK_DIR>/s3/omnigrid/anchor_smiles.json'))
+qf = json.load(open('<WORK_DIR>/s3/omnigrid/query_features.json'))
 ANCHORS = [  # (name, pubchem_name, t1/2 h)
     ('GLP-1', 'glucagon-like peptide 1', 0.033), ('tesamorelin', 'tesamorelin', 0.43),
     ('exenatide', 'exenatide', 2.4), ('teduglutide', 'teduglutide', 2.0),
@@ -78,5 +78,5 @@ joblib.dump({'coef': m.coef_.tolist(), 'intercept': float(m.intercept_), 'alpha'
              'loo_mae': mae, 'loo_r2': r2, 'loo_spearman': spear,
              'anchors': names, 'anchor_actual_h': [10**v for v in y],
              'anchor_loo_pred_h': [10**v for v in loo], 'drug_holdout': drug_preds},
-            '/data/qlyu/s3/omnigrid/halflife_anchor.joblib')
+            '<WORK_DIR>/s3/omnigrid/halflife_anchor.joblib')
 print('saved')

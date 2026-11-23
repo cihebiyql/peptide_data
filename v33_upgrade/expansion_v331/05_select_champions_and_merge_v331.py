@@ -4,7 +4,7 @@ Wave 5A — Step 05 (runs on node23):
 Strictly OOF-only cross-family champion selection (CPU vs 4-FM Fusion vs Nested-OOF Simplex Super-Ensemble),
 frozen OOF Conformal 80%/90% calibration, frozen OOF Censored-Aware AFT head selection, single untouched 20%
 holdout evaluation, pruned serving model bundling (ZERO catboost!), unified AD + Top-3 Analog Index rebuild,
-and ZERO-REGRESSION merge into /data/qlyu/v33_upgrade/bundle/.
+and ZERO-REGRESSION merge into <WORK_DIR>/v33_upgrade/bundle/.
 
 HARD ZERO-REGRESSION GUARANTEES:
 1. Backs up v33_manifest.json -> v33_manifest_24ep_backup.json (never overwriting an existing backup!).
@@ -36,7 +36,7 @@ from scipy.optimize import minimize
 from scipy.stats import spearmanr
 from sklearn.linear_model import HuberRegressor
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 BUNDLE_DIR = V33_BASE / "bundle"
 SERVING_DIR = BUNDLE_DIR / "serving_models"
 V33_ENDPOINTS_DIR = V33_BASE / "data" / "endpoints"

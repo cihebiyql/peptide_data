@@ -3,7 +3,7 @@
 Fair Individual Representation Ablation, Censored Multimodal AFT, Calibration,
 Conformal Uncertainty & Strict Zero-Leakage Leave-Case17-Out Suite.
 
-Strictly owns and writes ONLY under /data/qlyu/v33_upgrade/models_fusion/.
+Strictly owns and writes ONLY under <WORK_DIR>/v33_upgrade/models_fusion/.
 Read-only access to data/, features/, embeddings/, and models_cpu/.
 """
 from __future__ import annotations
@@ -1741,7 +1741,7 @@ def run_single_endpoint(args: Tuple[str, int]) -> Dict[str, Any]:
         "bounds": bounds,
         "cond_cols": ep_data["cond_cols"],
         "canonical_default_conditions": spec["canonical_conditions"],
-        "cpu_model_ref": f"/data/qlyu/v33_upgrade/models_cpu/{endpoint}/models_5fold.joblib",
+        "cpu_model_ref": f"<WORK_DIR>/v33_upgrade/models_cpu/{endpoint}/models_5fold.joblib",
         "pretrained_base_heads": serialized_heads,
         "smiles_only": {
             "candidate_heads": track_a_heads,

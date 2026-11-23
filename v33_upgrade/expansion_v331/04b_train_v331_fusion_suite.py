@@ -5,9 +5,9 @@ Wave 5A — Step 04b (runs on node23, 64 CPU cores):
 Censored Multimodal AFT, Nested Anti-(p>>n) ModalityAwareStacker, Conformal Uncertainty, &
 Strict Zero-Leakage Leave-Case17-Out Suite for ALL 22 new V33.1 endpoints.
 
-Imports exact picklable classes from /data/qlyu/v33_upgrade/models_fusion/ so every .joblib
+Imports exact picklable classes from <WORK_DIR>/v33_upgrade/models_fusion/ so every .joblib
 unpickles cleanly inside v33_inference_service.py with ZERO new class dependencies!
-Writes strictly under /data/qlyu/v33_upgrade/expansion_v331/models_fusion/.
+Writes strictly under <WORK_DIR>/v33_upgrade/expansion_v331/models_fusion/.
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ import joblib
 import numpy as np
 from scipy.linalg import eigh
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 EXP_SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(V33_BASE / "models_fusion"))
 sys.path.insert(0, str(EXP_SCRIPTS))

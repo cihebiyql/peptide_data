@@ -6,4 +6,4 @@ while pgrep -f "expand_cache" > /dev/null 2>&1; do
 done
 echo "Cache expansion done. Launching workers..."
 sleep 5
-bash /data/qlyu/s3/node23_launch_all.sh
+bash <WORK_DIR>/s3/node23_launch_all.sh

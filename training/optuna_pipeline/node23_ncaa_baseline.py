@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """S2: ncAA-RepDistill vs Morgan vs ESM2 baseline comparison (run on node23 CPU).
 
-Consumes: /data/qlyu/ncaa_features_v32.npz (from node1 GPU extraction)
+Consumes: <WORK_DIR>/ncaa_features_v32.npz (from node1 GPU extraction)
           + endpoint tables transferred from local.
 
 Arms per endpoint (all with GroupKFold-5, group=homology∪skeleton union-find):
@@ -10,7 +10,7 @@ Arms per endpoint (all with GroupKFold-5, group=homology∪skeleton union-find):
   morgan+desc — S0 baseline (for reference)
   (esm2 rows are NEW-only; ncaa covers ALL compounds with SMILES including modified)
 
-Run on node23: python3 /data/qlyu/s2_ncaa_baseline.py
+Run on node23: python3 <WORK_DIR>/s2_ncaa_baseline.py
 """
 
 import csv
@@ -30,8 +30,8 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 import lightgbm as lgb
 
-DATA = Path("/data/qlyu/v32_experiment")
-NCAA_NPZ = Path("/data/qlyu/ncaa_features_v32.npz")
+DATA = Path("<WORK_DIR>/v32_experiment")
+NCAA_NPZ = Path("<WORK_DIR>/ncaa_features_v32.npz")
 OUT = DATA / "s2_ncaa_baseline"
 (OUT / "preds").mkdir(parents=True, exist_ok=True)
 MIN_ROWS = 100

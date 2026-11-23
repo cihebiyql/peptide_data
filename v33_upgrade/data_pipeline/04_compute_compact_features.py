@@ -2,7 +2,7 @@
 """
 Step 04 (runs on node23, 64 CPU cores, RDKit 2026.09.1):
 Computes the Compact Anti-(p >> n) Feature Bank ONCE for ALL unique compounds in
-compounds_v33.tsv + case17_queries.tsv, saving to /data/qlyu/v33_upgrade/features/:
+compounds_v33.tsv + case17_queries.tsv, saving to <WORK_DIR>/v33_upgrade/features/:
   - compound_index.tsv (unified 0..N-1 mapping for all V33 + Case17 compounds)
   - physchem_core.npz (~83 curated, interpretable, zero-NaN/Inf peptide/macrocycle + sequence descriptors)
   - fp_compact.npz (chiral Morgan Count r2 1024D, chiral AtomPair 1024D, MACCS 167D, chiral Torsion 512D + valid mask)
@@ -28,7 +28,7 @@ from rdkit.Chem import Crippen, Descriptors, Lipinski, MACCSkeys, QED, rdFingerp
 RDLogger.DisableLog("rdApp.*")
 csv.field_size_limit(10_000_000)
 
-BASE_DIR = Path("/data/qlyu/v33_upgrade")
+BASE_DIR = Path("<WORK_DIR>/v33_upgrade")
 DATA_DIR = BASE_DIR / "data"
 FEAT_DIR = BASE_DIR / "features"
 N_WORKERS = min(64, os.cpu_count() or 32)

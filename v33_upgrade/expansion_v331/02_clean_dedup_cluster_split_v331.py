@@ -13,7 +13,7 @@ Wave 5A — Step 02 (runs on node23, 64 CPU cores, RDKit 2026.09.1):
 6. Freezes untouched ~20% outer cluster holdout + balanced 5-fold grouped CV (`[10%, 35%]`), asserting
    ZERO leakage across cluster_id, compound_key, inchikey_14, conn_hash, canonical_smiles and 0 NaN/Inf.
 7. Computes exact V33-identical compact features for ONLY the K new compounds and saves concatenated
-   V33.1 feature bank under `/data/qlyu/v33_upgrade/expansion_v331/features/` (rows 0..46597 bit-for-bit identical!).
+   V33.1 feature bank under `<WORK_DIR>/v33_upgrade/expansion_v331/features/` (rows 0..46597 bit-for-bit identical!).
 """
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 RDLogger.DisableLog("rdApp.*")
 csv.field_size_limit(10_000_000)
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 V33_DATA = V33_BASE / "data"
 V33_FEAT = V33_BASE / "features"
 

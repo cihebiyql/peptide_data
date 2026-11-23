@@ -7,9 +7,9 @@ import numpy as np
 
 sys.stdout.reconfigure(encoding="utf-8") if hasattr(sys.stdout, "reconfigure") else None
 csv.field_size_limit(10_000_000)
-INTEG = Path('/data/qlyu/s3_integrated')
-CACHE = Path('/data/qlyu/s3/feat_cache')
-DATA = Path('/data/qlyu/s3')
+INTEG = Path('<WORK_DIR>/s3_integrated')
+CACHE = Path('<WORK_DIR>/s3/feat_cache')
+DATA = Path('<WORK_DIR>/s3')
 
 t0 = time.time()
 
@@ -42,7 +42,7 @@ esm_valid = z['valid']
 import torch
 from transformers import AutoTokenizer, AutoModel
 
-SNAP = '/data/qlyu/.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots/08e4846e537177426273712802403f7ba8261b6c'
+SNAP = '<WORK_DIR>/.cache/huggingface/hub/models--facebook--esm2_t33_650M_UR50D/snapshots/08e4846e537177426273712802403f7ba8261b6c'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Device: {device}")
 

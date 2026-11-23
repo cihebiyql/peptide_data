@@ -121,22 +121,32 @@ def _sigmoid(z: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-np.clip(np.asarray(z, dtype=np.float64), -35.0, 35.0)))
 
 
+def _is_catboost(est: Any) -> bool:
+    return "catboost" in type(est).__module__.lower()
+
+
 def _predict_cpu_est(est: Any, X: Any, task_type: str) -> np.ndarray:
+    cb = _is_catboost(est)
     if task_type == "classification":
         if hasattr(est, "predict_proba"):
-            return est.predict_proba(X)[:, 1].astype(np.float64)
+            proba = est.predict_proba(X, thread_count=1) if cb else est.predict_proba(X)
+            return np.asarray(proba, dtype=np.float64)[:, 1]
         dec = est.decision_function(X).astype(np.float64)
         return _sigmoid(dec)
-    return np.asarray(est.predict(X), dtype=np.float64)
+    pred = est.predict(X, thread_count=1) if cb else est.predict(X)
+    return np.asarray(pred, dtype=np.float64)
 
 
 def _predict_fusion_est(est: Any, X: np.ndarray, task_type: str) -> np.ndarray:
+    cb = _is_catboost(est)
     if task_type == "classification":
         if hasattr(est, "predict_proba"):
-            return est.predict_proba(X)[:, 1].astype(np.float64)
+            proba = est.predict_proba(X, thread_count=1) if cb else est.predict_proba(X)
+            return np.asarray(proba, dtype=np.float64)[:, 1]
         dec = est.decision_function(X).astype(np.float64)
         return _sigmoid(dec)
-    return np.asarray(est.predict(X), dtype=np.float64)
+    pred = est.predict(X, thread_count=1) if cb else est.predict(X)
+    return np.asarray(pred, dtype=np.float64)
 
 
 def _apply_frozen_calibrator(p_raw: np.ndarray, cal_spec: Optional[Dict[str, Any]]) -> np.ndarray:
@@ -440,8 +450,17 @@ def _format_display_value(raw_val: float, ep_doc: Dict[str, Any]) -> Tuple[float
 class V33InferenceEngine:
     """Authoritative V33 Champion Inference Engine."""
 
-    def __init__(self, esmc_port: int = 18902, torch_threads: int = 16):
+    def __init__(
+        self,
+        esmc_port: int = 18902,
+        torch_threads: int = 4,
+        max_concurrent: int = 4,
+        queue_timeout: float = 30.0,
+    ):
         self.t_boot = time.time()
+        self.max_concurrent = max(1, int(max_concurrent))
+        self.queue_timeout = float(queue_timeout)
+        self.infer_sem = threading.BoundedSemaphore(self.max_concurrent)
         self.manifest = json.loads((BUNDLE_DIR / "v33_manifest.json").read_text(encoding="utf-8"))
         self.endpoints_order = sorted(self.manifest["endpoints"].keys())
         self.tier1_endpoints = [e for e in self.endpoints_order if self.manifest["endpoints"][e]["tier"] == 1]
@@ -499,8 +518,9 @@ class V33InferenceEngine:
                 if rp.exists():
                     self.mt46_models.append(load_mt46_checkpoint(rp, device="cpu"))
 
-        self.deep_lock = threading.Lock()
-        self._tune_estimator_threads(n_jobs=2)
+        # Read-only PyTorch eval() + no_grad() is thread-safe without a global mutex;
+        # cap per-estimator threads to 1 so EP_WORKERS parallel endpoint threads do not oversubscribe CPU/OpenMP.
+        self._tune_estimator_threads(n_jobs=1)
         self.ep_pool = ThreadPoolExecutor(max_workers=EP_WORKERS)
 
         self.startup_sec = round(time.time() - self.t_boot, 2)
@@ -527,6 +547,11 @@ class V33InferenceEngine:
             if hasattr(obj, "nthread") and isinstance(getattr(obj, "nthread", None), int):
                 try:
                     setattr(obj, "nthread", n_jobs)
+                except Exception:
+                    pass
+            if _is_catboost(obj) and hasattr(obj, "set_params"):
+                try:
+                    obj.set_params(thread_count=n_jobs)
                 except Exception:
                     pass
             if isinstance(obj, dict):
@@ -1082,6 +1107,9 @@ class V33InferenceEngine:
                         entry["ci80_high"] = round(hi80, 5)
                         entry["ci90_low"] = round(lo90, 5)
                         entry["ci90_high"] = round(hi90, 5)
+                        cov_meta = tr_doc.get("conformal_holdout_coverage") or {}
+                        if cov_meta.get("uq_reliability"):
+                            entry["uq_reliability"] = cov_meta["uq_reliability"]
                         if ep_doc["log10_space"]:
                             entry["ci80_linear"] = [round(10.0 ** np.clip(lo80, -15, 15), 4), round(10.0 ** np.clip(hi80, -15, 15), 4)]
                             entry["ci90_linear"] = [round(10.0 ** np.clip(lo90, -15, 15), 4), round(10.0 ** np.clip(hi90, -15, 15), 4)]
@@ -1244,44 +1272,66 @@ class V33RequestHandler(BaseHTTPRequestHandler):
         ret_dbg = bool(body.get("return_embeddings_debug", False))
 
         try:
-            if path == "/predict":
-                results, _ = ENGINE.predict_batch_items(
-                    [body], cond_src, include_tier2=include_tier2,
-                    force_live_encode=force_live, return_embeddings_debug=ret_dbg,
-                )
-                res = results[0]
-                code = 200 if res.get("status") == "ok" else 400
-                self._send_json(code, res)
-                return
+            if path in ("/predict", "/batch"):
+                acquired = ENGINE.infer_sem.acquire(timeout=ENGINE.queue_timeout)
+                if not acquired:
+                    self.send_response(429)
+                    body_429 = json.dumps(
+                        {"status": "error", "error": "Inference engine busy; please retry shortly."},
+                        ensure_ascii=False,
+                    ).encode("utf-8")
+                    self.send_header("Content-Type", "application/json; charset=utf-8")
+                    self.send_header("Content-Length", str(len(body_429)))
+                    self.send_header("Retry-After", "5")
+                    self.end_headers()
+                    self.wfile.write(body_429)
+                    return
+                try:
+                    if path == "/predict":
+                        results, _ = ENGINE.predict_batch_items(
+                            [body], cond_src, include_tier2=include_tier2,
+                            force_live_encode=force_live, return_embeddings_debug=ret_dbg,
+                        )
+                        res = results[0]
+                        code = 200 if res.get("status") == "ok" else 400
+                        self._send_json(code, res)
+                        return
 
-            if path == "/batch":
-                items = body.get("items")
-                if not isinstance(items, list) or len(items) == 0:
-                    self._send_json(400, {"status": "error", "error": "Field 'items' must be a non-empty list."})
+                    items = body.get("items")
+                    if not isinstance(items, list) or len(items) == 0:
+                        self._send_json(400, {"status": "error", "error": "Field 'items' must be a non-empty list."})
+                        return
+                    if len(items) > 500:
+                        self._send_json(400, {"status": "error", "error": f"Batch size {len(items)} exceeds max 500."})
+                        return
+                    results, timings = ENGINE.predict_batch_items(
+                        items, cond_src, include_tier2=include_tier2,
+                        force_live_encode=force_live, return_embeddings_debug=False,
+                    )
+                    n_ok = sum(1 for r in results if r.get("status") == "ok")
+                    self._send_json(200, {
+                        "status": "ok",
+                        "version": ENGINE.manifest.get("version", "v33.2"),
+                        "total": len(results),
+                        "succeeded": n_ok,
+                        "failed": len(results) - n_ok,
+                        "timing_ms": timings,
+                        "results": results,
+                    })
                     return
-                if len(items) > 500:
-                    self._send_json(400, {"status": "error", "error": f"Batch size {len(items)} exceeds max 500."})
-                    return
-                results, timings = ENGINE.predict_batch_items(
-                    items, cond_src, include_tier2=include_tier2,
-                    force_live_encode=force_live, return_embeddings_debug=False,
-                )
-                n_ok = sum(1 for r in results if r.get("status") == "ok")
-                self._send_json(200, {
-                    "status": "ok",
-                    "version": ENGINE.manifest.get("version", "v33.1"),
-                    "total": len(results),
-                    "succeeded": n_ok,
-                    "failed": len(results) - n_ok,
-                    "timing_ms": timings,
-                    "results": results,
-                })
-                return
+                finally:
+                    ENGINE.infer_sem.release()
 
             self._send_json(404, {"status": "error", "error": f"Unknown POST path: {path}"})
         except Exception as exc:
             traceback.print_exc()
             self._send_json(500, {"status": "error", "error": str(exc)})
+
+
+class BoundedThreadingHTTPServer(ThreadingHTTPServer):
+    request_queue_size = 64
+    allow_reuse_address = True
+    daemon_threads = True
 
 
 def main() -> None:
@@ -1290,15 +1340,29 @@ def main() -> None:
     ap.add_argument("--host", type=str, default="0.0.0.0")
     ap.add_argument("--port", type=int, default=8902)
     ap.add_argument("--esmc-port", type=int, default=18902)
-    ap.add_argument("--threads", type=int, default=16)
+    ap.add_argument("--threads", type=int, default=4)
+    ap.add_argument(
+        "--max-concurrent",
+        type=int,
+        default=int(os.environ.get("V33_MAX_CONCURRENT_INFER", "4")),
+    )
+    ap.add_argument(
+        "--queue-timeout",
+        type=float,
+        default=float(os.environ.get("V33_INFER_QUEUE_TIMEOUT", "30.0")),
+    )
     args = ap.parse_args()
 
     print(f"=== Starting Peptide OmniPanel V33 Live Inference Service on {args.host}:{args.port} ===", flush=True)
-    ENGINE = V33InferenceEngine(esmc_port=args.esmc_port, torch_threads=args.threads)
+    ENGINE = V33InferenceEngine(
+        esmc_port=args.esmc_port,
+        torch_threads=args.threads,
+        max_concurrent=args.max_concurrent,
+        queue_timeout=args.queue_timeout,
+    )
     MANIFEST_BYTES = (BUNDLE_DIR / "v33_manifest.json").read_bytes()
 
-    server = ThreadingHTTPServer((args.host, args.port), V33RequestHandler)
-    server.daemon_threads = True
+    server = BoundedThreadingHTTPServer((args.host, args.port), V33RequestHandler)
 
     def _handle_sig(signum, frame):
         print(f"[server] Signal {signum} received, shutting down cleanly...", flush=True)

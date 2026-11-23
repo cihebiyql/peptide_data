@@ -26,7 +26,7 @@ Wave 5A expands **Peptide OmniPanel V33** from **24 endpoints** to **46 scientif
 - **Local Windows RTX 5080 (16 GB)**: Performed all delta 4-FM embedding extraction (`K = 4,397` + 5 anchors) in **298.6s** using `D:\work\中检院\v33_upgrade\models_gpu\_local_cache\venv\Scripts\python.exe`.
 - **`node1` GPUs**: **0% touched / 0 jobs run**.
 - **`node23` (64 CPU cores, 256 GB RAM)**: Executed all cleaning, Non-Chaining Dual-Track clustering, feature computation (`61.8s`), 22-endpoint multi-family CPU training (`1,446.3s`), 22-endpoint 4-FM Multimodal Fusion training (`1,615.0s`), OOF champion selection & bundle merge (`491.6s`), and offline pre/post verification. Confirmed **`NONE_RUNNING`** lingering daemon processes after verification.
-- **`node2` Production Services (`172.21.43.16`)**: **100% untouched** during Wave 5A (ready for Wave 5B Web UI upgrade and atomic redeployment).
+- **`node2` Production Services (`<APP_HOST>`)**: **100% untouched** during Wave 5A (ready for Wave 5B Web UI upgrade and atomic redeployment).
 
 ---
 
@@ -158,20 +158,20 @@ Champion selection (`cpu` vs `fusion` vs nested-OOF simplex `super_ensemble`), c
 
 ## 6. Artifact & File Paths (Ready for Wave 5B)
 
-### On `node23` (`/data/qlyu/v33_upgrade/`)
+### On `node23` (`<WORK_DIR>/v33_upgrade/`)
 - **Merged Serving Bundle**:
-  - `/data/qlyu/v33_upgrade/bundle/v33_manifest.json` (46 endpoints, `version="v33.1"`)
-  - `/data/qlyu/v33_upgrade/bundle/v33_manifest_24ep_backup.json` (pristine 24-ep backup)
-  - `/data/qlyu/v33_upgrade/bundle/ad_analog_index.npz` & `analog_lookup.json.gz` (`50,994 refs × 46 eps`)
-  - `/data/qlyu/v33_upgrade/bundle/serving_models/*.joblib` (`84` files = `43` untouched V33.0 + `41` new V33.1)
-  - `/data/qlyu/v33_upgrade/bundle/v33_inference_service.py` (4-line surgical V33.1 update + `_24ep_backup.py`)
+  - `<WORK_DIR>/v33_upgrade/bundle/v33_manifest.json` (46 endpoints, `version="v33.1"`)
+  - `<WORK_DIR>/v33_upgrade/bundle/v33_manifest_24ep_backup.json` (pristine 24-ep backup)
+  - `<WORK_DIR>/v33_upgrade/bundle/ad_analog_index.npz` & `analog_lookup.json.gz` (`50,994 refs × 46 eps`)
+  - `<WORK_DIR>/v33_upgrade/bundle/serving_models/*.joblib` (`84` files = `43` untouched V33.0 + `41` new V33.1)
+  - `<WORK_DIR>/v33_upgrade/bundle/v33_inference_service.py` (4-line surgical V33.1 update + `_24ep_backup.py`)
 - **Isolated Expansion Workspace**:
-  - `/data/qlyu/v33_upgrade/expansion_v331/data/endpoints/*.tsv` (`22` new endpoint splits)
-  - `/data/qlyu/v33_upgrade/expansion_v331/data/{compounds_v331_merged.tsv, delta_compounds.tsv, v331_split_summary.json}`
-  - `/data/qlyu/v33_upgrade/expansion_v331/features/` (`50,995`-compound V33.1 feature bank)
-  - `/data/qlyu/v33_upgrade/expansion_v331/embeddings/` (`50,995`-compound merged 4-FM embeddings)
-  - `/data/qlyu/v33_upgrade/expansion_v331/{models_cpu, models_fusion, serving_models}/`
-  - `/data/qlyu/v33_upgrade/expansion_v331/{v331_champion_summary.json, v331_offline_verification_receipt.json, pre_merge_24ep_baseline.json}`
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/data/endpoints/*.tsv` (`22` new endpoint splits)
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/data/{compounds_v331_merged.tsv, delta_compounds.tsv, v331_split_summary.json}`
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/features/` (`50,995`-compound V33.1 feature bank)
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/embeddings/` (`50,995`-compound merged 4-FM embeddings)
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/{models_cpu, models_fusion, serving_models}/`
+  - `<WORK_DIR>/v33_upgrade/expansion_v331/{v331_champion_summary.json, v331_offline_verification_receipt.json, pre_merge_24ep_baseline.json}`
 
 ### Local Workspace (`D:\work\中检院\v33_upgrade\`)
 - **Report**: `D:\work\中检院\v33_upgrade\reports\v331_endpoint_expansion.md`

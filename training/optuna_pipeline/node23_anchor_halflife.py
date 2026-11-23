@@ -6,7 +6,7 @@ import sys, json, time
 import numpy as np
 from pathlib import Path
 
-sys.path.insert(0, '/data/qlyu/s3/omnigrid/engine')
+sys.path.insert(0, '<WORK_DIR>/s3/omnigrid/engine')
 from peptide_modeling_features import extract_structure
 from peptide_modeling_add_smiles_methods import extract_smiles_methods
 from sklearn.linear_model import Ridge
@@ -18,13 +18,13 @@ ANCHORS = {  # name -> (t1/2 hours, SMILES)
     'glargine': (12.0, None), 'setmelanotide': (11.0, None), 'liraglutide': (13.0, None),
     'degludec': (25.0, None),
 }
-smiles_map = json.load(open('/data/qlyu/s3/omnigrid/anchor_smiles.json'))
+smiles_map = json.load(open('<WORK_DIR>/s3/omnigrid/anchor_smiles.json'))
 NAME2PUBCHEM = {'GLP-1(7-36)': 'glucagon-like peptide 1', 'tesamorelin': 'tesamorelin',
                 'exenatide': 'exenatide', 'teduglutide': 'teduglutide',
                 'lixisenatide': 'lixisenatide', 'detemir': 'insulin detemir',
                 'glargine': 'insulin glargine', 'setmelanotide': 'setmelanotide',
                 'liraglutide': 'liraglutide', 'degludec': 'insulin degludec'}
-qf = json.load(open('/data/qlyu/s3/omnigrid/query_features.json'))
+qf = json.load(open('<WORK_DIR>/s3/omnigrid/query_features.json'))
 DRUGS = {'semaglutide': (168.0, qf['query'][0]['canonical_smiles']),
          'tirzepatide': (120.0, qf['query'][1]['canonical_smiles'])}
 
@@ -89,5 +89,5 @@ art = {'cols': cols, 'mu': mu, 'sd': sd, 'alpha': alpha, 'block_name': cname,
        'anchor_actual_h': [10**v for v in y], 'anchor_loo_pred_h': [10**v for v in loo_preds],
        'drug_holdout': drug_preds,
        'coef': m.coef_.tolist(), 'intercept': float(m.intercept_)}
-joblib.dump(art, '/data/qlyu/s3/omnigrid/halflife_anchor.joblib')
-print('\nsaved /data/qlyu/s3/omnigrid/halflife_anchor.joblib')
+joblib.dump(art, '<WORK_DIR>/s3/omnigrid/halflife_anchor.joblib')
+print('\nsaved <WORK_DIR>/s3/omnigrid/halflife_anchor.joblib')

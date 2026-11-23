@@ -8,8 +8,8 @@ from sklearn.model_selection import GroupKFold
 import lightgbm as lgb
 
 csv.field_size_limit(10_000_000)
-DATA = Path('/data/qlyu/s3')
-PER = Path('/data/qlyu/s3_per')
+DATA = Path('<WORK_DIR>/s3')
+PER = Path('<WORK_DIR>/s3_per')
 OUT = DATA / 'final'
 (OUT / 'models').mkdir(parents=True, exist_ok=True)
 DEMO_EXCLUDE = {'cmp_bccb3404f692c7bf44452c96', 'cmp_c80b5e5a1682bb35cd28ec5b'}

@@ -2,7 +2,7 @@
 """Shared index loading, alignment assertions, SHA-256 hashing, and NPZ verification
 for Peptide OmniPanel V33 pretrained representation caches.
 
-Guarantees exact 1-to-1 row alignment with /data/qlyu/v33_upgrade/features/compound_index.tsv
+Guarantees exact 1-to-1 row alignment with <WORK_DIR>/v33_upgrade/features/compound_index.tsv
 (N = 46,598 compounds, including all 17 Case17 reference peptide drugs).
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ import numpy as np
 
 csv.field_size_limit(10_000_000)
 
-BASE_DIR = Path(os.environ.get("V33_BASE_DIR", "/data/qlyu/v33_upgrade"))
+BASE_DIR = Path(os.environ.get("V33_BASE_DIR", "<WORK_DIR>/v33_upgrade"))
 DATA_DIR = BASE_DIR / "data"
 FEAT_DIR = BASE_DIR / "features"
 EMB_DIR = BASE_DIR / "embeddings"

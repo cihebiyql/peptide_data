@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 BUNDLE_DIR = V33_BASE / "bundle"
 EXP_BASE = V33_BASE / "expansion_v331"
 PRE_SNAPSHOT = EXP_BASE / "pre_merge_24ep_baseline.json"
@@ -29,12 +29,12 @@ POST_RECEIPT = EXP_BASE / "v331_offline_verification_receipt.json"
 
 # Configure node23 esmc python (esmfold2-env312) cleanly!
 os.environ.setdefault("V33_BASE_DIR", str(V33_BASE))
-if Path("/data/qlyu/esmfold2-env312/bin/python").exists():
-    os.environ.setdefault("V33_ESMC_PYTHON", "/data/qlyu/esmfold2-env312/bin/python")
-if Path("/data/qlyu/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36").exists():
+if Path("<WORK_DIR>/esmfold2-env312/bin/python").exists():
+    os.environ.setdefault("V33_ESMC_PYTHON", "<WORK_DIR>/esmfold2-env312/bin/python")
+if Path("<WORK_DIR>/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36").exists():
     os.environ.setdefault(
         "V33_ESMC_MODEL_DIR",
-        "/data/qlyu/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36",
+        "<WORK_DIR>/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36",
     )
 
 sys.path.insert(0, str(BUNDLE_DIR))

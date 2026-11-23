@@ -919,6 +919,14 @@ class _TTLCache:
                 self._store.popitem(last=False)
 
 
+class EngineUnavailableError(RuntimeError):
+    """Raised when V33_STRICT_REMOTE=1 and the live V33 inference engine is unreachable."""
+
+
+class EngineBusyError(RuntimeError):
+    """Raised when live inference concurrency slots are saturated (mapped to HTTP 429)."""
+
+
 class OmniPanelAdapter:
     """Authoritative V33 adapter supporting live `v33_remote` and `v33_offline_fallback`."""
 
@@ -929,8 +937,14 @@ class OmniPanelAdapter:
         self.remote_url: Optional[str] = None
         self.remote_healthy: bool = False
         self.mode: str = "v33_offline_fallback"
-        self.cache = _TTLCache(maxsize=256, ttl_seconds=3600.0)
-        self._gnn_cache = _TTLCache(maxsize=256, ttl_seconds=3600.0)
+        self.strict_remote: bool = os.environ.get("V33_STRICT_REMOTE", "0").strip().lower() in ("1", "true", "yes")
+        cache_ttl = float(os.environ.get("V33_CACHE_TTL_SEC", "86400"))
+        cache_size = int(os.environ.get("V33_CACHE_MAXSIZE", "1024"))
+        self.cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
+        self._gnn_cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
+        max_conc = max(1, int(os.environ.get("V33_WEB_MAX_CONCURRENT", "4")))
+        self._predict_sem = threading.BoundedSemaphore(max_conc)
+        self._predict_queue_timeout = float(os.environ.get("V33_WEB_QUEUE_TIMEOUT", "25.0"))
         self._gnn_lock = threading.Lock()
         self._gnn_engine: Optional[Any] = None
         self._gnn_checked: bool = False
@@ -1058,7 +1072,11 @@ class OmniPanelAdapter:
             return None
         from .gnn_atom_attribution import GNN_8_TASK_META, render_atom_attribution_svg
 
-        ep = endpoint if endpoint in eng.endpoints else eng.endpoints[0]
+        if endpoint not in eng.endpoints:
+            raise InputValidationError(
+                f"Unsupported atom-attribution endpoint '{endpoint}'. Supported endpoints: {', '.join(eng.endpoints)}."
+            )
+        ep = endpoint
         smi = resolved.canonical_smiles or Chem.MolToSmiles(resolved.mol, canonical=True)
         cache_hit = False
         cached = self._gnn_cache.get(smi)
@@ -1271,6 +1289,10 @@ class OmniPanelAdapter:
                     holdout_score_v33=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                     conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                     conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
+                    uq_reliability=cov.get("uq_reliability") or (
+                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
+                        else ("calibrated" if cov.get("cov80") is not None else None)
+                    ),
                     brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                     ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                     has_censored_head=bool(doc.get("censored_head")),
@@ -1463,6 +1485,9 @@ class OmniPanelAdapter:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
+        acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+        if not acquired:
+            raise EngineBusyError("Inference server is busy handling concurrent requests; please retry in a few seconds.")
         try:
             with urllib.request.urlopen(req, timeout=120.0) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
@@ -1474,11 +1499,17 @@ class OmniPanelAdapter:
                 except Exception:
                     msg = err_body
                 raise InputValidationError(f"V33 engine rejected input: {msg}") from exc
+            if exc.code == 429:
+                raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
             raise RuntimeError(f"V33 remote inference HTTP {exc.code}: {err_body[:300]}") from exc
         except Exception as exc:
             self.remote_healthy = False
             self.mode = "v33_offline_fallback"
+            if self.strict_remote:
+                raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
             raise RuntimeError(f"V33 remote inference unavailable ({self.remote_url}): {exc}") from exc
+        finally:
+            self._predict_sem.release()
 
         if data.get("status") != "ok":
             raise InputValidationError(str(data.get("error") or "V33 prediction failed."))
@@ -1533,8 +1564,24 @@ class OmniPanelAdapter:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=300.0) as resp:
-            batch_data = json.loads(resp.read().decode("utf-8"))
+        acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+        if not acquired:
+            raise EngineBusyError("Inference server is busy handling concurrent requests; please retry shortly.")
+        try:
+            with urllib.request.urlopen(req, timeout=300.0) as resp:
+                batch_data = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
+            raise RuntimeError(f"V33 remote batch HTTP {exc.code}") from exc
+        except Exception as exc:
+            self.remote_healthy = False
+            self.mode = "v33_offline_fallback"
+            if self.strict_remote:
+                raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
+            raise
+        finally:
+            self._predict_sem.release()
 
         results_list = batch_data.get("results") or []
         for pos, item_res in enumerate(results_list):
@@ -1695,6 +1742,12 @@ class OmniPanelAdapter:
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
+                uq_reliability=None if is_cls else (
+                    r.get("uq_reliability") or cov.get("uq_reliability") or (
+                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
+                        else ("calibrated" if cov.get("cov80") is not None else None)
+                    )
+                ),
                 brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                 ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                 censored_note=r.get("censored_note"),
@@ -2023,6 +2076,12 @@ class OmniPanelAdapter:
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
+                uq_reliability=None if is_cls else (
+                    cov.get("uq_reliability") or (
+                        "low" if (cov.get("cov80") is not None and float(cov["cov80"]) < 0.70)
+                        else ("calibrated" if cov.get("cov80") is not None else None)
+                    )
+                ),
                 brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                 ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                 censored_note=cens_note,
@@ -2176,6 +2235,10 @@ class OmniPanelAdapter:
                 cache_hit=cache_hit,
                 elapsed_ms=(time.perf_counter() - t0) * 1000.0,
             )
+        elif self.strict_remote:
+            raise EngineUnavailableError(
+                "Live 4-FM super-ensemble inference engine is currently unavailable (strict production mode: heuristic fallback disabled)."
+            )
         else:
             resp = self._predict_offline_fallback(
                 resolved=resolved,
@@ -2292,6 +2355,10 @@ class OmniPanelAdapter:
                     elapsed_ms=elapsed_each,
                 )
                 results[idx] = self._to_batch_molecule_result(row, pred)
+        elif self.strict_remote:
+            raise EngineUnavailableError(
+                "Live 4-FM super-ensemble inference engine is currently unavailable (strict production mode: heuristic fallback disabled)."
+            )
         else:
             for idx, row, resolved, physchem, mod_badges in valid_entries:
                 t_i = time.perf_counter()
@@ -2389,4 +2456,21 @@ class OmniPanelAdapter:
             key_metrics=key_metrics,
             predictions=pred.predictions,
             summary=pred.summary,
+            prediction_source=pred.adapter_mode,
         )
+
+    def warmup_curated_examples(self) -> int:
+        """Pre-warm all 25 curated examples in background so demo/quick-example clicks respond in <20 ms."""
+        if self.mode != "v33_remote" or not self.remote_url:
+            return 0
+        warmed = 0
+        default_cond = AssayConditions().to_v33_conditions()
+        for entry in DRUG_LIBRARY:
+            try:
+                q = entry["sequence"] if (not entry.get("smiles") and entry.get("sequence")) else entry["display_name"]
+                resolved = self.resolve_query(query=q)
+                self._call_v33_remote_single(resolved, include_tier2=True, v33_cond=default_cond)
+                warmed += 1
+            except Exception:
+                continue
+        return warmed

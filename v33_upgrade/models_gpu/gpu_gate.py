@@ -7,7 +7,7 @@ HARD RESOURCE RULE (NON-NEGOTIABLE):
       * memory.used < 50% (< 12,282 MiB / 24,564 MiB), AND
       * utilization.gpu < 50%.
   - Prefer GPUs with generous VRAM headroom (< 45% VRAM, e.g., GPU 5).
-  - Record every compliance check into /data/qlyu/v33_upgrade/embeddings/gpu_compliance_log.jsonl.
+  - Record every compliance check into <WORK_DIR>/v33_upgrade/embeddings/gpu_compliance_log.jsonl.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 from typing import List, Optional
 
-LOG_PATH = Path("/data/qlyu/v33_upgrade/embeddings/gpu_compliance_log.jsonl")
+LOG_PATH = Path("<WORK_DIR>/v33_upgrade/embeddings/gpu_compliance_log.jsonl")
 
 
 def sample_gpus() -> List[dict]:

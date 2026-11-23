@@ -495,3 +495,79 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
         assert len(dp["atom_attribution_endpoints"]) == 8
     else:
         assert res.status_code == 503
+
+
+def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(monkeypatch: pytest.MonkeyPatch):
+    """Regression suite covering independent audit findings N3, N5, N8, N9, N10, N15."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    # N8: Unknown atom-attribution endpoint must return 422 (never silently fall back to PAMPA with 200)
+    r_bad_ep = client.post(
+        "/api/v1/atom-attribution",
+        json={"query": "Semaglutide", "endpoint": "NOT_A_REAL_ENDPOINT"},
+    )
+    assert r_bad_ep.status_code == 422
+
+    # N9: /api/v1/batch/upload must reject payloads > 2 MB with HTTP 413
+    oversized = b"name,query\n" + (b"Semaglutide,Semaglutide\n" * 100_000)
+    assert len(oversized) > 2 * 1024 * 1024
+    r_big = client.post(
+        "/api/v1/batch/upload",
+        files={"file": ("huge.csv", oversized, "text/csv")},
+        data={"include_tier2": "false"},
+    )
+    assert r_big.status_code == 413
+
+    # N3: Manifest & /api/v1/endpoints expose uq_reliability and flag low-coverage PPB (<70%)
+    ep_data = client.get("/api/v1/endpoints").json()
+    by_ep = {e["endpoint"]: e for e in ep_data["endpoints"]}
+    assert by_ep["PPB"]["uq_reliability"] == "low"
+    assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
+    assert by_ep["hemolysis_cls"]["uq_reliability"] is None
+
+    # N5: CSV exports (both summary & full wide) must carry `prediction_source` column
+    headers = {"X-Client-Id": "pytest_audit_n5_01"}
+    r_job = client.post(
+        "/api/v1/jobs",
+        headers=headers,
+        json={"title": "CSV Source Check", "raw_text": "Semaglutide\nCyclosporine A\n", "include_tier2": False},
+    )
+    assert r_job.status_code == 200
+    jid = r_job.json()["job_id"]
+    import time
+    for _ in range(30):
+        det = client.get(f"/api/v1/jobs/{jid}", headers=headers).json()
+        if det["status"] in ("completed", "partial", "failed"):
+            break
+        time.sleep(0.1)
+    r_sum = client.get(f"/api/v1/jobs/{jid}/export?format=summary_csv", headers=headers)
+    assert r_sum.status_code == 200 and "prediction_source" in r_sum.text.splitlines()[0]
+    r_wide = client.get(f"/api/v1/jobs/{jid}/export?format=full_csv", headers=headers)
+    wide_hdr = r_wide.text.splitlines()[0]
+    assert r_wide.status_code == 200 and "prediction_source" in wide_hdr and "PAMPA_ci80_low" in wide_hdr and "PAMPA_uq_reliability" in wide_hdr
+    client.delete(f"/api/v1/jobs/{jid}", headers=headers)
+
+    # N5: When strict_remote=True and remote engine is offline, /predict must return 503 (never fabricated values)
+    from v33_upgrade.web import app as web_app_mod
+    monkeypatch.setattr(web_app_mod.adapter, "strict_remote", True)
+    monkeypatch.setattr(web_app_mod.adapter, "mode", "v33_offline_fallback")
+    monkeypatch.setattr(web_app_mod.adapter, "remote_url", None)
+    r_503 = client.post("/api/v1/predict", json={"query": "Semaglutide", "include_svg": False})
+    assert r_503.status_code == 503
+
+    # N15: Redacted health must hide filesystem paths and loopback URL while preserving booleans
+    monkeypatch.setattr(web_app_mod, "REDACT_HEALTH_PATHS", True)
+    h_red = client.get("/api/v1/health").json()
+    assert h_red["manifest_loaded"] is True
+    assert h_red["bundle_path"] is None and h_red["manifest_path"] is None and h_red["v33_remote_url"] is None
+
+    # Thread-safety check: 8 concurrent atom-attribution calls return bit-identical values
+    def _one_attr(_i: int):
+        rr = client.post("/api/v1/atom-attribution", json={"query": "Cyclosporine A", "endpoint": "PAMPA"})
+        return rr.status_code, (rr.json()["gnn_prediction"]["value"] if rr.status_code == 200 else None)
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        outs = list(pool.map(_one_attr, range(8)))
+    if outs[0][0] == 200:
+        assert all(code == 200 for code, _ in outs)
+        assert len({val for _, val in outs}) == 1

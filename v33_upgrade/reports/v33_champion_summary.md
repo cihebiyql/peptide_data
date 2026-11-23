@@ -1,9 +1,9 @@
 # Peptide OmniPanel V33 — Super-Ensemble Champion Selection, Authoritative Serving Bundle & Live Inference Report
 
 - **Generated**: 2026-11-22 06:15:28 +0800 | **Version**: `v33.0` | **Protocol**: Strictly Zero-Holdout-Peeking Nested 5-Fold OOF Selection
-- **Authoritative Bundle (`node23`)**: `/data/qlyu/v33_upgrade/bundle/` (`v33_manifest.json`, `ad_analog_index.npz`, `analog_lookup.json.gz`, `serving_models/`, `v33_inference_service.py`, `esmc_worker.py`)
+- **Authoritative Bundle (`node23`)**: `<WORK_DIR>/v33_upgrade/bundle/` (`v33_manifest.json`, `ad_analog_index.npz`, `analog_lookup.json.gz`, `serving_models/`, `v33_inference_service.py`, `esmc_worker.py`)
 - **Local Mirror**: `D:\work\中检院\v33_upgrade\bundle\v33_manifest.json`
-- **Live Inference Service**: `node23` (`0.0.0.0:8902`, `/usr/bin/python3` + persistent `esmc_worker.py` in `/data/qlyu/esmfold2-env312/bin/python`, 0 GPU usage; V32 `node23:8901` completely untouched & HTTP 200 verified)
+- **Live Inference Service**: `node23` (`0.0.0.0:8902`, `/usr/bin/python3` + persistent `esmc_worker.py` in `<WORK_DIR>/esmfold2-env312/bin/python`, 0 GPU usage; V32 `node23:8901` completely untouched & HTTP 200 verified)
 - **Frozen Corpus**: `46,597` unique compounds (`46,598` incl. Case17) · `24` endpoints (`20` Tier-1 + `4` Tier-2) · `69,111` rows (`55,299` CV + `13,812` untouched 20% Holdout; `2,523` censored rows)
 
 ---
@@ -141,7 +141,7 @@
 
 ## 4. Live V33 Inference Service Benchmark (`node23:8902`) & Encoder Cosine Parity
 
-- **Runtime**: `/usr/bin/python3` (`http.server.ThreadingHTTPServer` on `0.0.0.0:8902`) + persistent `esmc_worker.py` (`/data/qlyu/esmfold2-env312/bin/python` on `127.0.0.1:18902`, warm ESM-C 600M in RAM).
+- **Runtime**: `/usr/bin/python3` (`http.server.ThreadingHTTPServer` on `0.0.0.0:8902`) + persistent `esmc_worker.py` (`<WORK_DIR>/esmfold2-env312/bin/python` on `127.0.0.1:18902`, warm ESM-C 600M in RAM).
 - **Startup & Memory**: Cold startup **`215.75s`** | Pruned champion serving joblibs **`10460.0 MB`** (`22` CPU + `21` Fusion + `20` Deep endpoints) | Post-verification RSS **`23193.3 MB`** | GPU usage **`0`**.
 - **Assay Condition Routing**: Semaglutide `half_life_reg` responds cleanly to route condition (`pk_route='IV'`: `21.57h` vs `pk_route='SC'`: `51.676h`).
 - **Batched Inference (`POST /batch`, 5 diverse molecules × 24 endpoints = 120 predictions)**: Succeeded **`5/5`** in **`25482.07 ms`** (encode `0.31 ms`, predict `25387.0 ms`, AD+Top-3 analogs `33.63 ms`).

@@ -1,7 +1,7 @@
 # Peptide OmniPanel V33 — Wave 4 Self-Contained Migration onto `node2`
 
 **Date**: 2026-11-22  
-**Target Host**: `node2` (`172.21.43.16`, user `mode2`, 128 CPU cores, 251 GiB RAM, 474 GiB SSD free)  
+**Target Host**: `node2` (`<APP_HOST>`, user `mode2`, 128 CPU cores, 251 GiB RAM, 474 GiB SSD free)  
 **Public URL**: `https://lmmd.ecust.edu.cn/peptide-omnipanel/`  
 **Runtime Dependency on `node23` / `node1`**: **ZERO (100% self-contained on `node2`)**  
 **GPU VRAM Used by V33 on `node2`**: **0 MiB** (`CUDA_VISIBLE_DEVICES=""`)  
@@ -15,7 +15,7 @@ Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `mode2:m
 
 | Path on `node2` | Size | Contents |
 |---|---:|---|
-| `/var/www/peptide-omnipanel/v33_next/v33_runtime/` | `13 GB` | `bundle/` (43 pruned `.joblib` serving models, `v33_manifest.json` with 0 `/data/qlyu` strings, `ad_analog_index.npz`, `analog_lookup.json.gz`, `v32_reference_snapshot.json`, portable `v33_inference_service.py`, `v33_live_encoders.py`, `esmc_worker.py`, `verify_v33_bundle_and_service.py`), `features/` (59 MB), `embeddings/` (717 MB), `data/` (`compounds_v33.tsv`, `case17_queries.tsv`), `models_cpu/` + `models_fusion/` + `models_gpu_deep/` (Python class modules + 110 manifest-referenced `.pt` checkpoints) |
+| `/var/www/peptide-omnipanel/v33_next/v33_runtime/` | `13 GB` | `bundle/` (43 pruned `.joblib` serving models, `v33_manifest.json` with 0 `<WORK_DIR>` strings, `ad_analog_index.npz`, `analog_lookup.json.gz`, `v32_reference_snapshot.json`, portable `v33_inference_service.py`, `v33_live_encoders.py`, `esmc_worker.py`, `verify_v33_bundle_and_service.py`), `features/` (59 MB), `embeddings/` (717 MB), `data/` (`compounds_v33.tsv`, `case17_queries.tsv`), `models_cpu/` + `models_fusion/` + `models_gpu_deep/` (Python class modules + 110 manifest-referenced `.pt` checkpoints) |
 | `/var/www/peptide-omnipanel/v33_next/pretrained/` | `3.8 GB` | `ncaadistill/` (1.5 GB `best.pt`, config, vocab SHA-256 `7270675a...`, model modules), `peptideclm2/` (121 MB), `chemberta_mtr/` (14 MB, dereferenced from HF cache symlinks), `esmc_600m/` (2.2 GB `biohub-ESMC-600M@fcc9d36`) |
 | `/var/www/peptide-omnipanel/v33_next/extra_site/` | `238 MB` | Isolated `xgboost==3.2.0` (+ `xgboost.libs/libgomp`) and `lightgbm==4.7.0` overlaid via `PYTHONPATH` so V31's `/var/www/peptide-omnipanel/app/.venv` remains untouched |
 | `/var/www/peptide-omnipanel/v33_next/web/` | `524 KB` | FastAPI + static SPA with auto-reconnecting `adapter.py` and `app.py` |
@@ -24,7 +24,7 @@ Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `mode2:m
 
 ### Key Engineering Adaptations
 1. **Standalone Pure-PyTorch ESM-C 600M (`esmc_worker.py`)**: Because `node2`'s `.venv` has `transformers 4.57.6` (which predates native `model_type="esmc"` in `transformers 5.x`) and `modeling_esmc_remote.py` requires `esm>=3.4.1`, `esmc_worker.py` now implements the exact 36-layer RoPE + QK-LayerNorm + SwiGLU `StandaloneEsmcModel` + `ESMC_VOCAB` tokenizer directly on `torch 2.6.0` + `safetensors` (`strict=True` weight loading, 0 missing/unexpected keys). Verified against cached `esmc_600m_multiregion.npz` with **cosine 0.99995–0.99998** across all 4 pooling regions (`mean`, `max`, `nterm5`, `cterm5`) including padded multi-length batches.
-2. **100% Path Portability**: Updated `v33_inference_service.py`, `v33_live_encoders.py`, `esmc_worker.py`, `verify_v33_bundle_and_service.py`, `v33_config.py`, `fusion_config.py`, and `deep_data.py` to honor environment variables (`V33_BASE_DIR`, `V33_ESMC_PYTHON`, `V33_ESMC_MODEL_DIR`, `NCAA_REPO_DIR`, `V33_PEPTIDECLM2_DIR`, `V33_CHEMBERTA_DIR`, `V33_EP_WORKERS=16`). Rewrote `v33_manifest.json` on `node2` so `grep -c "/data/qlyu"` returns **`0`** across `v33_manifest.json`, `run_local_engine.sh`, and `omnigrid/app.py`.
+2. **100% Path Portability**: Updated `v33_inference_service.py`, `v33_live_encoders.py`, `esmc_worker.py`, `verify_v33_bundle_and_service.py`, `v33_config.py`, `fusion_config.py`, and `deep_data.py` to honor environment variables (`V33_BASE_DIR`, `V33_ESMC_PYTHON`, `V33_ESMC_MODEL_DIR`, `NCAA_REPO_DIR`, `V33_PEPTIDECLM2_DIR`, `V33_CHEMBERTA_DIR`, `V33_EP_WORKERS=16`). Rewrote `v33_manifest.json` on `node2` so `grep -c "<WORK_DIR>"` returns **`0`** across `v33_manifest.json`, `run_local_engine.sh`, and `omnigrid/app.py`.
 3. **Self-Healing Reboot Recovery Without `sudo`**: `omnigrid/app.py` (started by `systemd` `peptide-omnigrid.service`) idempotently launches `run_local_engine.sh` detached if `127.0.0.1:8902` is not listening; `web/adapter.py` and `web/app.py` automatically call `refresh_remote_health()` on `/api/v1/health`, `/api/v1/endpoints`, `/api/v1/predict`, and `/api/v1/batch` so the web layer seamlessly switches to `v33_remote` as soon as the local engine finishes warming up.
 
 ---
@@ -34,7 +34,7 @@ Everything lives under `/var/www/peptide-omnipanel/v33_next/` (owned by `mode2:m
 | Host | Verification Result |
 |---|---|
 | **`node1`** | **0** V33 tunnel processes (`v33_tunnel.sh` and `ssh -R 127.0.0.1:8902:10.0.0.3:8902` terminated; no V33 crontab). Legacy V32 `:8901` tunnel (`omnigrid_tunnel.sh`, PID `2526506`) left untouched as requested. |
-| **`node23`** | **0** V33 processes (`v33_inference_service.py` and `esmc_worker.py` terminated; TCP `:8902` and `:18902` closed). Training archive `/data/qlyu/v33_upgrade/` left untouched read-only. |
+| **`node23`** | **0** V33 processes (`v33_inference_service.py` and `esmc_worker.py` terminated; TCP `:8902` and `:18902` closed). Training archive `<WORK_DIR>/v33_upgrade/` left untouched read-only. |
 | **`node2`** | All listening ports owned strictly by local `mode2` Python processes:<br>• `127.0.0.1:7862` — PID `3456260` (`peptide-omnigrid.service`, RSS `121 MB`)<br>• `127.0.0.1:8902` — PID `3455227` (`v33_inference_service.py`, RSS `23.2 GiB` / `23,755 MB`)<br>• `127.0.0.1:18902` — PID `3455323` (`esmc_worker.py`, RSS `2.51 GiB`)<br>• `127.0.0.1:7861` — PID `2362` (legacy V31 service, untouched)<br>• RAM available: **187 GiB / 251 GiB** free<br>• GPU VRAM: GPU 0 `15173 MiB` / GPU 1 `7050 MiB` (unchanged; **0 MiB** used by V33 PIDs) |
 
 ---

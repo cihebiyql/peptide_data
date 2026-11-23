@@ -29,7 +29,7 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 RDLogger.DisableLog("rdApp.*")
 csv.field_size_limit(10_000_000)
 
-BASE_DIR = Path("/data/qlyu/v33_upgrade")
+BASE_DIR = Path("<WORK_DIR>/v33_upgrade")
 STAGING_DIR = BASE_DIR / "data" / "staging"
 OUT_DATA_DIR = BASE_DIR / "data"
 N_WORKERS = min(64, os.cpu_count() or 32)

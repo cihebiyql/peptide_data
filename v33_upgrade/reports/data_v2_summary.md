@@ -2,10 +2,10 @@
 
 - **Generated**: 2026-11-21 CST
 - **Pipeline Scope**: 24 harmonized ADMET / PK / Toxicity / Antimicrobial endpoints (20 Tier-1 ADMET/PK/Tox + 4 Tier-2 Species-Specific MIC), 46,597 unique V33 compounds (+1 Case17-only query index = 46,598 total feature-bank entries), 69,111 clean deduplicated observations.
-- **Authoritative Remote Root (`node23`)**: `/data/qlyu/v33_upgrade/`
-  - Frozen compound table (read-only): `/data/qlyu/v33_upgrade/data/compounds_v33.tsv` (`SHA-256: e669245fc2a89149b997c4452c62cc2af593abf043414a8b296b831b074a76a9`)
-  - Final leak-free, fold-balanced endpoint tables (24 TSVs): `/data/qlyu/v33_upgrade/data/endpoints/*.tsv`
-  - Frozen compact feature bank: `/data/qlyu/v33_upgrade/features/`
+- **Authoritative Remote Root (`node23`)**: `<WORK_DIR>/v33_upgrade/`
+  - Frozen compound table (read-only): `<WORK_DIR>/v33_upgrade/data/compounds_v33.tsv` (`SHA-256: e669245fc2a89149b997c4452c62cc2af593abf043414a8b296b831b074a76a9`)
+  - Final leak-free, fold-balanced endpoint tables (24 TSVs): `<WORK_DIR>/v33_upgrade/data/endpoints/*.tsv`
+  - Frozen compact feature bank: `<WORK_DIR>/v33_upgrade/features/`
   - Audit artifacts (mirrored locally in [`D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs)):
     - [`split_summary.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/split_summary.json)
     - [`verification_report.json`](file:///D:/work/中检院/v33_upgrade/data_pipeline/audit_outputs/verification_report.json)
@@ -163,7 +163,7 @@ To eliminate Wave-1's mega-cluster percolation bug (`CLU_000757` = 3,801 compoun
 
 ## 6. Frozen Compact Anti-`(p >> n)` Feature Bank Inventory
 
-All feature artifacts reside on `node23:/data/qlyu/v33_upgrade/features/` (RDKit `2026.09.1`, NumPy `2.2.6`, computed in `3,423.67s`, covering **46,598** entries = 46,597 V33 compounds + 1 Case17-only query `Tirzepatide` at index `46597`, **43,943** `smiles_valid`, **44,773** `seq_valid`):
+All feature artifacts reside on `node23:<WORK_DIR>/v33_upgrade/features/` (RDKit `2026.09.1`, NumPy `2.2.6`, computed in `3,423.67s`, covering **46,598** entries = 46,597 V33 compounds + 1 Case17-only query `Tirzepatide` at index `46597`, **43,943** `smiles_valid`, **44,773** `seq_valid`):
 
 | File | Arrays / Contents | Shape | Dtype | Size | Verified SHA-256 (first 16 hex) |
 |---|---|---|---|---:|---|

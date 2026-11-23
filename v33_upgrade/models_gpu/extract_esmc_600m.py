@@ -12,11 +12,11 @@ Strategy:
       * cterm5 (1152D): mean of last  min(5, L) residues (C-terminal carboxypeptidase/amidation region)
   - Maps deduplicated embeddings back to all 46,598 compound_index.tsv rows.
 
-Python: /data/qlyu/esmfold2-env312/bin/python (transformers 5.22 + esm 3.4.2 + torch 2.11+cu130)
+Python: <WORK_DIR>/esmfold2-env312/bin/python (transformers 5.22 + esm 3.4.2 + torch 2.11+cu130)
 Model weights:
-  - Primary (batched HF safetensors): /data/qlyu/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36
-  - Mirror (.pth): /data/qlyu/.cache/huggingface/hub/models--EvolutionaryScale--esmc-600m-2024-12/snapshots/d11cc14d44078eaecbc6a843d5eb20f4eecc1e7e
-Output: /data/qlyu/v33_upgrade/embeddings/esmc_600m_multiregion.npz
+  - Primary (batched HF safetensors): <WORK_DIR>/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36
+  - Mirror (.pth): <WORK_DIR>/.cache/huggingface/hub/models--EvolutionaryScale--esmc-600m-2024-12/snapshots/d11cc14d44078eaecbc6a843d5eb20f4eecc1e7e
+Output: <WORK_DIR>/v33_upgrade/embeddings/esmc_600m_multiregion.npz
 """
 from __future__ import annotations
 
@@ -40,10 +40,10 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from common_index import EMB_DIR, load_v33_compound_table, sha256_file, verify_embedding_arrays
 
 HF_ESMC_DIR = Path(
-    "/data/qlyu/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36"
+    "<WORK_DIR>/projects/peptide-interaction-representation-20261025/methods/esmc/assets/biohub-ESMC-600M@fcc9d36"
 )
 PTH_ESMC_SNAP = Path(
-    "/data/qlyu/.cache/huggingface/hub/models--EvolutionaryScale--esmc-600m-2024-12/snapshots/d11cc14d44078eaecbc6a843d5eb20f4eecc1e7e"
+    "<WORK_DIR>/.cache/huggingface/hub/models--EvolutionaryScale--esmc-600m-2024-12/snapshots/d11cc14d44078eaecbc6a843d5eb20f4eecc1e7e"
 )
 HIDDEN_DIM = 1152
 MAX_SEQ_LEN = 1022

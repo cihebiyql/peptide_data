@@ -4,8 +4,8 @@ Small-N Foundation/Shrinkage Modeling Suite (TabPFN v2 + Multi-Block Cosine/Tani
 + Empirical-Bayes Shrinkage Ridge / Huber / Cosine-KRR-SVR) across ALL N <= 400 regression endpoints.
 
 STRICT ZERO-LEAKAGE & ZERO-HOLDOUT-PEEKING GUARANTEES:
-1. Read-only access to /data/qlyu/v33_upgrade/{data,features,embeddings,models_cpu,models_fusion,models_gpu_deep,expansion_v331,bundle}/.
-2. Writes ONLY under /data/qlyu/v33_upgrade/v2_upgrade/smalln_cqr/.
+1. Read-only access to <WORK_DIR>/v33_upgrade/{data,features,embeddings,models_cpu,models_fusion,models_gpu_deep,expansion_v331,bundle}/.
+2. Writes ONLY under <WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/.
 3. Exact frozen 5-fold cluster splits (is_holdout == 0 CV, is_holdout == 1 untouched 20% holdout).
 4. Promotion decision made STRICTLY on nested 5-fold CV OOF MAE (margin >= 0.002 over frozen V33.1 champion).
 5. Untouched 20% holdout and Leave-Case17-Out evaluated ONCE after freezing all selections & weights.
@@ -39,11 +39,11 @@ import joblib
 import numpy as np
 from scipy.optimize import minimize
 
-V33_BASE = Path("/data/qlyu/v33_upgrade")
+V33_BASE = Path("<WORK_DIR>/v33_upgrade")
 EXP_BASE = V33_BASE / "expansion_v331"
 BUNDLE_DIR = V33_BASE / "bundle"
 OUT_DIR = V33_BASE / "v2_upgrade" / "smalln_cqr"
-TABPFN_CKPT = Path("/data/qlyu/.cache/tabpfn/tabpfn-v2-regressor.ckpt")
+TABPFN_CKPT = Path("<WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt")
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))

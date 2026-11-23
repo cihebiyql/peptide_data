@@ -624,12 +624,14 @@ class PurePyTorchEGATNet(nn.Module):
 
 
 def _normalize_atom_scores(sig: np.ndarray, local_c: np.ndarray) -> np.ndarray:
-    """Signed, magnitude-calibrated per-atom contribution score in [0.0, 1.0] centered at 0.50 (neutral).
+    """Qualitative 2D graph surrogate visualization score in [0.0, 1.0] centered at 0.50.
 
-    Preserves the sign of the grounded additive WeightAndSum contribution `sig * local_c`:
-      - < 0.50 (blue): negative / suppressing contribution
-      - ~ 0.50 (neutral): weak / negligible contribution (scale floor 0.35 prevents false crimson hotspots on low-signal peptides)
-      - > 0.50 (amber -> crimson): positive / enhancing contribution
+    Visualizes the signed `0.35 * y_add` additive residual branch (`sig * local_c`) of the
+    E-GAT 2D graph surrogate (note: the surrogate's main prediction combines a nonlinear
+    `graph_mlp` with `0.35 * y_add`, and production endpoint values come from the 4-FM ensemble):
+      - < 0.50 (blue): negative residual contribution
+      - ~ 0.50 (neutral): weak residual contribution (0.35 scale floor)
+      - > 0.50 (amber -> crimson): positive residual contribution
     """
     sig_a = np.asarray(sig, dtype=np.float64)
     lc_a = np.asarray(local_c, dtype=np.float64)

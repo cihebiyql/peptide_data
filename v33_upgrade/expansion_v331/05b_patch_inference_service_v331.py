@@ -5,8 +5,8 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-SVC = Path("/data/qlyu/v33_upgrade/bundle/v33_inference_service.py")
-BAK = Path("/data/qlyu/v33_upgrade/bundle/v33_inference_service_24ep_backup.py")
+SVC = Path("<WORK_DIR>/v33_upgrade/bundle/v33_inference_service.py")
+BAK = Path("<WORK_DIR>/v33_upgrade/bundle/v33_inference_service_24ep_backup.py")
 
 
 def main():

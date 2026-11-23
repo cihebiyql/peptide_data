@@ -57,7 +57,7 @@ def _resolve_pretrained(env_var: str, portable_rel: str, legacy_path: str) -> Pa
     return Path(legacy_path)
 
 
-NCAA_REPO = _resolve_pretrained("NCAA_REPO_DIR", "ncaadistill", "/data/qlyu/ncaadistill")
+NCAA_REPO = _resolve_pretrained("NCAA_REPO_DIR", "ncaadistill", "<WORK_DIR>/ncaadistill")
 NCAA_CONFIG_PATH = Path(os.environ.get("NCAA_CONFIG_PATH", str(NCAA_REPO / "config/phase2/phase2_repro_sweep24_e0_b0.yaml")))
 NCAA_CKPT_PATH = Path(os.environ.get("NCAA_CKPT_PATH", str(NCAA_REPO / "artifacts/checkpoints/phase2_repro_sweep24_e0_b0/best.pt")))
 NCAA_VOCAB_PATH = Path(os.environ.get("NCAA_VOCAB_PATH", str(NCAA_REPO / "data/raw/adaptation/vocab_smiles.txt")))
@@ -66,12 +66,12 @@ EXPECTED_VOCAB_SHA256 = "7270675ae5db795089e44a1fa6f574b13694013ba05e315d52f28fa
 PEPTIDECLM2_DIR = _resolve_pretrained(
     "V33_PEPTIDECLM2_DIR",
     "peptideclm2",
-    "/data/qlyu/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small",
+    "<WORK_DIR>/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small",
 )
 CHEMBERTA_DIR = _resolve_pretrained(
     "V33_CHEMBERTA_DIR",
     "chemberta_mtr",
-    "/data/qlyu/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca",
+    "<WORK_DIR>/.cache/huggingface/hub/models--DeepChem--ChemBERTa-77M-MTR/snapshots/66b895cab8adebea0cb59a8effa66b2020f204ca",
 )
 
 AA20 = "ACDEFGHIKLMNPQRSTVWY"

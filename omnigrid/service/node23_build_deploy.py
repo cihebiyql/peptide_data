@@ -4,21 +4,21 @@
 Fixes vs v1: normalize Windows backslash paths; estate/erg recognized as feature
 groups; do not trust TSV refit_status (read result JSON instead); compute
 training-mode defaults for one-hot context covariate columns.
-Output: /data/qlyu/s3/omnigrid/deploy_manifest.json
+Output: <WORK_DIR>/s3/omnigrid/deploy_manifest.json
 """
 import csv, json, hashlib
 from pathlib import Path
 from collections import defaultdict, Counter
 
 csv.field_size_limit(10_000_000)
-SRC = Path('/data/qlyu/s3/representative_seed_models.tsv')
-OUT = Path('/data/qlyu/s3/omnigrid')
+SRC = Path('<WORK_DIR>/s3/representative_seed_models.tsv')
+OUT = Path('<WORK_DIR>/s3/omnigrid')
 OUT.mkdir(parents=True, exist_ok=True)
 KNOWN_GROUPS = ['morgan','descriptors','graph_modifications','sequence','esm2','morgan_r3',
                 'atompair','torsion','maccs','rdkit_full','dpc','sequence_extra',
                 'rdkit_path','pattern','layered','estate','erg']
 TMP_BASE = '/tmp/peptide_modeling_qlyu_'
-DATA_BASE = '/data/qlyu/peptide_modeling_multiseed20h_v1/'
+DATA_BASE = '<WORK_DIR>/peptide_modeling_multiseed20h_v1/'
 
 def sha(p):
     h = hashlib.sha256()

@@ -463,12 +463,22 @@ class JobManager:
         buf = io.StringIO()
         writer = csv.writer(buf)
 
+        def _row_source(r: dict[str, Any]) -> str:
+            if r.get("prediction_source"):
+                return str(r["prediction_source"])
+            preds = r.get("predictions") or []
+            if preds:
+                srcs = sorted({str(p.get("prediction_source") or "unknown") for p in preds})
+                return "|".join(srcs)
+            return "unknown"
+
         if not full_wide:
             writer.writerow(
                 [
                     "index",
                     "name",
                     "status",
+                    "prediction_source",
                     "mw",
                     "logp",
                     "net_charge_ph74",
@@ -491,6 +501,7 @@ class JobManager:
                         r.get("index", ""),
                         r.get("name", ""),
                         r.get("status", ""),
+                        _row_source(r),
                         r.get("mw", ""),
                         r.get("logp", ""),
                         r.get("net_charge_ph74", ""),
@@ -508,7 +519,7 @@ class JobManager:
                 )
             return buf.getvalue()
 
-        # Full wide matrix: every predicted endpoint value + AD tier across all molecules
+        # Full wide matrix: every predicted endpoint value + 80% interval + AD + UQ reliability across all molecules
         ep_order: list[str] = []
         seen: set[str] = set()
         for r in results:
@@ -518,9 +529,19 @@ class JobManager:
                     seen.add(ep)
                     ep_order.append(ep)
 
-        header = ["index", "name", "status", "mw", "logp", "net_charge_ph74", "acylation_anchor"]
+        header = ["index", "name", "status", "prediction_source", "mw", "logp", "net_charge_ph74", "acylation_anchor"]
         for ep in ep_order:
-            header.extend([f"{ep}_value", f"{ep}_display", f"{ep}_ad"])
+            header.extend(
+                [
+                    f"{ep}_value",
+                    f"{ep}_display",
+                    f"{ep}_ci80_low",
+                    f"{ep}_ci80_high",
+                    f"{ep}_ad",
+                    f"{ep}_max_tc",
+                    f"{ep}_uq_reliability",
+                ]
+            )
         writer.writerow(header)
 
         for r in results:
@@ -531,6 +552,7 @@ class JobManager:
                 r.get("index", ""),
                 r.get("name", ""),
                 r.get("status", ""),
+                _row_source(r),
                 r.get("mw", ""),
                 r.get("logp", ""),
                 r.get("net_charge_ph74", ""),
@@ -538,6 +560,16 @@ class JobManager:
             ]
             for ep in ep_order:
                 p = by_ep.get(ep) or {}
-                row.extend([p.get("value", ""), p.get("value_display", ""), p.get("ad_status", "")])
+                row.extend(
+                    [
+                        p.get("value", ""),
+                        p.get("value_display", ""),
+                        p.get("ci80_low", ""),
+                        p.get("ci80_high", ""),
+                        p.get("ad_status", ""),
+                        p.get("max_tanimoto", ""),
+                        p.get("uq_reliability", ""),
+                    ]
+                )
             writer.writerow(row)
         return buf.getvalue()

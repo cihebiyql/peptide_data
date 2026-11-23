@@ -124,8 +124,20 @@ class RenderSvgResponse(BaseModel):
     modifications: list[ModificationBadge] = Field(default_factory=list)
 
 
+GNN_ATTRIBUTION_ENDPOINT = Literal[
+    "PAMPA",
+    "Caco2",
+    "hemolysis_cls",
+    "hemolysis_HC50",
+    "overall_peptide_toxicity",
+    "cytotoxicity_cls",
+    "cytotoxicity_CC50",
+    "half_life_reg",
+]
+
+
 class AtomAttributionRequest(BaseModel):
-    """Request live Pure-PyTorch E-GAT per-atom attribution heatmap SVG for one endpoint."""
+    """Request live Pure-PyTorch E-GAT qualitative 2D-graph surrogate heatmap SVG for one endpoint."""
 
     query: Optional[str] = Field(
         default=None,
@@ -133,7 +145,7 @@ class AtomAttributionRequest(BaseModel):
     )
     sequence: Optional[str] = Field(default=None)
     smiles: Optional[str] = Field(default=None)
-    endpoint: str = Field(
+    endpoint: GNN_ATTRIBUTION_ENDPOINT = Field(
         default="PAMPA",
         description="Target GNN attribution endpoint (PAMPA, Caco2, hemolysis_cls, hemolysis_HC50, overall_peptide_toxicity, cytotoxicity_cls, cytotoxicity_CC50, half_life_reg).",
     )
@@ -238,6 +250,7 @@ class EndpointPrediction(BaseModel):
     holdout_score: Optional[float] = None
     v32_cv_score: Optional[float] = None
     conformal_coverage_80: Optional[float] = None
+    uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
     brier_holdout: Optional[float] = None
     ece_holdout: Optional[float] = None
     censored_note: Optional[str] = None
@@ -374,6 +387,7 @@ class BatchMoleculeResult(BaseModel):
     key_metrics: dict[str, Any] = Field(default_factory=dict)
     predictions: list[EndpointPrediction] = Field(default_factory=list)
     summary: dict[str, Any] = Field(default_factory=dict)
+    prediction_source: str = "v33_remote"
 
 
 class JobCreateRequest(BaseModel):
@@ -425,6 +439,7 @@ class EndpointCatalogItem(BaseModel):
     holdout_score_v33: Optional[float] = None
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
+    uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
     brier_holdout: Optional[float] = None
     ece_holdout: Optional[float] = None
     has_censored_head: bool = False

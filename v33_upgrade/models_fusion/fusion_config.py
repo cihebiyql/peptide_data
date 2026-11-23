@@ -2,7 +2,7 @@
 """Configuration, endpoint contracts, embedding specifications, and Case17 metadata
 for the Peptide OmniPanel V33 Wave-2D Multimodal Fusion & Representation Ablation suite.
 
-Strictly owns and writes ONLY under /data/qlyu/v33_upgrade/models_fusion/.
+Strictly owns and writes ONLY under <WORK_DIR>/v33_upgrade/models_fusion/.
 Read-only access to data/, features/, embeddings/, and models_cpu/.
 """
 from __future__ import annotations

@@ -1,7 +1,7 @@
 {
   "schema": "peptide_omnipanel_v33_authoritative_manifest_v1",
   "version": "v33.2",
-  "generated_at": "2026-11-23 15:30:38 +0800",
+  "generated_at": "2026-11-23 20:26:01 +0800",
   "selection_protocol": {
     "zero_holdout_peeking": true,
     "super_ensemble_adoption_margin": 0.0005,
@@ -1931,6 +1931,8 @@
             "OOD": 0.24
           },
           "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.6% (<70%; n_eff_clusters=25); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 1.16745,
           "legacy_v331_q90": 1.76563
@@ -1958,6 +1960,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.6% (<70%; n_eff_clusters=25); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.6364,
           "legacy_v331_cov90": 0.7273
         }
@@ -2124,6 +2128,8 @@
             "OOD": 0.24
           },
           "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.6% (<70%; n_eff_clusters=25); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 1.21505,
           "legacy_v331_q90": 1.71405
@@ -2151,6 +2157,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.6% (<70%; n_eff_clusters=25); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.6364,
           "legacy_v331_cov90": 0.7273
         }
@@ -2588,6 +2596,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.2% (n_eff_clusters=68); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.73231,
           "legacy_v331_q90": 1.30995
@@ -2622,6 +2632,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.2% (n_eff_clusters=68); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.7073,
           "legacy_v331_cov90": 0.9268
         }
@@ -2788,6 +2800,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.4% (<70%; n_eff_clusters=68); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.72384,
           "legacy_v331_q90": 1.15013
@@ -2822,6 +2836,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 63.4% (<70%; n_eff_clusters=68); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.6829,
           "legacy_v331_cov90": 0.8537
         }
@@ -3357,6 +3373,8 @@
             "OOD": 0.76
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 79.4% (n_eff_clusters=210); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.79069,
           "legacy_v331_q90": 2.38218
@@ -3391,6 +3409,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 79.4% (n_eff_clusters=210); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7878,
           "legacy_v331_cov90": 0.8907
         }
@@ -3558,6 +3578,8 @@
             "OOD": 0.76
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.1% (n_eff_clusters=210); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.81589,
           "legacy_v331_q90": 2.38267
@@ -3592,6 +3614,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.1% (n_eff_clusters=210); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7749,
           "legacy_v331_cov90": 0.8682
         }
@@ -4126,6 +4150,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=16); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 1.67087,
           "legacy_v331_q90": 2.6553
@@ -4160,6 +4186,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=16); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.8235,
           "legacy_v331_cov90": 0.8824
         }
@@ -4325,6 +4353,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=16); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 1.82043,
           "legacy_v331_q90": 2.57758
@@ -4359,6 +4389,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=16); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.8235,
           "legacy_v331_cov90": 0.8824
         }
@@ -4800,6 +4832,8 @@
             0.0,
             1.0
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.6% (n_eff_clusters=43); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.36704,
           "legacy_v331_q90": 0.51188
@@ -4834,6 +4868,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.6% (n_eff_clusters=43); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7826,
           "legacy_v331_cov90": 0.8261
         }
@@ -5002,6 +5038,8 @@
             0.0,
             1.0
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=43); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.38461,
           "legacy_v331_q90": 0.54299
@@ -5036,6 +5074,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=43); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8261,
           "legacy_v331_cov90": 0.8261
         }
@@ -5568,6 +5608,8 @@
             "OOD": 0.32
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.92161,
           "legacy_v331_q90": 2.83137
@@ -5595,6 +5637,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.808,
           "legacy_v331_cov90": 0.904
         }
@@ -5760,6 +5804,8 @@
             "OOD": 0.32
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.6% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.98649,
           "legacy_v331_q90": 3.06839
@@ -5787,6 +5833,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.6% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.792,
           "legacy_v331_cov90": 0.896
         }
@@ -6321,6 +6369,8 @@
             "OOD": 0.48
           },
           "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 64.7% (<70%; n_eff_clusters=40); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.71999,
           "legacy_v331_q90": 0.99576
@@ -6348,6 +6398,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 64.7% (<70%; n_eff_clusters=40); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.6765,
           "legacy_v331_cov90": 0.7941
         }
@@ -6515,6 +6567,8 @@
             "OOD": 0.48
           },
           "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 67.7% (<70%; n_eff_clusters=40); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.73759,
           "legacy_v331_q90": 0.93709
@@ -6542,6 +6596,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 67.7% (<70%; n_eff_clusters=40); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.7353,
           "legacy_v331_cov90": 0.8529
         }
@@ -7060,6 +7116,8 @@
             "OOD": 0.64
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.4% (n_eff_clusters=171); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.80804,
           "legacy_v331_q90": 1.04818
@@ -7094,6 +7152,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.4% (n_eff_clusters=171); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8667,
           "legacy_v331_cov90": 0.9444
         }
@@ -7261,6 +7321,8 @@
             "OOD": 0.64
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.1% (n_eff_clusters=171); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.73291,
           "legacy_v331_q90": 1.05708
@@ -7295,6 +7357,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.1% (n_eff_clusters=171); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8,
           "legacy_v331_cov90": 0.9444
         }
@@ -7829,6 +7893,8 @@
             "OOD": 0.64
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.6% (n_eff_clusters=652); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.7543,
           "legacy_v331_q90": 1.01702
@@ -7863,6 +7929,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.6% (n_eff_clusters=652); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8161,
           "legacy_v331_cov90": 0.927
         }
@@ -8028,6 +8096,8 @@
             "OOD": 0.64
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.6% (n_eff_clusters=652); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.76928,
           "legacy_v331_q90": 1.03671
@@ -8062,6 +8132,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.6% (n_eff_clusters=652); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8338,
           "legacy_v331_cov90": 0.927
         }
@@ -8581,6 +8653,8 @@
             "OOD": 0.16
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.6% (n_eff_clusters=342); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.71356,
           "legacy_v331_q90": 0.94839
@@ -8608,6 +8682,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.6% (n_eff_clusters=342); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7563,
           "legacy_v331_cov90": 0.8274
         }
@@ -8773,6 +8849,8 @@
             "OOD": 0.16
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.1% (n_eff_clusters=342); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.73613,
           "legacy_v331_q90": 0.94817
@@ -8800,6 +8878,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.1% (n_eff_clusters=342); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7513,
           "legacy_v331_cov90": 0.8173
         }
@@ -9319,6 +9399,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 86.5% (n_eff_clusters=596); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.85316,
           "legacy_v331_q90": 1.15391
@@ -9353,6 +9435,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 86.5% (n_eff_clusters=596); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8704,
           "legacy_v331_cov90": 0.9606
         }
@@ -9518,6 +9602,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.3% (n_eff_clusters=596); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.85309,
           "legacy_v331_q90": 1.15553
@@ -9552,6 +9638,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.3% (n_eff_clusters=596); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8592,
           "legacy_v331_cov90": 0.9521
         }
@@ -10092,6 +10180,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.2% (n_eff_clusters=499); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.59827,
           "legacy_v331_q90": 0.83347
@@ -10126,6 +10216,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.2% (n_eff_clusters=499); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8006,
           "legacy_v331_cov90": 0.9026
         }
@@ -10293,6 +10385,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.1% (n_eff_clusters=499); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.59049,
           "legacy_v331_q90": 0.82425
@@ -10327,6 +10421,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.1% (n_eff_clusters=499); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8029,
           "legacy_v331_cov90": 0.8915
         }
@@ -10865,6 +10961,8 @@
             0.0,
             1.0
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 29.2% (<70%; n_eff_clusters=42); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.23637,
           "legacy_v331_q90": 0.36065
@@ -10899,6 +10997,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 29.2% (<70%; n_eff_clusters=42); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.2917,
           "legacy_v331_cov90": 0.9167
         }
@@ -11068,6 +11168,8 @@
             0.0,
             1.0
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=42); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.25118,
           "legacy_v331_q90": 0.37136
@@ -11102,6 +11204,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=42); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.9167
         }
@@ -11632,6 +11736,8 @@
             "OOD": 0.24
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 83.3% (n_eff_clusters=26); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.6355,
           "legacy_v331_q90": 0.79776
@@ -11659,6 +11765,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 83.3% (n_eff_clusters=26); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.8667,
           "legacy_v331_cov90": 0.9333
         }
@@ -11824,6 +11932,8 @@
             "OOD": 0.24
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=26); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.63503,
           "legacy_v331_q90": 0.78144
@@ -11851,6 +11961,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=26); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.8333,
           "legacy_v331_cov90": 0.8333
         }
@@ -12288,6 +12400,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.9% (n_eff_clusters=67); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.58786,
           "legacy_v331_q90": 0.77608
@@ -12322,6 +12436,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.9% (n_eff_clusters=67); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8788,
           "legacy_v331_cov90": 0.9394
         }
@@ -12487,6 +12603,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.8% (n_eff_clusters=67); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.55052,
           "legacy_v331_q90": 0.74857
@@ -12521,6 +12639,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.8% (n_eff_clusters=67); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7879,
           "legacy_v331_cov90": 0.9394
         }
@@ -14159,6 +14279,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.4% (n_eff_clusters=650); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.96488,
           "legacy_v331_q90": 1.3027
@@ -14193,6 +14315,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.4% (n_eff_clusters=650); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.7478,
           "legacy_v331_cov90": 0.8783
         }
@@ -14417,6 +14541,8 @@
             "OOD": 1.0
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.8% (n_eff_clusters=632); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.95972,
           "legacy_v331_q90": 1.29857
@@ -14451,6 +14577,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.8% (n_eff_clusters=632); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.778,
           "legacy_v331_cov90": 0.8824
         }
@@ -14983,6 +15111,8 @@
             "OOD": 0.04
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.2% (n_eff_clusters=903); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.61665,
           "legacy_v331_q90": 0.89144
@@ -15010,6 +15140,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.2% (n_eff_clusters=903); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.822,
           "legacy_v331_cov90": 0.922
         }
@@ -15175,6 +15307,8 @@
             "OOD": 0.04
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 83.0% (n_eff_clusters=903); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.64689,
           "legacy_v331_q90": 0.90402
@@ -15202,6 +15336,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 83.0% (n_eff_clusters=903); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8317,
           "legacy_v331_cov90": 0.9244
         }
@@ -17340,6 +17476,8 @@
             "OOD": 0.6
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 79.2% (n_eff_clusters=72); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.83611,
           "legacy_v331_q90": 1.3133
@@ -17374,6 +17512,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 79.2% (n_eff_clusters=72); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.8958
         }
@@ -17539,6 +17679,8 @@
             "OOD": 0.6
           },
           "bounds": null,
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=72); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.9232,
           "legacy_v331_q90": 1.33516
@@ -17573,6 +17715,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=72); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.8958
         }
@@ -18065,6 +18209,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.6% (n_eff_clusters=89); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.92808,
           "legacy_v331_q90": 2.42001
@@ -18092,6 +18238,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.6% (n_eff_clusters=89); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.7642,
           "legacy_v331_cov90": 0.8396
         }
@@ -18232,6 +18380,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=89); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.84488,
           "legacy_v331_q90": 2.46022
@@ -18259,6 +18409,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=89); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.783,
           "legacy_v331_cov90": 0.8679
         }
@@ -18670,6 +18822,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=57); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.86803,
           "legacy_v331_q90": 1.06918
@@ -18690,6 +18844,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=57); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.875
         }
@@ -18830,6 +18986,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=57); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.8275,
           "legacy_v331_q90": 1.05835
@@ -18850,6 +19008,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=57); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.7917
         }
@@ -19258,6 +19418,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 86.1% (n_eff_clusters=219); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.75895,
           "legacy_v331_q90": 0.92113
@@ -19285,6 +19447,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 86.1% (n_eff_clusters=219); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8611,
           "legacy_v331_cov90": 0.9167
         }
@@ -19425,6 +19589,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 88.0% (n_eff_clusters=219); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.75246,
           "legacy_v331_q90": 0.97323
@@ -19452,6 +19618,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 88.0% (n_eff_clusters=219); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8426,
           "legacy_v331_cov90": 0.9259
         }
@@ -19864,6 +20032,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.3% (<70%; n_eff_clusters=45); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.78625,
           "legacy_v331_q90": 1.10241
@@ -19891,6 +20061,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.3% (<70%; n_eff_clusters=45); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.5333,
           "legacy_v331_cov90": 0.9333
         }
@@ -20031,6 +20203,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=45); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.93056,
           "legacy_v331_q90": 1.10382
@@ -20058,6 +20232,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=45); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.6667,
           "legacy_v331_cov90": 0.8667
         }
@@ -20466,6 +20642,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.9% (n_eff_clusters=151); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.85581,
           "legacy_v331_q90": 2.36378
@@ -20493,6 +20671,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.9% (n_eff_clusters=151); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8382,
           "legacy_v331_cov90": 0.9118
         }
@@ -20634,6 +20814,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 88.2% (n_eff_clusters=151); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.84649,
           "legacy_v331_q90": 2.25493
@@ -20661,6 +20843,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 88.2% (n_eff_clusters=151); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8971,
           "legacy_v331_cov90": 0.9412
         }
@@ -21069,6 +21253,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.8% (n_eff_clusters=202); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.87935,
           "legacy_v331_q90": 1.06257
@@ -21096,6 +21282,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.8% (n_eff_clusters=202); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7677,
           "legacy_v331_cov90": 0.8283
         }
@@ -21236,6 +21424,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.8% (n_eff_clusters=202); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.88521,
           "legacy_v331_q90": 1.04161
@@ -21263,6 +21453,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.8% (n_eff_clusters=202); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7677,
           "legacy_v331_cov90": 0.8081
         }
@@ -21677,6 +21869,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 52.2% (<70%; n_eff_clusters=54); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.60503,
           "legacy_v331_q90": 0.75646
@@ -21711,6 +21905,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 52.2% (<70%; n_eff_clusters=54); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.4783,
           "legacy_v331_cov90": 0.6522
         }
@@ -21851,6 +22047,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 52.2% (<70%; n_eff_clusters=54); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.60503,
           "legacy_v331_q90": 0.75646
@@ -21885,6 +22083,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 52.2% (<70%; n_eff_clusters=54); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.4783,
           "legacy_v331_cov90": 0.6522
         }
@@ -22295,6 +22495,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=85); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.70606,
           "legacy_v331_q90": 0.86726
@@ -22329,6 +22531,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=85); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7736,
           "legacy_v331_cov90": 0.8491
         }
@@ -22469,6 +22673,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=85); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.64968,
           "legacy_v331_q90": 0.8341
@@ -22503,6 +22709,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 77.4% (n_eff_clusters=85); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7547,
           "legacy_v331_cov90": 0.8302
         }
@@ -22909,6 +23117,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.5% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.60819,
           "legacy_v331_q90": 0.81503
@@ -22936,6 +23146,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.5% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7647,
           "legacy_v331_cov90": 0.8824
         }
@@ -23076,6 +23288,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 94.1% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.66185,
           "legacy_v331_q90": 1.04551
@@ -23103,6 +23317,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 94.1% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8235,
           "legacy_v331_cov90": 1.0
         }
@@ -23513,6 +23729,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.2% (n_eff_clusters=289); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.74751,
           "legacy_v331_q90": 0.94128
@@ -23547,6 +23765,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.2% (n_eff_clusters=289); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8364,
           "legacy_v331_cov90": 0.903
         }
@@ -23687,6 +23907,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.9% (n_eff_clusters=289); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.73177,
           "legacy_v331_q90": 0.96
@@ -23721,6 +23943,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 87.9% (n_eff_clusters=289); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8424,
           "legacy_v331_cov90": 0.9394
         }
@@ -24134,6 +24358,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 69.9% (<70%; n_eff_clusters=456); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.68767,
           "legacy_v331_q90": 0.90054
@@ -24168,6 +24394,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 69.9% (<70%; n_eff_clusters=456); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.7061,
           "legacy_v331_cov90": 0.7885
         }
@@ -24308,6 +24536,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.5% (n_eff_clusters=456); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.67999,
           "legacy_v331_q90": 0.92586
@@ -24342,6 +24572,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.5% (n_eff_clusters=456); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.7312,
           "legacy_v331_cov90": 0.8172
         }
@@ -24750,6 +24982,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=76); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.67239,
           "legacy_v331_q90": 0.87347
@@ -24784,6 +25018,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=76); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7174,
           "legacy_v331_cov90": 0.8478
         }
@@ -24924,6 +25160,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.9% (n_eff_clusters=76); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.66868,
           "legacy_v331_q90": 0.8833
@@ -24958,6 +25196,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "moderate",
+          "uq_note": "Empirical holdout 80% coverage is 73.9% (n_eff_clusters=76); AD-stratified EB-shrunk interval (empirically calibrated, no exact finite-sample guarantee).",
           "legacy_v331_cov80": 0.7391,
           "legacy_v331_cov90": 0.8478
         }
@@ -25366,6 +25606,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.6% (n_eff_clusters=243); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.8173,
           "legacy_v331_q90": 1.19695
@@ -25400,6 +25642,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.6% (n_eff_clusters=243); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7857,
           "legacy_v331_cov90": 0.898
         }
@@ -25540,6 +25784,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.6% (n_eff_clusters=243); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.8574,
           "legacy_v331_q90": 1.20972
@@ -25574,6 +25820,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.6% (n_eff_clusters=243); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8265,
           "legacy_v331_cov90": 0.898
         }
@@ -25987,6 +26235,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 96.4% (n_eff_clusters=130); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.81344,
           "legacy_v331_q90": 2.22731
@@ -26021,6 +26271,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 96.4% (n_eff_clusters=130); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.9636,
           "legacy_v331_cov90": 0.9818
         }
@@ -26162,6 +26414,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 96.4% (n_eff_clusters=130); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.72755,
           "legacy_v331_q90": 2.15642
@@ -26196,6 +26450,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 96.4% (n_eff_clusters=130); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.9636,
           "legacy_v331_cov90": 0.9818
         }
@@ -26604,6 +26860,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 91.6% (n_eff_clusters=279); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.91678,
           "legacy_v331_q90": 2.33698
@@ -26638,6 +26896,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 91.6% (n_eff_clusters=279); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8896,
           "legacy_v331_cov90": 0.9481
         }
@@ -26779,6 +27039,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 90.9% (n_eff_clusters=279); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.88674,
           "legacy_v331_q90": 2.42565
@@ -26813,6 +27075,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 90.9% (n_eff_clusters=279); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8831,
           "legacy_v331_cov90": 0.9675
         }
@@ -27225,6 +27489,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=100); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 2.007,
           "legacy_v331_q90": 2.79246
@@ -27259,6 +27525,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 78.3% (n_eff_clusters=100); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8043,
           "legacy_v331_cov90": 0.9565
         }
@@ -27399,6 +27667,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.4% (n_eff_clusters=100); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "adaptive_tanimoto_dist",
           "legacy_v331_q80": 1.83632,
           "legacy_v331_q90": 2.77315
@@ -27433,6 +27703,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.4% (n_eff_clusters=100); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8261,
           "legacy_v331_cov90": 0.9348
         }
@@ -27842,6 +28114,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=235); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.75552,
           "legacy_v331_q90": 1.05616
@@ -27876,6 +28150,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 80.0% (n_eff_clusters=235); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8138,
           "legacy_v331_cov90": 0.9241
         }
@@ -28016,6 +28292,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.4% (n_eff_clusters=235); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.76762,
           "legacy_v331_q90": 1.03412
@@ -28050,6 +28328,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.4% (n_eff_clusters=235); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8276,
           "legacy_v331_cov90": 0.9034
         }
@@ -28461,6 +28741,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.3% (n_eff_clusters=265); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.84248,
           "legacy_v331_q90": 1.14059
@@ -28488,6 +28770,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.3% (n_eff_clusters=265); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7704,
           "legacy_v331_cov90": 0.9259
         }
@@ -28628,6 +28912,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.3% (n_eff_clusters=265); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.84773,
           "legacy_v331_q90": 1.13486
@@ -28655,6 +28941,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 76.3% (n_eff_clusters=265); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7852,
           "legacy_v331_cov90": 0.9333
         }
@@ -29069,6 +29357,8 @@
             -3.0,
             5.0
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.8% (<70%; n_eff_clusters=21); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.63577,
           "legacy_v331_q90": 1.51317
@@ -29103,6 +29393,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.8% (<70%; n_eff_clusters=21); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.5385,
           "legacy_v331_cov90": 0.8462
         }
@@ -29243,6 +29535,8 @@
             -3.0,
             5.0
           ],
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.8% (<70%; n_eff_clusters=21); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.71466,
           "legacy_v331_q90": 1.56274
@@ -29277,6 +29571,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "low",
+          "uq_note": "Empirical holdout 80% coverage is 53.8% (<70%; n_eff_clusters=21); interpret interval as heuristic rank-order uncertainty only.",
           "legacy_v331_cov80": 0.5385,
           "legacy_v331_cov90": 0.8462
         }
@@ -29687,6 +29983,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.6% (n_eff_clusters=716); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.62838,
           "legacy_v331_q90": 0.89086
@@ -29721,6 +30019,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.6% (n_eff_clusters=716); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.7992,
           "legacy_v331_cov90": 0.8996
         }
@@ -29861,6 +30161,8 @@
             -4.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.1% (n_eff_clusters=670); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.65713,
           "legacy_v331_q90": 0.89105
@@ -29895,6 +30197,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 84.1% (n_eff_clusters=670); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8251,
           "legacy_v331_cov90": 0.9058
         }
@@ -30305,6 +30609,8 @@
             -2.0,
             3.0
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.2% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.59499,
           "legacy_v331_q90": 0.81196
@@ -30339,6 +30645,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 81.2% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.875,
           "legacy_v331_cov90": 0.9688
         }
@@ -30479,6 +30787,8 @@
             -2.0,
             3.0
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.6278,
           "legacy_v331_q90": 0.89413
@@ -30513,6 +30823,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 75.0% (n_eff_clusters=40); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.75,
           "legacy_v331_cov90": 0.9375
         }
@@ -30921,6 +31233,8 @@
             -3.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 83.6% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.67176,
           "legacy_v331_q90": 1.03031
@@ -30955,6 +31269,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 83.6% (n_eff_clusters=73); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8,
           "legacy_v331_cov90": 0.9455
         }
@@ -31095,6 +31411,8 @@
             -3.0,
             5.5
           ],
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=58); AD-stratified EB-shrunk interval.",
           "legacy_v331_mode": "standard",
           "legacy_v331_q80": 0.8922,
           "legacy_v331_q90": 1.10984
@@ -31122,6 +31440,8 @@
             }
           },
           "method": "mondrian_ad_eb",
+          "uq_reliability": "calibrated",
+          "uq_note": "Empirical holdout 80% coverage is 82.3% (n_eff_clusters=58); AD-stratified EB-shrunk interval.",
           "legacy_v331_cov80": 0.8235,
           "legacy_v331_cov90": 0.9608
         }
@@ -31511,9 +31831,17 @@
   },
   "plan_b_upgrades": {
     "audit_compliance": "route_a_strict_zero_holdout_peeking",
+    "weight_rounding_note": "Manifest weights are serialized to 5 decimals (±1e-5); inference renormalizes active weights to 1.0.",
     "conformal_calibration": {
       "mode": "mondrian_ad_eb",
+      "method_label": "AD-stratified Empirical-Bayes shrunk interval (empirically calibrated on nested 5-fold OOF residuals; not an exact finite-sample conformal guarantee)",
+      "deployment_policy": "uniform_mondrian_ad_eb_json_zero_dep",
+      "deployment_policy_note": "Nested-OOF selected mondrian_ad_eb on 48/80 tracks (baseline 13, studentized_cvplus 11, cqr_lgb 8); deployed uniformly across all 80 regression tracks for pure-JSON zero-dependency serving, with holdout coverage reported identically from mondrian_ad_eb.",
       "n_regression_endpoints": 40,
+      "n_low_reliability_tracks_cov80_lt_70": {
+        "dual_modality": 7,
+        "smiles_only": 5
+      },
       "residual_alignment": "exact_100pct_frozen_wave5a",
       "pure_json_zero_overhead": true,
       "pooled_ood_cov80_dual": {
@@ -31537,8 +31865,8 @@
       "reason": "Deferred after independent audit flagged post-hoc holdout filtering and unified-vs-per-endpoint train-serve mismatch; all 46 endpoints preserve strict OOF-selected Wave 5A point weights (0.0 diff)."
     },
     "gnn_atom_attribution": {
-      "role": "2D Graph Surrogate Attribution (E-GAT)",
-      "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum (signed magnitude-calibrated)",
+      "role": "Qualitative 2D Graph Surrogate Visualization (E-GAT)",
+      "architecture": "Pure-PyTorch 4-Layer E-GATv2 + Task-Specific WeightAndSum (visualizes the 0.35*y_add residual branch; main predictions come from the 4-FM super-ensemble)",
       "checkpoint": "gnn_8ep_5fold_fp16.pt",
       "checkpoint_mb": 17.47,
       "endpoints": [

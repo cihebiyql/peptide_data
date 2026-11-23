@@ -2,8 +2,8 @@
 """Peptide OmniPanel V33 — 64-Core Parallel CPU Modeling, Censored AFT, Small-Sample GPR/Stacking,
 Calibration, Conformal Uncertainty, AD & Zero-Leakage Case17 Benchmark Suite.
 
-Strictly owns and writes ONLY under /data/qlyu/v33_upgrade/models_cpu/.
-Read-only access to /data/qlyu/v33_upgrade/data/ and /data/qlyu/v33_upgrade/features/.
+Strictly owns and writes ONLY under <WORK_DIR>/v33_upgrade/models_cpu/.
+Read-only access to <WORK_DIR>/v33_upgrade/data/ and <WORK_DIR>/v33_upgrade/features/.
 """
 from __future__ import annotations
 

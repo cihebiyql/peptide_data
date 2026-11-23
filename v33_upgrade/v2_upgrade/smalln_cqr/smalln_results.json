@@ -2,7 +2,7 @@
   "schema": "v33_plan_b1_smalln_results_v1",
   "generated_at": "2026-11-22 22:42:07 +0800",
   "elapsed_sec": 5695.17,
-  "tabpfn_status": "tabpfn available in isolated tabpfn_venv (deferred post-fork import) using offline /data/qlyu/.cache/tabpfn/tabpfn-v2-regressor.ckpt",
+  "tabpfn_status": "tabpfn available in isolated tabpfn_venv (deferred post-fork import) using offline <WORK_DIR>/.cache/tabpfn/tabpfn-v2-regressor.ckpt",
   "selection_gate": "strictly_inner_5fold_cv_oof_mae_gain >= 0.002 (zero holdout peeking)",
   "slices": {
     "all_n_le_400_20ep": {
@@ -9917,7 +9917,7 @@
       "n_exact_cv": 158,
       "n_exact_ho": 41,
       "elapsed_sec": 3331.21,
-      "promoted_joblib": "/data/qlyu/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/CL_per_kg_smalln_portable.joblib",
+      "promoted_joblib": "<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/CL_per_kg_smalln_portable.joblib",
       "joblib_modules": [
         "builtins"
       ],
@@ -10783,7 +10783,7 @@
       "n_exact_cv": 183,
       "n_exact_ho": 46,
       "elapsed_sec": 3651.93,
-      "promoted_joblib": "/data/qlyu/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/MIC_L_monocytogenes_smalln_portable.joblib",
+      "promoted_joblib": "<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr/promoted_models/MIC_L_monocytogenes_smalln_portable.joblib",
       "joblib_modules": [
         "builtins",
         "numpy",

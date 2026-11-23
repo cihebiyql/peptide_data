@@ -39,7 +39,7 @@ import numpy as np
 
 csv.field_size_limit(10_000_000)
 
-BASE_DIR = Path("/data/qlyu/v33_upgrade")
+BASE_DIR = Path("<WORK_DIR>/v33_upgrade")
 DATA_DIR = BASE_DIR / "data"
 FEAT_DIR = BASE_DIR / "features"
 RAW_EP_DIR = DATA_DIR / "endpoints_raw_clean"

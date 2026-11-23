@@ -9,8 +9,8 @@ import numpy as np
 
 sys.stdout.reconfigure(encoding="utf-8") if hasattr(sys.stdout, "reconfigure") else None
 csv.field_size_limit(10_000_000)
-DATA = Path('/data/qlyu/s3')
-PER = Path('/data/qlyu/s3_integrated')
+DATA = Path('<WORK_DIR>/s3')
+PER = Path('<WORK_DIR>/s3_integrated')
 CACHE = DATA / 'feat_cache'
 FAMS = {
     'PAMPA_log10Papp': 'PAMPA',

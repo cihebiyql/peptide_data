@@ -6,7 +6,7 @@
     "borderline": 0.4
   },
   "n_regression_endpoints": 40,
-  "calibrators_base_dir": "/data/qlyu/v33_upgrade/v2_upgrade/smalln_cqr",
+  "calibrators_base_dir": "<WORK_DIR>/v33_upgrade/v2_upgrade/smalln_cqr",
   "endpoints": {
     "CL_absolute": {
       "n_total": 54,

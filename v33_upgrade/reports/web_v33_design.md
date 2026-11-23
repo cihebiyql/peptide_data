@@ -51,8 +51,8 @@ Wave 3B replaced all legacy prototype/synthetic UI metrics with a 100% authorita
          │  V33_REMOTE_URL=http://127.0.0.1:8902
          │  (Parallel to UNTOUCHED live V31 :7861, V32 :7862, V32 tunnel :8901)
          ▼
-[node1 reverse tunnel]   /data/qlyu/v33_tunnel.sh  (-R 127.0.0.1:8902:10.0.0.3:8902)
-         │  (Parallel to UNTOUCHED /data/qlyu/omnigrid_tunnel.sh on :8901)
+[node1 reverse tunnel]   <WORK_DIR>/v33_tunnel.sh  (-R 127.0.0.1:8902:10.0.0.3:8902)
+         │  (Parallel to UNTOUCHED <WORK_DIR>/omnigrid_tunnel.sh on :8901)
          ▼
 [node23: 10.0.0.3:8902]  Live V33 Super-Ensemble Engine (4 warm FMs, 24 endpoints, 0 GPU)
 ```
@@ -60,8 +60,8 @@ Wave 3B replaced all legacy prototype/synthetic UI metrics with a 100% authorita
 ### Staging Isolation Verification
 - **Live V31 (`node2:7861`)**: Verified `HTTP 200`, untouched.
 - **Live V32 (`node2:7862`)**: Verified `HTTP 200`, untouched.
-- **Live V32 Reverse Tunnel (`node2:8901` via `node1:/data/qlyu/omnigrid_tunnel.sh`)**: Verified `HTTP 200` (`models_cached: 152, endpoints: 55`), untouched.
-- **New V33 Reverse Tunnel (`node2:8902` via `node1:/data/qlyu/v33_tunnel.sh`)**: Verified `HTTP 200` (`version: "v33.0", mode: "v33_live", endpoints: 24`).
+- **Live V32 Reverse Tunnel (`node2:8901` via `node1:<WORK_DIR>/omnigrid_tunnel.sh`)**: Verified `HTTP 200` (`models_cached: 152, endpoints: 55`), untouched.
+- **New V33 Reverse Tunnel (`node2:8902` via `node1:<WORK_DIR>/v33_tunnel.sh`)**: Verified `HTTP 200` (`version: "v33.0", mode: "v33_live", endpoints: 24`).
 - **New V33 Staged Web Platform (`node2:7863` under `/var/www/peptide-omnipanel/v33_next/`)**: Verified `HTTP 200` (`adapter_mode: "v33_remote", endpoints_total: 24, tier1_endpoints: 20, tier2_endpoints: 4, rdkit_version: "2026.03.6"`).
 - **Ready-to-Apply Deployment Templates** (mirrored in both `D:\work\中检院\v33_upgrade\web\deploy\` and `node2:/var/www/peptide-omnipanel/v33_next/deploy/`):
   - `peptide-next.location.conf` — Nginx location snippet exposing `/peptide-next/ -> http://127.0.0.1:7863/`.

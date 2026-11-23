@@ -1,49 +1,17 @@
-# Peptide OmniPanel V33 — Staging Enablement & Production Cutover Guide (`node2`)
+# Peptide OmniPanel 1.2 / Engine v33.2 — Production Deployment Notes
 
-## Current Staged Architecture (Zero Impact on Live V31 `:7861` / V32 `:7862`)
-- **Inference Engine (`node23`, `10.0.0.3:8902`)**: Live V33 4-foundation-model super-ensemble (24 endpoints, 0 GPU usage).
-- **Parallel Reverse Tunnel (`node1`)**: `/data/qlyu/v33_tunnel.sh` forwards `node2:127.0.0.1:8902 -> node23:10.0.0.3:8902` (independent of live V32 `/data/qlyu/omnigrid_tunnel.sh` on `:8901`).
-- **Staged FastAPI Web Server (`node2`)**: `/var/www/peptide-omnipanel/v33_next/` running on `127.0.0.1:7863` under user `mode2`.
-- **Live Production Untouched**: `:7861` (V31 Gradio), `:7862` (V32 Omnigrid), `:8901` (V32 tunnel), `/etc/nginx/`, and existing systemd units remain 100% untouched.
+## Self-Contained Production Architecture (`0 MiB` GPU VRAM, Zero External Cluster Dependency)
+- **Public URL**: `https://lmmd.ecust.edu.cn/peptide-omnipanel/` (proxied to `127.0.0.1:7862` via Nginx).
+- **Web Application (`127.0.0.1:7862`)**: FastAPI + SPA served by `omnigrid_app_node2.py` under systemd (`Restart=on-failure`) with:
+  - `V33_STRICT_REMOTE=1` (disables silent heuristic fallback; returns HTTP 503 if engine is offline)
+  - `V33_PUBLIC_HEALTH_REDACT=1` (omits internal filesystem paths & loopback URL from `/api/v1/health`)
+  - `V33_WARMUP_EXAMPLES=1` & `V33_CACHE_TTL_SEC=86400` (pre-warms all 25 curated examples into a 24h TTL cache)
+  - `V33_WEB_MAX_CONCURRENT=4` (bounded concurrency returning HTTP 429 + `Retry-After` under bursts)
+  - Built-in 30s background watchdog supervising `127.0.0.1:8902`.
+- **Live Inference Engine (`127.0.0.1:8902`)**: `v33_inference_service.py` (`46` endpoints, 4 foundation models on CPU, `OMP_NUM_THREADS=1`, CatBoost `thread_count=1`, bounded semaphore concurrency, `request_queue_size=64`). Supervised via user-level systemd (`v33-inference-engine.service`) and web watchdog.
+- **ESM-C 600M Worker (`127.0.0.1:18902`)**: Pure-PyTorch standalone `esmc_worker.py` on CPU, supervised via user-level systemd (`v33-esmc-worker.service`) or auto-spawned by `:8902`.
 
----
-
-## Step 1 — Enable Public Staging URL (`https://lmmd.ecust.edu.cn/peptide-next/`) [Requires root/sudo]
-
-1. Copy the systemd service unit and switch from manual `nohup` process to systemd:
+## Quick Verification
 ```bash
-# Stop the mode2 nohup process cleanly
-pkill -f "uvicorn web.app:app --host 127.0.0.1 --port 7863" || true
-
-# Install and start systemd unit
-sudo cp /var/www/peptide-omnipanel/v33_next/deploy/peptide-omnipanel-v33.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now peptide-omnipanel-v33.service
-sudo systemctl status peptide-omnipanel-v33.service --no-pager
+curl -sf https://lmmd.ecust.edu.cn/peptide-omnipanel/api/v1/health
 ```
-
-2. Add the Nginx staging location block from `deploy/peptide-next.location.conf` inside the `server {}` block of `/etc/nginx/sites-available/lmmd.ecust.edu.cn`, then test & reload:
-```bash
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-3. Verify public staging endpoint:
-```bash
-curl -sf https://lmmd.ecust.edu.cn/peptide-next/api/v1/health | jq .
-```
-
----
-
-## Step 2 — Full Production Cutover (When Ready to Replace `/peptide-omnipanel/`)
-
-1. Update `Environment=V33_ROOT_PATH=/peptide-omnipanel` in `/etc/systemd/system/peptide-omnipanel-v33.service` and restart:
-```bash
-sudo systemctl daemon-reload && sudo systemctl restart peptide-omnipanel-v33.service
-```
-
-2. In `/etc/nginx/sites-available/lmmd.ecust.edu.cn`, change `location /peptide-omnipanel/` `proxy_pass` from `http://127.0.0.1:7861/` (or `:7862/`) to `http://127.0.0.1:7863/` and reload:
-```bash
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-3. **Instant Rollback**: Revert `proxy_pass` back to `http://127.0.0.1:7861/` (or `:7862/`) and run `sudo nginx -t && sudo systemctl reload nginx` — zero downtime!

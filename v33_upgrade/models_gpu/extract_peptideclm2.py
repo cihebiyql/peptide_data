@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Extract PeptideCLM-2 (hybrid-small, 512D, float16) embeddings for all 46,598 V33 compounds.
 
-Model: /data/qlyu/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small
+Model: <WORK_DIR>/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small
 Architecture: 14-block RoPE SwiGLU Transformer (ChemPepMTR.MLM_model, 31M params, embed_dim=512, max_seq_len=2048).
 Features:
   - Runs L/D-Ala & Ser/pSer chirality/PTM canary check before full extraction.
   - Native mean_pool (excludes [PAD], matches audited benchmark contract).
   - Weighted chunk_mean pooling for any SMILES exceeding 2046 tokens (zero silent truncation!).
   - Supports GPU (bf16/fp32) or multi-process CPU on node23.
-Output: /data/qlyu/v33_upgrade/embeddings/peptideclm2.npz
+Output: <WORK_DIR>/v33_upgrade/embeddings/peptideclm2.npz
 """
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common_index import EMB_DIR, load_v33_compound_table, sha256_file, verify_embedding_arrays
 
 MODEL_DIR = Path(
-    "/data/qlyu/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small"
+    "<WORK_DIR>/projects/peptide-four-task-benchmark-20261022/resources/chemical-encoders-20261024-v1/models/peptideclm-2-hybrid-small"
 )
 MAX_LEN = 2048
 

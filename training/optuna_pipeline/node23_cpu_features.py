@@ -10,7 +10,7 @@ sys.stdout.reconfigure(encoding="utf-8") if hasattr(sys.stdout, "reconfigure") e
 csv.field_size_limit(10_000_000)
 RDLogger.DisableLog("rdApp.*")
 
-DATA = Path("/data/qlyu/s3")
+DATA = Path("<WORK_DIR>/s3")
 ANNO = DATA / "compound_sequence_annotation.tsv"
 SM = DATA / "structures_master.tsv"
 OUT = DATA / "expanded_cpu_features_fp16.npz"

@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Benchmark (and optionally extract Tier-1 PK/permeability subset for) Uni-Mol2-84M.
 
-Python: /data/qlyu/anaconda3/envs/cuda12.1/bin/python
-Weights: /data/qlyu/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt
-  (via UNIMOL_WEIGHT_DIR=/data/qlyu/models/dd_model/Uni-Mol/Uni-Mol2)
+Python: <WORK_DIR>/anaconda3/envs/cuda12.1/bin/python
+Weights: <WORK_DIR>/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt
+  (via UNIMOL_WEIGHT_DIR=<WORK_DIR>/models/dd_model/Uni-Mol/Uni-Mol2)
 
 Modes:
   --mode benchmark  : Benchmark 500 cyclic/modified peptides (+ Case17), record exact
                       conformer+GPU throughput, peak VRAM, and projected time for Tier-1 (~10k) & full (43.9k).
-                      Saves /data/qlyu/v33_upgrade/embeddings/unimol2_benchmark.json.
+                      Saves <WORK_DIR>/v33_upgrade/embeddings/unimol2_benchmark.json.
   --mode tier1      : Extract Uni-Mol2-84M embeddings for all unique valid SMILES across Tier-1 PK/permeability
                       endpoints (PAMPA, Caco2, MDCK, RRCK, PPB, CL_per_kg, CL_absolute, Vd_per_kg, F, Cmax,
                       LogD7.4, BBB, half_life_reg, half_life_cls, solubility_reg) + all 17 Case17 drugs,
                       aligned to all 46,598 compound_index.tsv rows with explicit valid mask!
-                      Saves /data/qlyu/v33_upgrade/embeddings/unimol2_84m_tier1.npz.
+                      Saves <WORK_DIR>/v33_upgrade/embeddings/unimol2_84m_tier1.npz.
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ import time
 from pathlib import Path
 from typing import List, Set
 
-os.environ.setdefault("UNIMOL_WEIGHT_DIR", "/data/qlyu/models/dd_model/Uni-Mol/Uni-Mol2")
+os.environ.setdefault("UNIMOL_WEIGHT_DIR", "<WORK_DIR>/models/dd_model/Uni-Mol/Uni-Mol2")
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
@@ -122,7 +122,7 @@ def main():
         col_std = float(vecs.std(axis=0).mean())
         report = {
             "model": "Uni-Mol2-84M",
-            "checkpoint": "/data/qlyu/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt",
+            "checkpoint": "<WORK_DIR>/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt",
             "n_bench": len(bench_smiles),
             "embed_dim": int(vecs.shape[1]),
             "elapsed_sec": round(dt, 2),
@@ -164,7 +164,7 @@ def main():
             "file": str(out_path),
             "sha256": sha256_file(out_path),
             "size_bytes": out_path.stat().st_size,
-            "checkpoint": "/data/qlyu/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt",
+            "checkpoint": "<WORK_DIR>/models/dd_model/Uni-Mol/Uni-Mol2/modelzoo/84M/checkpoint.pt",
             "scope_endpoints": TIER1_PK_PERM_ENDPOINTS + ["Case17"],
             "n_valid": int(valid_mask.sum()),
             "peak_torch_alloc_mib": peak_vram,

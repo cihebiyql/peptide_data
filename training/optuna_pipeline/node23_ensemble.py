@@ -30,9 +30,9 @@ warnings.filterwarnings('ignore')
 csv.field_size_limit(10_000_000)
 
 EP = sys.argv[1]
-DATA = Path('/data/qlyu/s3')
+DATA = Path('<WORK_DIR>/s3')
 CACHE = DATA / 'feat_cache'
-PER = Path('/data/qlyu/s3_integrated')
+PER = Path('<WORK_DIR>/s3_integrated')
 CKPT_DIR = DATA / 'complete' / 'ckpt'
 OUT = DATA / 'complete' / 'ensemble'
 OUT.mkdir(parents=True, exist_ok=True)
