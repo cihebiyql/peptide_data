@@ -300,8 +300,8 @@ def test_spa_root_serves_subpath_safe_html_without_internal_codenames():
     assert res.status_code == 200
     html = res.text
     assert "OmniPanel" in html
-    assert 'href="static/styles.css?v=1.2' in html
-    assert 'src="static/app.js?v=1.2' in html
+    assert 'href="static/styles.css?v=1.3' in html
+    assert 'src="static/app.js?v=1.3' in html
     assert 'href="docs"' in html
     # Zero hardcoded stale counts, zero internal codenames, zero institution naming
     for forbidden in ("58,932", "213,800", "V32", "V33", "v33_remote", "中检院", "叶老师", "NIFDC", "Prof. Ye"):
@@ -326,9 +326,15 @@ def test_v11_scientific_static_assets_served():
         assert r.content.startswith(b"\x89PNG\r\n\x1a\n")
         assert len(r.content) < 300 * 1024, f"{png_name} exceeds 300 KB ({len(r.content)} bytes)"
 
+    r_anat = client.get("/static/assets/admet_human_anatomy.png")
+    assert r_anat.status_code == 200
+    assert r_anat.content.startswith(b"\x89PNG\r\n\x1a\n")
+    assert len(r_anat.content) < 600 * 1024
+
     r_map = client.get("/static/assets/admet_human_map.svg")
     assert r_map.status_code == 200
     assert 'viewBox="0 0 640 520"' in r_map.text
+    assert "admet_human_anatomy.png" in r_map.text
     for hs in ("bbb", "gut", "pk", "clearance", "safety", "micro"):
         assert f'data-hotspot="{hs}"' in r_map.text
 

@@ -4212,6 +4212,15 @@ html, body {
     #0E1729;
 }
 
+.admet-anatomy-img {
+  image-rendering: auto;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+[data-theme="dark"] .admet-anatomy-img {
+  filter: brightness(0.93) contrast(1.03);
+}
+
 [data-theme="dark"] .modality-card:hover {
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(56, 189, 248, 0.45);
 }

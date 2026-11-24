@@ -290,11 +290,17 @@ async function initInlineScientificSvgs() {
   const archHost = document.getElementById("arch-flow-host");
 
   await Promise.all([
-    loadInlineSvgAsset(apiUrl("/static/assets/admet_human_map.svg?v=1.1"), mapHost),
+    loadInlineSvgAsset(apiUrl("/static/assets/admet_human_map.svg?v=1.3"), mapHost),
     loadInlineSvgAsset(apiUrl("/static/assets/arch_4fm_flow.svg?v=1.1"), archHost),
   ]);
 
-  if (mapHost) applySvgI18n(state.lang, mapHost);
+  if (mapHost) {
+    const anatImg = mapHost.querySelector("#admet-anatomy-img");
+    if (anatImg) {
+      anatImg.setAttribute("href", apiUrl("/static/assets/admet_human_anatomy.png?v=1.3"));
+    }
+    applySvgI18n(state.lang, mapHost);
+  }
   if (archHost) applySvgI18n(state.lang, archHost);
 
   if (mapHost) {
