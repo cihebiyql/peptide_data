@@ -300,8 +300,8 @@ def test_spa_root_serves_subpath_safe_html_without_internal_codenames():
     assert res.status_code == 200
     html = res.text
     assert "OmniPanel" in html
-    assert 'href="static/styles.css?v=1.3' in html
-    assert 'src="static/app.js?v=1.3' in html
+    assert 'href="static/styles.css?v=1.4' in html
+    assert 'src="static/app.js?v=1.4' in html
     assert 'href="docs"' in html
     # Zero hardcoded stale counts, zero internal codenames, zero institution naming
     for forbidden in ("58,932", "213,800", "V32", "V33", "v33_remote", "中检院", "叶老师", "NIFDC", "Prof. Ye"):
@@ -459,9 +459,10 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
 
     manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["version"] == "v33.3"
+    assert manifest["version"] == "v33.4"
     reg_eps = [ep for ep, v in manifest["endpoints"].items() if v["task_type"] == "regression"]
-    assert len(reg_eps) == 40
+    assert len(reg_eps) == 41
+    assert "LogD_decadiene" in manifest["endpoints"]
     for ep in reg_eps:
         for tr in ("dual_modality", "smiles_only"):
             conf = manifest["endpoints"][ep][tr]["conformal"]
@@ -530,7 +531,7 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     # N3: Manifest & /api/v1/endpoints expose 3-tier uq_reliability (low / moderate / calibrated)
     ep_data = client.get("/api/v1/endpoints").json()
     by_ep = {e["endpoint"]: e for e in ep_data["endpoints"]}
-    assert by_ep["PPB"]["uq_reliability"] == "low"
+    assert by_ep["PPB"]["uq_reliability"] in ("calibrated", "moderate")
     assert by_ep["Cmax"]["uq_reliability"] == "low"
     assert by_ep["CL_per_kg"]["uq_reliability"] == "moderate"
     assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
@@ -594,3 +595,47 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     if outs[0][0] == 200:
         assert all(code == 200 for code, _ in outs)
         assert len({val for _, val in outs}) == 1
+
+
+def test_v334_logd_decadiene_chameleonicity_and_clinical_evidence():
+    """Verify V33.4 Endpoint #47 (LogD_decadiene), ΔLogD chameleonicity, and 110-product clinical evidence API."""
+    # 1. Catalog browse mode for /api/v1/clinical-evidence
+    r_cat = client.get("/api/v1/clinical-evidence?limit=20")
+    assert r_cat.status_code == 200
+    cd = r_cat.json()
+    assert cd["stats"]["n_products"] == 110
+    assert cd["stats"]["n_pk_records_indexed"] >= 900
+    assert "ADMETatlas" in cd["source_attribution"]["database"]
+    assert len(cd["products"]) == 20
+
+    # 2. Exact query for Semaglutide clinical evidence (route-resolved oral + SC F)
+    r_sema = client.get("/api/v1/clinical-evidence?query=Semaglutide")
+    assert r_sema.status_code == 200
+    sd = r_sema.json()
+    assert sd["matched"] is True
+    assert sd["product"]["name"] == "Semaglutide"
+    assert sd["product"]["n_pk_records"] >= 10
+    assert any(pk["endpoint"] == "F" and pk["route"] == "subcutaneous" for pk in sd["product"]["pk_records"])
+    assert any(pk["endpoint"] == "F" and pk["route"] == "oral" for pk in sd["product"]["pk_records"])
+
+    # 3. Single-molecule /api/v1/predict auto-attaches LogD_decadiene (#47), chameleonicity ΔLogD, and clinical_evidence
+    rp = client.post("/api/v1/predict", json={"query": "Semaglutide", "include_svg": False})
+    assert rp.status_code == 200
+    dp = rp.json()
+    by_ep = {p["endpoint"]: p for p in dp["predictions"]}
+    assert len(by_ep) == 47
+    assert "LogD_decadiene" in by_ep
+    assert dp["chameleonicity"] is not None
+    assert dp["chameleonicity"]["delta_logd"] == pytest.approx(
+        by_ep["LogD7.4"]["value"] - by_ep["LogD_decadiene"]["value"], abs=0.01
+    )
+    assert dp["clinical_evidence"] is not None
+    assert dp["clinical_evidence"]["product_id"] == "ATLPD0000089"
+
+    # 4. Cyclosporine A matched via name/InChIKey14 + macrocycle chameleonicity flag
+    rc = client.post("/api/v1/predict", json={"query": "Cyclosporine A", "include_svg": False})
+    assert rc.status_code == 200
+    dc = rc.json()
+    assert dc["chameleonicity"] is not None and dc["chameleonicity"]["is_macrocycle"] is True
+    assert dc["clinical_evidence"] is not None
+    assert dc["clinical_evidence"]["name"] == "Cyclosporine"

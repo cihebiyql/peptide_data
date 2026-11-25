@@ -10,7 +10,7 @@
  */
 
 import { buildIntervalBarHtml, escapeHtml, renderAdmetRadar, renderBatchRadarOverlay, renderCase17ParityChart } from "./charts.js?v=1.2";
-import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.2";
+import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.4";
 import {
   animateKpiValue,
   initHeroMolecularCanvas,
@@ -1369,7 +1369,137 @@ function renderPredictionResult(data, { keepContext = false } = {}) {
     mechEl.classList.add("hidden");
   }
 
+  renderClinicalEvidence(data);
   renderEndpointDashboards(data);
+}
+
+function renderClinicalEvidence(data) {
+  const el = document.getElementById("clinical-evidence-panel");
+  if (!el) return;
+  const ce = data?.clinical_evidence;
+  if (!ce) {
+    el.classList.add("hidden");
+    el.innerHTML = "";
+    return;
+  }
+
+  const pkAll = Array.isArray(ce.pk_records) ? ce.pk_records : [];
+  const cc = ce.context_counts || {};
+  const atcTags = (ce.atc || []).slice(0, 3).map((a) => `<span class="mod-badge tone-slate mono" style="font-size:10.5px;">${escapeHtml(a)}</span>`).join("");
+  const routeTag = ce.route ? `<span class="mod-badge tone-cobalt" style="font-size:10.5px;">${escapeHtml(ce.route)}</span>` : "";
+
+  const sigDefs = [
+    ["trial_context", "clin_sig_trials", "tone-cobalt"],
+    ["clinical_ae", "clin_sig_ae", "tone-amber"],
+    ["clinical_immunogenicity_context", "clin_sig_immuno", "tone-violet"],
+    ["nonclinical_safety_context", "clin_sig_safety", "tone-teal"],
+    ["rxnorm_identity", "clin_sig_rxnorm", "tone-slate"],
+  ];
+  const sigPills = sigDefs
+    .filter(([k]) => Number(cc[k] || 0) > 0)
+    .map(([k, i18nKey, tone]) => `<span class="clin-sig-pill ${tone}"><span>${escapeHtml(t(state.lang, i18nKey))}</span><strong class="mono">${Number(cc[k])}</strong></span>`)
+    .join("");
+
+  const renderRows = (rows) =>
+    rows
+      .map((r) => {
+        const srcHtml =
+          r.reference_url && String(r.reference_url).startsWith("http")
+            ? `<a href="${escapeHtml(r.reference_url)}" target="_blank" rel="noopener noreferrer" class="clin-src-link">${escapeHtml(r.source || "Ref")} ↗</a>`
+            : `<span class="muted">${escapeHtml(r.source || "—")}</span>`;
+        return `
+          <tr>
+            <td><span class="clin-ep-badge mono">${escapeHtml(r.endpoint || "—")}</span></td>
+            <td class="mono clin-val-cell">${escapeHtml(r.value_display || "—")}</td>
+            <td>${escapeHtml(r.route && r.route !== "unspecified" ? r.route : "—")}</td>
+            <td>${escapeHtml(r.species && r.species !== "unspecified" ? r.species : "—")}</td>
+            <td class="clin-dose-cell">${escapeHtml(r.dose || "—")}</td>
+            <td class="nowrap">${srcHtml}</td>
+          </tr>`;
+      })
+      .join("");
+
+  const INIT_ROWS = 8;
+  const hasMore = pkAll.length > INIT_ROWS;
+  const tableHtml = pkAll.length
+    ? `
+      <div class="clin-table-wrap">
+        <table class="data-table clin-pk-table">
+          <thead>
+            <tr>
+              <th>${escapeHtml(t(state.lang, "clin_th_ep"))}</th>
+              <th>${escapeHtml(t(state.lang, "clin_th_val"))}</th>
+              <th>${escapeHtml(t(state.lang, "clin_th_route"))}</th>
+              <th>${escapeHtml(t(state.lang, "clin_th_species"))}</th>
+              <th>${escapeHtml(t(state.lang, "clin_th_dose"))}</th>
+              <th>${escapeHtml(t(state.lang, "clin_th_src"))}</th>
+            </tr>
+          </thead>
+          <tbody id="clin-pk-tbody">${renderRows(pkAll.slice(0, INIT_ROWS))}</tbody>
+        </table>
+      </div>
+      ${hasMore ? `<div class="clin-more-row"><button type="button" class="btn-link-subtle" id="btn-clin-toggle-rows" data-expanded="0">${escapeHtml(t(state.lang, "clin_show_all", { n: pkAll.length }))}</button></div>` : ""}`
+    : `<div class="empty-inline" style="padding:10px 0;">${escapeHtml(t(state.lang, "clin_no_pk"))}</div>`;
+
+  const attr = ce.source_attribution || {};
+  const attrCitation = attr.citation || "Yi et al., Nucleic Acids Research (2026), doi:10.1093/nar/gkag1147";
+
+  el.innerHTML = `
+    <div class="clin-head">
+      <div class="clin-head-left">
+        <div class="clin-kicker">${escapeHtml(t(state.lang, "clin_kicker"))}</div>
+        <div class="clin-title-row">
+          <h3 class="clin-title">${escapeHtml(ce.name || data.query_name)}</h3>
+          <span class="mono clin-pid">${escapeHtml(ce.product_id || "")}</span>
+          ${routeTag}
+          ${atcTags}
+        </div>
+        <p class="clin-sub">${escapeHtml(t(state.lang, "clin_sub"))}</p>
+      </div>
+      ${sigPills ? `<div class="clin-sig-row">${sigPills}</div>` : ""}
+    </div>
+    ${tableHtml}
+    <div class="clin-footer-note">
+      <span><strong>${escapeHtml(t(state.lang, "clin_attr_prefix"))}</strong> ADMETatlas V1.0 (${escapeHtml(attrCitation)}, CC-BY-NC 4.0)</span>
+      <span class="clin-caveat">${escapeHtml(t(state.lang, "clin_caveat"))}</span>
+    </div>`;
+  el.classList.remove("hidden");
+
+  const toggleBtn = el.querySelector("#btn-clin-toggle-rows");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const exp = toggleBtn.dataset.expanded === "1";
+      const tbody = el.querySelector("#clin-pk-tbody");
+      if (tbody) {
+        tbody.innerHTML = renderRows(exp ? pkAll.slice(0, INIT_ROWS) : pkAll);
+      }
+      toggleBtn.dataset.expanded = exp ? "0" : "1";
+      toggleBtn.textContent = exp ? t(state.lang, "clin_show_all", { n: pkAll.length }) : t(state.lang, "clin_show_less");
+    });
+  }
+}
+
+function buildChameleonicityCalloutHtml(cham) {
+  if (!cham || cham.delta_logd == null) return "";
+  const lbl = state.lang === "zh" ? cham.label_zh : cham.label_en;
+  const note = state.lang === "zh" ? cham.note_zh : cham.note_en;
+  const dStr = cham.delta_logd >= 0 ? `+${cham.delta_logd.toFixed(2)}` : cham.delta_logd.toFixed(2);
+  const octStr = cham.logd_octanol >= 0 ? `+${cham.logd_octanol.toFixed(2)}` : cham.logd_octanol.toFixed(2);
+  const decStr = cham.logd_decadiene >= 0 ? `+${cham.logd_decadiene.toFixed(2)}` : cham.logd_decadiene.toFixed(2);
+  return `
+    <div class="cham-callout">
+      <div class="cham-top">
+        <div class="cham-title-wrap">
+          <span class="cham-title">${escapeHtml(t(state.lang, "cham_title"))}</span>
+          <span class="mod-badge tone-${escapeHtml(cham.tone || "slate")}" style="font-size:10.5px;">${escapeHtml(lbl)}</span>
+        </div>
+        <div class="cham-metrics mono">
+          <span class="cham-eq" title="${escapeHtml(t(state.lang, "cham_formula"))}">${octStr} − (${decStr}) =</span>
+          <strong class="cham-val">${escapeHtml(dStr)}</strong>
+        </div>
+      </div>
+      <p class="cham-note">${escapeHtml(note)}</p>
+    </div>`;
 }
 
 function renderEndpointDashboards(data) {
@@ -1388,11 +1518,11 @@ function renderEndpointDashboards(data) {
   document.getElementById("count-tier-1").textContent = String(allPreds.filter((p) => p.tier === 1).length);
   document.getElementById("count-tier-2").textContent = String(allPreds.filter((p) => p.tier === 2).length);
 
-  renderDomainGrid(document.getElementById("tier1-dashboard"), ["pk", "permeability", "safety", "physicochemical"], tier1);
+  renderDomainGrid(document.getElementById("tier1-dashboard"), ["pk", "permeability", "safety", "physicochemical"], tier1, data.chameleonicity);
   renderTier2Dashboard(document.getElementById("tier2-dashboard"), tier2, allPreds);
 }
 
-function renderDomainGrid(container, domainKeys, preds) {
+function renderDomainGrid(container, domainKeys, preds, chameleonicity = null) {
   container.innerHTML = "";
   domainKeys.forEach((dKey) => {
     const meta = DOMAIN_META[dKey];
@@ -1404,6 +1534,7 @@ function renderDomainGrid(container, domainKeys, preds) {
     const rowsHtml = items.length
       ? items.map((p) => buildEndpointItemHtml(p)).join("")
       : `<div class="empty-inline">${escapeHtml(t(state.lang, "no_ep_match"))}</div>`;
+    const chamHtml = dKey === "physicochemical" ? buildChameleonicityCalloutHtml(chameleonicity) : "";
 
     card.innerHTML = `
       <div class="domain-header">
@@ -1413,6 +1544,7 @@ function renderDomainGrid(container, domainKeys, preds) {
         </div>
         <span class="domain-count">${escapeHtml(t(state.lang, "ep_count_unit", { n: items.length }))}</span>
       </div>
+      ${chamHtml}
       <div class="ep-list">${rowsHtml}</div>`;
 
     wireExpandableDrawers(card);
@@ -2683,6 +2815,11 @@ const API_PRESETS = {
     url: "/api/v1/predict",
     body: { query: "Micafungin", include_tier2: true, include_svg: false },
   },
+  clinical_sema: {
+    method: "GET",
+    url: "/api/v1/clinical-evidence?query=Semaglutide",
+    body: null,
+  },
   atom_attr_csa: {
     method: "POST",
     url: "/api/v1/atom-attribution",
@@ -2758,16 +2895,13 @@ function renderCodeSnippet(lang) {
   const el = document.getElementById("api-code-snippet");
   if (!el) return;
   if (lang === "curl") {
-    el.textContent = `# 1) Single-peptide prediction (46 endpoints)
+    el.textContent = `# 1) Single-peptide prediction (47 endpoints + ΔLogD + clinical evidence)
 curl -sS -X POST "${baseFull}/api/v1/predict" \\
   -H "Content-Type: application/json" \\
   -d '{"query":"Semaglutide","include_tier2":true,"conditions":{"rbc_species":"human","pk_context":"human_sc"}}'
 
-# 2) Submit async batch task & poll progress
-curl -sS -X POST "${baseFull}/api/v1/jobs" \\
-  -H "Content-Type: application/json" \\
-  -H "X-Client-Id: my_lab_session" \\
-  -d '{"title":"Lead Series","raw_text":"Semaglutide\\nMicafungin\\nCyclosporine A","include_tier2":true}'`;
+# 2) Query FDA/EMA/DailyMed clinical PK evidence (110 peptide products)
+curl -sS "${baseFull}/api/v1/clinical-evidence?query=Semaglutide"`;
   } else {
     el.textContent = `import httpx
 

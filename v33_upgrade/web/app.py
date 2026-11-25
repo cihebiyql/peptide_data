@@ -91,8 +91,9 @@ app = FastAPI(
     title="Peptide OmniPanel API",
     description=(
         "Publication-grade peptide & cyclic-peptide ADMET, pharmacokinetics, safety, and antimicrobial "
-        "prediction platform powered by a 4-foundation-model super-ensemble (46 tiered endpoints, "
-        "calibrated probabilities, AD-stratified empirical uncertainty intervals, exact Tanimoto AD, and async task tracking). "
+        "prediction platform powered by a 4-foundation-model super-ensemble (47 tiered endpoints incl. "
+        "macrocycle chameleonicity LogD_decadiene, calibrated probabilities, AD-stratified empirical uncertainty "
+        "intervals, exact Tanimoto AD, 110-product clinical/regulatory evidence layer, and async task tracking). "
         "Scope: internal_research_only."
     ),
     version=__version__,
@@ -191,6 +192,24 @@ def get_examples() -> JSONResponse:
             "batch_demo_csv": BATCH_DEMO_SAMPLE,
             "batch_presets": BATCH_PRESETS,
         }
+    )
+
+
+@app.get("/api/v1/clinical-evidence", tags=["Evidence"])
+def get_clinical_evidence(
+    query: Optional[str] = Query(default=None, description="Drug name, brand/alias, canonical 20-AA sequence, or SMILES."),
+    smiles: Optional[str] = Query(default=None, description="Optional explicit covalent SMILES for RDKit InChIKey14 matching."),
+    sequence: Optional[str] = Query(default=None, description="Optional explicit canonical 20-AA sequence."),
+    limit: int = Query(default=30, ge=1, le=120),
+) -> JSONResponse:
+    """Query curated FDA/EMA/DailyMed clinical PK records and regulatory context signals across 110 peptide products (attributed to ADMETatlas V1.0, CC-BY-NC 4.0)."""
+    return JSONResponse(
+        adapter.query_clinical_evidence(
+            query=query,
+            sequence=sequence,
+            smiles=smiles,
+            limit=limit,
+        )
     )
 
 
@@ -525,7 +544,7 @@ def export_job(
             headers={"Content-Disposition": f'attachment; filename="omnipanel_{safe_id}.json"'},
         )
     csv_text = job_manager.export_job_csv(detail, full_wide=(format == "full_csv"))
-    suffix = "full_46ep" if format == "full_csv" else "summary"
+    suffix = f"full_{len(adapter.get_catalog())}ep" if format == "full_csv" else "summary"
     return Response(
         content=csv_text.encode("utf-8-sig"),
         media_type="text/csv; charset=utf-8",

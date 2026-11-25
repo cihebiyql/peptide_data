@@ -4266,3 +4266,215 @@ html, body {
   .hero-kpi-ribbon { flex-wrap: wrap; gap: 12px; }
   .kpi-divider { display: none; }
 }
+
+/* ==================== v1.3 CLINICAL EVIDENCE & CHAMELEONICITY ==================== */
+.clinical-evidence-card {
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--cobalt);
+}
+
+.clin-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.clin-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cobalt);
+  margin-bottom: 3px;
+}
+
+.clin-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.clin-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.clin-pid {
+  font-size: 11px;
+  color: var(--ink-muted);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+.clin-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.clin-sig-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.clin-sig-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-subtle);
+  color: var(--ink-secondary);
+}
+
+.clin-sig-pill strong {
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.clin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.clin-pk-table {
+  width: 100%;
+  font-size: 12px;
+}
+
+.clin-pk-table th,
+.clin-pk-table td {
+  padding: 7px 10px;
+}
+
+.clin-ep-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--cobalt-soft);
+  color: var(--cobalt);
+}
+
+.clin-val-cell {
+  font-weight: 650;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.clin-dose-cell {
+  max-width: 240px;
+  color: var(--ink-muted);
+  font-size: 11.5px;
+}
+
+.clin-src-link {
+  color: var(--cobalt);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 11.5px;
+}
+
+.clin-src-link:hover {
+  text-decoration: underline;
+}
+
+.clin-more-row {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.clin-footer-note {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+.clin-caveat {
+  color: var(--ink-faint);
+}
+
+.cham-callout {
+  margin: 0 12px 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+}
+
+.cham-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cham-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.cham-title {
+  font-size: 12.2px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cham-metrics {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 11.5px;
+}
+
+.cham-eq {
+  color: var(--ink-muted);
+}
+
+.cham-val {
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--teal);
+}
+
+.cham-note {
+  margin: 5px 0 0;
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .clinical-evidence-card {
+  border-left-color: var(--cobalt);
+}
+
+[data-theme="dark"] .cham-callout {
+  background: rgba(20, 184, 166, 0.06);
+  border-color: rgba(45, 212, 191, 0.22);
+  border-left-color: var(--teal);
+}

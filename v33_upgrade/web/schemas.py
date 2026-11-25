@@ -315,6 +315,8 @@ class PredictResponse(BaseModel):
     radar: list[RadarAxis] = Field(default_factory=list)
     predictions: list[EndpointPrediction] = Field(default_factory=list)
     skipped: list[dict[str, Any]] = Field(default_factory=list)
+    chameleonicity: Optional[dict[str, Any]] = None
+    clinical_evidence: Optional[dict[str, Any]] = None
     summary: dict[str, Any] = Field(default_factory=dict)
     runtime_ms: float
     cache_hit: bool = False

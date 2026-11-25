@@ -96,6 +96,7 @@ V33_ENDPOINT_ORDER: tuple[str, ...] = (
     "cytotoxicity_CC50",
     # Tier 1 — Physicochemical & In Vitro
     "LogD7.4",
+    "LogD_decadiene",
     "solubility_reg",
     "solubility_cls",
     # Tier 2 — Reference-Strain Antimicrobial MICs (ESKAPE + Clinical)
@@ -270,6 +271,14 @@ ENDPOINT_UI_META: dict[str, dict[str, Any]] = {
         "ci_bar_max": 5.5,
         "input_requirements": "SMILES or Sequence",
         "scope_note": "Octanol-buffer distribution at pH 7.4; AD-stratified empirical intervals.",
+    },
+    "LogD_decadiene": {
+        "display_en": "Macrocycle Lipophilicity (LogD decadiene)",
+        "display_zh": "大环肽癸二烯亲脂性 LogD (变色龙效应)",
+        "ci_bar_min": -5.0,
+        "ci_bar_max": 4.0,
+        "input_requirements": "SMILES (1,9-decadiene/water pH 7.4 shake-flask)",
+        "scope_note": "Hydrocarbon/water lipophilicity (1,9-decadiene/water, JMC 2024 via ADMETatlas V1.0); paired with LogD7.4 (octanol/water) to quantify macrocycle chameleonicity ΔLogD = LogD7.4 − LogD_decadiene.",
     },
     "solubility_reg": {
         "display_en": "Aqueous Solubility (Quant.)",
@@ -536,7 +545,7 @@ def _fmt_val(val: Optional[float], unit: str, kind: str) -> str:
         return f"{val * 100:.1f}%"
     if unit == "cm/s":
         return f"{val:.2e}"
-    if unit in ("log10", "logD", "LogD7.4"):
+    if unit in ("log10", "logD", "LogD7.4", "LogD_dec", "logD_dec"):
         return f"{val:+.2f}" if val >= 0 else f"{val:.2f}"
     if abs(val) >= 100:
         return f"{val:.1f}"
@@ -655,6 +664,12 @@ def _risk_assessment(endpoint: str, val: Optional[float]) -> tuple[str, str]:
         if -1.0 <= val <= 4.5:
             return "moderate", "Borderline"
         return "caution", "Extreme LogD" if endpoint == "LogD7.4" else "Extreme LogP"
+    if endpoint == "LogD_decadiene":
+        if -1.5 <= val <= 2.5:
+            return "favorable", "Membrane-Ready"
+        if -3.0 <= val <= 3.5:
+            return "moderate", "Moderate"
+        return "info", "Polar / Hydrophilic" if val < -3.0 else "Highly Lipophilic"
     if endpoint == "solubility_reg":
         if val >= 100.0:
             return "favorable", "High Solubility"
@@ -985,6 +1000,10 @@ class OmniPanelAdapter:
         self.drug_fps: list[dict[str, Any]] = []
         self._build_drug_index()
 
+        # 5. Load 110-product Clinical & Regulatory Evidence Index (ADMETatlas V1.0, CC-BY-NC 4.0)
+        self.clinical_evidence_data: dict[str, Any] = {}
+        self._load_clinical_evidence()
+
     # -----------------------------------------------------------------------
     # Portable Pure-PyTorch E-GAT Live Per-Atom Attribution (0 GPU VRAM)
     # -----------------------------------------------------------------------
@@ -1207,6 +1226,220 @@ class OmniPanelAdapter:
                     "entry": entry,
                 }
             )
+
+    def _load_clinical_evidence(self) -> None:
+        env_p = os.environ.get("V33_CLINICAL_EVIDENCE_PATH", "").strip()
+        cands: list[Path] = []
+        if env_p:
+            cands.append(Path(env_p))
+        cands.extend(
+            [
+                WEB_DIR / "clinical_evidence_index.json",
+                UPGRADE_DIR / "web" / "clinical_evidence_index.json",
+                UPGRADE_DIR / "bundle" / "clinical_evidence_index.json",
+            ]
+        )
+        for p in cands:
+            if p.exists() and p.is_file():
+                try:
+                    self.clinical_evidence_data = json.loads(p.read_text(encoding="utf-8"))
+                    return
+                except Exception:
+                    continue
+
+    def lookup_clinical_evidence(
+        self,
+        query_name: Optional[str] = None,
+        sequence: Optional[str] = None,
+        mol: Optional[Any] = None,
+        drug_entry: Optional[dict[str, Any]] = None,
+    ) -> Optional[dict[str, Any]]:
+        """Match peptide against the 110-product clinical & regulatory evidence index (name/alias, InChIKey14, or sequence)."""
+        if not self.clinical_evidence_data:
+            return None
+        lookup = self.clinical_evidence_data.get("lookup") or {}
+        by_name: dict[str, str] = lookup.get("by_name") or {}
+        by_seq: dict[str, str] = lookup.get("by_seq") or {}
+        by_ik14: dict[str, str] = lookup.get("by_ik14") or {}
+        products: dict[str, Any] = self.clinical_evidence_data.get("products") or {}
+
+        pid: Optional[str] = None
+        match_method: Optional[str] = None
+
+        # 1. Exact drug name / alias / normalized variant
+        name_cands: list[str] = []
+        if drug_entry:
+            for k in ("display_name", "key"):
+                v = str(drug_entry.get(k) or "").strip()
+                if v:
+                    name_cands.append(v)
+        if query_name:
+            name_cands.append(query_name.strip())
+        expanded_cands: list[str] = []
+        for c in name_cands:
+            low = c.lower()
+            expanded_cands.append(low)
+            if low.endswith(" a"):
+                expanded_cands.append(low[:-2].strip())
+            if "(" in low:
+                expanded_cands.append(low.split("(")[0].strip())
+        for c in expanded_cands:
+            if c and c in by_name:
+                pid = by_name[c]
+                match_method = "name_alias"
+                break
+
+        # 2. Exact RDKit connectivity InChIKey14
+        if pid is None and mol is not None:
+            try:
+                ik = Chem.MolToInchiKey(mol)
+                if ik and len(ik) >= 14 and ik[:14] in by_ik14:
+                    pid = by_ik14[ik[:14]]
+                    match_method = "inchikey14"
+            except Exception:
+                pass
+
+        # 3. Exact canonical 20-AA sequence
+        if pid is None and sequence:
+            seq_clean = clean_sequence_text(sequence)
+            if seq_clean and seq_clean in by_seq:
+                pid = by_seq[seq_clean]
+                match_method = "sequence"
+
+        if pid is None or pid not in products:
+            return None
+
+        prod = dict(products[pid])
+        prod["match_method"] = match_method
+        prod["source_attribution"] = self.clinical_evidence_data.get("source_attribution") or {}
+        return prod
+
+    def query_clinical_evidence(
+        self,
+        query: Optional[str] = None,
+        sequence: Optional[str] = None,
+        smiles: Optional[str] = None,
+        limit: int = 30,
+    ) -> dict[str, Any]:
+        """Query the 110-product clinical & regulatory evidence index for REST API consumers."""
+        stats = self.clinical_evidence_data.get("stats") or {}
+        attr = self.clinical_evidence_data.get("source_attribution") or {}
+        products: dict[str, Any] = self.clinical_evidence_data.get("products") or {}
+
+        q_clean = (query or "").strip()
+        seq_clean = (sequence or "").strip()
+        smi_clean = (smiles or "").strip()
+
+        if q_clean or seq_clean or smi_clean:
+            mol = parse_smiles_safe(smi_clean) if smi_clean else None
+            drug_entry = lookup_drug(q_clean) if q_clean else None
+            if mol is None and q_clean and not drug_entry:
+                mol = parse_smiles_safe(q_clean)
+            matched = self.lookup_clinical_evidence(
+                query_name=q_clean or None,
+                sequence=seq_clean or (q_clean if is_canonical_sequence(q_clean) else None),
+                mol=mol,
+                drug_entry=drug_entry,
+            )
+            if matched is not None:
+                return {
+                    "matched": True,
+                    "product": matched,
+                    "stats": stats,
+                    "source_attribution": attr,
+                }
+            # Substring search across product names & aliases
+            if q_clean:
+                ql = q_clean.lower()
+                hits = []
+                for p in products.values():
+                    hay = " ".join([p.get("name", ""), *(p.get("aliases") or []), *(p.get("atc") or [])]).lower()
+                    if ql in hay:
+                        hits.append(
+                            {
+                                "product_id": p["product_id"],
+                                "name": p["name"],
+                                "route": p.get("route", ""),
+                                "atc": p.get("atc") or [],
+                                "n_pk_records": p.get("n_pk_records", 0),
+                                "context_total": p.get("context_total", 0),
+                                "context_counts": p.get("context_counts") or {},
+                            }
+                        )
+                hits.sort(key=lambda x: (-x["n_pk_records"], x["name"]))
+                return {
+                    "matched": False,
+                    "matches": hits[:limit],
+                    "total_matches": len(hits),
+                    "stats": stats,
+                    "source_attribution": attr,
+                }
+            return {
+                "matched": False,
+                "matches": [],
+                "total_matches": 0,
+                "stats": stats,
+                "source_attribution": attr,
+            }
+
+        # Catalog browse mode
+        catalog = [
+            {
+                "product_id": p["product_id"],
+                "name": p["name"],
+                "aliases": (p.get("aliases") or [])[:5],
+                "route": p.get("route", ""),
+                "atc": p.get("atc") or [],
+                "n_pk_records": p.get("n_pk_records", 0),
+                "context_total": p.get("context_total", 0),
+                "context_counts": p.get("context_counts") or {},
+            }
+            for p in products.values()
+        ]
+        catalog.sort(key=lambda x: (-x["n_pk_records"], -x["context_total"], x["name"]))
+        return {
+            "stats": stats,
+            "source_attribution": attr,
+            "total": len(catalog),
+            "products": catalog[:limit],
+        }
+
+    @staticmethod
+    def _compute_chameleonicity(
+        preds_by_ep: dict[str, EndpointPrediction],
+        physchem: PhysChemSummary,
+    ) -> Optional[dict[str, Any]]:
+        """Derive macrocycle chameleonicity index ΔLogD = LogD7.4 (octanol) − LogD_decadiene (hydrocarbon)."""
+        p_oct = preds_by_ep.get("LogD7.4")
+        p_dec = preds_by_ep.get("LogD_decadiene")
+        if not p_oct or not p_dec or p_oct.value is None or p_dec.value is None:
+            return None
+        delta = round(float(p_oct.value) - float(p_dec.value), 3)
+        is_macro = len(physchem.macrocycle_rings) > 0
+        if delta >= 2.5:
+            tier, lbl_en, lbl_zh, tone = "high", "Strong Chameleonicity", "强变色龙效应", "teal"
+            note_en = "Large ΔLogD (≥2.5) indicates substantial polar surface shielding / intramolecular H-bonding in apolar lipid environments."
+            note_zh = "显著的 ΔLogD (≥2.5) 提示分子在非极性膜环境中具有较强的极性遮蔽或分子内氢键构象适应潜力。"
+        elif delta >= 1.5:
+            tier, lbl_en, lbl_zh, tone = "moderate", "Moderate Chameleonicity", "中等变色龙效应", "cobalt"
+            note_en = "Moderate ΔLogD (1.5–2.5) reflects measurable polarity adaptation between aqueous/octanol and hydrocarbon phases."
+            note_zh = "中等 ΔLogD (1.5–2.5) 反映分子在极性相与烃类膜相之间存在一定程度的构象极性调节。"
+        else:
+            tier, lbl_en, lbl_zh, tone = "low", "Low Conformational Shift", "低极性构象位移", "slate"
+            note_en = "Small ΔLogD (<1.5) indicates similar exposed polarity across octanol and hydrocarbon phases."
+            note_zh = "较小 ΔLogD (<1.5) 表明分子在辛醇与非极性烃相中的表观极性差异较小。"
+        return {
+            "delta_logd": delta,
+            "logd_octanol": round(float(p_oct.value), 3),
+            "logd_decadiene": round(float(p_dec.value), 3),
+            "tier": tier,
+            "tone": tone,
+            "label_en": lbl_en,
+            "label_zh": lbl_zh,
+            "is_macrocycle": is_macro,
+            "note_en": note_en,
+            "note_zh": note_zh,
+        }
 
     def _ordered_endpoints(self) -> list[str]:
         eps_map = self.manifest.get("endpoints") or {}
@@ -1532,12 +1765,18 @@ class OmniPanelAdapter:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
+        total_budget = float(os.environ.get("V33_WEB_TOTAL_BUDGET", "50.0"))
+        queue_cap = min(self._predict_queue_timeout, 18.0)
+        t_req_start = time.monotonic()
         try:
-            acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+            acquired = self._predict_sem.acquire(timeout=queue_cap)
             if not acquired:
                 raise EngineBusyError("Inference server is busy handling concurrent requests; please retry in a few seconds.")
             try:
-                with urllib.request.urlopen(req, timeout=52.0) as resp:
+                remaining = total_budget - (time.monotonic() - t_req_start)
+                if remaining < 12.0:
+                    raise EngineBusyError("Inference queue wait left insufficient request budget; please retry in a few seconds.")
+                with urllib.request.urlopen(req, timeout=remaining) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
             except urllib.error.HTTPError as exc:
                 err_body = exc.read().decode("utf-8", errors="replace")
@@ -2025,6 +2264,8 @@ class OmniPanelAdapter:
                     raw_val = 0.24 if is_amp_like else 0.12
                 elif ep in ("LogD7.4", "LogP"):
                     raw_val = max(-2.0, min(4.5, 1.2 + (0.6 if is_cyclic else 0.0) - max(0.0, mw_log - 3.3)))
+                elif ep == "LogD_decadiene":
+                    raw_val = max(-4.0, min(3.0, -0.4 + (0.4 if is_cyclic else -0.8) - max(0.0, mw_log - 3.3)))
                 elif ep == "solubility_reg":
                     raw_val = 1.95 if not is_cyclic else 1.45
                 elif ep == "solubility_cls":
@@ -2050,10 +2291,15 @@ class OmniPanelAdapter:
                 ci80_low = ci80_high = ci90_low = ci90_high = None
                 ci80_disp = ci90_disp = None
             else:
-                if conf.get("mode") == "mondrian_ad_eb" and conf.get("q80_by_tier"):
+                if conf.get("mode") in ("mondrian_ad_eb", "mondrian_ad_eb_cw") and conf.get("q80_by_tier"):
                     tier_key = "In-Domain" if ad_status == "in_domain" else ("Borderline" if ad_status == "borderline" else "OOD")
                     q80 = float(conf["q80_by_tier"].get(tier_key, conf.get("q80_global", conf.get("q80", 0.5))))
                     q90 = float(conf["q90_by_tier"].get(tier_key, conf.get("q90_global", conf.get("q90", 0.75))))
+                elif conf.get("mode") == "cqr_lgb_cw" and (conf.get("fallback_mondrian_cw") or {}).get("q80_by_tier"):
+                    fb = conf["fallback_mondrian_cw"]
+                    tier_key = "In-Domain" if ad_status == "in_domain" else ("Borderline" if ad_status == "borderline" else "OOD")
+                    q80 = float(fb["q80_by_tier"].get(tier_key, fb.get("q80_global", 0.5)))
+                    q90 = float(fb["q90_by_tier"].get(tier_key, fb.get("q90_global", 0.75)))
                 else:
                     q80 = float(conf.get("q80", 0.5))
                     q90 = float(conf.get("q90", 0.75))
@@ -2137,8 +2383,8 @@ class OmniPanelAdapter:
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
-                uq_reliability=None,
-                uq_note=None,
+                uq_reliability=None if is_cls else self._resolve_uq_reliability(cov, conf),
+                uq_note=None if is_cls else (cov.get("uq_note") or conf.get("uq_note")),
                 brier_holdout=round(float(ho_m["brier"]), 4) if is_cls and ho_m.get("brier") is not None else None,
                 ece_holdout=round(float(ho_m["ece"]), 4) if is_cls and ho_m.get("ece") is not None else None,
                 censored_note=cens_note,
@@ -2308,6 +2554,16 @@ class OmniPanelAdapter:
                 v33_cond=v33_cond,
                 elapsed_ms=(time.perf_counter() - t0) * 1000.0,
             )
+
+        # Attach Macrocycle Chameleonicity (ΔLogD) & Clinical Regulatory Evidence (110 products, ADMETatlas V1.0)
+        preds_by_ep = {p.endpoint: p for p in resp.predictions}
+        resp.chameleonicity = self._compute_chameleonicity(preds_by_ep, physchem)
+        resp.clinical_evidence = self.lookup_clinical_evidence(
+            query_name=resolved.query_name,
+            sequence=resolved.sequence,
+            mol=resolved.mol,
+            drug_entry=resolved.drug_entry,
+        )
 
         # Attach live Pure-PyTorch E-GAT per-atom attribution heatmap SVG when include_svg=True (<95 ms CPU)
         if include_svg and resolved.mol is not None:
@@ -2485,6 +2741,7 @@ class OmniPanelAdapter:
             "cytotoxicity_cc50": by_ep["cytotoxicity_CC50"].value_display if "cytotoxicity_CC50" in by_ep else "—",
             "cytotoxicity_cc50_val": by_ep["cytotoxicity_CC50"].value if "cytotoxicity_CC50" in by_ep else None,
             "logd": by_ep["LogD7.4"].value_display if "LogD7.4" in by_ep else "—",
+            "logd_decadiene": by_ep["LogD_decadiene"].value_display if "LogD_decadiene" in by_ep else "—",
             "solubility": by_ep["solubility_reg"].value_display if "solubility_reg" in by_ep else "—",
             "mic_ecoli": by_ep["MIC_E_coli"].value_display if "MIC_E_coli" in by_ep else "—",
             "mic_saureus": by_ep["MIC_S_aureus"].value_display if "MIC_S_aureus" in by_ep else "—",
