@@ -174,7 +174,8 @@
       "hemolysis_cls",
       "overall_peptide_toxicity",
       "solubility_cls",
-      "solubility_reg"
+      "solubility_reg",
+      "LogD_decadiene"
     ],
     "cpu_aux_tracks_needed": [
       "dual_modality",
@@ -222,7 +223,9 @@
       "hemolysis_cls",
       "overall_peptide_toxicity",
       "solubility_cls",
-      "solubility_reg"
+      "solubility_reg",
+      "LogD_decadiene",
+      "Vd_absolute"
     ],
     "deep_checkpoint_refs": {
       "CL_absolute": {
