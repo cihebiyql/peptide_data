@@ -1384,21 +1384,18 @@ function renderClinicalEvidence(data) {
   }
 
   const pkAll = Array.isArray(ce.pk_records) ? ce.pk_records : [];
-  const cc = ce.context_counts || {};
+  const extLinks = ce.external_links || {};
   const atcTags = (ce.atc || []).slice(0, 3).map((a) => `<span class="mod-badge tone-slate mono" style="font-size:10.5px;">${escapeHtml(a)}</span>`).join("");
   const routeTag = ce.route ? `<span class="mod-badge tone-cobalt" style="font-size:10.5px;">${escapeHtml(ce.route)}</span>` : "";
 
-  const sigDefs = [
-    ["trial_context", "clin_sig_trials", "tone-cobalt"],
-    ["clinical_ae", "clin_sig_ae", "tone-amber"],
-    ["clinical_immunogenicity_context", "clin_sig_immuno", "tone-violet"],
-    ["nonclinical_safety_context", "clin_sig_safety", "tone-teal"],
-    ["rxnorm_identity", "clin_sig_rxnorm", "tone-slate"],
-  ];
-  const sigPills = sigDefs
-    .filter(([k]) => Number(cc[k] || 0) > 0)
-    .map(([k, i18nKey, tone]) => `<span class="clin-sig-pill ${tone}"><span>${escapeHtml(t(state.lang, i18nKey))}</span><strong class="mono">${Number(cc[k])}</strong></span>`)
-    .join("");
+  const extPills = [];
+  if (extLinks.dailymed_search) {
+    extPills.push(`<a href="${escapeHtml(extLinks.dailymed_search)}" target="_blank" rel="noopener noreferrer" class="clin-sig-pill clin-src-link"><span>US FDA DailyMed SPL</span><strong>↗</strong></a>`);
+  }
+  if (extLinks.admetatlas_portal) {
+    extPills.push(`<a href="${escapeHtml(extLinks.admetatlas_portal)}" target="_blank" rel="noopener noreferrer" class="clin-sig-pill clin-src-link" title="External pharmacovigilance & trial database (outbound link only)"><span>ADMETatlas (${escapeHtml(extLinks.admetatlas_product_id || "Portal")})</span><strong>↗</strong></a>`);
+  }
+  const sigPills = extPills.join("");
 
   const renderRows = (rows) =>
     rows
@@ -1442,7 +1439,7 @@ function renderClinicalEvidence(data) {
     : `<div class="empty-inline" style="padding:10px 0;">${escapeHtml(t(state.lang, "clin_no_pk"))}</div>`;
 
   const attr = ce.source_attribution || {};
-  const attrCitation = attr.citation || "Yi et al., Nucleic Acids Research (2026), doi:10.1093/nar/gkag1147";
+  const attrDb = attr.database || "US FDA DailyMed SPL & Drugs@FDA Clinical Pharmacology Reviews (Public Domain, 17 U.S.C. § 105)";
 
   el.innerHTML = `
     <div class="clin-head">
@@ -1460,7 +1457,7 @@ function renderClinicalEvidence(data) {
     </div>
     ${tableHtml}
     <div class="clin-footer-note">
-      <span><strong>${escapeHtml(t(state.lang, "clin_attr_prefix"))}</strong> ADMETatlas V1.0 (${escapeHtml(attrCitation)}, CC-BY-NC 4.0)</span>
+      <span><strong>${escapeHtml(t(state.lang, "clin_attr_prefix"))}</strong> ${escapeHtml(attrDb)}</span>
       <span class="clin-caveat">${escapeHtml(t(state.lang, "clin_caveat"))}</span>
     </div>`;
   el.classList.remove("hidden");
@@ -1483,15 +1480,18 @@ function buildChameleonicityCalloutHtml(cham) {
   if (!cham || cham.delta_logd == null) return "";
   const lbl = state.lang === "zh" ? cham.label_zh : cham.label_en;
   const note = state.lang === "zh" ? cham.note_zh : cham.note_en;
+  const warn = cham.in_applicability_scope === false ? (state.lang === "zh" ? cham.scope_warning_zh : cham.scope_warning_en) : "";
   const dStr = cham.delta_logd >= 0 ? `+${cham.delta_logd.toFixed(2)}` : cham.delta_logd.toFixed(2);
   const octStr = cham.logd_octanol >= 0 ? `+${cham.logd_octanol.toFixed(2)}` : cham.logd_octanol.toFixed(2);
   const decStr = cham.logd_decadiene >= 0 ? `+${cham.logd_decadiene.toFixed(2)}` : cham.logd_decadiene.toFixed(2);
+  const valBadge = `<span class="mod-badge tone-slate mono" style="font-size:10px;" title="Out-of-sample experimental dual-phase validation (n=27 macrocycles): Spearman ρ=0.915, R²=0.816, AUROC(Δ≥2.0)=0.955">OOS ρ=0.915 (n=27)</span>`;
   return `
     <div class="cham-callout">
       <div class="cham-top">
         <div class="cham-title-wrap">
           <span class="cham-title">${escapeHtml(t(state.lang, "cham_title"))}</span>
           <span class="mod-badge tone-${escapeHtml(cham.tone || "slate")}" style="font-size:10.5px;">${escapeHtml(lbl)}</span>
+          ${valBadge}
         </div>
         <div class="cham-metrics mono">
           <span class="cham-eq" title="${escapeHtml(t(state.lang, "cham_formula"))}">${octStr} − (${decStr}) =</span>
@@ -1499,6 +1499,7 @@ function buildChameleonicityCalloutHtml(cham) {
         </div>
       </div>
       <p class="cham-note">${escapeHtml(note)}</p>
+      ${warn ? `<p class="cham-note" style="color:var(--amber);font-weight:600;margin-top:4px;">⚠ ${escapeHtml(warn)}</p>` : ""}
     </div>`;
 }
 
@@ -2796,7 +2797,11 @@ function renderValidationTable() {
             <div class="val-sub-row">${escapeHtml(e.model_family)}</div>
           </td>
           <td class="num"><strong>${e.cv_score_v33 != null ? e.cv_score_v33.toFixed(3) : "—"}</strong></td>
-          <td class="num"><strong style="color:var(--cobalt)">${e.holdout_score_v33 != null ? e.holdout_score_v33.toFixed(3) : "—"}</strong></td>
+          <td class="num">
+            <strong style="color:var(--cobalt)">${e.holdout_score_v33 != null ? e.holdout_score_v33.toFixed(3) : "—"}</strong>
+            ${Array.isArray(e.holdout_ci95) && e.holdout_ci95.length === 2 ? `<div class="val-sub-row mono" style="font-size:10px;">[${e.holdout_ci95[0].toFixed(2)}, ${e.holdout_ci95[1].toFixed(2)}]</div>` : ""}
+            ${e.evidence_grade === "rank_only" ? `<div style="margin-top:2px;"><span class="mod-badge tone-slate" style="font-size:9.5px;padding:1px 5px;" title="Small-N or low-R² endpoint: research rank-ordering only">${state.lang === "zh" ? "仅排序参考" : "Rank-Only"}</span></div>` : ""}
+          </td>
           <td class="num">${covOrCal}</td>
         </tr>`;
     })

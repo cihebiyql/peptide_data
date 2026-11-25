@@ -8,7 +8,7 @@ Leave-Case17-Out scorecard metrics are loaded dynamically from `v33_manifest.jso
 
 Supports two clean runtime modes with identical API contracts:
   1. `v33_remote` (Primary Production Mode)
-     Forwards `/predict` and `/batch` directly to live `node23:8902` (or configured
+     Forwards `/predict` and `/batch` directly to the local inference service (`127.0.0.1:8902` or configured
      `V33_REMOTE_URL`), preserving all real calibrated probabilities, 80%/90% Conformal
      intervals, censored AFT/Tobit diagnostic values, real Tanimoto AD & Top-3 nearest
      training analogs, assay condition routing, and real Fatty-Acylation Mechanism Anchor,
@@ -1409,25 +1409,29 @@ class OmniPanelAdapter:
         preds_by_ep: dict[str, EndpointPrediction],
         physchem: PhysChemSummary,
     ) -> Optional[dict[str, Any]]:
-        """Derive macrocycle chameleonicity index ΔLogD = LogD7.4 (octanol) − LogD_decadiene (hydrocarbon)."""
+        """Derive macrocycle chameleonicity index ΔLogD = LogD7.4 (octanol) − LogD_decadiene (hydrocarbon).
+
+        Cutoffs empirically calibrated via 27-macrocycle dual-phase OOS validation (empirical terciles [0.68, 2.42];
+        OOS Spearman ρ=0.9145, R²=0.8160, AUROC(Δ>=2.0)=0.9545). Explicitly flags non-macrocycles as extrapolated.
+        """
         p_oct = preds_by_ep.get("LogD7.4")
         p_dec = preds_by_ep.get("LogD_decadiene")
         if not p_oct or not p_dec or p_oct.value is None or p_dec.value is None:
             return None
         delta = round(float(p_oct.value) - float(p_dec.value), 3)
         is_macro = len(physchem.macrocycle_rings) > 0
-        if delta >= 2.5:
-            tier, lbl_en, lbl_zh, tone = "high", "Strong Chameleonicity", "强变色龙效应", "teal"
-            note_en = "Large ΔLogD (≥2.5) indicates substantial polar surface shielding / intramolecular H-bonding in apolar lipid environments."
-            note_zh = "显著的 ΔLogD (≥2.5) 提示分子在非极性膜环境中具有较强的极性遮蔽或分子内氢键构象适应潜力。"
-        elif delta >= 1.5:
-            tier, lbl_en, lbl_zh, tone = "moderate", "Moderate Chameleonicity", "中等变色龙效应", "cobalt"
-            note_en = "Moderate ΔLogD (1.5–2.5) reflects measurable polarity adaptation between aqueous/octanol and hydrocarbon phases."
-            note_zh = "中等 ΔLogD (1.5–2.5) 反映分子在极性相与烃类膜相之间存在一定程度的构象极性调节。"
+        if delta >= 2.4:
+            tier, lbl_en, lbl_zh, tone = "high", "Strong Chameleonicity (Top Tercile)", "强变色龙效应 (上三分位)", "teal"
+            note_en = "Large ΔLogD (≥2.4, empirically calibrated top tercile) indicates strong polar surface shielding / intramolecular H-bonding in apolar lipid environments."
+            note_zh = "显著的 ΔLogD (≥2.4，经 27 对实验双相大环标定的上三分位) 提示分子在非极性膜环境中具有较强的极性遮蔽或分子内氢键构象适应潜力。"
+        elif delta >= 0.7:
+            tier, lbl_en, lbl_zh, tone = "moderate", "Moderate Chameleonicity (Mid Tercile)", "中等变色龙效应 (中三分位)", "cobalt"
+            note_en = "Moderate ΔLogD (0.7–2.4) reflects measurable polarity adaptation between octanol and hydrocarbon phases."
+            note_zh = "中等 ΔLogD (0.7–2.4) 反映分子在辛醇与烃类膜相之间存在一定程度的构象极性调节。"
         else:
-            tier, lbl_en, lbl_zh, tone = "low", "Low Conformational Shift", "低极性构象位移", "slate"
-            note_en = "Small ΔLogD (<1.5) indicates similar exposed polarity across octanol and hydrocarbon phases."
-            note_zh = "较小 ΔLogD (<1.5) 表明分子在辛醇与非极性烃相中的表观极性差异较小。"
+            tier, lbl_en, lbl_zh, tone = "low", "Low Conformational Shift (Bottom Tercile)", "低极性构象位移 (下三分位)", "slate"
+            note_en = "Small ΔLogD (<0.7) indicates similar exposed polarity across octanol and hydrocarbon phases."
+            note_zh = "较小 ΔLogD (<0.7) 表明分子在辛醇与非极性烃相中的表观极性差异较小。"
         return {
             "delta_logd": delta,
             "logd_octanol": round(float(p_oct.value), 3),
@@ -1437,6 +1441,10 @@ class OmniPanelAdapter:
             "label_en": lbl_en,
             "label_zh": lbl_zh,
             "is_macrocycle": is_macro,
+            "in_applicability_scope": is_macro,
+            "scope_warning_en": None if is_macro else "Out-of-scope extrapolation: LogD_decadiene is trained exclusively on cyclic macrocycles; interpret ΔLogD for linear/non-macrocyclic peptides strictly as exploratory.",
+            "scope_warning_zh": None if is_macro else "适用域提示：LogD_decadiene 仅基于大环肽训练，非大环/线性肽的 ΔLogD 属外推探索值，请谨慎解读。",
+            "empirical_validation": {"n_matched_macrocycles": 27, "oos_spearman": 0.9145, "oos_r2": 0.8160, "auroc_ge2": 0.9545, "empirical_terciles": [0.68, 2.42]},
             "note_en": note_en,
             "note_zh": note_zh,
         }
@@ -1499,6 +1507,10 @@ class OmniPanelAdapter:
             v32_cv = v32.get(f"cv_{metric_key}") if v32 else None
             v32_ho = v32.get(f"holdout_{metric_key}") if v32 else None
 
+            ho_ci_doc = dm.get("holdout_bootstrap_ci95") or {}
+            ho_ci95 = ho_ci_doc.get("roc_auc_ci95") if is_cls else ho_ci_doc.get("spearman_ci95")
+            ev_grade = doc.get("evidence_grade") if doc.get("evidence_grade") in ("quantitative", "rank_only") else None
+
             items.append(
                 EndpointCatalogItem(
                     endpoint=ep,
@@ -1522,6 +1534,8 @@ class OmniPanelAdapter:
                     holdout_score_v32=round(float(v32_ho), 4) if v32_ho is not None else None,
                     cv_score_v33=round(float(cv_m[metric_key]), 4) if cv_m.get(metric_key) is not None else None,
                     holdout_score_v33=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
+                    holdout_ci95=ho_ci95,
+                    evidence_grade=ev_grade,  # type: ignore[arg-type]
                     conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                     conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
                     uq_reliability=None if is_cls else self._resolve_uq_reliability(cov, dm.get("conformal") or {}),
@@ -1914,8 +1928,8 @@ class OmniPanelAdapter:
         raw_eps = raw_v33.get("endpoints") or {}
         track = str(raw_v33.get("modality_track") or "dual_modality")
 
-        # Merge local SMARTS anchor metadata with live engine mechanism_anchor
-        anchor = detect_acylation_anchor(resolved.mol)
+        # Merge local SMARTS anchor metadata with live engine mechanism_anchor (strict leave-one-drug-out refs)
+        anchor = detect_acylation_anchor(resolved.mol, exclude_drug=resolved.query_name)
         live_anch = raw_v33.get("mechanism_anchor") or {}
         if live_anch.get("anchor_mid_h") is not None and not anchor.detected:
             anchor.detected = True
@@ -2040,6 +2054,8 @@ class OmniPanelAdapter:
                 cv_metric_name=metric_name,
                 cv_score=round(float(cv_m[metric_key]), 4) if cv_m.get(metric_key) is not None else None,
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
+                holdout_ci95=(tr_doc.get("holdout_bootstrap_ci95") or {}).get("roc_auc_ci95" if is_cls else "spearman_ci95"),
+                evidence_grade=ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only") else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
@@ -2129,7 +2145,7 @@ class OmniPanelAdapter:
     ) -> PredictResponse:
         """Offline fallback hydrated strictly from real `v33_manifest.json` + Case17 Leave-Case17-Out scorecard."""
         eps_manifest = self.manifest.get("endpoints") or {}
-        anchor = detect_acylation_anchor(resolved.mol)
+        anchor = detect_acylation_anchor(resolved.mol, exclude_drug=resolved.query_name)
         q_fp = morgan_fp(resolved.mol)
 
         # Look up exact real Leave-Case17-Out V33 row if this is a Case17 clinical drug
@@ -2380,6 +2396,8 @@ class OmniPanelAdapter:
                 cv_metric_name=metric_name,
                 cv_score=round(float(cv_m[metric_key]), 4) if cv_m.get(metric_key) is not None else None,
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
+                holdout_ci95=(dm.get("holdout_bootstrap_ci95") or {}).get("roc_auc_ci95" if is_cls else "spearman_ci95"),
+                evidence_grade=ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only") else None,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,

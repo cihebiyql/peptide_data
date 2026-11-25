@@ -459,10 +459,11 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
 
     manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["version"] == "v33.4"
+    assert manifest["version"] == "v33.5"
     reg_eps = [ep for ep, v in manifest["endpoints"].items() if v["task_type"] == "regression"]
     assert len(reg_eps) == 41
     assert "LogD_decadiene" in manifest["endpoints"]
+    assert manifest["v335_protocol_audit"]["zero_holdout_peeking_enforced"] is True
     for ep in reg_eps:
         for tr in ("dual_modality", "smiles_only"):
             conf = manifest["endpoints"][ep][tr]["conformal"]
@@ -528,14 +529,18 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     )
     assert r_big.status_code == 413
 
-    # N3: Manifest & /api/v1/endpoints expose 3-tier uq_reliability (low / moderate / calibrated)
+    # N3: Manifest & /api/v1/endpoints expose 3-tier uq_reliability (low / moderate / calibrated) + evidence_grade + bootstrap CI95
     ep_data = client.get("/api/v1/endpoints").json()
     by_ep = {e["endpoint"]: e for e in ep_data["endpoints"]}
-    assert by_ep["PPB"]["uq_reliability"] in ("calibrated", "moderate")
+    assert by_ep["PPB"]["uq_reliability"] == "low"
     assert by_ep["Cmax"]["uq_reliability"] == "low"
     assert by_ep["CL_per_kg"]["uq_reliability"] == "moderate"
     assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
     assert by_ep["hemolysis_cls"]["uq_reliability"] is None
+    assert by_ep["PAMPA"]["evidence_grade"] == "quantitative"
+    assert by_ep["LogD_decadiene"]["evidence_grade"] == "rank_only"
+    assert by_ep["Vd_absolute"]["evidence_grade"] == "rank_only"
+    assert isinstance(by_ep["PAMPA"]["holdout_ci95"], list) and len(by_ep["PAMPA"]["holdout_ci95"]) == 2
 
     # N5 + CSV formula injection + error row prediction_source + anonymous session isolation
     headers = {"X-Client-Id": "pytest_audit_n5_01"}
@@ -597,28 +602,29 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
         assert len({val for _, val in outs}) == 1
 
 
-def test_v334_logd_decadiene_chameleonicity_and_clinical_evidence():
-    """Verify V33.4 Endpoint #47 (LogD_decadiene), ΔLogD chameleonicity, and 110-product clinical evidence API."""
-    # 1. Catalog browse mode for /api/v1/clinical-evidence
+def test_v335_logd_decadiene_chameleonicity_public_domain_pk_and_noncircular_anchor():
+    """Verify V33.5 Endpoint #47 (LogD_decadiene), calibrated ΔLogD scope warning, clean-room US FDA public-domain PK index & non-circular SMARTS anchor."""
+    # 1. Catalog browse mode for /api/v1/clinical-evidence (US Federal Public Domain, zero CC-BY-NC derivative counts)
     r_cat = client.get("/api/v1/clinical-evidence?limit=20")
     assert r_cat.status_code == 200
     cd = r_cat.json()
-    assert cd["stats"]["n_products"] == 110
-    assert cd["stats"]["n_pk_records_indexed"] >= 900
-    assert "ADMETatlas" in cd["source_attribution"]["database"]
+    assert cd["stats"]["n_products"] >= 55
+    assert cd["stats"]["n_pk_records_indexed"] >= 400
+    assert "Public Domain" in cd["source_attribution"]["license"]
     assert len(cd["products"]) == 20
 
-    # 2. Exact query for Semaglutide clinical evidence (route-resolved oral + SC F)
+    # 2. Exact query for Semaglutide public-domain US FDA/DailyMed PK (route-resolved oral + SC F)
     r_sema = client.get("/api/v1/clinical-evidence?query=Semaglutide")
     assert r_sema.status_code == 200
     sd = r_sema.json()
     assert sd["matched"] is True
     assert sd["product"]["name"] == "Semaglutide"
-    assert sd["product"]["n_pk_records"] >= 10
+    assert sd["product"]["n_pk_records"] >= 5
+    assert "context_counts" not in sd["product"]
     assert any(pk["endpoint"] == "F" and pk["route"] == "subcutaneous" for pk in sd["product"]["pk_records"])
     assert any(pk["endpoint"] == "F" and pk["route"] == "oral" for pk in sd["product"]["pk_records"])
 
-    # 3. Single-molecule /api/v1/predict auto-attaches LogD_decadiene (#47), chameleonicity ΔLogD, and clinical_evidence
+    # 3. Single-molecule /api/v1/predict: 47 endpoints, calibrated ΔLogD, non-circular anchor (zero fusion protein anchors!)
     rp = client.post("/api/v1/predict", json={"query": "Semaglutide", "include_svg": False})
     assert rp.status_code == 200
     dp = rp.json()
@@ -626,16 +632,22 @@ def test_v334_logd_decadiene_chameleonicity_and_clinical_evidence():
     assert len(by_ep) == 47
     assert "LogD_decadiene" in by_ep
     assert dp["chameleonicity"] is not None
+    assert dp["chameleonicity"]["in_applicability_scope"] is False
+    assert dp["chameleonicity"]["scope_warning_en"] is not None
     assert dp["chameleonicity"]["delta_logd"] == pytest.approx(
         by_ep["LogD7.4"]["value"] - by_ep["LogD_decadiene"]["value"], abs=0.01
     )
+    # Non-circular fatty-diacid anchor: no Fc/albumin fusions (Dulaglutide/Albiglutide) and Semaglutide excluded from own refs
+    anch_refs_str = " ".join(dp["mechanism_anchor"]["anchor_drugs"])
+    assert "Dulaglutide" not in anch_refs_str and "Albiglutide" not in anch_refs_str and "Semaglutide" not in anch_refs_str
     assert dp["clinical_evidence"] is not None
     assert dp["clinical_evidence"]["product_id"] == "ATLPD0000089"
 
-    # 4. Cyclosporine A matched via name/InChIKey14 + macrocycle chameleonicity flag
+    # 4. Cyclosporine A: macrocycle in applicability scope for ΔLogD
     rc = client.post("/api/v1/predict", json={"query": "Cyclosporine A", "include_svg": False})
     assert rc.status_code == 200
     dc = rc.json()
-    assert dc["chameleonicity"] is not None and dc["chameleonicity"]["is_macrocycle"] is True
-    assert dc["clinical_evidence"] is not None
-    assert dc["clinical_evidence"]["name"] == "Cyclosporine"
+    assert dc["chameleonicity"] is not None
+    assert dc["chameleonicity"]["is_macrocycle"] is True
+    assert dc["chameleonicity"]["in_applicability_scope"] is True
+    assert dc["chameleonicity"]["scope_warning_en"] is None

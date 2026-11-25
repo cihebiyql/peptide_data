@@ -1,6 +1,6 @@
 {
   "schema": "peptide_omnipanel_v33_authoritative_manifest_v1",
-  "version": "v33.4",
+  "version": "v33.5",
   "generated_at": "2026-11-23 21:20:40 +0800",
   "selection_protocol": {
     "zero_holdout_peeking": true,
@@ -25,24 +25,26 @@
     "n_tier2_endpoints": 22,
     "n_classification_endpoints": 6,
     "n_regression_endpoints": 41,
-    "n_total_rows": 82422,
-    "n_cv_rows": 65958,
-    "n_holdout_rows": 16464,
+    "n_total_rows": 82414,
+    "n_cv_rows": 65947,
+    "n_holdout_rows": 16467,
     "n_censored_rows": 4535,
-    "n_case17_drugs": 17
+    "n_case17_drugs": 17,
+    "n_quantitative_endpoints": 29,
+    "n_rank_only_endpoints": 18
   },
   "overall_summary": {
     "dual_modality_winning_family_counts": {
-      "fusion": 24,
+      "fusion": 22,
       "deep": 3,
       "super_ensemble": 18,
-      "cpu": 2
+      "cpu": 4
     },
     "smiles_only_winning_family_counts": {
-      "fusion": 28,
-      "super_ensemble": 11,
+      "fusion": 25,
+      "super_ensemble": 12,
       "deep": 2,
-      "cpu": 6
+      "cpu": 8
     },
     "classification_6_holdout_dual_means": {
       "cpu_roc_auc": 0.86725,
@@ -97,6 +99,29 @@
       "deep": 2,
       "fusion": 25,
       "super_ensemble": 12
+    },
+    "statistical_significance_tests": {
+      "regression_family_holdout_mae": {
+        "n_endpoints": 41,
+        "mean_mae": {
+          "champion": 0.5088,
+          "fusion": 0.5097,
+          "cpu": 0.5372
+        },
+        "friedman_chi2": 22.8921,
+        "friedman_p": 1.069e-05,
+        "wilcoxon_p_champion_vs_cpu": 0.0002255,
+        "wilcoxon_p_fusion_vs_cpu": 0.0001486,
+        "wilcoxon_p_champion_vs_fusion": 0.8519,
+        "paired_boot_cpu_minus_champion_mae_ci95": [
+          0.0124,
+          0.0483
+        ],
+        "paired_boot_cpu_minus_fusion_mae_ci95": [
+          0.0133,
+          0.0441
+        ]
+      }
     }
   },
   "representation_ablation_summary": {
@@ -224,8 +249,7 @@
       "overall_peptide_toxicity",
       "solubility_cls",
       "solubility_reg",
-      "LogD_decadiene",
-      "Vd_absolute"
+      "LogD_decadiene"
     ],
     "deep_checkpoint_refs": {
       "CL_absolute": {
@@ -1217,7 +1241,17 @@
         "v33_f_sc": 0.65589,
         "v33_solubility_prob": 0.50958
       }
-    ]
+    ],
+    "non_circular_separation": {
+      "primary_metric_policy": "Pure-ML route-matched metrics are reported as the PRIMARY benchmark; literature fatty-acylation rule overlay is reported separately under strict Leave-One-Drug-Out (excluding Insulin degludec self-anchor circularity).",
+      "pure_ml_all_16_mae_log10": 0.3185,
+      "pure_ml_lipidated_5_mae_log10": 0.2171,
+      "pure_ml_non_lipidated_11_mae_log10": 0.3646,
+      "lodo_rule_overlay_lipidated_5_mae_log10": 0.1829,
+      "lodo_rule_overlay_all_16_mae_log10": 0.3078,
+      "insulin_degludec_circularity_removed": true,
+      "fusion_protein_anchors_removed": true
+    }
   },
   "endpoints": {
     "BBB": {
@@ -1423,7 +1457,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 169,
+          "n_clusters": 129,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.8454,
+            0.9456
+          ],
+          "brier_ci95": [
+            0.0976,
+            0.1585
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -1744,7 +1791,8 @@
           "ece": 0.08835,
           "log_loss": 0.42073
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "CL_absolute": {
       "endpoint": "CL_absolute",
@@ -2003,6 +2051,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=11; holdout Cov80=63.6% < 65%; holdout Cov90=72.7% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.6364,
           "v332_baseline_cov90": 0.7273
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 11,
+          "n_clusters": 2,
+          "n_boot": 1000,
+          "mae_ci95": [
+            1.0158,
+            2.8246
+          ],
+          "spearman_ci95": [
+            0.5793,
+            0.6575
+          ],
+          "r2_ci95": [
+            0.2548,
+            0.3099
+          ],
+          "cov80_ci95": [
+            0.0,
+            0.7
+          ]
         }
       },
       "smiles_only": {
@@ -2419,7 +2488,8 @@
           "all_row_hinge_mae": 1.37444,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "CL_per_kg": {
       "endpoint": "CL_per_kg",
@@ -2685,6 +2755,27 @@
           "uq_note": "Moderate UQ reliability (n=41, Cov80=85.4%, Cov90=97.6%).",
           "v332_baseline_cov80": 0.7073,
           "v332_baseline_cov90": 0.9268
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 41,
+          "n_clusters": 17,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4084,
+            0.7479
+          ],
+          "spearman_ci95": [
+            0.2611,
+            0.9183
+          ],
+          "r2_ci95": [
+            -1.2723,
+            0.6995
+          ],
+          "cov80_ci95": [
+            0.5312,
+            0.8246
+          ]
         }
       },
       "smiles_only": {
@@ -3217,7 +3308,8 @@
           "all_row_hinge_mae": 0.57596,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "Caco2": {
       "endpoint": "Caco2",
@@ -3481,6 +3573,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8199,
           "v332_baseline_cov90": 0.8971
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 311,
+          "n_clusters": 59,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3158,
+            0.4491
+          ],
+          "spearman_ci95": [
+            0.7703,
+            0.8882
+          ],
+          "r2_ci95": [
+            0.5718,
+            0.7779
+          ],
+          "cov80_ci95": [
+            0.7059,
+            0.839
+          ]
         }
       },
       "smiles_only": {
@@ -4002,7 +4115,8 @@
           "all_row_hinge_mae": 0.39008,
           "censored_c_index": 0.83631
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "Cmax": {
       "endpoint": "Cmax",
@@ -4268,6 +4382,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=17); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.8235,
           "v332_baseline_cov90": 0.8824
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 17,
+          "n_clusters": 5,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3849,
+            2.4631
+          ],
+          "spearman_ci95": [
+            -0.8065,
+            0.7918
+          ],
+          "r2_ci95": [
+            -3.8481,
+            0.4264
+          ],
+          "cov80_ci95": [
+            0.2493,
+            1.0
+          ]
         }
       },
       "smiles_only": {
@@ -4690,7 +4825,8 @@
           "all_row_hinge_mae": 1.091,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "F": {
       "endpoint": "F",
@@ -4972,6 +5108,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=23); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.7826,
           "v332_baseline_cov90": 0.8261
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 23,
+          "n_clusters": 8,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1187,
+            0.3823
+          ],
+          "spearman_ci95": [
+            0.2327,
+            0.9877
+          ],
+          "r2_ci95": [
+            -1.3614,
+            0.8369
+          ],
+          "cov80_ci95": [
+            0.6,
+            0.9
+          ]
         }
       },
       "smiles_only": {
@@ -5506,7 +5663,8 @@
           "all_row_hinge_mae": 0.21333,
           "censored_c_index": 0.7463
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "LogD7.4": {
       "endpoint": "LogD7.4",
@@ -5763,6 +5921,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.768,
           "v332_baseline_cov90": 0.888
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 125,
+          "n_clusters": 25,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3707,
+            0.5714
+          ],
+          "spearman_ci95": [
+            0.5093,
+            0.8999
+          ],
+          "r2_ci95": [
+            0.449,
+            0.8017
+          ],
+          "cov80_ci95": [
+            0.7432,
+            0.8812
+          ]
         }
       },
       "smiles_only": {
@@ -6284,7 +6463,8 @@
           "all_row_hinge_mae": 0.48273,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MDCK": {
       "endpoint": "MDCK",
@@ -6543,6 +6723,27 @@
           "uq_note": "Moderate UQ reliability (n=34, Cov80=73.5%, Cov90=88.2%).",
           "v332_baseline_cov80": 0.6765,
           "v332_baseline_cov90": 0.7941
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 34,
+          "n_clusters": 7,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.2338,
+            0.5998
+          ],
+          "spearman_ci95": [
+            0.1392,
+            1.0
+          ],
+          "r2_ci95": [
+            -0.7363,
+            0.8216
+          ],
+          "cov80_ci95": [
+            0.614,
+            1.0
+          ]
         }
       },
       "smiles_only": {
@@ -7060,7 +7261,8 @@
           "all_row_hinge_mae": 0.53537,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_C_albicans": {
       "endpoint": "MIC_C_albicans",
@@ -7307,6 +7509,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8667,
           "v332_baseline_cov90": 0.9444
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 90,
+          "n_clusters": 46,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3775,
+            0.5349
+          ],
+          "spearman_ci95": [
+            0.3954,
+            0.834
+          ],
+          "r2_ci95": [
+            0.289,
+            0.6981
+          ],
+          "cov80_ci95": [
+            0.7538,
+            0.9259
+          ]
         }
       },
       "smiles_only": {
@@ -7828,7 +8051,8 @@
           "all_row_hinge_mae": 0.55863,
           "censored_c_index": 0.69256
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_E_coli": {
       "endpoint": "MIC_E_coli",
@@ -8094,6 +8318,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8161,
           "v332_baseline_cov90": 0.927
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 397,
+          "n_clusters": 152,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.398,
+            0.4821
+          ],
+          "spearman_ci95": [
+            0.4653,
+            0.7166
+          ],
+          "r2_ci95": [
+            0.1914,
+            0.4775
+          ],
+          "cov80_ci95": [
+            0.7741,
+            0.854
+          ]
         }
       },
       "smiles_only": {
@@ -8619,7 +8864,8 @@
           "all_row_hinge_mae": 0.45024,
           "censored_c_index": 0.75427
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_P_aeruginosa": {
       "endpoint": "MIC_P_aeruginosa",
@@ -8857,6 +9103,27 @@
           "uq_note": "Moderate UQ reliability (n=197, Cov80=73.6%, Cov90=81.7%).",
           "v332_baseline_cov80": 0.7563,
           "v332_baseline_cov90": 0.8274
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 197,
+          "n_clusters": 87,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3661,
+            1.0078
+          ],
+          "spearman_ci95": [
+            -0.2176,
+            0.5843
+          ],
+          "r2_ci95": [
+            -0.554,
+            0.4319
+          ],
+          "cov80_ci95": [
+            0.6,
+            0.9028
+          ]
         }
       },
       "smiles_only": {
@@ -9375,7 +9642,8 @@
           "all_row_hinge_mae": 0.64717,
           "censored_c_index": 0.60184
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_S_aureus": {
       "endpoint": "MIC_S_aureus",
@@ -9620,6 +9888,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8704,
           "v332_baseline_cov90": 0.9606
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 355,
+          "n_clusters": 146,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.429,
+            0.521
+          ],
+          "spearman_ci95": [
+            0.3008,
+            0.5853
+          ],
+          "r2_ci95": [
+            0.0494,
+            0.3452
+          ],
+          "cov80_ci95": [
+            0.8193,
+            0.9157
+          ]
         }
       },
       "smiles_only": {
@@ -10145,7 +10434,8 @@
           "all_row_hinge_mae": 0.5197,
           "censored_c_index": 0.66553
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "PAMPA": {
       "endpoint": "PAMPA",
@@ -10411,6 +10701,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8006,
           "v332_baseline_cov90": 0.9026
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3222,
+            0.4356
+          ],
+          "spearman_ci95": [
+            0.674,
+            0.8572
+          ],
+          "r2_ci95": [
+            0.5151,
+            0.7081
+          ],
+          "cov80_ci95": [
+            0.7092,
+            0.8581
+          ]
         }
       },
       "smiles_only": {
@@ -10932,7 +11243,8 @@
           "all_row_hinge_mae": 0.43366,
           "censored_c_index": 0.76397
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "PPB": {
       "endpoint": "PPB",
@@ -10959,14 +11271,14 @@
         "cond_matrix": "plasma"
       },
       "counts": {
-        "n_total": 167,
-        "n_cv": 135,
+        "n_total": 162,
+        "n_cv": 130,
         "n_holdout": 32,
         "n_censored_total": 30,
         "n_censored_cv": 22,
         "n_censored_holdout": 8,
         "censor_counts": {
-          "exact": 137,
+          "exact": 132,
           "right": 14,
           "left": 3,
           "interval": 13
@@ -11000,133 +11312,173 @@
           "fusion": 1.0
         },
         "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": 0.0,
+        "nested_super_delta_over_best_single": -1e-05,
         "cv_metrics": {
-          "n_total": 113,
-          "n_exact": 113,
-          "n_censored": 0,
-          "mae": 0.16927,
-          "rmse": 0.23427,
-          "r2": 0.36368,
-          "spearman": 0.67019,
-          "pearson": 0.60389,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.16927,
-          "censored_c_index": null
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.15106,
+          "rmse": 0.21807,
+          "r2": 0.42537,
+          "spearman": 0.70635,
+          "pearson": 0.65415,
+          "censored_concordance": 0.04545,
+          "censored_violation_mae": 0.16813,
+          "all_row_hinge_mae": 0.15395,
+          "censored_c_index": 0.76451
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
-          "n_total": 24,
+          "n_total": 32,
           "n_exact": 24,
-          "n_censored": 0,
-          "mae": 0.25907,
-          "rmse": 0.29259,
-          "r2": 0.22563,
-          "spearman": 0.82891,
-          "pearson": 0.60143,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.25907,
-          "censored_c_index": null
+          "n_censored": 8,
+          "mae": 0.2608,
+          "rmse": 0.29672,
+          "r2": 0.20359,
+          "spearman": 0.67828,
+          "pearson": 0.55763,
+          "censored_concordance": 0.25,
+          "censored_violation_mae": 0.29076,
+          "all_row_hinge_mae": 0.26829,
+          "censored_c_index": 0.7
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 113,
-            "n_exact": 113,
-            "n_censored": 0,
-            "mae": 0.21949,
-            "rmse": 0.26434,
-            "r2": 0.18981,
-            "spearman": 0.54503,
-            "pearson": 0.4829,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.21949,
-            "censored_c_index": null
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.18218,
+            "rmse": 0.24354,
+            "r2": 0.28328,
+            "spearman": 0.57868,
+            "pearson": 0.5417,
+            "censored_concordance": 0.04545,
+            "censored_violation_mae": 0.2022,
+            "all_row_hinge_mae": 0.18557,
+            "censored_c_index": 0.70529
           },
           "fusion": {
-            "n_total": 113,
-            "n_exact": 113,
-            "n_censored": 0,
-            "mae": 0.16927,
-            "rmse": 0.23427,
-            "r2": 0.36368,
-            "spearman": 0.67019,
-            "pearson": 0.60389,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.16927,
-            "censored_c_index": null
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.15106,
+            "rmse": 0.21807,
+            "r2": 0.42537,
+            "spearman": 0.70635,
+            "pearson": 0.65415,
+            "censored_concordance": 0.04545,
+            "censored_violation_mae": 0.16813,
+            "all_row_hinge_mae": 0.15395,
+            "censored_c_index": 0.76451
+          },
+          "deep": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.16078,
+            "rmse": 0.23761,
+            "r2": 0.31778,
+            "spearman": 0.65634,
+            "pearson": 0.62916,
+            "censored_concordance": 0.40909,
+            "censored_violation_mae": 0.09421,
+            "all_row_hinge_mae": 0.14951,
+            "censored_c_index": 0.74919
           }
         },
         "family_holdout_metrics": {
           "cpu": {
-            "n_total": 24,
+            "n_total": 32,
             "n_exact": 24,
-            "n_censored": 0,
-            "mae": 0.29209,
-            "rmse": 0.33052,
-            "r2": 0.01185,
-            "spearman": 0.55986,
-            "pearson": 0.51166,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.29209,
-            "censored_c_index": null
+            "n_censored": 8,
+            "mae": 0.29918,
+            "rmse": 0.33007,
+            "r2": 0.01454,
+            "spearman": 0.59121,
+            "pearson": 0.47978,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.38211,
+            "all_row_hinge_mae": 0.31991,
+            "censored_c_index": 0.60227
           },
           "fusion": {
-            "n_total": 24,
+            "n_total": 32,
             "n_exact": 24,
-            "n_censored": 0,
-            "mae": 0.25907,
-            "rmse": 0.29259,
-            "r2": 0.22563,
-            "spearman": 0.82891,
-            "pearson": 0.60143,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.25907,
-            "censored_c_index": null
+            "n_censored": 8,
+            "mae": 0.2608,
+            "rmse": 0.29672,
+            "r2": 0.20359,
+            "spearman": 0.67828,
+            "pearson": 0.55763,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.29076,
+            "all_row_hinge_mae": 0.26829,
+            "censored_c_index": 0.7
+          },
+          "deep": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.23284,
+            "rmse": 0.30394,
+            "r2": 0.16435,
+            "spearman": 0.78886,
+            "pearson": 0.74975,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.36378,
+            "all_row_hinge_mae": 0.26557,
+            "censored_c_index": 0.75455
           }
         },
         "calibrator": null,
         "conformal": {
-          "mode": "mondrian_ad_eb_cw",
-          "ad_thresholds": {
-            "in_domain": 0.65,
-            "borderline": 0.4
-          },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 113,
-          "n_eff_clusters": 47,
-          "q80_global": 0.36426,
-          "q90_global": 0.51194,
-          "q80_by_tier": {
-            "In-Domain": 0.36426,
-            "Borderline": 0.39369,
-            "OOD": 0.43294
-          },
-          "q90_by_tier": {
-            "In-Domain": 0.52224,
-            "Borderline": 0.59617,
-            "OOD": 0.81981
-          },
-          "tier_counts": {
-            "In-Domain": 25,
-            "Borderline": 36,
-            "OOD": 52
-          },
-          "tier_clusters": {
-            "In-Domain": 14,
-            "Borderline": 20,
-            "OOD": 18
-          },
-          "tier_eb_weights": {
-            "In-Domain": 0.7,
-            "Borderline": 1.0,
-            "OOD": 0.9
+          "mode": "cqr_lgb_cw",
+          "calibrator_file": "conformal_calibrators/PPB__dual_modality__cqr_lgb_cw.joblib",
+          "n_cal_total": 108,
+          "n_eff_clusters": 42,
+          "Q80": 0.1447,
+          "Q90": 0.12863,
+          "fallback_mondrian_cw": {
+            "mode": "mondrian_ad_eb_cw",
+            "ad_thresholds": {
+              "in_domain": 0.65,
+              "borderline": 0.4
+            },
+            "min_stratum_clusters": 20,
+            "n_cal_total": 108,
+            "n_eff_clusters": 42,
+            "q80_global": 0.28967,
+            "q90_global": 0.47174,
+            "q80_by_tier": {
+              "In-Domain": 0.31631,
+              "Borderline": 0.31631,
+              "OOD": 0.31631
+            },
+            "q90_by_tier": {
+              "In-Domain": 0.51229,
+              "Borderline": 0.54378,
+              "OOD": 0.73814
+            },
+            "tier_counts": {
+              "In-Domain": 25,
+              "Borderline": 43,
+              "OOD": 40
+            },
+            "tier_clusters": {
+              "In-Domain": 14,
+              "Borderline": 17,
+              "OOD": 15
+            },
+            "tier_eb_weights": {
+              "In-Domain": 0.7,
+              "Borderline": 0.85,
+              "OOD": 0.75
+            },
+            "bounds": [
+              0.0,
+              1.0
+            ]
           },
           "bounds": [
             0.0,
@@ -11135,146 +11487,243 @@
         },
         "conformal_holdout_coverage": {
           "n_eval": 24,
-          "cov80": 0.7917,
-          "cov90": 1.0,
-          "mean_width80": 0.7522,
-          "mean_width90": 1.1249
+          "cov80": 0.8333,
+          "cov90": 0.9583,
+          "mean_width80": 0.7904,
+          "mean_width90": 0.8594,
+          "cov80_ci95_wilson": [
+            0.6415,
+            0.9332
+          ],
+          "cov90_ci95_wilson": [
+            0.7976,
+            0.9926
+          ],
+          "by_tier": {
+            "In-Domain": {
+              "n": 17,
+              "cov80": 0.8235,
+              "cov90": 1.0,
+              "w80": 0.8309,
+              "w90": 0.8941
+            },
+            "Borderline": {
+              "n": 5,
+              "cov80": 1.0,
+              "cov90": 1.0,
+              "w80": 0.704,
+              "w90": 0.7988
+            },
+            "OOD": {
+              "n": 2,
+              "cov80": 0.5,
+              "cov90": 0.5,
+              "w80": 0.6617,
+              "w90": 0.7161
+            }
+          },
+          "uq_reliability": "low",
+          "uq_note": "Low UQ reliability (small holdout calibration n=24); interpret CI bounds cautiously.",
+          "v332_baseline_cov80": 0.2917,
+          "v332_baseline_cov90": 0.9167
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 24,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1502,
+            0.3196
+          ],
+          "spearman_ci95": [
+            -0.0964,
+            0.9045
+          ],
+          "r2_ci95": [
+            -7.549,
+            0.4181
+          ],
+          "cov80_ci95": [
+            0.0857,
+            0.6671
+          ]
         }
       },
       "smiles_only": {
-        "winning_family": "fusion",
-        "is_super_ensemble": false,
+        "winning_family": "super_ensemble",
+        "is_super_ensemble": true,
         "weights": {
-          "fusion": 1.0
+          "fusion": 0.47013,
+          "deep": 0.52987
         },
         "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": 0.0,
+        "nested_super_delta_over_best_single": 0.00962,
         "cv_metrics": {
-          "n_total": 112,
-          "n_exact": 112,
-          "n_censored": 0,
-          "mae": 0.16893,
-          "rmse": 0.23162,
-          "r2": 0.35387,
-          "spearman": 0.67518,
-          "pearson": 0.59551,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.16893,
-          "censored_c_index": null
+          "n_total": 130,
+          "n_exact": 108,
+          "n_censored": 22,
+          "mae": 0.14847,
+          "rmse": 0.21675,
+          "r2": 0.4323,
+          "spearman": 0.72588,
+          "pearson": 0.66571,
+          "censored_concordance": 0.18182,
+          "censored_violation_mae": 0.12898,
+          "all_row_hinge_mae": 0.14517,
+          "censored_c_index": 0.77801
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
-          "n_total": 24,
+          "n_total": 32,
           "n_exact": 24,
-          "n_censored": 0,
-          "mae": 0.25882,
-          "rmse": 0.2921,
-          "r2": 0.22821,
-          "spearman": 0.83761,
-          "pearson": 0.60721,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.25882,
-          "censored_c_index": null
+          "n_censored": 8,
+          "mae": 0.21561,
+          "rmse": 0.25045,
+          "r2": 0.43261,
+          "spearman": 0.80322,
+          "pearson": 0.75033,
+          "censored_concordance": 0.125,
+          "censored_violation_mae": 0.2407,
+          "all_row_hinge_mae": 0.22189,
+          "censored_c_index": 0.80227
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 112,
-            "n_exact": 112,
-            "n_censored": 0,
-            "mae": 0.2067,
-            "rmse": 0.25365,
-            "r2": 0.2251,
-            "spearman": 0.56102,
-            "pearson": 0.49225,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.2067,
-            "censored_c_index": null
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.19174,
+            "rmse": 0.25494,
+            "r2": 0.21464,
+            "spearman": 0.52914,
+            "pearson": 0.48109,
+            "censored_concordance": 0.18182,
+            "censored_violation_mae": 0.18096,
+            "all_row_hinge_mae": 0.18991,
+            "censored_c_index": 0.70316
           },
           "fusion": {
-            "n_total": 112,
-            "n_exact": 112,
-            "n_censored": 0,
-            "mae": 0.16893,
-            "rmse": 0.23162,
-            "r2": 0.35387,
-            "spearman": 0.67518,
-            "pearson": 0.59551,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.16893,
-            "censored_c_index": null
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.15809,
+            "rmse": 0.22417,
+            "r2": 0.39279,
+            "spearman": 0.67926,
+            "pearson": 0.62704,
+            "censored_concordance": 0.09091,
+            "censored_violation_mae": 0.16638,
+            "all_row_hinge_mae": 0.15949,
+            "censored_c_index": 0.753
+          },
+          "deep": {
+            "n_total": 130,
+            "n_exact": 108,
+            "n_censored": 22,
+            "mae": 0.16045,
+            "rmse": 0.23177,
+            "r2": 0.3509,
+            "spearman": 0.68414,
+            "pearson": 0.65775,
+            "censored_concordance": 0.36364,
+            "censored_violation_mae": 0.1001,
+            "all_row_hinge_mae": 0.15023,
+            "censored_c_index": 0.75532
           }
         },
         "family_holdout_metrics": {
           "cpu": {
-            "n_total": 24,
+            "n_total": 32,
             "n_exact": 24,
-            "n_censored": 0,
-            "mae": 0.26663,
-            "rmse": 0.29738,
-            "r2": 0.20006,
-            "spearman": 0.45451,
-            "pearson": 0.6372,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.26663,
-            "censored_c_index": null
+            "n_censored": 8,
+            "mae": 0.24634,
+            "rmse": 0.28376,
+            "r2": 0.27168,
+            "spearman": 0.60601,
+            "pearson": 0.56851,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.27743,
+            "all_row_hinge_mae": 0.25411,
+            "censored_c_index": 0.66364
           },
           "fusion": {
-            "n_total": 24,
+            "n_total": 32,
             "n_exact": 24,
-            "n_censored": 0,
-            "mae": 0.25882,
-            "rmse": 0.2921,
-            "r2": 0.22821,
-            "spearman": 0.83761,
-            "pearson": 0.60721,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.25882,
-            "censored_c_index": null
+            "n_censored": 8,
+            "mae": 0.26292,
+            "rmse": 0.29732,
+            "r2": 0.20039,
+            "spearman": 0.81846,
+            "pearson": 0.54055,
+            "censored_concordance": 0.25,
+            "censored_violation_mae": 0.2792,
+            "all_row_hinge_mae": 0.26699,
+            "censored_c_index": 0.75909
+          },
+          "deep": {
+            "n_total": 32,
+            "n_exact": 24,
+            "n_censored": 8,
+            "mae": 0.17759,
+            "rmse": 0.25213,
+            "r2": 0.42499,
+            "spearman": 0.78798,
+            "pearson": 0.78069,
+            "censored_concordance": 0.125,
+            "censored_violation_mae": 0.2223,
+            "all_row_hinge_mae": 0.18877,
+            "censored_c_index": 0.81136
           }
         },
         "calibrator": null,
         "conformal": {
-          "mode": "mondrian_ad_eb_cw",
-          "ad_thresholds": {
-            "in_domain": 0.65,
-            "borderline": 0.4
-          },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 112,
-          "n_eff_clusters": 46,
-          "q80_global": 0.34515,
-          "q90_global": 0.52508,
-          "q80_by_tier": {
-            "In-Domain": 0.33674,
-            "Borderline": 0.33674,
-            "OOD": 0.33674
-          },
-          "q90_by_tier": {
-            "In-Domain": 0.52769,
-            "Borderline": 0.60102,
-            "OOD": 0.8023
-          },
-          "tier_counts": {
-            "In-Domain": 25,
-            "Borderline": 36,
-            "OOD": 51
-          },
-          "tier_clusters": {
-            "In-Domain": 14,
-            "Borderline": 20,
-            "OOD": 17
-          },
-          "tier_eb_weights": {
-            "In-Domain": 0.7,
-            "Borderline": 1.0,
-            "OOD": 0.85
+          "mode": "cqr_lgb_cw",
+          "calibrator_file": "conformal_calibrators/PPB__smiles_only__cqr_lgb_cw.joblib",
+          "n_cal_total": 108,
+          "n_eff_clusters": 42,
+          "Q80": 0.06531,
+          "Q90": 0.07919,
+          "fallback_mondrian_cw": {
+            "mode": "mondrian_ad_eb_cw",
+            "ad_thresholds": {
+              "in_domain": 0.65,
+              "borderline": 0.4
+            },
+            "min_stratum_clusters": 20,
+            "n_cal_total": 108,
+            "n_eff_clusters": 42,
+            "q80_global": 0.23959,
+            "q90_global": 0.42272,
+            "q80_by_tier": {
+              "In-Domain": 0.30652,
+              "Borderline": 0.30652,
+              "OOD": 0.30652
+            },
+            "q90_by_tier": {
+              "In-Domain": 0.41238,
+              "Borderline": 0.41238,
+              "OOD": 0.75322
+            },
+            "tier_counts": {
+              "In-Domain": 25,
+              "Borderline": 43,
+              "OOD": 40
+            },
+            "tier_clusters": {
+              "In-Domain": 14,
+              "Borderline": 17,
+              "OOD": 15
+            },
+            "tier_eb_weights": {
+              "In-Domain": 0.7,
+              "Borderline": 0.85,
+              "OOD": 0.75
+            },
+            "bounds": [
+              0.0,
+              1.0
+            ]
           },
           "bounds": [
             0.0,
@@ -11283,10 +11732,45 @@
         },
         "conformal_holdout_coverage": {
           "n_eval": 24,
-          "cov80": 0.5417,
-          "cov90": 1.0,
-          "mean_width80": 0.6735,
-          "mean_width90": 1.1317
+          "cov80": 0.7083,
+          "cov90": 0.75,
+          "mean_width80": 0.5696,
+          "mean_width90": 0.6939,
+          "cov80_ci95_wilson": [
+            0.5083,
+            0.8509
+          ],
+          "cov90_ci95_wilson": [
+            0.551,
+            0.88
+          ],
+          "by_tier": {
+            "In-Domain": {
+              "n": 17,
+              "cov80": 0.7059,
+              "cov90": 0.7059,
+              "w80": 0.5749,
+              "w90": 0.6987
+            },
+            "Borderline": {
+              "n": 5,
+              "cov80": 0.8,
+              "cov90": 1.0,
+              "w80": 0.5619,
+              "w90": 0.7089
+            },
+            "OOD": {
+              "n": 2,
+              "cov80": 0.5,
+              "cov90": 0.5,
+              "w80": 0.5444,
+              "w90": 0.615
+            }
+          },
+          "uq_reliability": "low",
+          "uq_note": "Low UQ reliability (small holdout calibration n=24; holdout Cov90=75.0% < 78%); interpret CI bounds cautiously.",
+          "v332_baseline_cov80": 0.75,
+          "v332_baseline_cov90": 0.9167
         }
       },
       "censored_head": {
@@ -11599,7 +12083,7 @@
           "censored_c_index": 0.62955
         }
       },
-      "v334_admetatlas_upgraded": true
+      "evidence_grade": "quantitative"
     },
     "RRCK": {
       "endpoint": "RRCK",
@@ -11854,6 +12338,27 @@
           "uq_note": "Moderate UQ reliability (n=30, Cov80=90.0%, Cov90=96.7%).",
           "v332_baseline_cov80": 0.8667,
           "v332_baseline_cov90": 0.9333
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 30,
+          "n_clusters": 7,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1398,
+            0.3138
+          ],
+          "spearman_ci95": [
+            0.1341,
+            0.8751
+          ],
+          "r2_ci95": [
+            0.1448,
+            0.7006
+          ],
+          "cov80_ci95": [
+            0.8065,
+            1.0
+          ]
         }
       },
       "smiles_only": {
@@ -12269,7 +12774,8 @@
           "all_row_hinge_mae": 0.33155,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "Vd_per_kg": {
       "endpoint": "Vd_per_kg",
@@ -12535,6 +13041,27 @@
           "uq_note": "Moderate UQ reliability (n=33, Cov80=87.9%, Cov90=93.9%).",
           "v332_baseline_cov80": 0.8788,
           "v332_baseline_cov90": 0.9394
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 33,
+          "n_clusters": 14,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1865,
+            0.429
+          ],
+          "spearman_ci95": [
+            0.2033,
+            0.806
+          ],
+          "r2_ci95": [
+            -0.4366,
+            0.5546
+          ],
+          "cov80_ci95": [
+            0.7838,
+            1.0
+          ]
         }
       },
       "smiles_only": {
@@ -12966,7 +13493,8 @@
           "all_row_hinge_mae": 0.33563,
           "censored_c_index": null
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "cytotoxicity_cls": {
       "endpoint": "cytotoxicity_cls",
@@ -13160,7 +13688,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 587,
+          "n_clusters": 253,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.899,
+            0.9574
+          ],
+          "brier_ci95": [
+            0.0702,
+            0.1253
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -13481,7 +14022,8 @@
           "ece": 0.0648,
           "log_loss": 0.37238
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "half_life_cls": {
       "endpoint": "half_life_cls",
@@ -13741,7 +14283,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 641,
+          "n_clusters": 166,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.7125,
+            0.861
+          ],
+          "brier_ci95": [
+            0.1529,
+            0.2242
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -14106,7 +14661,8 @@
           "ece": 0.08603,
           "log_loss": 0.60327
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "half_life_reg": {
       "endpoint": "half_life_reg",
@@ -14433,6 +14989,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7478,
           "v332_baseline_cov90": 0.8783
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.576,
+            0.7362
+          ],
+          "spearman_ci95": [
+            0.3477,
+            0.5742
+          ],
+          "r2_ci95": [
+            0.2654,
+            0.5133
+          ],
+          "cov80_ci95": [
+            0.6915,
+            0.8184
+          ]
         }
       },
       "smiles_only": {
@@ -15011,7 +15588,8 @@
           "all_row_hinge_mae": 0.73763,
           "censored_c_index": 0.6368
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "hemolysis_HC50": {
       "endpoint": "hemolysis_HC50",
@@ -15268,6 +15846,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.822,
           "v332_baseline_cov90": 0.922
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 820,
+          "n_clusters": 224,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3355,
+            0.4235
+          ],
+          "spearman_ci95": [
+            0.5866,
+            0.743
+          ],
+          "r2_ci95": [
+            0.2641,
+            0.5199
+          ],
+          "cov80_ci95": [
+            0.7767,
+            0.8622
+          ]
         }
       },
       "smiles_only": {
@@ -15786,7 +16385,8 @@
           "all_row_hinge_mae": 0.38879,
           "censored_c_index": 0.74723
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "hemolysis_cls": {
       "endpoint": "hemolysis_cls",
@@ -16000,7 +16600,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.8713,
+            0.9194
+          ],
+          "brier_ci95": [
+            0.0957,
+            0.1352
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "fusion",
@@ -16321,7 +16934,8 @@
           "ece": 0.05042,
           "log_loss": 0.39269
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "overall_peptide_toxicity": {
       "endpoint": "overall_peptide_toxicity",
@@ -16528,7 +17142,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 2208,
+          "n_clusters": 1451,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.9389,
+            0.9621
+          ],
+          "brier_ci95": [
+            0.0767,
+            0.1022
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "cpu",
@@ -16852,7 +17479,8 @@
           "ece": 0.04099,
           "log_loss": 0.31221
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "solubility_cls": {
       "endpoint": "solubility_cls",
@@ -17063,7 +17691,20 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 745,
+          "n_clusters": 261,
+          "n_boot": 1000,
+          "roc_auc_ci95": [
+            0.8402,
+            0.8927
+          ],
+          "brier_ci95": [
+            0.126,
+            0.1536
+          ]
+        }
       },
       "smiles_only": {
         "winning_family": "super_ensemble",
@@ -17386,7 +18027,8 @@
           "ece": 0.05444,
           "log_loss": 0.45178
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "solubility_reg": {
       "endpoint": "solubility_reg",
@@ -17650,6 +18292,27 @@
           "uq_note": "Moderate UQ reliability (n=48, Cov80=75.0%, Cov90=91.7%).",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.8958
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 48,
+          "n_clusters": 17,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4336,
+            0.9066
+          ],
+          "spearman_ci95": [
+            0.021,
+            0.8266
+          ],
+          "r2_ci95": [
+            -0.0859,
+            0.7818
+          ],
+          "cov80_ci95": [
+            0.5434,
+            0.853
+          ]
         }
       },
       "smiles_only": {
@@ -18169,7 +18832,8 @@
           "all_row_hinge_mae": 0.68211,
           "censored_c_index": 0.70849
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "LC_antimicrobial": {
       "endpoint": "LC_antimicrobial",
@@ -18398,6 +19062,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8019,
           "v332_baseline_cov90": 0.9057
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 106,
+          "n_clusters": 24,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3569,
+            0.6305
+          ],
+          "spearman_ci95": [
+            0.1653,
+            0.5749
+          ],
+          "r2_ci95": [
+            -0.1975,
+            0.3222
+          ],
+          "cov80_ci95": [
+            0.6091,
+            0.8652
+          ]
         }
       },
       "smiles_only": {
@@ -18816,7 +19501,8 @@
           "all_row_hinge_mae": 0.4964,
           "censored_c_index": 0.62064
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MBC_A_baumannii": {
       "endpoint": "MBC_A_baumannii",
@@ -19038,6 +19724,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=24); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.875
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 24,
+          "n_clusters": 12,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4216,
+            0.8941
+          ],
+          "spearman_ci95": [
+            -0.271,
+            0.8549
+          ],
+          "r2_ci95": [
+            -1.2997,
+            0.4164
+          ],
+          "cov80_ci95": [
+            0.4346,
+            0.9355
+          ]
         }
       },
       "smiles_only": {
@@ -19446,7 +20153,8 @@
           "all_row_hinge_mae": 0.55738,
           "censored_c_index": 0.64242
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MBC_E_coli": {
       "endpoint": "MBC_E_coli",
@@ -19675,6 +20383,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8611,
           "v332_baseline_cov90": 0.9167
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 108,
+          "n_clusters": 59,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3433,
+            0.4898
+          ],
+          "spearman_ci95": [
+            0.4669,
+            0.7777
+          ],
+          "r2_ci95": [
+            0.2457,
+            0.5524
+          ],
+          "cov80_ci95": [
+            0.7692,
+            0.9293
+          ]
         }
       },
       "smiles_only": {
@@ -20094,7 +20823,8 @@
           "all_row_hinge_mae": 0.42702,
           "censored_c_index": 0.71713
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MBC_E_faecalis": {
       "endpoint": "MBC_E_faecalis",
@@ -20323,6 +21053,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=15; holdout Cov80=53.3% < 65%; holdout Cov90=66.7% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.5333,
           "v332_baseline_cov90": 0.9333
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 15,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3642,
+            0.8919
+          ],
+          "spearman_ci95": [
+            0.1216,
+            0.8882
+          ],
+          "r2_ci95": [
+            -1.005,
+            0.6127
+          ],
+          "cov80_ci95": [
+            0.2495,
+            0.9091
+          ]
         }
       },
       "smiles_only": {
@@ -20738,7 +21489,8 @@
           "all_row_hinge_mae": 0.71712,
           "censored_c_index": 0.77419
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MBC_P_aeruginosa": {
       "endpoint": "MBC_P_aeruginosa",
@@ -20967,6 +21719,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8382,
           "v332_baseline_cov90": 0.9118
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 68,
+          "n_clusters": 35,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3786,
+            0.5836
+          ],
+          "spearman_ci95": [
+            0.4131,
+            0.8597
+          ],
+          "r2_ci95": [
+            0.1278,
+            0.6126
+          ],
+          "cov80_ci95": [
+            0.7206,
+            0.9412
+          ]
         }
       },
       "smiles_only": {
@@ -21383,7 +22156,8 @@
           "all_row_hinge_mae": 0.51531,
           "censored_c_index": 0.76517
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MBC_S_aureus": {
       "endpoint": "MBC_S_aureus",
@@ -21612,6 +22386,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7677,
           "v332_baseline_cov90": 0.8283
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 99,
+          "n_clusters": 53,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4959,
+            0.749
+          ],
+          "spearman_ci95": [
+            0.1355,
+            0.5524
+          ],
+          "r2_ci95": [
+            -0.2357,
+            0.2894
+          ],
+          "cov80_ci95": [
+            0.6837,
+            0.86
+          ]
         }
       },
       "smiles_only": {
@@ -22031,7 +22826,8 @@
           "all_row_hinge_mae": 0.64802,
           "censored_c_index": 0.63082
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MBEC_biofilm": {
       "endpoint": "MBEC_biofilm",
@@ -22269,6 +23065,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=23; holdout Cov80=56.5% < 65%; holdout Cov90=69.6% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.4783,
           "v332_baseline_cov90": 0.6522
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 23,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3122,
+            1.1095
+          ],
+          "spearman_ci95": [
+            -0.4405,
+            0.5639
+          ],
+          "r2_ci95": [
+            -2.605,
+            -0.1691
+          ],
+          "cov80_ci95": [
+            0.25,
+            0.8667
+          ]
         }
       },
       "smiles_only": {
@@ -22691,7 +23508,8 @@
           "all_row_hinge_mae": 0.67531,
           "censored_c_index": 0.53869
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MBIC_biofilm": {
       "endpoint": "MBIC_biofilm",
@@ -22929,6 +23747,27 @@
           "uq_note": "Moderate UQ reliability (n=53, Cov80=81.1%, Cov90=83.0%).",
           "v332_baseline_cov80": 0.7736,
           "v332_baseline_cov90": 0.8491
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 53,
+          "n_clusters": 22,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3773,
+            0.7749
+          ],
+          "spearman_ci95": [
+            -0.1326,
+            0.7667
+          ],
+          "r2_ci95": [
+            -0.3166,
+            0.4439
+          ],
+          "cov80_ci95": [
+            0.55,
+            0.8864
+          ]
         }
       },
       "smiles_only": {
@@ -23351,7 +24190,8 @@
           "all_row_hinge_mae": 0.63245,
           "censored_c_index": 0.52859
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MFC_C_albicans": {
       "endpoint": "MFC_C_albicans",
@@ -23578,6 +24418,27 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=17); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.7647,
           "v332_baseline_cov90": 0.8824
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 17,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1833,
+            0.4948
+          ],
+          "spearman_ci95": [
+            -0.3678,
+            0.8989
+          ],
+          "r2_ci95": [
+            -1.3117,
+            0.5112
+          ],
+          "cov80_ci95": [
+            0.5908,
+            1.0
+          ]
         }
       },
       "smiles_only": {
@@ -23994,7 +24855,8 @@
           "all_row_hinge_mae": 0.29561,
           "censored_c_index": 0.64286
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_A_baumannii": {
       "endpoint": "MIC_A_baumannii",
@@ -24231,6 +25093,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8364,
           "v332_baseline_cov90": 0.903
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 165,
+          "n_clusters": 72,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.347,
+            0.4921
+          ],
+          "spearman_ci95": [
+            0.3549,
+            0.7597
+          ],
+          "r2_ci95": [
+            -0.1371,
+            0.5086
+          ],
+          "cov80_ci95": [
+            0.7586,
+            0.912
+          ]
         }
       },
       "smiles_only": {
@@ -24657,7 +25540,8 @@
           "all_row_hinge_mae": 0.55674,
           "censored_c_index": 0.59915
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_B_subtilis": {
       "endpoint": "MIC_B_subtilis",
@@ -24894,6 +25778,27 @@
           "uq_note": "Moderate UQ reliability (n=279, Cov80=73.1%, Cov90=82.4%).",
           "v332_baseline_cov80": 0.7025,
           "v332_baseline_cov90": 0.7885
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 279,
+          "n_clusters": 112,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4435,
+            0.6395
+          ],
+          "spearman_ci95": [
+            0.1686,
+            0.63
+          ],
+          "r2_ci95": [
+            -0.0105,
+            0.408
+          ],
+          "cov80_ci95": [
+            0.6381,
+            0.8011
+          ]
         }
       },
       "smiles_only": {
@@ -25316,7 +26221,8 @@
           "all_row_hinge_mae": 0.5992,
           "censored_c_index": 0.62972
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_C_neoformans": {
       "endpoint": "MIC_C_neoformans",
@@ -25552,6 +26458,27 @@
           "uq_note": "Moderate UQ reliability (n=46, Cov80=89.1%, Cov90=95.7%).",
           "v332_baseline_cov80": 0.7174,
           "v332_baseline_cov90": 0.8478
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 46,
+          "n_clusters": 20,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3935,
+            0.6329
+          ],
+          "spearman_ci95": [
+            0.0382,
+            0.7396
+          ],
+          "r2_ci95": [
+            -0.5097,
+            0.2872
+          ],
+          "cov80_ci95": [
+            0.6045,
+            0.881
+          ]
         }
       },
       "smiles_only": {
@@ -25974,7 +26901,8 @@
           "all_row_hinge_mae": 0.55047,
           "censored_c_index": 0.5767
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_E_faecalis": {
       "endpoint": "MIC_E_faecalis",
@@ -26210,6 +27138,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7857,
           "v332_baseline_cov90": 0.898
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 98,
+          "n_clusters": 48,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4225,
+            0.6319
+          ],
+          "spearman_ci95": [
+            0.065,
+            0.5503
+          ],
+          "r2_ci95": [
+            -0.2953,
+            0.2422
+          ],
+          "cov80_ci95": [
+            0.6833,
+            0.8824
+          ]
         }
       },
       "smiles_only": {
@@ -26636,7 +27585,8 @@
           "all_row_hinge_mae": 0.69219,
           "censored_c_index": 0.56343
         }
-      }
+      },
+      "evidence_grade": "rank_only"
     },
     "MIC_E_faecium": {
       "endpoint": "MIC_E_faecium",
@@ -26873,6 +27823,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8909,
           "v332_baseline_cov90": 0.9818
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 55,
+          "n_clusters": 31,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.2735,
+            0.4181
+          ],
+          "spearman_ci95": [
+            0.5271,
+            0.8156
+          ],
+          "r2_ci95": [
+            0.149,
+            0.5106
+          ],
+          "cov80_ci95": [
+            0.8478,
+            0.9839
+          ]
         }
       },
       "smiles_only": {
@@ -27296,7 +28267,8 @@
           "all_row_hinge_mae": 0.36378,
           "censored_c_index": 0.75667
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_K_pneumoniae": {
       "endpoint": "MIC_K_pneumoniae",
@@ -27532,6 +28504,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.9026,
           "v332_baseline_cov90": 0.9545
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 154,
+          "n_clusters": 67,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3648,
+            0.5079
+          ],
+          "spearman_ci95": [
+            0.4162,
+            0.73
+          ],
+          "r2_ci95": [
+            0.2019,
+            0.5704
+          ],
+          "cov80_ci95": [
+            0.8216,
+            0.9399
+          ]
         }
       },
       "smiles_only": {
@@ -27959,7 +28952,8 @@
           "all_row_hinge_mae": 0.48768,
           "censored_c_index": 0.7248
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_L_monocytogenes": {
       "endpoint": "MIC_L_monocytogenes",
@@ -28195,6 +29189,27 @@
           "uq_note": "Moderate UQ reliability (n=46, Cov80=93.5%, Cov90=97.8%).",
           "v332_baseline_cov80": 0.8043,
           "v332_baseline_cov90": 0.9565
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 46,
+          "n_clusters": 19,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.389,
+            0.7528
+          ],
+          "spearman_ci95": [
+            0.234,
+            0.8863
+          ],
+          "r2_ci95": [
+            -0.2875,
+            0.7282
+          ],
+          "cov80_ci95": [
+            0.5333,
+            0.9388
+          ]
         }
       },
       "smiles_only": {
@@ -28617,7 +29632,8 @@
           "all_row_hinge_mae": 0.53401,
           "censored_c_index": 0.77642
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_S_epidermidis": {
       "endpoint": "MIC_S_epidermidis",
@@ -28854,6 +29870,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8,
           "v332_baseline_cov90": 0.9241
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 145,
+          "n_clusters": 53,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4019,
+            0.5686
+          ],
+          "spearman_ci95": [
+            0.3644,
+            0.673
+          ],
+          "r2_ci95": [
+            0.0432,
+            0.3607
+          ],
+          "cov80_ci95": [
+            0.7236,
+            0.8765
+          ]
         }
       },
       "smiles_only": {
@@ -29278,7 +30315,8 @@
           "all_row_hinge_mae": 0.51845,
           "censored_c_index": 0.68832
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "MIC_Salmonella": {
       "endpoint": "MIC_Salmonella",
@@ -29508,6 +30546,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7852,
           "v332_baseline_cov90": 0.9259
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 135,
+          "n_clusters": 65,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.482,
+            0.6334
+          ],
+          "spearman_ci95": [
+            0.3663,
+            0.729
+          ],
+          "r2_ci95": [
+            0.0187,
+            0.4607
+          ],
+          "cov80_ci95": [
+            0.7045,
+            0.8587
+          ]
         }
       },
       "smiles_only": {
@@ -29927,7 +30986,8 @@
           "all_row_hinge_mae": 0.56979,
           "censored_c_index": 0.70173
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "Vd_absolute": {
       "endpoint": "Vd_absolute",
@@ -29957,14 +31017,14 @@
         "cond_estimand": "Vss"
       },
       "counts": {
-        "n_total": 66,
-        "n_cv": 53,
+        "n_total": 63,
+        "n_cv": 50,
         "n_holdout": 13,
         "n_censored_total": 2,
         "n_censored_cv": 2,
         "n_censored_holdout": 0,
         "censor_counts": {
-          "exact": 64,
+          "exact": 61,
           "right": 2,
           "left": 0,
           "interval": 0
@@ -29973,71 +31033,71 @@
       },
       "v32_reference": null,
       "dual_modality": {
-        "winning_family": "fusion",
+        "winning_family": "cpu",
         "is_super_ensemble": false,
         "weights": {
-          "fusion": 1.0
+          "cpu": 1.0
         },
-        "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": -0.00666,
+        "best_single_family": "cpu",
+        "nested_super_delta_over_best_single": -0.0227,
         "cv_metrics": {
-          "n_total": 51,
-          "n_exact": 51,
-          "n_censored": 0,
-          "mae": 0.48371,
-          "rmse": 0.72643,
-          "r2": -0.01508,
-          "spearman": 0.06206,
-          "pearson": -0.00935,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.48371,
-          "censored_c_index": null
+          "n_total": 50,
+          "n_exact": 48,
+          "n_censored": 2,
+          "mae": 0.45971,
+          "rmse": 0.7196,
+          "r2": 0.02909,
+          "spearman": 0.39634,
+          "pearson": 0.3139,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 1.03079,
+          "all_row_hinge_mae": 0.48255,
+          "censored_c_index": 0.6086
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 13,
           "n_exact": 13,
           "n_censored": 0,
-          "mae": 0.5062,
-          "rmse": 0.70991,
-          "r2": 0.03018,
-          "spearman": 0.5167,
-          "pearson": 0.42524,
+          "mae": 0.77798,
+          "rmse": 0.989,
+          "r2": -0.88226,
+          "spearman": -0.16292,
+          "pearson": -0.27101,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.5062,
+          "all_row_hinge_mae": 0.77798,
           "censored_c_index": null
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 51,
-            "n_exact": 51,
-            "n_censored": 0,
-            "mae": 0.49297,
-            "rmse": 0.74154,
-            "r2": -0.05776,
-            "spearman": 0.02938,
-            "pearson": -0.07886,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.49297,
-            "censored_c_index": null
+            "n_total": 50,
+            "n_exact": 48,
+            "n_censored": 2,
+            "mae": 0.45971,
+            "rmse": 0.7196,
+            "r2": 0.02909,
+            "spearman": 0.39634,
+            "pearson": 0.3139,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 1.03079,
+            "all_row_hinge_mae": 0.48255,
+            "censored_c_index": 0.6086
           },
           "fusion": {
-            "n_total": 51,
-            "n_exact": 51,
-            "n_censored": 0,
-            "mae": 0.48371,
-            "rmse": 0.72643,
-            "r2": -0.01508,
-            "spearman": 0.06206,
-            "pearson": -0.00935,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.48371,
-            "censored_c_index": null
+            "n_total": 50,
+            "n_exact": 48,
+            "n_censored": 2,
+            "mae": 0.49701,
+            "rmse": 0.73836,
+            "r2": -0.0222,
+            "spearman": 0.25493,
+            "pearson": 0.0688,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.6225,
+            "all_row_hinge_mae": 0.50203,
+            "censored_c_index": 0.58312
           }
         },
         "family_holdout_metrics": {
@@ -30045,67 +31105,79 @@
             "n_total": 13,
             "n_exact": 13,
             "n_censored": 0,
-            "mae": 0.51973,
-            "rmse": 0.71845,
-            "r2": 0.00672,
-            "spearman": 0.26113,
-            "pearson": 0.09152,
+            "mae": 0.77798,
+            "rmse": 0.989,
+            "r2": -0.88226,
+            "spearman": -0.16292,
+            "pearson": -0.27101,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.51973,
+            "all_row_hinge_mae": 0.77798,
             "censored_c_index": null
           },
           "fusion": {
             "n_total": 13,
             "n_exact": 13,
             "n_censored": 0,
-            "mae": 0.5062,
-            "rmse": 0.70991,
-            "r2": 0.03018,
-            "spearman": 0.5167,
-            "pearson": 0.42524,
+            "mae": 0.52743,
+            "rmse": 0.74828,
+            "r2": -0.07748,
+            "spearman": -0.08334,
+            "pearson": -0.2273,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.5062,
+            "all_row_hinge_mae": 0.52743,
             "censored_c_index": null
           }
         },
         "calibrator": null,
         "conformal": {
-          "mode": "mondrian_ad_eb_cw",
-          "ad_thresholds": {
-            "in_domain": 0.65,
-            "borderline": 0.4
-          },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 51,
-          "n_eff_clusters": 24,
-          "q80_global": 0.95355,
-          "q90_global": 1.60722,
-          "q80_by_tier": {
-            "In-Domain": 0.95504,
-            "Borderline": 0.95504,
-            "OOD": 1.34624
-          },
-          "q90_by_tier": {
-            "In-Domain": 1.39799,
-            "Borderline": 1.39799,
-            "OOD": 1.80381
-          },
-          "tier_counts": {
-            "In-Domain": 22,
-            "Borderline": 18,
-            "OOD": 11
-          },
-          "tier_clusters": {
-            "In-Domain": 7,
-            "Borderline": 12,
-            "OOD": 6
-          },
-          "tier_eb_weights": {
-            "In-Domain": 0.35,
-            "Borderline": 0.6,
-            "OOD": 0.3
+          "mode": "cqr_lgb_cw",
+          "calibrator_file": "conformal_calibrators/Vd_absolute__dual_modality__cqr_lgb_cw.joblib",
+          "n_cal_total": 48,
+          "n_eff_clusters": 21,
+          "Q80": 0.22507,
+          "Q90": 1.00348,
+          "fallback_mondrian_cw": {
+            "mode": "mondrian_ad_eb_cw",
+            "ad_thresholds": {
+              "in_domain": 0.65,
+              "borderline": 0.4
+            },
+            "min_stratum_clusters": 20,
+            "n_cal_total": 48,
+            "n_eff_clusters": 21,
+            "q80_global": 0.63025,
+            "q90_global": 1.51317,
+            "q80_by_tier": {
+              "In-Domain": 0.55924,
+              "Borderline": 0.55924,
+              "OOD": 1.08566
+            },
+            "q90_by_tier": {
+              "In-Domain": 1.33444,
+              "Borderline": 1.33444,
+              "OOD": 1.74785
+            },
+            "tier_counts": {
+              "In-Domain": 21,
+              "Borderline": 18,
+              "OOD": 9
+            },
+            "tier_clusters": {
+              "In-Domain": 6,
+              "Borderline": 11,
+              "OOD": 5
+            },
+            "tier_eb_weights": {
+              "In-Domain": 0.3,
+              "Borderline": 0.55,
+              "OOD": 0.25
+            },
+            "bounds": [
+              -3.0,
+              5.0
+            ]
           },
           "bounds": [
             -3.0,
@@ -30114,78 +31186,134 @@
         },
         "conformal_holdout_coverage": {
           "n_eval": 13,
-          "cov80": 0.7692,
+          "cov80": 0.5385,
           "cov90": 1.0,
-          "mean_width80": 1.9703,
-          "mean_width90": 2.8584
+          "mean_width80": 1.6458,
+          "mean_width90": 3.9288,
+          "cov80_ci95_wilson": [
+            0.2914,
+            0.7679
+          ],
+          "cov90_ci95_wilson": [
+            0.7719,
+            1.0
+          ],
+          "by_tier": {
+            "In-Domain": {
+              "n": 2,
+              "cov80": 0.0,
+              "cov90": 1.0,
+              "w80": 1.3365,
+              "w90": 3.5574
+            },
+            "Borderline": {
+              "n": 10,
+              "cov80": 0.6,
+              "cov90": 1.0,
+              "w80": 1.6285,
+              "w90": 3.9364
+            },
+            "OOD": {
+              "n": 1,
+              "cov80": 1.0,
+              "cov90": 1.0,
+              "w80": 2.4371,
+              "w90": 4.5954
+            }
+          },
+          "uq_reliability": "low",
+          "uq_note": "Low UQ reliability (small holdout calibration n=13; holdout Cov80=53.8% < 65%); interpret CI bounds cautiously.",
+          "v332_baseline_cov80": 0.5385,
+          "v332_baseline_cov90": 0.8462
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 13,
+          "n_clusters": 5,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.18,
+            1.1819
+          ],
+          "spearman_ci95": [
+            -0.8255,
+            0.9753
+          ],
+          "r2_ci95": [
+            -1.9916,
+            0.1607
+          ],
+          "cov80_ci95": [
+            0.3,
+            1.0
+          ]
         }
       },
       "smiles_only": {
-        "winning_family": "fusion",
+        "winning_family": "cpu",
         "is_super_ensemble": false,
         "weights": {
-          "fusion": 1.0
+          "cpu": 1.0
         },
-        "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": -0.00316,
+        "best_single_family": "cpu",
+        "nested_super_delta_over_best_single": -0.04978,
         "cv_metrics": {
-          "n_total": 50,
-          "n_exact": 50,
-          "n_censored": 0,
-          "mae": 0.45161,
-          "rmse": 0.66106,
-          "r2": -0.04263,
-          "spearman": -0.02416,
-          "pearson": -0.193,
-          "censored_concordance": null,
-          "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.45161,
-          "censored_c_index": null
+          "n_total": 49,
+          "n_exact": 47,
+          "n_censored": 2,
+          "mae": 0.45694,
+          "rmse": 0.69728,
+          "r2": -0.14574,
+          "spearman": 0.28799,
+          "pearson": 0.26087,
+          "censored_concordance": 0.0,
+          "censored_violation_mae": 0.96794,
+          "all_row_hinge_mae": 0.4778,
+          "censored_c_index": 0.57666
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
           "n_total": 13,
           "n_exact": 13,
           "n_censored": 0,
-          "mae": 0.54716,
-          "rmse": 0.73061,
-          "r2": -0.0272,
-          "spearman": -0.42225,
-          "pearson": -0.46071,
+          "mae": 0.73788,
+          "rmse": 0.97344,
+          "r2": -0.82349,
+          "spearman": -0.50559,
+          "pearson": -0.47875,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.54716,
+          "all_row_hinge_mae": 0.73788,
           "censored_c_index": null
         },
         "holdout_metrics_raw": null,
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 50,
-            "n_exact": 50,
-            "n_censored": 0,
-            "mae": 0.46578,
-            "rmse": 0.66229,
-            "r2": -0.04652,
-            "spearman": 0.03814,
-            "pearson": -0.02301,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.46578,
-            "censored_c_index": null
+            "n_total": 49,
+            "n_exact": 47,
+            "n_censored": 2,
+            "mae": 0.45694,
+            "rmse": 0.69728,
+            "r2": -0.14574,
+            "spearman": 0.28799,
+            "pearson": 0.26087,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.96794,
+            "all_row_hinge_mae": 0.4778,
+            "censored_c_index": 0.57666
           },
           "fusion": {
-            "n_total": 50,
-            "n_exact": 50,
-            "n_censored": 0,
-            "mae": 0.45161,
-            "rmse": 0.66106,
-            "r2": -0.04263,
-            "spearman": -0.02416,
-            "pearson": -0.193,
-            "censored_concordance": null,
-            "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.45161,
-            "censored_c_index": null
+            "n_total": 49,
+            "n_exact": 47,
+            "n_censored": 2,
+            "mae": 0.4679,
+            "rmse": 0.66273,
+            "r2": -0.03501,
+            "spearman": 0.10695,
+            "pearson": 0.02765,
+            "censored_concordance": 0.0,
+            "censored_violation_mae": 0.65449,
+            "all_row_hinge_mae": 0.47552,
+            "censored_c_index": 0.52003
           }
         },
         "family_holdout_metrics": {
@@ -30193,67 +31321,79 @@
             "n_total": 13,
             "n_exact": 13,
             "n_censored": 0,
-            "mae": 0.56968,
-            "rmse": 0.78489,
-            "r2": -0.18551,
-            "spearman": -0.67782,
-            "pearson": -0.71459,
+            "mae": 0.73788,
+            "rmse": 0.97344,
+            "r2": -0.82349,
+            "spearman": -0.50559,
+            "pearson": -0.47875,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.56968,
+            "all_row_hinge_mae": 0.73788,
             "censored_c_index": null
           },
           "fusion": {
             "n_total": 13,
             "n_exact": 13,
             "n_censored": 0,
-            "mae": 0.54716,
-            "rmse": 0.73061,
-            "r2": -0.0272,
-            "spearman": -0.42225,
-            "pearson": -0.46071,
+            "mae": 0.56432,
+            "rmse": 0.77145,
+            "r2": -0.14525,
+            "spearman": -0.62782,
+            "pearson": -0.50048,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.54716,
+            "all_row_hinge_mae": 0.56432,
             "censored_c_index": null
           }
         },
         "calibrator": null,
         "conformal": {
-          "mode": "mondrian_ad_eb_cw",
-          "ad_thresholds": {
-            "in_domain": 0.65,
-            "borderline": 0.4
-          },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 50,
-          "n_eff_clusters": 24,
-          "q80_global": 0.97442,
-          "q90_global": 1.42424,
-          "q80_by_tier": {
-            "In-Domain": 0.97442,
-            "Borderline": 0.98167,
-            "OOD": 1.25428
-          },
-          "q90_by_tier": {
-            "In-Domain": 1.31074,
-            "Borderline": 1.31074,
-            "OOD": 1.59164
-          },
-          "tier_counts": {
-            "In-Domain": 22,
-            "Borderline": 18,
-            "OOD": 10
-          },
-          "tier_clusters": {
-            "In-Domain": 7,
-            "Borderline": 12,
-            "OOD": 5
-          },
-          "tier_eb_weights": {
-            "In-Domain": 0.35,
-            "Borderline": 0.6,
-            "OOD": 0.25
+          "mode": "cqr_lgb_cw",
+          "calibrator_file": "conformal_calibrators/Vd_absolute__smiles_only__cqr_lgb_cw.joblib",
+          "n_cal_total": 47,
+          "n_eff_clusters": 21,
+          "Q80": 0.28922,
+          "Q90": 0.85636,
+          "fallback_mondrian_cw": {
+            "mode": "mondrian_ad_eb_cw",
+            "ad_thresholds": {
+              "in_domain": 0.65,
+              "borderline": 0.4
+            },
+            "min_stratum_clusters": 20,
+            "n_cal_total": 47,
+            "n_eff_clusters": 21,
+            "q80_global": 0.71466,
+            "q90_global": 1.56274,
+            "q80_by_tier": {
+              "In-Domain": 0.62694,
+              "Borderline": 0.62694,
+              "OOD": 1.00918
+            },
+            "q90_by_tier": {
+              "In-Domain": 1.52083,
+              "Borderline": 1.52083,
+              "OOD": 1.68765
+            },
+            "tier_counts": {
+              "In-Domain": 21,
+              "Borderline": 18,
+              "OOD": 8
+            },
+            "tier_clusters": {
+              "In-Domain": 6,
+              "Borderline": 11,
+              "OOD": 4
+            },
+            "tier_eb_weights": {
+              "In-Domain": 0.3,
+              "Borderline": 0.55,
+              "OOD": 0.2
+            },
+            "bounds": [
+              -3.0,
+              5.0
+            ]
           },
           "bounds": [
             -3.0,
@@ -30262,10 +31402,45 @@
         },
         "conformal_holdout_coverage": {
           "n_eval": 13,
-          "cov80": 0.7692,
-          "cov90": 0.7692,
-          "mean_width80": 2.003,
-          "mean_width90": 2.6647
+          "cov80": 0.5385,
+          "cov90": 1.0,
+          "mean_width80": 1.8953,
+          "mean_width90": 3.7138,
+          "cov80_ci95_wilson": [
+            0.2914,
+            0.7679
+          ],
+          "cov90_ci95_wilson": [
+            0.7719,
+            1.0
+          ],
+          "by_tier": {
+            "In-Domain": {
+              "n": 2,
+              "cov80": 0.0,
+              "cov90": 1.0,
+              "w80": 1.3283,
+              "w90": 3.1866
+            },
+            "Borderline": {
+              "n": 10,
+              "cov80": 0.6,
+              "cov90": 1.0,
+              "w80": 1.9847,
+              "w90": 3.801
+            },
+            "OOD": {
+              "n": 1,
+              "cov80": 1.0,
+              "cov90": 1.0,
+              "w80": 2.1352,
+              "w90": 3.8965
+            }
+          },
+          "uq_reliability": "low",
+          "uq_note": "Low UQ reliability (small holdout calibration n=13; holdout Cov80=53.8% < 65%); interpret CI bounds cautiously.",
+          "v332_baseline_cov80": 0.5385,
+          "v332_baseline_cov90": 0.8462
         }
       },
       "censored_head": {
@@ -30494,7 +31669,7 @@
           "censored_c_index": null
         }
       },
-      "v334_admetatlas_upgraded": true
+      "evidence_grade": "rank_only"
     },
     "cytotoxicity_CC50": {
       "endpoint": "cytotoxicity_CC50",
@@ -30732,6 +31907,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7992,
           "v332_baseline_cov90": 0.8996
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 478,
+          "n_clusters": 178,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.3535,
+            0.4541
+          ],
+          "spearman_ci95": [
+            0.4923,
+            0.7731
+          ],
+          "r2_ci95": [
+            0.2912,
+            0.6755
+          ],
+          "cov80_ci95": [
+            0.7455,
+            0.8577
+          ]
         }
       },
       "smiles_only": {
@@ -31158,7 +32354,8 @@
           "all_row_hinge_mae": 0.38664,
           "censored_c_index": 0.74067
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "efflux_ratio": {
       "endpoint": "efflux_ratio",
@@ -31392,6 +32589,27 @@
           "uq_note": "Moderate UQ reliability (n=32, Cov80=90.6%, Cov90=96.9%).",
           "v332_baseline_cov80": 0.875,
           "v332_baseline_cov90": 0.9688
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 32,
+          "n_clusters": 9,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.2603,
+            0.4706
+          ],
+          "spearman_ci95": [
+            -0.2498,
+            0.8992
+          ],
+          "r2_ci95": [
+            -0.6434,
+            0.8295
+          ],
+          "cov80_ci95": [
+            0.7586,
+            0.963
+          ]
         }
       },
       "smiles_only": {
@@ -31814,7 +33032,8 @@
           "all_row_hinge_mae": 0.40655,
           "censored_c_index": 0.69598
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "hemolysis_MHC": {
       "endpoint": "hemolysis_MHC",
@@ -32050,6 +33269,27 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8,
           "v332_baseline_cov90": 0.9455
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 55,
+          "n_clusters": 12,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.4311,
+            0.6463
+          ],
+          "spearman_ci95": [
+            -0.4455,
+            0.7182
+          ],
+          "r2_ci95": [
+            -0.7159,
+            0.4514
+          ],
+          "cov80_ci95": [
+            0.5356,
+            0.875
+          ]
         }
       },
       "smiles_only": {
@@ -32466,11 +33706,12 @@
           "all_row_hinge_mae": 0.47741,
           "censored_c_index": 0.76065
         }
-      }
+      },
+      "evidence_grade": "quantitative"
     },
     "LogD_decadiene": {
       "endpoint": "LogD_decadiene",
-      "expansion_wave": "v33.4",
+      "expansion_wave": "v33.5",
       "display_en": "Macrocycle Lipophilicity (LogD decadiene/water)",
       "display_zh": "大环肽癸二烯亲脂性 LogD (变色龙效应)",
       "tier": 1,
@@ -32478,6 +33719,7 @@
       "domain": "physicochemical",
       "task_type": "regression",
       "size_tier": "small",
+      "evidence_grade": "rank_only",
       "unit": "LogD_dec",
       "linear_unit": "logD_dec",
       "log10_space": false,
@@ -32490,8 +33732,8 @@
       },
       "counts": {
         "n_total": 87,
-        "n_cv": 70,
-        "n_holdout": 17,
+        "n_cv": 67,
+        "n_holdout": 20,
         "n_censored_total": 0,
         "n_censored_cv": 0,
         "n_censored_holdout": 0,
@@ -32505,100 +33747,117 @@
       },
       "v32_reference": null,
       "dual_modality": {
-        "winning_family": "fusion",
+        "winning_family": "cpu",
         "is_super_ensemble": false,
         "weights": {
-          "fusion": 1.0
+          "cpu": 1.0
         },
-        "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": 0.0,
+        "best_single_family": "cpu",
+        "nested_super_delta_over_best_single": -0.00718,
         "cv_metrics": {
-          "n_total": 70,
-          "n_exact": 70,
+          "n_total": 67,
+          "n_exact": 67,
           "n_censored": 0,
-          "mae": 0.97209,
-          "rmse": 1.21087,
-          "r2": 0.29218,
-          "spearman": 0.74184,
-          "pearson": 0.68123,
+          "mae": 0.76728,
+          "rmse": 0.9531,
+          "r2": 0.60362,
+          "spearman": 0.79947,
+          "pearson": 0.81498,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.97209,
+          "all_row_hinge_mae": 0.76728,
           "censored_c_index": null
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
-          "n_total": 17,
-          "n_exact": 17,
+          "n_total": 20,
+          "n_exact": 20,
           "n_censored": 0,
-          "mae": 0.53826,
-          "rmse": 0.66536,
-          "r2": 0.70884,
-          "spearman": 0.84559,
-          "pearson": 0.88282,
+          "mae": 0.38711,
+          "rmse": 0.48291,
+          "r2": 0.80667,
+          "spearman": 0.93083,
+          "pearson": 0.92615,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.53826,
+          "all_row_hinge_mae": 0.38711,
           "censored_c_index": null
         },
         "holdout_metrics_raw": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 20,
+          "n_clusters": 4,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1651,
+            0.5375
+          ],
+          "spearman_ci95": [
+            0.8462,
+            0.997
+          ],
+          "r2_ci95": [
+            0.4733,
+            0.9269
+          ]
+        },
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 70,
-            "n_exact": 70,
+            "n_total": 67,
+            "n_exact": 67,
             "n_censored": 0,
-            "mae": 0.97209,
-            "rmse": 1.21087,
-            "r2": 0.29218,
-            "spearman": 0.74184,
-            "pearson": 0.68123,
+            "mae": 0.76728,
+            "rmse": 0.9531,
+            "r2": 0.60362,
+            "spearman": 0.79947,
+            "pearson": 0.81498,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.97209,
+            "all_row_hinge_mae": 0.76728,
             "censored_c_index": null
           },
           "fusion": {
-            "n_total": 70,
-            "n_exact": 70,
+            "n_total": 67,
+            "n_exact": 67,
             "n_censored": 0,
-            "mae": 0.97209,
-            "rmse": 1.21087,
-            "r2": 0.29218,
-            "spearman": 0.74184,
-            "pearson": 0.68123,
+            "mae": 0.79911,
+            "rmse": 0.99049,
+            "r2": 0.57191,
+            "spearman": 0.76303,
+            "pearson": 0.78675,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.97209,
+            "all_row_hinge_mae": 0.79911,
             "censored_c_index": null
           }
         },
         "family_holdout_metrics": {
           "cpu": {
-            "n_total": 17,
-            "n_exact": 17,
+            "n_total": 20,
+            "n_exact": 20,
             "n_censored": 0,
-            "mae": 0.53826,
-            "rmse": 0.66536,
-            "r2": 0.70884,
-            "spearman": 0.84559,
-            "pearson": 0.88282,
+            "mae": 0.38711,
+            "rmse": 0.48291,
+            "r2": 0.80667,
+            "spearman": 0.93083,
+            "pearson": 0.92615,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.53826,
+            "all_row_hinge_mae": 0.38711,
             "censored_c_index": null
           },
           "fusion": {
-            "n_total": 17,
-            "n_exact": 17,
+            "n_total": 20,
+            "n_exact": 20,
             "n_censored": 0,
-            "mae": 0.53826,
-            "rmse": 0.66536,
-            "r2": 0.70884,
-            "spearman": 0.84559,
-            "pearson": 0.88282,
+            "mae": 0.35859,
+            "rmse": 0.43511,
+            "r2": 0.84305,
+            "spearman": 0.94135,
+            "pearson": 0.92746,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.53826,
+            "all_row_hinge_mae": 0.35859,
             "censored_c_index": null
           }
         },
@@ -32609,141 +33868,205 @@
             "in_domain": 0.65,
             "borderline": 0.4
           },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 70,
+          "min_stratum_clusters": 10,
+          "n_cal_total": 67,
           "n_eff_clusters": 5,
-          "q80_global": 2.16929,
-          "q90_global": 2.94577,
+          "q80_global": 1.88803,
+          "q90_global": 1.98034,
           "q80_by_tier": {
-            "In-Domain": 2.16929,
-            "Borderline": 2.29352,
-            "OOD": 2.29352
+            "In-Domain": 1.77256,
+            "Borderline": 1.9088,
+            "OOD": 1.9088
           },
           "q90_by_tier": {
-            "In-Domain": 2.8293,
-            "Borderline": 2.94577,
-            "OOD": 2.94577
+            "In-Domain": 1.83718,
+            "Borderline": 1.98034,
+            "OOD": 1.98034
           },
           "tier_counts": {
-            "In-Domain": 11,
-            "Borderline": 59,
+            "In-Domain": 12,
+            "Borderline": 55,
             "OOD": 0
           },
           "tier_clusters": {
             "In-Domain": 3,
-            "Borderline": 4,
+            "Borderline": 3,
             "OOD": 0
           },
           "tier_eb_weights": {
-            "In-Domain": 0.15,
-            "Borderline": 0.2,
+            "In-Domain": 0.3,
+            "Borderline": 0.3,
             "OOD": 0.0
           },
-          "bounds": null
+          "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Small-N congeneric macrocycle endpoint (n_cv=67, n_holdout=20, n_clusters=5); intervals are wide empirical references only — use for rank ordering."
         },
         "conformal_holdout_coverage": {
-          "n_eval": 17,
+          "n_eval": 20,
           "cov80": 1.0,
           "cov90": 1.0,
-          "mean_width80": 4.3678,
-          "mean_width90": 5.686
-        }
+          "mean_width80": 3.5451,
+          "mean_width90": 3.6744,
+          "uq_reliability": "low",
+          "uq_note": "Small-N congeneric macrocycle endpoint (n_cv=67, n_holdout=20, n_clusters=5); intervals are wide empirical references only — use for rank ordering."
+        },
+        "repeated_5x5_cv": {
+          "cpu_mae_mean": 0.6141,
+          "cpu_mae_sd": 0.0231,
+          "cpu_spearman_mean": 0.8598,
+          "cpu_spearman_sd": 0.0064,
+          "cpu_r2_mean": 0.7434,
+          "cpu_r2_sd": 0.016,
+          "fusion_mae_mean": 0.6701,
+          "fusion_mae_sd": 0.0625,
+          "fusion_spearman_mean": 0.8286,
+          "fusion_spearman_sd": 0.0343,
+          "fusion_r2_mean": 0.6496,
+          "fusion_r2_sd": 0.0686
+        },
+        "loco_cv": {
+          "n_total": 87,
+          "n_exact": 87,
+          "n_censored": 0,
+          "mae": 0.87557,
+          "rmse": 1.1107,
+          "r2": 0.40159,
+          "spearman": 0.73458,
+          "pearson": 0.72542,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.87557,
+          "censored_c_index": null
+        },
+        "stacker_weights": {
+          "cpu_smiles": 0.8444485796112711,
+          "ncaa_smiles_repr": 0.018732307922953686,
+          "ncaa_fusion_hf": 0.13681911246577522,
+          "peptideclm2": 0.0,
+          "chemberta_mtr": 0.0,
+          "direct_smiles": 0.0
+        },
+        "cv_fold_sizes": [
+          42,
+          10,
+          7,
+          6,
+          2
+        ]
       },
       "smiles_only": {
-        "winning_family": "fusion",
+        "winning_family": "cpu",
         "is_super_ensemble": false,
         "weights": {
-          "fusion": 1.0
+          "cpu": 1.0
         },
-        "best_single_family": "fusion",
-        "nested_super_delta_over_best_single": 0.0,
+        "best_single_family": "cpu",
+        "nested_super_delta_over_best_single": -0.00718,
         "cv_metrics": {
-          "n_total": 70,
-          "n_exact": 70,
+          "n_total": 67,
+          "n_exact": 67,
           "n_censored": 0,
-          "mae": 0.7881,
-          "rmse": 0.96643,
-          "r2": 0.54911,
-          "spearman": 0.80401,
-          "pearson": 0.78887,
+          "mae": 0.76728,
+          "rmse": 0.9531,
+          "r2": 0.60362,
+          "spearman": 0.79947,
+          "pearson": 0.81498,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.7881,
+          "all_row_hinge_mae": 0.76728,
           "censored_c_index": null
         },
         "cv_metrics_raw": null,
         "holdout_metrics": {
-          "n_total": 17,
-          "n_exact": 17,
+          "n_total": 20,
+          "n_exact": 20,
           "n_censored": 0,
-          "mae": 0.49139,
-          "rmse": 0.62412,
-          "r2": 0.74381,
-          "spearman": 0.93382,
-          "pearson": 0.90386,
+          "mae": 0.38711,
+          "rmse": 0.48291,
+          "r2": 0.80667,
+          "spearman": 0.93083,
+          "pearson": 0.92615,
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.49139,
+          "all_row_hinge_mae": 0.38711,
           "censored_c_index": null
         },
         "holdout_metrics_raw": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 20,
+          "n_clusters": 4,
+          "n_boot": 1000,
+          "mae_ci95": [
+            0.1651,
+            0.5375
+          ],
+          "spearman_ci95": [
+            0.8462,
+            0.997
+          ],
+          "r2_ci95": [
+            0.4733,
+            0.9269
+          ]
+        },
         "family_cv_metrics": {
           "cpu": {
-            "n_total": 70,
-            "n_exact": 70,
+            "n_total": 67,
+            "n_exact": 67,
             "n_censored": 0,
-            "mae": 0.7881,
-            "rmse": 0.96643,
-            "r2": 0.54911,
-            "spearman": 0.80401,
-            "pearson": 0.78887,
+            "mae": 0.76728,
+            "rmse": 0.9531,
+            "r2": 0.60362,
+            "spearman": 0.79947,
+            "pearson": 0.81498,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.7881,
+            "all_row_hinge_mae": 0.76728,
             "censored_c_index": null
           },
           "fusion": {
-            "n_total": 70,
-            "n_exact": 70,
+            "n_total": 67,
+            "n_exact": 67,
             "n_censored": 0,
-            "mae": 0.7881,
-            "rmse": 0.96643,
-            "r2": 0.54911,
-            "spearman": 0.80401,
-            "pearson": 0.78887,
+            "mae": 0.79911,
+            "rmse": 0.99049,
+            "r2": 0.57191,
+            "spearman": 0.76303,
+            "pearson": 0.78675,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.7881,
+            "all_row_hinge_mae": 0.79911,
             "censored_c_index": null
           }
         },
         "family_holdout_metrics": {
           "cpu": {
-            "n_total": 17,
-            "n_exact": 17,
+            "n_total": 20,
+            "n_exact": 20,
             "n_censored": 0,
-            "mae": 0.49139,
-            "rmse": 0.62412,
-            "r2": 0.74381,
-            "spearman": 0.93382,
-            "pearson": 0.90386,
+            "mae": 0.38711,
+            "rmse": 0.48291,
+            "r2": 0.80667,
+            "spearman": 0.93083,
+            "pearson": 0.92615,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.49139,
+            "all_row_hinge_mae": 0.38711,
             "censored_c_index": null
           },
           "fusion": {
-            "n_total": 17,
-            "n_exact": 17,
+            "n_total": 20,
+            "n_exact": 20,
             "n_censored": 0,
-            "mae": 0.49139,
-            "rmse": 0.62412,
-            "r2": 0.74381,
-            "spearman": 0.93382,
-            "pearson": 0.90386,
+            "mae": 0.35859,
+            "rmse": 0.43511,
+            "r2": 0.84305,
+            "spearman": 0.94135,
+            "pearson": 0.92746,
             "censored_concordance": null,
             "censored_violation_mae": null,
-            "all_row_hinge_mae": 0.49139,
+            "all_row_hinge_mae": 0.35859,
             "censored_c_index": null
           }
         },
@@ -32754,45 +34077,92 @@
             "in_domain": 0.65,
             "borderline": 0.4
           },
-          "min_stratum_clusters": 20,
-          "n_cal_total": 70,
+          "min_stratum_clusters": 10,
+          "n_cal_total": 67,
           "n_eff_clusters": 5,
-          "q80_global": 1.55541,
-          "q90_global": 2.19679,
+          "q80_global": 1.88803,
+          "q90_global": 1.98034,
           "q80_by_tier": {
-            "In-Domain": 1.47915,
-            "Borderline": 1.65803,
-            "OOD": 1.65803
+            "In-Domain": 1.77256,
+            "Borderline": 1.9088,
+            "OOD": 1.9088
           },
           "q90_by_tier": {
-            "In-Domain": 2.02432,
-            "Borderline": 2.19679,
-            "OOD": 2.19679
+            "In-Domain": 1.83718,
+            "Borderline": 1.98034,
+            "OOD": 1.98034
           },
           "tier_counts": {
-            "In-Domain": 11,
-            "Borderline": 59,
+            "In-Domain": 12,
+            "Borderline": 55,
             "OOD": 0
           },
           "tier_clusters": {
             "In-Domain": 3,
-            "Borderline": 4,
+            "Borderline": 3,
             "OOD": 0
           },
           "tier_eb_weights": {
-            "In-Domain": 0.15,
-            "Borderline": 0.2,
+            "In-Domain": 0.3,
+            "Borderline": 0.3,
             "OOD": 0.0
           },
-          "bounds": null
+          "bounds": null,
+          "uq_reliability": "low",
+          "uq_note": "Small-N congeneric macrocycle endpoint (n_cv=67, n_holdout=20, n_clusters=5); intervals are wide empirical references only — use for rank ordering."
         },
         "conformal_holdout_coverage": {
-          "n_eval": 17,
+          "n_eval": 20,
           "cov80": 1.0,
           "cov90": 1.0,
-          "mean_width80": 3.0004,
-          "mean_width90": 4.0892
-        }
+          "mean_width80": 3.5451,
+          "mean_width90": 3.6744,
+          "uq_reliability": "low",
+          "uq_note": "Small-N congeneric macrocycle endpoint (n_cv=67, n_holdout=20, n_clusters=5); intervals are wide empirical references only — use for rank ordering."
+        },
+        "repeated_5x5_cv": {
+          "cpu_mae_mean": 0.6141,
+          "cpu_mae_sd": 0.0231,
+          "cpu_spearman_mean": 0.8598,
+          "cpu_spearman_sd": 0.0064,
+          "cpu_r2_mean": 0.7434,
+          "cpu_r2_sd": 0.016,
+          "fusion_mae_mean": 0.6701,
+          "fusion_mae_sd": 0.0625,
+          "fusion_spearman_mean": 0.8286,
+          "fusion_spearman_sd": 0.0343,
+          "fusion_r2_mean": 0.6496,
+          "fusion_r2_sd": 0.0686
+        },
+        "loco_cv": {
+          "n_total": 87,
+          "n_exact": 87,
+          "n_censored": 0,
+          "mae": 0.87557,
+          "rmse": 1.1107,
+          "r2": 0.40159,
+          "spearman": 0.73458,
+          "pearson": 0.72542,
+          "censored_concordance": null,
+          "censored_violation_mae": null,
+          "all_row_hinge_mae": 0.87557,
+          "censored_c_index": null
+        },
+        "stacker_weights": {
+          "cpu_smiles": 0.8444485796112711,
+          "ncaa_smiles_repr": 0.018732307922953686,
+          "ncaa_fusion_hf": 0.13681911246577522,
+          "peptideclm2": 0.0,
+          "chemberta_mtr": 0.0,
+          "direct_smiles": 0.0
+        },
+        "cv_fold_sizes": [
+          42,
+          10,
+          7,
+          6,
+          2
+        ]
       },
       "censored_head": null,
       "representation_ablation_holdout": {}
@@ -32858,11 +34228,11 @@
       "MIC_Salmonella_fusion.joblib": "779ca6d48d9036878b980ce0197217f3be0ad463523393e3385f3cbd235928db",
       "PAMPA_cpu.joblib": "a69c255c1b5c492154b936d89bbce7685a34a8c70f458d985d93d53d4c02d254",
       "PAMPA_fusion.joblib": "3d6ba28b617e3366558b31d44e7f8ca780415007a30b52043fc48a7ac8be0144",
-      "PPB_cpu.joblib": "1ea14c1b7db3793cdf0310988f57e26deef9864f7f851df2df803ee22918f70d",
-      "PPB_fusion.joblib": "80000e97a2fe3360f6cdf07a9e57b5da098bb8a544c3d5ca8de1e2dab2953a3a",
+      "PPB_cpu.joblib": "419eb4537b1166703e93c246d5e73a9e6fae5624c65150de073220879b4c2c2b",
+      "PPB_fusion.joblib": "53560490afb837cf6d2273f5fe110286f956a5ab6cfc0fe94ede05022db775b9",
       "RRCK_cpu.joblib": "3b6057d9a78f1c728ba365fbf41b1d2b621303246096791bf68cdec0c17821a7",
       "RRCK_fusion.joblib": "cac0f11372d2c68ff0aba7c98cb2227316116e309aed982a5777c89ab906dd31",
-      "Vd_absolute_cpu.joblib": "3ce3a7da395e940b50873801fed9cfaeff6e92fd56ae25b84fe78e5d6c091207",
+      "Vd_absolute_cpu.joblib": "624f37e6ac58c12e42fc89325810d8c79313b2515c7fd1f6c4d0f5f2c61e835c",
       "Vd_per_kg_cpu.joblib": "da442ddea48db1b1fc1c26880fac3898328cd6c485a36fa6659621b1f2e4b050",
       "Vd_per_kg_fusion.joblib": "2af95b1629c62923fd2e10ea948a1dfcd5fa1a0bae6d61bdc43d05e80ad540c6",
       "cytotoxicity_CC50_cpu.joblib": "735d02117ea9ad1bbe8818b288e74ab955c58befdf0d90be7a1637983dd36052",
@@ -32887,9 +34257,8 @@
       "solubility_cls_fusion.joblib": "086579caacb8a33fb43da1f217ac5c483f0f2fb3fdf623c9a100c93d668d09cc",
       "solubility_reg_cpu.joblib": "af572673ac16fdfadfea1c581175f2f4b494af1194581a4ce0501e784f6cd01c",
       "solubility_reg_fusion.joblib": "65095be2cd6cbd1b3ef5c7c34513b347ef3f128d68d3b9baad5f711d9073146b",
-      "LogD_decadiene_cpu.joblib": "e0d432a7d09a64679c8040a175ccda43889b428b1ab0d368f6c6727f461dd9b4",
-      "LogD_decadiene_fusion.joblib": "49456f2edf8186f40434ab255a43399a882d215edde2ebc3d17ebe57b3e905eb",
-      "Vd_absolute_fusion.joblib": "8a696fb78779a5fe8532c5792d604c2916f81a8102dcc3962b07e0c158d4c584"
+      "LogD_decadiene_cpu.joblib": "e01975a6e10b9aab7ea90d1154f0ff22bd86fadb3bf149f5265e442dbea5acbf",
+      "LogD_decadiene_fusion.joblib": "aa6b3a6909112fb2620657fa5ce665773506851e0e9b9393b40422c86b2de77b"
     }
   },
   "build_elapsed_sec": 965.4,
@@ -33310,22 +34679,689 @@
       }
     }
   },
-  "v334_admetatlas_absorption": {
-    "source": "ADMETatlas V1.0 (admetatlas-v1.0-2026-08-11, Yi et al., NAR 2026, doi:10.1093/nar/gkag1147)",
+  "v335_protocol_audit": {
+    "zero_holdout_peeking_enforced": true,
+    "promotion_rule": "100% ZERO-HOLDOUT-PEEKING: Promote expanded existing endpoint ONLY if 5-seed nested CV paired MAE improves by >=1.0% (and >=0.005) on identical baseline CV rows AND 5-seed mean CV Spearman >= -0.01 AND >=4/5 seeds improve. Holdout is NEVER inspected for accept/reject.",
+    "tanimoto_isolation_threshold": 0.4,
     "promoted_endpoints": [
-      "LogD_decadiene",
-      "Vd_absolute",
-      "PPB"
+      "LogD_decadiene"
     ],
     "held_endpoints_v333_kept": [
       "F",
       "LogD7.4",
       "CL_per_kg",
       "CL_absolute",
-      "Vd_per_kg"
+      "Vd_per_kg",
+      "Vd_absolute",
+      "PPB",
+      "half_life_reg"
     ],
-    "clinical_products_indexed": 110,
-    "clinical_pk_records_indexed": 908,
-    "clinical_context_signals_indexed": 3678
+    "evidence_grade_counts": {
+      "quantitative": 29,
+      "rank_only": 18
+    },
+    "delta_logd_experimental_validation": {
+      "n_matched_dual_phase_macrocycles": 27,
+      "protocol": "Strictly Out-of-Sample: LogD7.4_OOS - LogD_decadiene_5x5_OOF vs Measured (LogD_oct - LogD_dec)",
+      "spearman": 0.91453,
+      "spearman_ci95": [
+        0.798,
+        0.9705
+      ],
+      "pearson": 0.91011,
+      "mae": 0.45532,
+      "mae_ci95": [
+        0.3464,
+        0.5789
+      ],
+      "r2": 0.81602,
+      "high_chameleonicity_ge2_auroc": 0.9545,
+      "n_high_chameleonicity_ge2": 11,
+      "empirical_terciles": {
+        "p33": 0.68,
+        "p67": 2.42,
+        "min": -0.37,
+        "max": 4.39
+      },
+      "scope_warning": "Validated exclusively on cyclic macrocycles; ΔLogD for linear non-macrocyclic peptides is extrapolated and flagged out-of-scope."
+    },
+    "deep_mt_note": "Deep Multi-Task checkpoints (3 legacy winners: F, CL_absolute, Cmax) were not retrained in v33.5; newly promoted endpoints use CPU/4-FM Fusion only.",
+    "clinical_pk_index_license": "US Federal Government Public Domain (FDA DailyMed SPL & Drugs@FDA NDA/BLA Reviews, 17 U.S.C. § 105) — 59 drugs, 427 PK records; zero CC-BY-NC mirroring."
+  },
+  "egat_fidelity_audit": {
+    "PAMPA": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8536,
+      "fidelity_vs_4fm_pearson": 0.8672,
+      "fidelity_vs_4fm_mae": 0.2132,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.6293,
+      "ensemble_4fm_holdout_score": 0.7912,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 5.5966,
+      "deletion_rand20_delta": 5.8021,
+      "deletion_bot20_delta": 5.7772,
+      "deletion_top_vs_rand_ratio": 0.965,
+      "deletion_top_vs_bot_ratio": 0.969,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "Caco2": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8848,
+      "fidelity_vs_4fm_pearson": 0.8943,
+      "fidelity_vs_4fm_mae": 0.2421,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.7617,
+      "ensemble_4fm_holdout_score": 0.8462,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 6.4939,
+      "deletion_rand20_delta": 6.0721,
+      "deletion_bot20_delta": 6.044,
+      "deletion_top_vs_rand_ratio": 1.069,
+      "deletion_top_vs_bot_ratio": 1.074,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "hemolysis_cls": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.7544,
+      "fidelity_vs_4fm_pearson": 0.7526,
+      "fidelity_vs_4fm_mae": 0.1593,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8439,
+      "ensemble_4fm_holdout_score": 0.9418,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.0989,
+      "deletion_rand20_delta": 0.039,
+      "deletion_bot20_delta": 0.0521,
+      "deletion_top_vs_rand_ratio": 2.535,
+      "deletion_top_vs_bot_ratio": 1.899,
+      "interpretability_tier": "faithful_surrogate"
+    },
+    "hemolysis_HC50": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.5906,
+      "fidelity_vs_4fm_pearson": 0.5757,
+      "fidelity_vs_4fm_mae": 0.334,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.5042,
+      "ensemble_4fm_holdout_score": 0.722,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.9046,
+      "deletion_rand20_delta": 1.7554,
+      "deletion_bot20_delta": 1.5543,
+      "deletion_top_vs_rand_ratio": 0.515,
+      "deletion_top_vs_bot_ratio": 0.582,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "overall_peptide_toxicity": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8439,
+      "fidelity_vs_4fm_pearson": 0.853,
+      "fidelity_vs_4fm_mae": 0.1435,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8606,
+      "ensemble_4fm_holdout_score": 0.9351,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.1869,
+      "deletion_rand20_delta": 0.0546,
+      "deletion_bot20_delta": 0.0585,
+      "deletion_top_vs_rand_ratio": 3.421,
+      "deletion_top_vs_bot_ratio": 3.193,
+      "interpretability_tier": "faithful_surrogate"
+    },
+    "cytotoxicity_cls": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6487,
+      "fidelity_vs_4fm_pearson": 0.6206,
+      "fidelity_vs_4fm_mae": 0.173,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8261,
+      "ensemble_4fm_holdout_score": 0.9271,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.1424,
+      "deletion_rand20_delta": 0.0626,
+      "deletion_bot20_delta": 0.0857,
+      "deletion_top_vs_rand_ratio": 2.273,
+      "deletion_top_vs_bot_ratio": 1.661,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "cytotoxicity_CC50": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6037,
+      "fidelity_vs_4fm_pearson": 0.8419,
+      "fidelity_vs_4fm_mae": 0.3328,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.3769,
+      "ensemble_4fm_holdout_score": 0.6962,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.9351,
+      "deletion_rand20_delta": 1.3829,
+      "deletion_bot20_delta": 1.2277,
+      "deletion_top_vs_rand_ratio": 0.676,
+      "deletion_top_vs_bot_ratio": 0.762,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "half_life_reg": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6267,
+      "fidelity_vs_4fm_pearson": 0.6134,
+      "fidelity_vs_4fm_mae": 0.3872,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.4625,
+      "ensemble_4fm_holdout_score": 0.599,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.3312,
+      "deletion_rand20_delta": 0.1517,
+      "deletion_bot20_delta": 0.3066,
+      "deletion_top_vs_rand_ratio": 2.184,
+      "deletion_top_vs_bot_ratio": 1.08,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    }
+  },
+  "external_baselines_same_split": {
+    "PAMPA": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 1715,
+        "spearman": 0.78282,
+        "mae": 0.37375,
+        "r2": 0.62512
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 1715,
+        "spearman": 0.75381,
+        "mae": 0.39623,
+        "r2": 0.59001,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0227,
+          "ci95": [
+            -0.0023,
+            0.0407
+          ],
+          "p_value": 0.064
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 1715,
+        "spearman": 0.79607,
+        "mae": 0.37284,
+        "r2": 0.64653,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": -0.0003,
+          "ci95": [
+            -0.0165,
+            0.0153
+          ],
+          "p_value": 0.958
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "spearman": 0.6293,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 1715,
+        "spearman": 0.62536,
+        "mae": 0.4727,
+        "r2": 0.44642,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1001,
+          "ci95": [
+            0.0648,
+            0.1451
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 1715,
+        "spearman": 0.65829,
+        "mae": 0.45724,
+        "r2": 0.45638,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0838,
+          "ci95": [
+            0.0517,
+            0.1196
+          ],
+          "p_value": 0.001
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 1524,
+        "spearman": 0.42841,
+        "mae": 0.5377,
+        "r2": 0.22316,
+        "paired_boot_vs_omni": {
+          "n_eval": 1524,
+          "n_clusters": 81,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1673,
+          "ci95": [
+            0.1032,
+            0.2151
+          ],
+          "p_value": 0.001
+        }
+      }
+    },
+    "hemolysis_cls": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 4101,
+        "roc_auc": 0.8973,
+        "brier": 0.1126
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 4101,
+        "roc_auc": 0.8727,
+        "brier": 0.1342,
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.025,
+          "ci95": [
+            0.007,
+            0.042
+          ],
+          "p_value": 0.008
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 4101,
+        "roc_auc": 0.8727,
+        "brier": 0.1283,
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0249,
+          "ci95": [
+            0.0083,
+            0.0409
+          ],
+          "p_value": 0.006
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "roc_auc": 0.8439,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 3629,
+        "roc_auc": 0.847,
+        "brier": 0.1372,
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0503,
+          "ci95": [
+            0.0366,
+            0.0658
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 3629,
+        "roc_auc": 0.8505,
+        "brier": 0.1335,
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0465,
+          "ci95": [
+            0.035,
+            0.0592
+          ],
+          "p_value": 0.001
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 4025,
+        "roc_auc": 0.8305,
+        "brier": 0.1408,
+        "paired_boot_vs_omni": {
+          "n_eval": 4025,
+          "n_clusters": 1255,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0671,
+          "ci95": [
+            0.045,
+            0.0953
+          ],
+          "p_value": 0.001
+        }
+      }
+    },
+    "half_life_reg": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 567,
+        "spearman": 0.4847,
+        "mae": 0.66401,
+        "r2": 0.39689
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 567,
+        "spearman": 0.3448,
+        "mae": 0.75065,
+        "r2": 0.22312,
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0837,
+          "ci95": [
+            0.0302,
+            0.1288
+          ],
+          "p_value": 0.001
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 567,
+        "spearman": 0.44105,
+        "mae": 0.70492,
+        "r2": 0.32484,
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0417,
+          "ci95": [
+            0.0055,
+            0.0835
+          ],
+          "p_value": 0.03
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "spearman": 0.4625,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 527,
+        "spearman": 0.33621,
+        "mae": 0.78803,
+        "r2": 0.23151,
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.119,
+          "ci95": [
+            0.0623,
+            0.1689
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 527,
+        "spearman": 0.45363,
+        "mae": 0.74812,
+        "r2": 0.26314,
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0782,
+          "ci95": [
+            0.0199,
+            0.1288
+          ],
+          "p_value": 0.008
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 544,
+        "spearman": 0.24579,
+        "mae": 0.82054,
+        "r2": 0.06227,
+        "paired_boot_vs_omni": {
+          "n_eval": 544,
+          "n_clusters": 149,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1475,
+          "ci95": [
+            0.0665,
+            0.2259
+          ],
+          "p_value": 0.001
+        }
+      }
+    }
+  },
+  "temporal_split_benchmarks": {
+    "PAMPA": {
+      "description": "Train: Naylor 2018 + CycPeptMPDB (<=2023) -> Blind Test: SweMacrocycleDB (2024-2025) + 2025-2026 JMC/ACSMCL",
+      "task_type": "regression",
+      "n_train_historical": 7395,
+      "n_test_future_novel": 1177,
+      "qsar_morgan_lgbm": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 0.90996,
+        "rmse": 1.07042,
+        "r2": -0.56708,
+        "spearman": 0.19749,
+        "pearson": 0.22927,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.90996,
+        "censored_c_index": null
+      },
+      "multimodal_4fm_lgbm": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 0.74563,
+        "rmse": 0.89602,
+        "r2": -0.09806,
+        "spearman": 0.13351,
+        "pearson": 0.19694,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.74563,
+        "censored_c_index": null
+      }
+    },
+    "hemolysis_cls": {
+      "description": "Train: DBAASP / ENDL / HLPpredFuse (<=2022) -> Blind Test: HemoPI2 (2025) + Hemolytik2 (2026)",
+      "task_type": "classification",
+      "n_train_historical": 15247,
+      "n_test_future_novel": 4300,
+      "qsar_morgan_lgbm": {
+        "roc_auc": 0.7872,
+        "brier": 0.1828
+      },
+      "multimodal_4fm_lgbm": {
+        "roc_auc": 0.8544,
+        "brier": 0.1508
+      }
+    },
+    "LogD7.4": {
+      "description": "Train: Naylor 2018 + PEGASUS + ChEMBL (<=2024) -> Blind Test: Chloroalkene 2026 + JMC 2025",
+      "task_type": "regression",
+      "n_train_historical": 653,
+      "n_test_future_novel": 22,
+      "qsar_morgan_lgbm": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.23114,
+        "rmse": 1.66147,
+        "r2": -0.41679,
+        "spearman": -0.12429,
+        "pearson": -0.06841,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.23114,
+        "censored_c_index": null
+      },
+      "multimodal_4fm_lgbm": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.13741,
+        "rmse": 1.50905,
+        "r2": -0.16877,
+        "spearman": 0.34567,
+        "pearson": 0.33701,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.13741,
+        "censored_c_index": null
+      }
+    }
+  },
+  "recent_fda_2019_2023_blind_set": {
+    "protocol": "Strict Full-Cluster Leave-Recent-FDA-Out (all training compounds & clusters with Tc >= 0.40 to any 2019-2023 FDA drug excluded)",
+    "n_drugs": 8,
+    "approval_years": "2019-2023",
+    "half_life_log10_metrics": {
+      "n_total": 8,
+      "n_exact": 8,
+      "n_censored": 0,
+      "mae": 0.51385,
+      "rmse": 0.61559,
+      "r2": 0.30089,
+      "spearman": 0.7619,
+      "pearson": 0.73655,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.51385,
+      "censored_c_index": null
+    },
+    "ppb_metrics": {
+      "n_total": 7,
+      "n_exact": 7,
+      "n_censored": 0,
+      "mae": 0.3322,
+      "rmse": 0.3689,
+      "r2": 0.07307,
+      "spearman": 0.10714,
+      "pearson": 0.32303,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.3322,
+      "censored_c_index": null
+    },
+    "hemolysis_false_positive_gt_0_50": "0/8",
+    "drugs": [
+      {
+        "name": "Motixafortide",
+        "fda_approval_year": 2023,
+        "route": "SC",
+        "obs_half_life_h": 2.0,
+        "blind_pred_half_life_h": 2.84,
+        "obs_ppb": 0.99,
+        "blind_pred_ppb": 0.411,
+        "blind_pred_hemolysis_prob": 0.054,
+        "fda_label_note": "FDA Aphexda NDA 217159 (Sep 2023): T1/2 ~2 h, PPB >99%, Vd 27 L, CL 46.5 L/h"
+      },
+      {
+        "name": "Rezafungin",
+        "fda_approval_year": 2023,
+        "route": "IV",
+        "obs_half_life_h": 133.0,
+        "blind_pred_half_life_h": 13.94,
+        "obs_ppb": 0.974,
+        "blind_pred_ppb": 1.0,
+        "blind_pred_hemolysis_prob": 0.016,
+        "fda_label_note": "FDA Rezzayo NDA 217417 (Mar 2023): T1/2 ~133 h, PPB 97.4%, Vd 67 L, CL 0.35 L/h"
+      },
+      {
+        "name": "Trofinetide",
+        "fda_approval_year": 2023,
+        "route": "PO",
+        "obs_half_life_h": 1.5,
+        "blind_pred_half_life_h": 0.78,
+        "obs_ppb": 0.06,
+        "blind_pred_ppb": 0.49,
+        "blind_pred_hemolysis_prob": 0.0,
+        "fda_label_note": "FDA Daybue NDA 217026 (Mar 2023): T1/2 ~1.5 h, PPB <6%, Vd 80 L"
+      },
+      {
+        "name": "Voclosporin",
+        "fda_approval_year": 2021,
+        "route": "PO",
+        "obs_half_life_h": 30.0,
+        "blind_pred_half_life_h": 7.95,
+        "obs_ppb": 0.97,
+        "blind_pred_ppb": 0.547,
+        "blind_pred_hemolysis_prob": 0.092,
+        "fda_label_note": "FDA Lupkynis NDA 213716 (Jan 2021): T1/2 ~30 h, PPB 97%, Vd 2154 L"
+      },
+      {
+        "name": "Difelikefalin",
+        "fda_approval_year": 2021,
+        "route": "IV",
+        "obs_half_life_h": 2.6,
+        "blind_pred_half_life_h": 0.26,
+        "obs_ppb": 0.255,
+        "blind_pred_ppb": 0.512,
+        "blind_pred_hemolysis_prob": 0.017,
+        "fda_label_note": "FDA Korsuva NDA 214916 (Aug 2021): T1/2 ~2-3 h (healthy) / 23-31 h (HD), PPB 23-28%, Vd 0.238 L/kg"
+      },
+      {
+        "name": "Dasiglucagon",
+        "fda_approval_year": 2021,
+        "route": "SC",
+        "obs_half_life_h": 0.5,
+        "blind_pred_half_life_h": 0.51,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.437,
+        "blind_pred_hemolysis_prob": 0.069,
+        "fda_label_note": "FDA Zegalogue NDA 214231 (Mar 2021): T1/2 ~0.5 h, Vd 47-57 L"
+      },
+      {
+        "name": "Setmelanotide",
+        "fda_approval_year": 2020,
+        "route": "SC",
+        "obs_half_life_h": 11.0,
+        "blind_pred_half_life_h": 2.45,
+        "obs_ppb": 0.791,
+        "blind_pred_ppb": 0.499,
+        "blind_pred_hemolysis_prob": 0.006,
+        "fda_label_note": "FDA Imcivree NDA 213793 (Nov 2020): T1/2 ~11 h, PPB 79.1%, Vd 75.2 L, CL 7.15 L/h"
+      },
+      {
+        "name": "Bremelanotide",
+        "fda_approval_year": 2019,
+        "route": "SC",
+        "obs_half_life_h": 2.7,
+        "blind_pred_half_life_h": 7.76,
+        "obs_ppb": 0.21,
+        "blind_pred_ppb": 0.528,
+        "blind_pred_hemolysis_prob": 0.037,
+        "fda_label_note": "FDA Vyleesi NDA 210557 (Jun 2019): T1/2 ~2.7 h, PPB 21%, F ~100% SC, Vd 25 L, CL 6.5 L/h"
+      }
+    ]
   }
 }

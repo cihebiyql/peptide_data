@@ -41,6 +41,12 @@ _MONOACYL_PATTERNS: list[tuple[int, Chem.Mol]] = [
     (L, Chem.MolFromSmarts("C(=O)" + "C" * L))
     for L in range(22, 8, -1)
 ]
+# Exact covalent amide/ester-linked saturated mono-fatty-acyl chain for mechanism rule overlay
+# CH3-(CH2)_{L-1}-C(=O)-[N,O] -> total chain carbons = L + 1 (e.g. C14 myristoyl, C16 palmitoyl)
+_MONOACYL_ANCHOR_PATTERNS: list[tuple[int, Chem.Mol]] = [
+    (L + 1, Chem.MolFromSmarts("[CH3]" + ("[CH2]" * (L - 1)) + "C(=O)[N,O]"))
+    for L in range(21, 12, -1)
+]
 
 # Henderson-Hasselbalch pKa constants for physiological pH 7.4 net charge estimation (canonical sequences)
 _PKA_POS = {"K": 10.53, "R": 12.48, "H": 6.00}
@@ -165,10 +171,22 @@ def estimate_residue_count(mol: Chem.Mol, sequence: Optional[str] = None) -> Opt
     return None
 
 
-def detect_acylation_anchor(mol: Optional[Chem.Mol]) -> MechanismAnchor:
-    """Literature-anchored half-life mechanism layer (aligned verbatim with V32/V33 audit rules)."""
+def detect_acylation_anchor(
+    mol: Optional[Chem.Mol],
+    exclude_drug: Optional[str] = None,
+) -> MechanismAnchor:
+    """RDKit SMARTS-based fatty-acylation structural motif detector & literature PK class rule overlay.
+
+    Scientifically separated from Pure-ML predictions (reported strictly as a transparent
+    literature rule overlay, never conflated with ML test metrics). Uses exact RDKit
+    graph SMARTS (zero fragile SMILES string regex) and strictly fatty-acylated reference
+    classes (Fc/albumin fusion proteins removed). Supports leave-one-drug-out reference
+    reporting via `exclude_drug`.
+    """
     if mol is None:
         return MechanismAnchor(detected=False)
+
+    ex_low = (exclude_drug or "").strip().lower()
 
     diacid_len = 0
     for L, pat in _DIACID_PATTERNS:
@@ -179,53 +197,76 @@ def detect_acylation_anchor(mol: Optional[Chem.Mol]) -> MechanismAnchor:
     # Check total aliphatic carbons in diacid chain (L internal CH2 + 2 carbonyls = C(L+2))
     if diacid_len >= 16:
         c_total = diacid_len + 2
+        # Strictly C18/C20 fatty-diacid acylated peptide literature class (NO Fc/albumin fusion proteins!)
+        all_refs = [
+            ("semaglutide", "Semaglutide (C18 diacid, ~168 h FDA label)"),
+            ("tirzepatide", "Tirzepatide (C20 diacid, ~120 h FDA label)"),
+            ("cagrilintide", "Cagrilintide (C20 diacid, ~159–195 h clinical Ph1/2)"),
+        ]
+        shown_refs = [lbl for k, lbl in all_refs if not ex_low or k not in ex_low]
         return MechanismAnchor(
             detected=True,
             acylation_class="weekly_diacid",
-            label_en=f"C{c_total} Fatty Diacid · Once-Weekly Albumin-Binding Class",
-            label_zh=f"C{c_total} 脂肪二羧酸脂化 · 周给药白蛋白结合长效机制",
+            label_en=f"C{c_total} Fatty Diacid · Once-Weekly Albumin-Binding Rule Overlay",
+            label_zh=f"C{c_total} 脂肪二羧酸脂化 · 周给药白蛋白结合机制规则层",
             chain_carbons=c_total,
             value_h=144.0,
             range_h=[120.0, 168.0],
-            anchor_drugs=["Dulaglutide (120 h)", "Efpeglenatide (160 h)", "Albiglutide (168 h)"],
+            anchor_drugs=shown_refs,
             note=(
-                f"Detected C{c_total} fatty diacid side-chain signature (reversible albumin binding + reduced renal clearance). "
-                "Literature-anchored once-weekly class range 120–168 h based on FDA labels of held-in reference analogs "
-                "(dulaglutide / efpeglenatide / albiglutide; Semaglutide & Tirzepatide held out of anchor calibration)."
+                f"RDKit SMARTS detected covalent C{c_total} α,ω-fatty-diacid acylation motif "
+                "(reversible human serum albumin binding + reduced renal filtration). "
+                "Displayed strictly as a literature class rule overlay (typical once-weekly class 120–168 h), "
+                "separate from the Pure-ML super-ensemble prediction."
             ),
         )
     if diacid_len >= 12:
         c_total = diacid_len + 2
+        all_refs = [
+            ("degludec", "Insulin degludec (C16 diacid, ~25 h FDA label)"),
+            ("icodec", "C14–C16 diacid multi-hexamer/albumin depot class (typical 20–30 h)"),
+        ]
+        shown_refs = [lbl for k, lbl in all_refs if not ex_low or k not in ex_low]
         return MechanismAnchor(
             detected=True,
             acylation_class="depot_diacid",
-            label_en=f"C{c_total} Fatty Diacid · Multi-Hexamer Depot Class",
-            label_zh=f"C{c_total} 脂肪二羧酸脂化 · 缓释多聚体长效机制",
+            label_en=f"C{c_total} Fatty Diacid · Intermediate/Depot Albumin-Binding Rule Overlay",
+            label_zh=f"C{c_total} 脂肪二羧酸脂化 · 中长效缓释/白蛋白结合规则层",
             chain_carbons=c_total,
             value_h=25.0,
             range_h=[20.0, 30.0],
-            anchor_drugs=["Insulin degludec (25 h steady-state FDA label)"],
+            anchor_drugs=shown_refs,
             note=(
-                f"Detected C{c_total} fatty diacid depot signature (subcutaneous multi-hexamer self-association + albumin binding). "
-                "Literature-anchored reference ~25 h (range 20–30 h)."
+                f"RDKit SMARTS detected covalent C{c_total} fatty-diacid acylation motif "
+                "(subcutaneous depot self-association + albumin binding). "
+                "Displayed strictly as a literature class rule overlay (20–30 h), separate from Pure-ML."
             ),
         )
 
-    can = Chem.MolToSmiles(mol)
-    mono_c = max((len(run) for run in re.findall(r"C{10,}", can)), default=0)
+    mono_c = 0
+    for c_tot, pat in _MONOACYL_ANCHOR_PATTERNS:
+        if pat is not None and mol.HasSubstructMatch(pat):
+            mono_c = c_tot
+            break
     if mono_c >= 14:
+        all_refs = [
+            ("detemir", "Insulin detemir (C14 monoacyl, 5–7 h FDA label)"),
+            ("liraglutide", "Liraglutide (C16 monoacyl, ~13 h FDA label)"),
+        ]
+        shown_refs = [lbl for k, lbl in all_refs if not ex_low or k not in ex_low]
         return MechanismAnchor(
             detected=True,
             acylation_class="daily_acyl",
-            label_en=f"C{mono_c} Monoacyl Chain · Once-Daily Albumin-Binding Class",
-            label_zh=f"C{mono_c} 单酰基脂链 · 日给药白蛋白结合长效机制",
+            label_en=f"C{mono_c} Mono-Fatty-Acyl · Once-Daily Albumin-Binding Rule Overlay",
+            label_zh=f"C{mono_c} 单酰基脂链 · 日给药白蛋白结合机制规则层",
             chain_carbons=mono_c,
             value_h=9.0,
             range_h=[5.0, 13.0],
-            anchor_drugs=["Insulin detemir (5–7 h)", "Liraglutide (13 h)"],
+            anchor_drugs=shown_refs,
             note=(
-                f"Detected C{mono_c} mono-fatty-acyl chain signature (albumin binding slows proteolytic degradation & clearance). "
-                "Literature-anchored once-daily class range 5–13 h (detemir 5–7 h / liraglutide 13 h)."
+                f"RDKit SMARTS detected covalent C{mono_c} mono-fatty-acyl amide/ester chain "
+                "(albumin binding slows proteolytic clearance). "
+                "Displayed strictly as a literature class rule overlay (5–13 h), separate from Pure-ML."
             ),
         )
 

@@ -1,0 +1,650 @@
+{
+  "schema": "v335_external_egat_temporal_blind_receipt_v1",
+  "elapsed_sec": 369.2,
+  "egat_fidelity_audit": {
+    "PAMPA": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8536,
+      "fidelity_vs_4fm_pearson": 0.8672,
+      "fidelity_vs_4fm_mae": 0.2132,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.6293,
+      "ensemble_4fm_holdout_score": 0.7912,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 5.5966,
+      "deletion_rand20_delta": 5.8021,
+      "deletion_bot20_delta": 5.7772,
+      "deletion_top_vs_rand_ratio": 0.965,
+      "deletion_top_vs_bot_ratio": 0.969,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "Caco2": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8848,
+      "fidelity_vs_4fm_pearson": 0.8943,
+      "fidelity_vs_4fm_mae": 0.2421,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.7617,
+      "ensemble_4fm_holdout_score": 0.8462,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 6.4939,
+      "deletion_rand20_delta": 6.0721,
+      "deletion_bot20_delta": 6.044,
+      "deletion_top_vs_rand_ratio": 1.069,
+      "deletion_top_vs_bot_ratio": 1.074,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "hemolysis_cls": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.7544,
+      "fidelity_vs_4fm_pearson": 0.7526,
+      "fidelity_vs_4fm_mae": 0.1593,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8439,
+      "ensemble_4fm_holdout_score": 0.9418,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.0989,
+      "deletion_rand20_delta": 0.039,
+      "deletion_bot20_delta": 0.0521,
+      "deletion_top_vs_rand_ratio": 2.535,
+      "deletion_top_vs_bot_ratio": 1.899,
+      "interpretability_tier": "faithful_surrogate"
+    },
+    "hemolysis_HC50": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.5906,
+      "fidelity_vs_4fm_pearson": 0.5757,
+      "fidelity_vs_4fm_mae": 0.334,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.5042,
+      "ensemble_4fm_holdout_score": 0.722,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.9046,
+      "deletion_rand20_delta": 1.7554,
+      "deletion_bot20_delta": 1.5543,
+      "deletion_top_vs_rand_ratio": 0.515,
+      "deletion_top_vs_bot_ratio": 0.582,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "overall_peptide_toxicity": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8439,
+      "fidelity_vs_4fm_pearson": 0.853,
+      "fidelity_vs_4fm_mae": 0.1435,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8606,
+      "ensemble_4fm_holdout_score": 0.9351,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.1869,
+      "deletion_rand20_delta": 0.0546,
+      "deletion_bot20_delta": 0.0585,
+      "deletion_top_vs_rand_ratio": 3.421,
+      "deletion_top_vs_bot_ratio": 3.193,
+      "interpretability_tier": "faithful_surrogate"
+    },
+    "cytotoxicity_cls": {
+      "task_type": "classification",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6487,
+      "fidelity_vs_4fm_pearson": 0.6206,
+      "fidelity_vs_4fm_mae": 0.173,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8261,
+      "ensemble_4fm_holdout_score": 0.9271,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.1424,
+      "deletion_rand20_delta": 0.0626,
+      "deletion_bot20_delta": 0.0857,
+      "deletion_top_vs_rand_ratio": 2.273,
+      "deletion_top_vs_bot_ratio": 1.661,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "cytotoxicity_CC50": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6037,
+      "fidelity_vs_4fm_pearson": 0.8419,
+      "fidelity_vs_4fm_mae": 0.3328,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.3769,
+      "ensemble_4fm_holdout_score": 0.6962,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.9351,
+      "deletion_rand20_delta": 1.3829,
+      "deletion_bot20_delta": 1.2277,
+      "deletion_top_vs_rand_ratio": 0.676,
+      "deletion_top_vs_bot_ratio": 0.762,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "half_life_reg": {
+      "task_type": "regression",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6267,
+      "fidelity_vs_4fm_pearson": 0.6134,
+      "fidelity_vs_4fm_mae": 0.3872,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.4625,
+      "ensemble_4fm_holdout_score": 0.599,
+      "deletion_faithfulness_n": 30,
+      "deletion_top20_delta": 0.3312,
+      "deletion_rand20_delta": 0.1517,
+      "deletion_bot20_delta": 0.3066,
+      "deletion_top_vs_rand_ratio": 2.184,
+      "deletion_top_vs_bot_ratio": 1.08,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    }
+  },
+  "external_baselines_same_split": {
+    "PAMPA": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 1715,
+        "spearman": 0.78282,
+        "mae": 0.37375,
+        "r2": 0.62512
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 1715,
+        "spearman": 0.75381,
+        "mae": 0.39623,
+        "r2": 0.59001,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0227,
+          "ci95": [
+            -0.0023,
+            0.0407
+          ],
+          "p_value": 0.064
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 1715,
+        "spearman": 0.79607,
+        "mae": 0.37284,
+        "r2": 0.64653,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": -0.0003,
+          "ci95": [
+            -0.0165,
+            0.0153
+          ],
+          "p_value": 0.958
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "spearman": 0.6293,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 1715,
+        "spearman": 0.62536,
+        "mae": 0.4727,
+        "r2": 0.44642,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1001,
+          "ci95": [
+            0.0648,
+            0.1451
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 1715,
+        "spearman": 0.65829,
+        "mae": 0.45724,
+        "r2": 0.45638,
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0838,
+          "ci95": [
+            0.0517,
+            0.1196
+          ],
+          "p_value": 0.001
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 1524,
+        "spearman": 0.42841,
+        "mae": 0.5377,
+        "r2": 0.22316,
+        "paired_boot_vs_omni": {
+          "n_eval": 1524,
+          "n_clusters": 81,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1673,
+          "ci95": [
+            0.1032,
+            0.2151
+          ],
+          "p_value": 0.001
+        }
+      }
+    },
+    "hemolysis_cls": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 4101,
+        "roc_auc": 0.8973,
+        "brier": 0.1126
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 4101,
+        "roc_auc": 0.8727,
+        "brier": 0.1342,
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.025,
+          "ci95": [
+            0.007,
+            0.042
+          ],
+          "p_value": 0.008
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 4101,
+        "roc_auc": 0.8727,
+        "brier": 0.1283,
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0249,
+          "ci95": [
+            0.0083,
+            0.0409
+          ],
+          "p_value": 0.006
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "roc_auc": 0.8439,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 3629,
+        "roc_auc": 0.847,
+        "brier": 0.1372,
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0503,
+          "ci95": [
+            0.0366,
+            0.0658
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 3629,
+        "roc_auc": 0.8505,
+        "brier": 0.1335,
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0465,
+          "ci95": [
+            0.035,
+            0.0592
+          ],
+          "p_value": 0.001
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 4025,
+        "roc_auc": 0.8305,
+        "brier": 0.1408,
+        "paired_boot_vs_omni": {
+          "n_eval": 4025,
+          "n_clusters": 1255,
+          "metric": "delta_roc_auc (A - B)",
+          "mean_delta": 0.0671,
+          "ci95": [
+            0.045,
+            0.0953
+          ],
+          "p_value": 0.001
+        }
+      }
+    },
+    "half_life_reg": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 567,
+        "spearman": 0.4847,
+        "mae": 0.66401,
+        "r2": 0.39689
+      },
+      "QSAR_Morgan_RDKit2D_RF": {
+        "n": 567,
+        "spearman": 0.3448,
+        "mae": 0.75065,
+        "r2": 0.22312,
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0837,
+          "ci95": [
+            0.0302,
+            0.1288
+          ],
+          "p_value": 0.001
+        }
+      },
+      "QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 567,
+        "spearman": 0.44105,
+        "mae": 0.70492,
+        "r2": 0.32484,
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0417,
+          "ci95": [
+            0.0055,
+            0.0835
+          ],
+          "p_value": 0.03
+        }
+      },
+      "Pure2D_Graph_EGAT_5fold": {
+        "n": 200,
+        "spearman": 0.4625,
+        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
+      },
+      "ChemBERTa-MTR_only": {
+        "n": 527,
+        "spearman": 0.33621,
+        "mae": 0.78803,
+        "r2": 0.23151,
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.119,
+          "ci95": [
+            0.0623,
+            0.1689
+          ],
+          "p_value": 0.001
+        }
+      },
+      "PeptideCLM2_only": {
+        "n": 527,
+        "spearman": 0.45363,
+        "mae": 0.74812,
+        "r2": 0.26314,
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.0782,
+          "ci95": [
+            0.0199,
+            0.1288
+          ],
+          "p_value": 0.008
+        }
+      },
+      "ESM-C_600M_seq_only": {
+        "n": 544,
+        "spearman": 0.24579,
+        "mae": 0.82054,
+        "r2": 0.06227,
+        "paired_boot_vs_omni": {
+          "n_eval": 544,
+          "n_clusters": 149,
+          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "mean_delta": 0.1475,
+          "ci95": [
+            0.0665,
+            0.2259
+          ],
+          "p_value": 0.001
+        }
+      }
+    }
+  },
+  "temporal_split_benchmarks": {
+    "PAMPA": {
+      "description": "Train: Naylor 2018 + CycPeptMPDB (<=2023) -> Blind Test: SweMacrocycleDB (2024-2025) + 2025-2026 JMC/ACSMCL",
+      "task_type": "regression",
+      "n_train_historical": 7395,
+      "n_test_future_novel": 1177,
+      "qsar_morgan_lgbm": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 0.90996,
+        "rmse": 1.07042,
+        "r2": -0.56708,
+        "spearman": 0.19749,
+        "pearson": 0.22927,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.90996,
+        "censored_c_index": null
+      },
+      "multimodal_4fm_lgbm": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 0.74563,
+        "rmse": 0.89602,
+        "r2": -0.09806,
+        "spearman": 0.13351,
+        "pearson": 0.19694,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.74563,
+        "censored_c_index": null
+      }
+    },
+    "hemolysis_cls": {
+      "description": "Train: DBAASP / ENDL / HLPpredFuse (<=2022) -> Blind Test: HemoPI2 (2025) + Hemolytik2 (2026)",
+      "task_type": "classification",
+      "n_train_historical": 15247,
+      "n_test_future_novel": 4300,
+      "qsar_morgan_lgbm": {
+        "roc_auc": 0.7872,
+        "brier": 0.1828
+      },
+      "multimodal_4fm_lgbm": {
+        "roc_auc": 0.8544,
+        "brier": 0.1508
+      }
+    },
+    "LogD7.4": {
+      "description": "Train: Naylor 2018 + PEGASUS + ChEMBL (<=2024) -> Blind Test: Chloroalkene 2026 + JMC 2025",
+      "task_type": "regression",
+      "n_train_historical": 653,
+      "n_test_future_novel": 22,
+      "qsar_morgan_lgbm": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.23114,
+        "rmse": 1.66147,
+        "r2": -0.41679,
+        "spearman": -0.12429,
+        "pearson": -0.06841,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.23114,
+        "censored_c_index": null
+      },
+      "multimodal_4fm_lgbm": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.13741,
+        "rmse": 1.50905,
+        "r2": -0.16877,
+        "spearman": 0.34567,
+        "pearson": 0.33701,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.13741,
+        "censored_c_index": null
+      }
+    }
+  },
+  "recent_fda_2019_2023_blind_set": {
+    "protocol": "Strict Full-Cluster Leave-Recent-FDA-Out (all training compounds & clusters with Tc >= 0.40 to any 2019-2023 FDA drug excluded)",
+    "n_drugs": 8,
+    "approval_years": "2019-2023",
+    "half_life_log10_metrics": {
+      "n_total": 8,
+      "n_exact": 8,
+      "n_censored": 0,
+      "mae": 0.51385,
+      "rmse": 0.61559,
+      "r2": 0.30089,
+      "spearman": 0.7619,
+      "pearson": 0.73655,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.51385,
+      "censored_c_index": null
+    },
+    "ppb_metrics": {
+      "n_total": 7,
+      "n_exact": 7,
+      "n_censored": 0,
+      "mae": 0.3322,
+      "rmse": 0.3689,
+      "r2": 0.07307,
+      "spearman": 0.10714,
+      "pearson": 0.32303,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.3322,
+      "censored_c_index": null
+    },
+    "hemolysis_false_positive_gt_0_50": "0/8",
+    "drugs": [
+      {
+        "name": "Motixafortide",
+        "fda_approval_year": 2023,
+        "route": "SC",
+        "obs_half_life_h": 2.0,
+        "blind_pred_half_life_h": 2.84,
+        "obs_ppb": 0.99,
+        "blind_pred_ppb": 0.411,
+        "blind_pred_hemolysis_prob": 0.054,
+        "fda_label_note": "FDA Aphexda NDA 217159 (Sep 2023): T1/2 ~2 h, PPB >99%, Vd 27 L, CL 46.5 L/h"
+      },
+      {
+        "name": "Rezafungin",
+        "fda_approval_year": 2023,
+        "route": "IV",
+        "obs_half_life_h": 133.0,
+        "blind_pred_half_life_h": 13.94,
+        "obs_ppb": 0.974,
+        "blind_pred_ppb": 1.0,
+        "blind_pred_hemolysis_prob": 0.016,
+        "fda_label_note": "FDA Rezzayo NDA 217417 (Mar 2023): T1/2 ~133 h, PPB 97.4%, Vd 67 L, CL 0.35 L/h"
+      },
+      {
+        "name": "Trofinetide",
+        "fda_approval_year": 2023,
+        "route": "PO",
+        "obs_half_life_h": 1.5,
+        "blind_pred_half_life_h": 0.78,
+        "obs_ppb": 0.06,
+        "blind_pred_ppb": 0.49,
+        "blind_pred_hemolysis_prob": 0.0,
+        "fda_label_note": "FDA Daybue NDA 217026 (Mar 2023): T1/2 ~1.5 h, PPB <6%, Vd 80 L"
+      },
+      {
+        "name": "Voclosporin",
+        "fda_approval_year": 2021,
+        "route": "PO",
+        "obs_half_life_h": 30.0,
+        "blind_pred_half_life_h": 7.95,
+        "obs_ppb": 0.97,
+        "blind_pred_ppb": 0.547,
+        "blind_pred_hemolysis_prob": 0.092,
+        "fda_label_note": "FDA Lupkynis NDA 213716 (Jan 2021): T1/2 ~30 h, PPB 97%, Vd 2154 L"
+      },
+      {
+        "name": "Difelikefalin",
+        "fda_approval_year": 2021,
+        "route": "IV",
+        "obs_half_life_h": 2.6,
+        "blind_pred_half_life_h": 0.26,
+        "obs_ppb": 0.255,
+        "blind_pred_ppb": 0.512,
+        "blind_pred_hemolysis_prob": 0.017,
+        "fda_label_note": "FDA Korsuva NDA 214916 (Aug 2021): T1/2 ~2-3 h (healthy) / 23-31 h (HD), PPB 23-28%, Vd 0.238 L/kg"
+      },
+      {
+        "name": "Dasiglucagon",
+        "fda_approval_year": 2021,
+        "route": "SC",
+        "obs_half_life_h": 0.5,
+        "blind_pred_half_life_h": 0.51,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.437,
+        "blind_pred_hemolysis_prob": 0.069,
+        "fda_label_note": "FDA Zegalogue NDA 214231 (Mar 2021): T1/2 ~0.5 h, Vd 47-57 L"
+      },
+      {
+        "name": "Setmelanotide",
+        "fda_approval_year": 2020,
+        "route": "SC",
+        "obs_half_life_h": 11.0,
+        "blind_pred_half_life_h": 2.45,
+        "obs_ppb": 0.791,
+        "blind_pred_ppb": 0.499,
+        "blind_pred_hemolysis_prob": 0.006,
+        "fda_label_note": "FDA Imcivree NDA 213793 (Nov 2020): T1/2 ~11 h, PPB 79.1%, Vd 75.2 L, CL 7.15 L/h"
+      },
+      {
+        "name": "Bremelanotide",
+        "fda_approval_year": 2019,
+        "route": "SC",
+        "obs_half_life_h": 2.7,
+        "blind_pred_half_life_h": 7.76,
+        "obs_ppb": 0.21,
+        "blind_pred_ppb": 0.528,
+        "blind_pred_hemolysis_prob": 0.037,
+        "fda_label_note": "FDA Vyleesi NDA 210557 (Jun 2019): T1/2 ~2.7 h, PPB 21%, F ~100% SC, Vd 25 L, CL 6.5 L/h"
+      }
+    ]
+  },
+  "case17_non_circular_separation": {
+    "primary_metric_policy": "Pure-ML route-matched metrics are reported as the PRIMARY benchmark; literature fatty-acylation rule overlay is reported separately under strict Leave-One-Drug-Out (excluding Insulin degludec self-anchor circularity).",
+    "pure_ml_all_16_mae_log10": 0.3185,
+    "pure_ml_lipidated_5_mae_log10": 0.2171,
+    "pure_ml_non_lipidated_11_mae_log10": 0.3646,
+    "lodo_rule_overlay_lipidated_5_mae_log10": 0.1829,
+    "lodo_rule_overlay_all_16_mae_log10": 0.3078,
+    "insulin_degludec_circularity_removed": true,
+    "fusion_protein_anchors_removed": true
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "schema": "v335_strict_zero_peeking_audit_v1",
+  "promotion_rule": "100% ZERO-HOLDOUT-PEEKING: Promote expanded existing endpoint ONLY if 5-seed nested CV paired MAE improves by >=1.0% (and >=0.005) on identical baseline CV rows AND 5-seed mean CV Spearman >= -0.01 AND >=4/5 seeds improve. Holdout is NEVER inspected for accept/reject.",
+  "tanimoto_isolation_threshold": 0.4,
+  "endpoints": {
+    "F": {
+      "n_added_clean": 6,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 1,
+        "tc_ho": 12,
+        "tc_c17": 4
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.2246,
+        "sd": 0.0106
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.2206,
+        "sd": 0.0083
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.577,
+        "sd": 0.0665
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.5887,
+        "sd": 0.0336
+      },
+      "seed_wins": "4/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.2246->0.2206 (-1.81%), Sp 0.5770->0.5887 (+0.0117), seed_wins=4/5"
+    },
+    "LogD7.4": {
+      "n_added_clean": 4,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 9,
+        "tc_c17": 1
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.456,
+        "sd": 0.0104
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.4546,
+        "sd": 0.012
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.5973,
+        "sd": 0.0151
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.599,
+        "sd": 0.0147
+      },
+      "seed_wins": "4/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.4560->0.4546 (-0.31%), Sp 0.5973->0.5990 (+0.0016), seed_wins=4/5"
+    },
+    "CL_per_kg": {
+      "n_added_clean": 4,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 2,
+        "tc_c17": 0
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.5667,
+        "sd": 0.0237
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.5711,
+        "sd": 0.028
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.6697,
+        "sd": 0.0253
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.6695,
+        "sd": 0.0409
+      },
+      "seed_wins": "2/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.5667->0.5711 (+0.78%), Sp 0.6697->0.6695 (-0.0002), seed_wins=2/5"
+    },
+    "CL_absolute": {
+      "n_added_clean": 1,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 2,
+        "tc_c17": 0
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.7641,
+        "sd": 0.0163
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.756,
+        "sd": 0.0188
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.383,
+        "sd": 0.028
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.3845,
+        "sd": 0.071
+      },
+      "seed_wins": "3/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.7641->0.7560 (-1.06%), Sp 0.3830->0.3845 (+0.0015), seed_wins=3/5"
+    },
+    "Vd_per_kg": {
+      "n_added_clean": 4,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 1,
+        "tc_c17": 0
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.3887,
+        "sd": 0.0089
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.3837,
+        "sd": 0.0063
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.5377,
+        "sd": 0.0222
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.5368,
+        "sd": 0.0289
+      },
+      "seed_wins": "5/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.3887->0.3837 (-1.29%), Sp 0.5377->0.5368 (-0.0009), seed_wins=5/5"
+    },
+    "Vd_absolute": {
+      "n_added_clean": 0,
+      "promoted": false,
+      "reason": "zero_tanimoto_isolated_additions",
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 2,
+        "tc_c17": 1
+      }
+    },
+    "PPB": {
+      "n_added_clean": 1,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 3,
+        "tc_c17": 1
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.1827,
+        "sd": 0.0091
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.1837,
+        "sd": 0.0105
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.6189,
+        "sd": 0.0314
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.6181,
+        "sd": 0.0403
+      },
+      "seed_wins": "4/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.1827->0.1837 (+0.53%), Sp 0.6189->0.6181 (-0.0008), seed_wins=4/5"
+    },
+    "half_life_reg": {
+      "n_added_clean": 2,
+      "drops": {
+        "dup": 0,
+        "cl_ho": 0,
+        "tc_ho": 0,
+        "tc_c17": 0
+      },
+      "cv_5seed_old_mae": {
+        "mean": 0.6081,
+        "sd": 0.0088
+      },
+      "cv_5seed_new_mae": {
+        "mean": 0.6081,
+        "sd": 0.009
+      },
+      "cv_5seed_old_sp": {
+        "mean": 0.6137,
+        "sd": 0.0089
+      },
+      "cv_5seed_new_sp": {
+        "mean": 0.6135,
+        "sd": 0.0091
+      },
+      "seed_wins": "2/5",
+      "promoted": false,
+      "reason": "5-seed paired CV MAE 0.6081->0.6081 (+0.00%), Sp 0.6137->0.6135 (-0.0001), seed_wins=2/5"
+    }
+  },
+  "promoted": [
+    "LogD_decadiene"
+  ],
+  "held_on_v333": [
+    "F",
+    "LogD7.4",
+    "CL_per_kg",
+    "CL_absolute",
+    "Vd_per_kg",
+    "Vd_absolute",
+    "PPB",
+    "half_life_reg"
+  ],
+  "logd_decadiene_delta_validation": {
+    "n_matched_dual_phase_macrocycles": 27,
+    "protocol": "Strictly Out-of-Sample: LogD7.4_OOS - LogD_decadiene_5x5_OOF vs Measured (LogD_oct - LogD_dec)",
+    "spearman": 0.91453,
+    "spearman_ci95": [
+      0.798,
+      0.9705
+    ],
+    "pearson": 0.91011,
+    "mae": 0.45532,
+    "mae_ci95": [
+      0.3464,
+      0.5789
+    ],
+    "r2": 0.81602,
+    "high_chameleonicity_ge2_auroc": 0.9545,
+    "n_high_chameleonicity_ge2": 11,
+    "empirical_terciles": {
+      "p33": 0.68,
+      "p67": 2.42,
+      "min": -0.37,
+      "max": 4.39
+    },
+    "scope_warning": "Validated exclusively on cyclic macrocycles; ΔLogD for linear non-macrocyclic peptides is extrapolated and flagged out-of-scope."
+  }
+}

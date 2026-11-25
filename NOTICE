@@ -1,0 +1,32 @@
+Peptide OmniPanel — Third-Party Notices & Research Scope Statement
+==================================================================
+
+1. Scientific & Regulatory Scope Disclaimer
+-------------------------------------------
+Peptide OmniPanel is an academic research platform intended strictly for
+early-stage preclinical hypothesis generation and compound prioritization
+(`internal_research_only`). Predictions, uncertainty intervals, structural
+saliency maps, and linked regulatory label records MUST NOT be used for
+clinical diagnosis, patient dosing, medical decision-making, or regulatory
+submissions.
+
+2. US Federal Government Public-Domain Regulatory PK Records
+------------------------------------------------------------
+Regulatory pharmacokinetic reference values displayed in the Clinical &
+Regulatory PK panel (`web/clinical_evidence_index.json`) are restricted
+exclusively to factual observations extracted from US Federal Government
+public-domain sources — specifically FDA DailyMed Structured Product
+Labeling (SPL) XML documents (`https://dailymed.nlm.nih.gov/`) and US FDA
+Drugs@FDA NDA/BLA Clinical Pharmacology Reviews (`https://www.accessdata.fda.gov/`),
+which are public domain under 17 U.S.C. § 105.
+
+3. Interoperability & Attribution to External Resources
+-------------------------------------------------------
+- ADMETatlas V1.0 (Yi et al., Nucleic Acids Research 2026,
+  doi:10.1093/nar/gkag1147, CC-BY-NC 4.0): This repository does NOT mirror
+  or redistribute ADMETatlas CC-BY-NC derivative tables, clinical trial
+  aggregations, or FAERS narrative annotations. Where applicable, the web
+  interface provides outbound reference links to https://admetatlas.scbdd.com/
+  for users wishing to browse external pharmacovigilance context directly.
+- See DATA_LICENSES.md for the complete source-by-source license ledger for
+  every upstream dataset and pretrained foundation model.

@@ -248,6 +248,8 @@ class EndpointPrediction(BaseModel):
     cv_metric_name: str = "Spearman"
     cv_score: Optional[float] = None
     holdout_score: Optional[float] = None
+    holdout_ci95: Optional[list[float]] = None
+    evidence_grade: Optional[Literal["quantitative", "rank_only"]] = None
     v32_cv_score: Optional[float] = None
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
@@ -441,6 +443,8 @@ class EndpointCatalogItem(BaseModel):
     holdout_score_v32: Optional[float] = None
     cv_score_v33: Optional[float] = None
     holdout_score_v33: Optional[float] = None
+    holdout_ci95: Optional[list[float]] = None
+    evidence_grade: Optional[Literal["quantitative", "rank_only"]] = None
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
     uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
