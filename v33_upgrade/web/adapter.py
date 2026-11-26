@@ -1000,7 +1000,7 @@ class OmniPanelAdapter:
         self.drug_fps: list[dict[str, Any]] = []
         self._build_drug_index()
 
-        # 5. Load 110-product Clinical & Regulatory Evidence Index (ADMETatlas V1.0, CC-BY-NC 4.0)
+        # 5. Load 59-product NLM DailyMed / US FDA factual regulatory PK index (zero CC-BY-NC derivative fields)
         self.clinical_evidence_data: dict[str, Any] = {}
         self._load_clinical_evidence()
 
@@ -1141,6 +1141,9 @@ class OmniPanelAdapter:
             {"atom_index": int(i), "symbol": str(symbols[i]), "weight": round(float(weights[i]), 4)}
             for i in order
         ]
+        egat_ep = (self.manifest.get("egat_fidelity_audit") or {}).get(ep) or {}
+        tier_raw = egat_ep.get("interpretability_tier")
+        tier_val = tier_raw if tier_raw in ("faithful_surrogate", "qualitative_saliency_heuristic") else "qualitative_saliency_heuristic"
         return {
             "svg": svg_str,
             "endpoint": ep,
@@ -1151,6 +1154,10 @@ class OmniPanelAdapter:
             "gnn_prediction": gnn_pred,
             "top_atoms": top_atoms,
             "available_endpoints": list(eng.endpoints),
+            "interpretability_tier": tier_val,
+            "fidelity_vs_4fm_spearman": egat_ep.get("fidelity_vs_4fm_spearman"),
+            "deletion_top_vs_rand_ratio": egat_ep.get("deletion_top_vs_rand_ratio"),
+            "deletion_top_vs_rand_ci95": egat_ep.get("deletion_top_vs_rand_ci95"),
         }
 
     @staticmethod
@@ -1404,15 +1411,15 @@ class OmniPanelAdapter:
             "products": catalog[:limit],
         }
 
-    @staticmethod
     def _compute_chameleonicity(
+        self,
         preds_by_ep: dict[str, EndpointPrediction],
         physchem: PhysChemSummary,
     ) -> Optional[dict[str, Any]]:
         """Derive macrocycle chameleonicity index ΔLogD = LogD7.4 (octanol) − LogD_decadiene (hydrocarbon).
 
-        Cutoffs empirically calibrated via 27-macrocycle dual-phase OOS validation (empirical terciles [0.68, 2.42];
-        OOS Spearman ρ=0.9145, R²=0.8160, AUROC(Δ>=2.0)=0.9545). Explicitly flags non-macrocycles as extrapolated.
+        Reads LOCO dual-phase validation stats dynamically from `v33_manifest.json` (never hardcoded).
+        Explicitly flags non-macrocycles as out-of-scope extrapolation so UI hides tier & validation badges.
         """
         p_oct = preds_by_ep.get("LogD7.4")
         p_dec = preds_by_ep.get("LogD_decadiene")
@@ -1420,10 +1427,26 @@ class OmniPanelAdapter:
             return None
         delta = round(float(p_oct.value) - float(p_dec.value), 3)
         is_macro = len(physchem.macrocycle_rings) > 0
-        if delta >= 2.4:
+        dv = (self.manifest.get("v335_protocol_audit") or {}).get("logd_decadiene_delta_validation") or {}
+        emp_terc = dv.get("empirical_terciles_in_sample") or dv.get("empirical_terciles") or {}
+        emp_val = {
+            "n_matched_macrocycles": int(dv.get("n_matched_dual_phase_macrocycles", 27)),
+            "n_clusters": int(dv.get("n_clusters_represented", 5)),
+            "protocol": dv.get("protocol", "Within-series LOCO cross-validation"),
+            "loco_spearman": dv.get("spearman"),
+            "loco_spearman_cluster_ci95": dv.get("spearman_cluster_boot_ci95"),
+            "loco_r2": dv.get("r2"),
+            "auroc_ge_2_4": dv.get("auroc_ge_2_4_deployment_threshold") or dv.get("high_chameleonicity_ge2_auroc"),
+            "empirical_terciles": [emp_terc.get("p33", 0.68), emp_terc.get("p67", 2.42)],
+        }
+        if not is_macro:
+            tier, lbl_en, lbl_zh, tone = "out_of_scope", "Out of Scope (Non-Macrocycle)", "适用域外 (非大环肽)", "amber"
+            note_en = "Exploratory extrapolation only: LogD_decadiene was trained exclusively on cyclic macrocycles."
+            note_zh = "仅作探索外推：LogD_decadiene 仅基于环状大环肽训练，不适用于线性/非大环肽。"
+        elif delta >= 2.4:
             tier, lbl_en, lbl_zh, tone = "high", "Strong Chameleonicity (Top Tercile)", "强变色龙效应 (上三分位)", "teal"
-            note_en = "Large ΔLogD (≥2.4, empirically calibrated top tercile) indicates strong polar surface shielding / intramolecular H-bonding in apolar lipid environments."
-            note_zh = "显著的 ΔLogD (≥2.4，经 27 对实验双相大环标定的上三分位) 提示分子在非极性膜环境中具有较强的极性遮蔽或分子内氢键构象适应潜力。"
+            note_en = "Large ΔLogD (≥2.4, top tercile of 27 dual-phase macrocycles) indicates strong polar surface shielding / intramolecular H-bonding in apolar lipid environments."
+            note_zh = "显著的 ΔLogD (≥2.4，27 对双相大环肽上三分位) 提示分子在非极性膜环境中具有较强的极性遮蔽或分子内氢键构象适应潜力。"
         elif delta >= 0.7:
             tier, lbl_en, lbl_zh, tone = "moderate", "Moderate Chameleonicity (Mid Tercile)", "中等变色龙效应 (中三分位)", "cobalt"
             note_en = "Moderate ΔLogD (0.7–2.4) reflects measurable polarity adaptation between octanol and hydrocarbon phases."
@@ -1444,7 +1467,7 @@ class OmniPanelAdapter:
             "in_applicability_scope": is_macro,
             "scope_warning_en": None if is_macro else "Out-of-scope extrapolation: LogD_decadiene is trained exclusively on cyclic macrocycles; interpret ΔLogD for linear/non-macrocyclic peptides strictly as exploratory.",
             "scope_warning_zh": None if is_macro else "适用域提示：LogD_decadiene 仅基于大环肽训练，非大环/线性肽的 ΔLogD 属外推探索值，请谨慎解读。",
-            "empirical_validation": {"n_matched_macrocycles": 27, "oos_spearman": 0.9145, "oos_r2": 0.8160, "auroc_ge2": 0.9545, "empirical_terciles": [0.68, 2.42]},
+            "empirical_validation": emp_val if is_macro else None,
             "note_en": note_en,
             "note_zh": note_zh,
         }
@@ -1508,8 +1531,8 @@ class OmniPanelAdapter:
             v32_ho = v32.get(f"holdout_{metric_key}") if v32 else None
 
             ho_ci_doc = dm.get("holdout_bootstrap_ci95") or {}
-            ho_ci95 = ho_ci_doc.get("roc_auc_ci95") if is_cls else ho_ci_doc.get("spearman_ci95")
-            ev_grade = doc.get("evidence_grade") if doc.get("evidence_grade") in ("quantitative", "rank_only") else None
+            ho_ci95 = (ho_ci_doc.get("roc_auc_ci95") if is_cls else ho_ci_doc.get("spearman_ci95")) if ho_ci_doc.get("ci_reliable", True) else None
+            ev_grade = doc.get("evidence_grade") if doc.get("evidence_grade") in ("quantitative", "rank_only", "exploratory_not_recommended") else None
 
             items.append(
                 EndpointCatalogItem(
@@ -1558,6 +1581,11 @@ class OmniPanelAdapter:
             "representation_ablation_summary": self.manifest.get("representation_ablation_summary") or {},
             "case17_scorecard": self.manifest.get("case17_scorecard") or {},
             "selection_protocol": self.manifest.get("selection_protocol") or {},
+            "v335_protocol_audit": self.manifest.get("v335_protocol_audit") or {},
+            "egat_fidelity_audit": self.manifest.get("egat_fidelity_audit") or {},
+            "external_baselines_same_split": self.manifest.get("external_baselines_same_split") or {},
+            "temporal_split_benchmarks": self.manifest.get("temporal_split_benchmarks") or {},
+            "recent_fda_2019_2023_blind_set": self.manifest.get("recent_fda_2019_2023_blind_set") or {},
         }
 
     # -----------------------------------------------------------------------
@@ -2017,6 +2045,17 @@ class OmniPanelAdapter:
 
             analogs = [_format_analog_entry(a, ep_doc or r) for a in (r.get("top3_analogs") or [])]
 
+            ev_g = ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only", "exploratory_not_recommended") else None
+            not_rec_warn = None
+            if ev_g == "exploratory_not_recommended":
+                risk_level, risk_label = "caution", "Exploratory / Not Recommended"
+                not_rec_warn = "Negative holdout correlation/R² on small corpus; numeric output is exploratory only and NOT recommended for prioritization."
+            elif ep == "LogD_decadiene" and (len(physchem.macrocycle_rings) == 0 or ad_status == "ood"):
+                risk_level, risk_label = "info", "Out of Scope (Non-Macrocycle)"
+
+            tr_ci_doc = tr_doc.get("holdout_bootstrap_ci95") or {}
+            tr_ci95 = (tr_ci_doc.get("roc_auc_ci95") if is_cls else tr_ci_doc.get("spearman_ci95")) if tr_ci_doc.get("ci_reliable", True) else None
+
             pred_obj = EndpointPrediction(
                 endpoint=ep,
                 display_en=ui.get("display_en") or r.get("display_en", ep),
@@ -2054,8 +2093,9 @@ class OmniPanelAdapter:
                 cv_metric_name=metric_name,
                 cv_score=round(float(cv_m[metric_key]), 4) if cv_m.get(metric_key) is not None else None,
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
-                holdout_ci95=(tr_doc.get("holdout_bootstrap_ci95") or {}).get("roc_auc_ci95" if is_cls else "spearman_ci95"),
-                evidence_grade=ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only") else None,
+                holdout_ci95=tr_ci95,
+                evidence_grade=ev_g,  # type: ignore[arg-type]
+                not_recommended_warning=not_rec_warn,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
@@ -2360,6 +2400,16 @@ class OmniPanelAdapter:
             if source_tag == "offline_fallback":
                 note_txt = f"[Offline preview mode — live inference engine disconnected] {note_txt}"
 
+            ev_g_off = ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only", "exploratory_not_recommended") else None
+            not_rec_off = None
+            if ev_g_off == "exploratory_not_recommended":
+                risk_level, risk_label = "caution", "Exploratory / Not Recommended"
+                not_rec_off = "Negative holdout correlation/R² on small corpus; numeric output is exploratory only and NOT recommended for prioritization."
+            elif ep == "LogD_decadiene" and (len(physchem.macrocycle_rings) == 0 or ad_status == "ood"):
+                risk_level, risk_label = "info", "Out of Scope (Non-Macrocycle)"
+            off_ci_doc = (ep_doc.get("smiles_only" if not (resolved.sequence and resolved.canonical_smiles) else "dual_modality") or dm).get("holdout_bootstrap_ci95") or {}
+            off_ci95 = (off_ci_doc.get("roc_auc_ci95") if is_cls else off_ci_doc.get("spearman_ci95")) if off_ci_doc.get("ci_reliable", True) else None
+
             pred_obj = EndpointPrediction(
                 endpoint=ep,
                 display_en=ui.get("display_en") or ep_doc.get("display_en", ep),
@@ -2396,8 +2446,9 @@ class OmniPanelAdapter:
                 cv_metric_name=metric_name,
                 cv_score=round(float(cv_m[metric_key]), 4) if cv_m.get(metric_key) is not None else None,
                 holdout_score=round(float(ho_m[metric_key]), 4) if ho_m.get(metric_key) is not None else None,
-                holdout_ci95=(dm.get("holdout_bootstrap_ci95") or {}).get("roc_auc_ci95" if is_cls else "spearman_ci95"),
-                evidence_grade=ep_doc.get("evidence_grade") if ep_doc.get("evidence_grade") in ("quantitative", "rank_only") else None,
+                holdout_ci95=off_ci95,
+                evidence_grade=ev_g_off,  # type: ignore[arg-type]
+                not_recommended_warning=not_rec_off,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
@@ -2573,7 +2624,7 @@ class OmniPanelAdapter:
                 elapsed_ms=(time.perf_counter() - t0) * 1000.0,
             )
 
-        # Attach Macrocycle Chameleonicity (ΔLogD) & Clinical Regulatory Evidence (110 products, ADMETatlas V1.0)
+        # Attach Macrocycle Chameleonicity (ΔLogD) & Factual Regulatory PK Evidence (59 FDA peptide drugs)
         preds_by_ep = {p.endpoint: p for p in resp.predictions}
         resp.chameleonicity = self._compute_chameleonicity(preds_by_ep, physchem)
         resp.clinical_evidence = self.lookup_clinical_evidence(

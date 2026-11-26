@@ -1,0 +1,613 @@
+{
+  "schema": "v336_stats_ci_logd_egat_case17_receipt_v1",
+  "elapsed_sec": 415.5,
+  "evidence_grade_counts": {
+    "quantitative": 20,
+    "rank_only": 26,
+    "exploratory_not_recommended": 1
+  },
+  "uq_reliability_counts": {
+    "dual_modality": {
+      "low": 10,
+      "moderate": 11,
+      "calibrated": 20
+    },
+    "smiles_only": {
+      "low": 10,
+      "moderate": 10,
+      "calibrated": 21
+    }
+  },
+  "statistical_significance_tests": {
+    "regression_family_cpu_vs_fusion_only": {
+      "note": "Compares strictly independent families (`fusion` vs `cpu`; circular `champion` excluded) using SD-normalized error MAE/SD(y_holdout) to remove cross-unit scale dominance.",
+      "n_endpoints": 41,
+      "mean_normalized_mae": {
+        "fusion": 0.6349,
+        "cpu": 0.6688
+      },
+      "mean_raw_mae": {
+        "fusion": 0.5097,
+        "cpu": 0.5372
+      },
+      "fusion_win_rate": "32/41",
+      "wilcoxon_p_nmae_raw": 0.0003054,
+      "wilcoxon_p_nmae_holm": 0.0003054,
+      "wilcoxon_p_raw_mae_holm": 0.0002973,
+      "paired_boot_cpu_minus_fusion_nmae_ci95": [
+        0.0136,
+        0.057
+      ]
+    },
+    "single_fm_4model_ablation_friedman_nemenyi": {
+      "n_endpoints": 46,
+      "endpoints_included": [
+        "BBB",
+        "CL_absolute",
+        "CL_per_kg",
+        "Caco2",
+        "Cmax",
+        "F",
+        "LogD7.4",
+        "MDCK",
+        "MIC_C_albicans",
+        "MIC_E_coli",
+        "MIC_P_aeruginosa",
+        "MIC_S_aureus",
+        "PAMPA",
+        "PPB",
+        "RRCK",
+        "Vd_per_kg",
+        "cytotoxicity_cls",
+        "half_life_cls",
+        "half_life_reg",
+        "hemolysis_HC50",
+        "hemolysis_cls",
+        "overall_peptide_toxicity",
+        "solubility_cls",
+        "solubility_reg",
+        "LC_antimicrobial",
+        "MBC_A_baumannii",
+        "MBC_E_coli",
+        "MBC_E_faecalis",
+        "MBC_P_aeruginosa",
+        "MBC_S_aureus",
+        "MBEC_biofilm",
+        "MBIC_biofilm",
+        "MFC_C_albicans",
+        "MIC_A_baumannii",
+        "MIC_B_subtilis",
+        "MIC_C_neoformans",
+        "MIC_E_faecalis",
+        "MIC_E_faecium",
+        "MIC_K_pneumoniae",
+        "MIC_L_monocytogenes",
+        "MIC_S_epidermidis",
+        "MIC_Salmonella",
+        "Vd_absolute",
+        "cytotoxicity_CC50",
+        "efflux_ratio",
+        "hemolysis_MHC"
+      ],
+      "metric": "ROC-AUC (classification) / Spearman rho (regression)",
+      "mean_primary_score": {
+        "ncaa_fusion_hf": 0.5505,
+        "esmc_multiregion": 0.5462,
+        "peptideclm2": 0.5383,
+        "chemberta_mtr": 0.5439
+      },
+      "mean_rank_1_is_best": {
+        "ncaa_fusion_hf": 2.478,
+        "esmc_multiregion": 2.478,
+        "peptideclm2": 2.413,
+        "chemberta_mtr": 2.63
+      },
+      "friedman_chi2": 0.7043,
+      "friedman_p": 0.8722,
+      "nemenyi_critical_diff_alpha_0_05": 0.692,
+      "pairwise_wilcoxon_p_holm": {
+        "peptideclm2_vs_chemberta_mtr": 1.0,
+        "ncaa_fusion_hf_vs_chemberta_mtr": 1.0,
+        "esmc_multiregion_vs_peptideclm2": 1.0,
+        "esmc_multiregion_vs_chemberta_mtr": 1.0,
+        "ncaa_fusion_hf_vs_peptideclm2": 1.0,
+        "ncaa_fusion_hf_vs_esmc_multiregion": 1.0
+      }
+    }
+  },
+  "logd_decadiene_loco_audit": {
+    "delta_validation_loco": {
+      "n_matched_dual_phase_macrocycles": 27,
+      "n_clusters_represented": 5,
+      "max_inter_cluster_tanimoto": 0.8438,
+      "protocol": "Within-Series LOCO Cross-Validation (Not Prospective External Validation): LogD7.4_OOS(smiles_only) - LogD_decadiene_LOCO_OOF vs Measured (LogD_oct - LogD_dec)",
+      "octanol_source_audit": {
+        "Naylor LPE 2018 primary SI": 27
+      },
+      "same_macrocycle_literature_subset": {
+        "n": 27,
+        "sources": {
+          "Naylor LPE 2018 primary SI": 27
+        },
+        "n_total": 27,
+        "n_exact": 27,
+        "n_censored": 0,
+        "mae": 0.42018,
+        "rmse": 0.5252,
+        "r2": 0.82875,
+        "spearman": 0.89927,
+        "pearson": 0.92668,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.42018,
+        "censored_c_index": null
+      },
+      "spearman": 0.89927,
+      "spearman_cluster_boot_ci95": [
+        0.8422,
+        0.9869
+      ],
+      "cluster_boot_caveat": "Only 5 clusters represented; cluster bootstrap CI is wide and exploratory.",
+      "pearson": 0.92668,
+      "mae": 0.42018,
+      "mae_cluster_boot_ci95": [
+        0.1834,
+        0.5941
+      ],
+      "r2": 0.82875,
+      "auroc_ge_2_4_deployment_threshold": 0.9506,
+      "balanced_acc_ge_2_4": 0.8889,
+      "high_chameleonicity_ge2_auroc": 0.9716,
+      "tercile_3x3_confusion_matrix_0_7_and_2_4": [
+        [
+          4,
+          5,
+          0
+        ],
+        [
+          1,
+          6,
+          2
+        ],
+        [
+          0,
+          1,
+          8
+        ]
+      ],
+      "tercile_3class_accuracy": 0.6667,
+      "empirical_terciles_in_sample": {
+        "p33": 0.68,
+        "p67": 2.42,
+        "min": -0.37,
+        "max": 4.39
+      },
+      "scope_warning": "Validated strictly on cyclic macrocycles within-series (LOCO); ΔLogD for linear/non-macrocyclic peptides is extrapolated and badges are hidden."
+    },
+    "loco_metrics": {
+      "n_total": 87,
+      "n_exact": 87,
+      "n_censored": 0,
+      "mae": 0.56518,
+      "rmse": 0.70235,
+      "r2": 0.76072,
+      "spearman": 0.86668,
+      "pearson": 0.87766,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.56518,
+      "censored_c_index": null
+    },
+    "max_inter_cluster_tanimoto": 0.8438
+  },
+  "egat_true_graph_deletion_audit": {
+    "PAMPA": {
+      "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8292,
+      "fidelity_vs_4fm_pearson": 0.8326,
+      "fidelity_vs_4fm_mae": 0.2131,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.6257,
+      "ensemble_4fm_holdout_score": 0.7996,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 5.6694,
+      "deletion_rand20_delta": 5.8589,
+      "deletion_bot20_delta": 5.6815,
+      "deletion_top_vs_rand_ratio": 0.968,
+      "deletion_top_vs_rand_ci95": [
+        0.951,
+        0.984
+      ],
+      "deletion_top_vs_bot_ratio": 0.998,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "Caco2": {
+      "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.9006,
+      "fidelity_vs_4fm_pearson": 0.9074,
+      "fidelity_vs_4fm_mae": 0.2286,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.8068,
+      "ensemble_4fm_holdout_score": 0.8523,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 6.8451,
+      "deletion_rand20_delta": 6.0165,
+      "deletion_bot20_delta": 6.0917,
+      "deletion_top_vs_rand_ratio": 1.138,
+      "deletion_top_vs_rand_ci95": [
+        1.111,
+        1.162
+      ],
+      "deletion_top_vs_bot_ratio": 1.124,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "hemolysis_cls": {
+      "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6528,
+      "fidelity_vs_4fm_pearson": 0.557,
+      "fidelity_vs_4fm_mae": 0.1753,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.7492,
+      "ensemble_4fm_holdout_score": 0.9156,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.1061,
+      "deletion_rand20_delta": 0.0502,
+      "deletion_bot20_delta": 0.032,
+      "deletion_top_vs_rand_ratio": 2.115,
+      "deletion_top_vs_rand_ci95": [
+        1.685,
+        2.548
+      ],
+      "deletion_top_vs_bot_ratio": 3.31,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "hemolysis_HC50": {
+      "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.4835,
+      "fidelity_vs_4fm_pearson": 0.5161,
+      "fidelity_vs_4fm_mae": 0.3291,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.3747,
+      "ensemble_4fm_holdout_score": 0.6072,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 1.0,
+      "deletion_rand20_delta": 1.7372,
+      "deletion_bot20_delta": 1.4835,
+      "deletion_top_vs_rand_ratio": 0.576,
+      "deletion_top_vs_rand_ci95": [
+        0.524,
+        0.632
+      ],
+      "deletion_top_vs_bot_ratio": 0.674,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "overall_peptide_toxicity": {
+      "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.8695,
+      "fidelity_vs_4fm_pearson": 0.8744,
+      "fidelity_vs_4fm_mae": 0.141,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.8977,
+      "ensemble_4fm_holdout_score": 0.9623,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.2549,
+      "deletion_rand20_delta": 0.0545,
+      "deletion_bot20_delta": 0.0646,
+      "deletion_top_vs_rand_ratio": 4.677,
+      "deletion_top_vs_rand_ci95": [
+        3.32,
+        6.499
+      ],
+      "deletion_top_vs_bot_ratio": 3.946,
+      "interpretability_tier": "faithful_surrogate"
+    },
+    "cytotoxicity_cls": {
+      "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.6691,
+      "fidelity_vs_4fm_pearson": 0.6323,
+      "fidelity_vs_4fm_mae": 0.1842,
+      "ground_truth_metric": "roc_auc",
+      "egat_holdout_score": 0.7955,
+      "ensemble_4fm_holdout_score": 0.9289,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.1237,
+      "deletion_rand20_delta": 0.0636,
+      "deletion_bot20_delta": 0.0738,
+      "deletion_top_vs_rand_ratio": 1.944,
+      "deletion_top_vs_rand_ci95": [
+        1.532,
+        2.452
+      ],
+      "deletion_top_vs_bot_ratio": 1.677,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "cytotoxicity_CC50": {
+      "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.5994,
+      "fidelity_vs_4fm_pearson": 0.8386,
+      "fidelity_vs_4fm_mae": 0.3271,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.404,
+      "ensemble_4fm_holdout_score": 0.6341,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.9911,
+      "deletion_rand20_delta": 1.3912,
+      "deletion_bot20_delta": 1.2414,
+      "deletion_top_vs_rand_ratio": 0.712,
+      "deletion_top_vs_rand_ci95": [
+        0.659,
+        0.768
+      ],
+      "deletion_top_vs_bot_ratio": 0.798,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    },
+    "half_life_reg": {
+      "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
+      "n_holdout_evaluated": 200,
+      "fidelity_vs_4fm_spearman": 0.4683,
+      "fidelity_vs_4fm_pearson": 0.4992,
+      "fidelity_vs_4fm_mae": 0.4456,
+      "ground_truth_metric": "spearman",
+      "egat_holdout_score": 0.3875,
+      "ensemble_4fm_holdout_score": 0.4934,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.3113,
+      "deletion_rand20_delta": 0.1601,
+      "deletion_bot20_delta": 0.3812,
+      "deletion_top_vs_rand_ratio": 1.944,
+      "deletion_top_vs_rand_ci95": [
+        1.584,
+        2.477
+      ],
+      "deletion_top_vs_bot_ratio": 0.816,
+      "interpretability_tier": "qualitative_saliency_heuristic"
+    }
+  },
+  "case17_true_dynamic_lodo": {
+    "primary_metric_policy": "Pure-ML route-matched metrics are reported as the PRIMARY Case17 headline. True Dynamic Leave-One-Drug-Out (LODO) rule overlay is computed by invoking the exact production `detect_acylation_anchor(mol, exclude_drug=drug_name)` (dynamically recomputing geometric-mean half-life from remaining peer drugs only; Insulin degludec has no remaining C16-diacid peer and falls back to Pure-ML).",
+    "n_evaluated": 16,
+    "pure_ml_all_16": {
+      "n_total": 16,
+      "n_exact": 16,
+      "n_censored": 0,
+      "mae": 0.31851,
+      "rmse": 0.42133,
+      "r2": 0.77104,
+      "spearman": 0.89412,
+      "pearson": 0.901,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.31851,
+      "censored_c_index": null,
+      "mae_ci95": [
+        0.1927,
+        0.4649
+      ],
+      "spearman_ci95": [
+        0.6567,
+        0.9792
+      ]
+    },
+    "lodo_rule_overlay_all_16": {
+      "n_total": 16,
+      "n_exact": 16,
+      "n_censored": 0,
+      "mae": 0.30824,
+      "rmse": 0.40708,
+      "r2": 0.78627,
+      "spearman": 0.87059,
+      "pearson": 0.90475,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.30824,
+      "censored_c_index": null,
+      "mae_ci95": [
+        0.1942,
+        0.447
+      ],
+      "spearman_ci95": [
+        0.5923,
+        0.9694
+      ]
+    },
+    "pure_ml_all_16_mae_log10": 0.31851,
+    "pure_ml_all_16_r2": 0.77104,
+    "pure_ml_all_16_spearman": 0.89412,
+    "pure_ml_lipidated_5_mae_log10": 0.2171,
+    "pure_ml_non_lipidated_11_mae_log10": 0.3646,
+    "lodo_rule_overlay_lipidated_5_mae_log10": 0.1842,
+    "lodo_rule_overlay_all_16_mae_log10": 0.30824,
+    "lodo_rule_overlay_all_16_r2": 0.78627,
+    "lodo_rule_overlay_all_16_spearman": 0.87059,
+    "insulin_degludec_circularity_removed": true,
+    "fusion_protein_anchors_removed": true,
+    "computed_via_production_smarts_function": true,
+    "per_drug_lodo_audit": [
+      {
+        "drug_name": "Leuprolide",
+        "obs_h": 3.0,
+        "pure_ml_h": 3.61,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 3.61,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Bivalirudin",
+        "obs_h": 0.42,
+        "pure_ml_h": 1.24,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 1.24,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Glucagon",
+        "obs_h": 0.22,
+        "pure_ml_h": 0.19,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 0.19,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Teriparatide",
+        "obs_h": 1.0,
+        "pure_ml_h": 2.28,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 2.28,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Exenatide",
+        "obs_h": 2.4,
+        "pure_ml_h": 8.58,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 8.58,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Liraglutide",
+        "obs_h": 13.0,
+        "pure_ml_h": 15.05,
+        "smarts_detected": true,
+        "acylation_class": "daily_acyl",
+        "lodo_overlay_h": 6.0,
+        "lodo_effective_h": 6.0,
+        "lodo_remaining_refs": [
+          "Insulin detemir (C14 monoacyl-Lys, ~6 h FDA label)"
+        ]
+      },
+      {
+        "drug_name": "Semaglutide",
+        "obs_h": 168.0,
+        "pure_ml_h": 63.38,
+        "smarts_detected": true,
+        "acylation_class": "weekly_diacid",
+        "lodo_overlay_h": 142.8,
+        "lodo_effective_h": 142.8,
+        "lodo_remaining_refs": [
+          "Tirzepatide (C20 diacid, ~120 h FDA label)",
+          "Cagrilintide (C20 diacid, ~170 h clinical Ph1/2)"
+        ]
+      },
+      {
+        "drug_name": "Tirzepatide",
+        "obs_h": 125.0,
+        "pure_ml_h": 111.44,
+        "smarts_detected": true,
+        "acylation_class": "weekly_diacid",
+        "lodo_overlay_h": 169.0,
+        "lodo_effective_h": 169.0,
+        "lodo_remaining_refs": [
+          "Semaglutide (C18 diacid, ~168 h FDA label)",
+          "Cagrilintide (C20 diacid, ~170 h clinical Ph1/2)"
+        ]
+      },
+      {
+        "drug_name": "Cyclosporine_A",
+        "obs_h": 8.4,
+        "pure_ml_h": 9.52,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 9.52,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Oxytocin",
+        "obs_h": 0.067,
+        "pure_ml_h": 0.75,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 0.75,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Octreotide",
+        "obs_h": 1.8,
+        "pure_ml_h": 5.53,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 5.53,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Ziconotide",
+        "obs_h": 4.6,
+        "pure_ml_h": 1.19,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 1.19,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Daptomycin",
+        "obs_h": 8.5,
+        "pure_ml_h": 5.93,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 5.93,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Caspofungin",
+        "obs_h": 10.0,
+        "pure_ml_h": 13.87,
+        "smarts_detected": false,
+        "acylation_class": null,
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 13.87,
+        "lodo_remaining_refs": []
+      },
+      {
+        "drug_name": "Insulin_detemir",
+        "obs_h": 6.0,
+        "pure_ml_h": 19.01,
+        "smarts_detected": true,
+        "acylation_class": "daily_acyl",
+        "lodo_overlay_h": 13.0,
+        "lodo_effective_h": 13.0,
+        "lodo_remaining_refs": [
+          "Liraglutide (C16 monoacyl-γGlu-Lys, ~13 h FDA label)"
+        ]
+      },
+      {
+        "drug_name": "Insulin_degludec",
+        "obs_h": 25.0,
+        "pure_ml_h": 22.39,
+        "smarts_detected": true,
+        "acylation_class": "depot_diacid",
+        "lodo_overlay_h": null,
+        "lodo_effective_h": 22.39,
+        "lodo_remaining_refs": []
+      }
+    ]
+  }
+}

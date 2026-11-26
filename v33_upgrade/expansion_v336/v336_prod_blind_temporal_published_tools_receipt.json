@@ -1,0 +1,798 @@
+{
+  "schema": "v336_prod_blind_temporal_published_tools_receipt_v1",
+  "elapsed_sec": 7783.6,
+  "external_baselines_same_split": {
+    "PAMPA": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 1715,
+        "spearman": 0.78282,
+        "mae": 0.37375,
+        "r2": 0.62512
+      },
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
+        "n": 1715,
+        "spearman": 0.7537,
+        "mae": 0.39625,
+        "r2": 0.58998,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0229,
+          "ci95": [
+            0.0034,
+            0.04
+          ],
+          "p_value": 0.03,
+          "p_value_display": "0.0300",
+          "p_value_holm": 0.12
+        }
+      },
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 1715,
+        "spearman": 0.79607,
+        "mae": 0.37284,
+        "r2": 0.64653,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": -0.0004,
+          "ci95": [
+            -0.0157,
+            0.0166
+          ],
+          "p_value": 0.94,
+          "p_value_display": "0.9400",
+          "p_value_holm": 0.94
+        }
+      },
+      "Internal_SingleFM_ChemBERTa_MTR": {
+        "n": 1715,
+        "spearman": 0.62536,
+        "mae": 0.4727,
+        "r2": 0.44642,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1002,
+          "ci95": [
+            0.0639,
+            0.1404
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Internal_SingleFM_PeptideCLM2": {
+        "n": 1715,
+        "spearman": 0.65829,
+        "mae": 0.45724,
+        "r2": 0.45638,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0832,
+          "ci95": [
+            0.0484,
+            0.1162
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Internal_SingleFM_ESMC_600M": {
+        "n": 1524,
+        "spearman": 0.42841,
+        "mae": 0.5377,
+        "r2": 0.22316,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 1524,
+          "n_clusters": 81,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1673,
+          "ci95": [
+            0.1042,
+            0.2137
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_CycPeptMP_RF750_SameSplit": {
+        "n": 1715,
+        "spearman": 0.75955,
+        "mae": 0.39257,
+        "r2": 0.59596,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "CycPeptMP / CycPeptMPDB RF baseline (Li et al., Brief. Bioinform. 2024, config/baselines.json: n_estimators=750, max_depth=20)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0196,
+          "ci95": [
+            -0.0014,
+            0.0399
+          ],
+          "p_value": 0.072,
+          "p_value_display": "0.0720",
+          "p_value_holm": 0.216
+        }
+      },
+      "Published_CycPeptMP_2DSVM_SameSplit": {
+        "n": 1715,
+        "spearman": 0.72469,
+        "mae": 0.41319,
+        "r2": 0.53897,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "CycPeptMP 2D-descriptor SVR baseline (Li et al., Brief. Bioinform. 2024, config/baselines.json: C=8)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0401,
+          "ci95": [
+            -0.0055,
+            0.0774
+          ],
+          "p_value": 0.076,
+          "p_value_display": "0.0760",
+          "p_value_holm": 0.216
+        }
+      },
+      "Published_MultiCycGT_SVM_Tanimoto_SameSplit": {
+        "n": 1715,
+        "spearman": 0.71119,
+        "mae": 0.42228,
+        "r2": 0.51066,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "Multi_CycGT Tanimoto-Kernel SVR (Cao et al., JCIM 2024; github.com/hongliangduan/Multi_CycGT svm_tanimoto)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0468,
+          "ci95": [
+            0.0133,
+            0.0766
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      }
+    },
+    "hemolysis_cls": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 4101,
+        "roc_auc": 0.8973,
+        "brier": 0.1126
+      },
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
+        "n": 4101,
+        "roc_auc": 0.872,
+        "brier": 0.1342,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0255,
+          "ci95": [
+            0.0074,
+            0.043
+          ],
+          "p_value": 0.006,
+          "p_value_display": "0.0060",
+          "p_value_holm": 0.048
+        }
+      },
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 4101,
+        "roc_auc": 0.8727,
+        "brier": 0.1283,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0247,
+          "ci95": [
+            0.0065,
+            0.042
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "p_value_holm": 0.044
+        }
+      },
+      "Internal_SingleFM_ChemBERTa_MTR": {
+        "n": 3629,
+        "roc_auc": 0.847,
+        "brier": 0.1372,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0501,
+          "ci95": [
+            0.0363,
+            0.066
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Internal_SingleFM_PeptideCLM2": {
+        "n": 3629,
+        "roc_auc": 0.8505,
+        "brier": 0.1335,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 3629,
+          "n_clusters": 1233,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0463,
+          "ci95": [
+            0.0347,
+            0.0595
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Internal_SingleFM_ESMC_600M": {
+        "n": 4025,
+        "roc_auc": 0.8305,
+        "brier": 0.1408,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 4025,
+          "n_clusters": 1255,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0676,
+          "ci95": [
+            0.0434,
+            0.0966
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_HemoPI2_v1_3_Benchmark": {
+        "tool_citation": "HemoPI2 v1.3 (Rathore et al., Protein Science 2025; PyPI hemopi2==1.3)",
+        "n_holdout_canonical_seq": 3230,
+        "n_holdout_strictly_novel_vs_hemopi2_corpus": 2334,
+        "HemoPI2_v1_3_Pretrained_ESM2t6_AllCanonical": {
+          "n": 3230,
+          "roc_auc": 0.8305,
+          "brier": 0.1754,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "mean_delta": 0.0651,
+            "ci95": [
+              0.0229,
+              0.105
+            ],
+            "p_value": 0.001,
+            "p_value_display": "<=0.001",
+            "p_value_holm": 0.021
+          },
+          "note": "Off-the-shelf HemoPI2 ESM2-t6 fine-tuned classifier (all canonical holdout)"
+        },
+        "HemoPI2_v1_3_Pretrained_ESM2t6_ZeroOverlapNovel": {
+          "n": 2334,
+          "roc_auc": 0.8317,
+          "brier": 0.1764,
+          "omni_same_subset_roc_auc": 0.8867,
+          "paired_boot_vs_omni": {
+            "n_eval": 2334,
+            "n_clusters": 1071,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "mean_delta": 0.0562,
+            "ci95": [
+              0.0148,
+              0.1039
+            ],
+            "p_value": 0.004,
+            "p_value_display": "0.0040",
+            "p_value_holm": 0.044
+          },
+          "note": "Off-the-shelf HemoPI2 ESM2-t6 evaluated strictly on novel peptides absent from HemoPI2 corpus"
+        }
+      }
+    },
+    "half_life_reg": {
+      "OmniPanel_4FM_SuperEnsemble": {
+        "n": 567,
+        "spearman": 0.4847,
+        "mae": 0.66401,
+        "r2": 0.39689
+      },
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
+        "n": 567,
+        "spearman": 0.34683,
+        "mae": 0.74987,
+        "r2": 0.22445,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0826,
+          "ci95": [
+            0.0316,
+            0.1319
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "p_value_holm": 0.044
+        }
+      },
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
+        "n": 567,
+        "spearman": 0.44105,
+        "mae": 0.70492,
+        "r2": 0.32484,
+        "category": "internal_qsar",
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0412,
+          "ci95": [
+            0.0063,
+            0.0811
+          ],
+          "p_value": 0.024,
+          "p_value_display": "0.0240",
+          "p_value_holm": 0.12
+        }
+      },
+      "Internal_SingleFM_ChemBERTa_MTR": {
+        "n": 527,
+        "spearman": 0.33621,
+        "mae": 0.78803,
+        "r2": 0.23151,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1172,
+          "ci95": [
+            0.0591,
+            0.1673
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "p_value_holm": 0.024
+        }
+      },
+      "Internal_SingleFM_PeptideCLM2": {
+        "n": 527,
+        "spearman": 0.45363,
+        "mae": 0.74812,
+        "r2": 0.26314,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 527,
+          "n_clusters": 153,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0758,
+          "ci95": [
+            0.0136,
+            0.1273
+          ],
+          "p_value": 0.012,
+          "p_value_display": "0.0120",
+          "p_value_holm": 0.072
+        }
+      },
+      "Internal_SingleFM_ESMC_600M": {
+        "n": 544,
+        "spearman": 0.24579,
+        "mae": 0.82054,
+        "r2": 0.06227,
+        "category": "internal_single_fm",
+        "paired_boot_vs_omni": {
+          "n_eval": 544,
+          "n_clusters": 149,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1467,
+          "ci95": [
+            0.0645,
+            0.2287
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_PLifePred_AAC_DPC_SVR_SameSplit": {
+        "n": 567,
+        "spearman": 0.35987,
+        "mae": 0.76183,
+        "r2": 0.15704,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "PLifePred-style AAC + DPC + PhysChem RBF-SVR architecture (Mathur et al., Sci. Rep. 2018) retrained on identical half_life_reg CV split",
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0954,
+          "ci95": [
+            0.0242,
+            0.1536
+          ],
+          "p_value": 0.01,
+          "p_value_display": "0.0100",
+          "p_value_holm": 0.07
+        }
+      }
+    },
+    "_multiplicity_correction": {
+      "method": "Holm-Bonferroni step-down across all paired cluster-bootstrap comparisons",
+      "n_comparisons": 21,
+      "p_floor_note": "With 1,000 bootstrap replicates, p_value=0.001 denotes p <= 0.001."
+    }
+  },
+  "temporal_split_benchmarks": {
+    "PAMPA": {
+      "description": "Release-cohort split (non-SweMacrocycleDB historical train -> SweMacrocycleDB 2024-2025 + 2025-2026 JMC/ACSMCL test; exact compound dedup)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "super_ensemble",
+      "weights": {
+        "cpu": 0.255,
+        "fusion": 0.745
+      },
+      "task_type": "regression",
+      "n_train_historical": 7395,
+      "n_test_future_novel": 1177,
+      "cpu_qsar_track": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 1.04919,
+        "rmse": 1.23041,
+        "r2": -1.07055,
+        "spearman": -0.12064,
+        "pearson": -0.07809,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.04919,
+        "censored_c_index": null
+      },
+      "prod_super_ensemble": {
+        "n_total": 1177,
+        "n_exact": 1177,
+        "n_censored": 0,
+        "mae": 0.9173,
+        "rmse": 1.07647,
+        "r2": -0.58486,
+        "spearman": -0.00664,
+        "pearson": 0.05448,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.9173,
+        "censored_c_index": null
+      }
+    },
+    "hemolysis_cls": {
+      "description": "Release-cohort split (historical DBAASP/ENDL/HLPpredFuse train -> HemoPI2 2025 + Hemolytik2 2026 release cohorts; note: 2025-2026 compendia include some earlier literature)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "super_ensemble",
+      "weights": {
+        "cpu": 0.45,
+        "fusion": 0.55
+      },
+      "task_type": "classification",
+      "n_train_historical": 15247,
+      "n_test_future_novel": 4300,
+      "train_n_pos": 4015,
+      "train_n_neg": 11232,
+      "train_pos_rate": 0.2633,
+      "test_n_pos": 1757,
+      "test_n_neg": 2543,
+      "test_pos_rate": 0.4086,
+      "cpu_qsar_track": {
+        "roc_auc": 0.7902,
+        "brier": 0.1795
+      },
+      "prod_super_ensemble": {
+        "roc_auc": 0.8316,
+        "brier": 0.1591
+      }
+    },
+    "LogD7.4": {
+      "description": "Release-cohort split (historical Naylor/PEGASUS/ChEMBL train -> 2025-2026 Chloroalkene/JMC test; exact compound dedup)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "fusion",
+      "weights": {
+        "fusion": 1.0
+      },
+      "task_type": "regression",
+      "n_train_historical": 653,
+      "n_test_future_novel": 22,
+      "cpu_qsar_track": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.18955,
+        "rmse": 1.57572,
+        "r2": -0.27431,
+        "spearman": 0.58006,
+        "pearson": 0.68291,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.18955,
+        "censored_c_index": null
+      },
+      "prod_super_ensemble": {
+        "n_total": 22,
+        "n_exact": 22,
+        "n_censored": 0,
+        "mae": 1.10824,
+        "rmse": 1.52634,
+        "r2": -0.1957,
+        "spearman": 0.55973,
+        "pearson": 0.63384,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 1.10824,
+        "censored_c_index": null
+      }
+    }
+  },
+  "recent_fda_2019_2023_blind_set": {
+    "protocol": "Production V33 CPU + 4-FM Fusion Super-Ensemble under direct query-to-train structural/sequence isolation (excludes every training compound with InChIKey14 match, Morgan-2048 radius-2 Tc >= 0.40, or canonical 3-mer sequence Jaccard >= 0.40 to any of the 11 FDA 2019-2023 peptides; exact counts logged).",
+    "n_drugs": 11,
+    "approval_years": "2019-2023",
+    "exclusion_ledger": {
+      "half_life_reg": {
+        "n_train_before": 2901,
+        "n_excluded_total": 1976,
+        "n_excluded_exact_ik_or_ck": 40,
+        "n_excluded_morgan2048_tc_ge_0_40": 1935,
+        "n_excluded_seq_3mer_ge_0_40": 1,
+        "n_clusters_touched": 498,
+        "n_train_after": 925,
+        "n_clusters_after": 429,
+        "pct_training_retained": 31.9,
+        "prod_stack_winning_family": "fusion",
+        "prod_stack_weights": {
+          "fusion": 1.0
+        }
+      },
+      "PPB": {
+        "n_train_before": 132,
+        "n_excluded_total": 55,
+        "n_excluded_exact_ik_or_ck": 9,
+        "n_excluded_morgan2048_tc_ge_0_40": 46,
+        "n_excluded_seq_3mer_ge_0_40": 0,
+        "n_clusters_touched": 25,
+        "n_train_after": 77,
+        "n_clusters_after": 28,
+        "pct_training_retained": 58.3,
+        "prod_stack_winning_family": "fusion",
+        "prod_stack_weights": {
+          "fusion": 1.0
+        }
+      },
+      "hemolysis_cls": {
+        "n_train_before": 20506,
+        "n_excluded_total": 13613,
+        "n_excluded_exact_ik_or_ck": 0,
+        "n_excluded_morgan2048_tc_ge_0_40": 13613,
+        "n_excluded_seq_3mer_ge_0_40": 0,
+        "n_clusters_touched": 5304,
+        "n_train_after": 6893,
+        "n_clusters_after": 2099,
+        "pct_training_retained": 33.6,
+        "prod_stack_winning_family": "super_ensemble",
+        "prod_stack_weights": {
+          "cpu": 0.55,
+          "fusion": 0.45
+        }
+      }
+    },
+    "half_life_log10_metrics": {
+      "n_total": 11,
+      "n_exact": 11,
+      "n_censored": 0,
+      "mae": 0.42794,
+      "rmse": 0.52164,
+      "r2": 0.6404,
+      "spearman": 0.8,
+      "pearson": 0.87758,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.42794,
+      "censored_c_index": null,
+      "n_evaluated": 11,
+      "spearman_fisher_ci95": [
+        0.3848,
+        0.9459
+      ],
+      "mae_boot_ci95": [
+        0.2649,
+        0.6172
+      ],
+      "constant_median_baseline_mae": 0.6833,
+      "mae_improvement_vs_constant_pct": 37.4
+    },
+    "ppb_metrics": {
+      "n_total": 8,
+      "n_exact": 8,
+      "n_censored": 0,
+      "mae": 0.29671,
+      "rmse": 0.31438,
+      "r2": 0.31602,
+      "spearman": 0.73055,
+      "pearson": 0.66194,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.29671,
+      "censored_c_index": null,
+      "n_evaluated": 8,
+      "spearman_fisher_ci95": [
+        0.0533,
+        0.9475
+      ],
+      "mae_boot_ci95": [
+        0.2345,
+        0.3726
+      ],
+      "constant_median_baseline_mae": 0.326,
+      "mae_improvement_vs_constant_pct": 9.0
+    },
+    "hemolysis_predicted_probability_summary": {
+      "n_gt_0_50": 1,
+      "n_total": 11,
+      "max_pred_prob": 0.5548,
+      "median_pred_prob": 0.0562,
+      "caveat": "Approved clinical peptides lack uniform in vitro RBC HC50 labels; reported strictly as predicted-probability sanity check, NOT as a ground-truth false-positive rate."
+    },
+    "drugs": [
+      {
+        "name": "Zilucoplan",
+        "fda_approval_year": 2023,
+        "route": "SC",
+        "obs_half_life_h": 172.0,
+        "blind_pred_half_life_h": 19.89,
+        "obs_ppb": 0.99,
+        "blind_pred_ppb": 0.791,
+        "blind_pred_hemolysis_prob": 0.555,
+        "fda_label_note": "FDA Zilbrysq NDA 216834 (Oct 2023): T1/2 ~172 h (~7 days), PPB >99%"
+      },
+      {
+        "name": "Motixafortide",
+        "fda_approval_year": 2023,
+        "route": "SC",
+        "obs_half_life_h": 2.0,
+        "blind_pred_half_life_h": 2.76,
+        "obs_ppb": 0.99,
+        "blind_pred_ppb": 0.595,
+        "blind_pred_hemolysis_prob": 0.032,
+        "fda_label_note": "FDA Aphexda NDA 217159 (Sep 2023): T1/2 ~2 h, PPB >99%, Vd 27 L, CL 46.5 L/h"
+      },
+      {
+        "name": "Rezafungin",
+        "fda_approval_year": 2023,
+        "route": "IV",
+        "obs_half_life_h": 133.0,
+        "blind_pred_half_life_h": 13.1,
+        "obs_ppb": 0.974,
+        "blind_pred_ppb": 0.771,
+        "blind_pred_hemolysis_prob": 0.312,
+        "fda_label_note": "FDA Rezzayo NDA 217417 (Mar 2023): T1/2 ~133 h, PPB 97.4%, Vd 67 L, CL 0.35 L/h"
+      },
+      {
+        "name": "Trofinetide",
+        "fda_approval_year": 2023,
+        "route": "PO",
+        "obs_half_life_h": 1.5,
+        "blind_pred_half_life_h": 0.58,
+        "obs_ppb": 0.06,
+        "blind_pred_ppb": 0.58,
+        "blind_pred_hemolysis_prob": 0.001,
+        "fda_label_note": "FDA Daybue NDA 217026 (Mar 2023): T1/2 ~1.5 h, PPB <6%, Vd 80 L"
+      },
+      {
+        "name": "Voclosporin",
+        "fda_approval_year": 2021,
+        "route": "PO",
+        "obs_half_life_h": 30.0,
+        "blind_pred_half_life_h": 11.06,
+        "obs_ppb": 0.97,
+        "blind_pred_ppb": 0.735,
+        "blind_pred_hemolysis_prob": 0.388,
+        "fda_label_note": "FDA Lupkynis NDA 213716 (Jan 2021): T1/2 ~30 h, PPB 97%, Vd 2154 L"
+      },
+      {
+        "name": "Difelikefalin",
+        "fda_approval_year": 2021,
+        "route": "IV",
+        "obs_half_life_h": 2.6,
+        "blind_pred_half_life_h": 0.67,
+        "obs_ppb": 0.255,
+        "blind_pred_ppb": 0.498,
+        "blind_pred_hemolysis_prob": 0.064,
+        "fda_label_note": "FDA Korsuva NDA 214916 (Aug 2021): T1/2 ~2-3 h (healthy) / 23-31 h (HD), PPB 23-28%, Vd 0.238 L/kg"
+      },
+      {
+        "name": "Dasiglucagon",
+        "fda_approval_year": 2021,
+        "route": "SC",
+        "obs_half_life_h": 0.5,
+        "blind_pred_half_life_h": 1.37,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.678,
+        "blind_pred_hemolysis_prob": 0.056,
+        "fda_label_note": "FDA Zegalogue NDA 214231 (Mar 2021): T1/2 ~0.5 h, Vd 47-57 L"
+      },
+      {
+        "name": "Vosoritide",
+        "fda_approval_year": 2021,
+        "route": "SC",
+        "obs_half_life_h": 0.46,
+        "blind_pred_half_life_h": 0.88,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.684,
+        "blind_pred_hemolysis_prob": 0.033,
+        "fda_label_note": "FDA Voxzogo NDA 214938 (Nov 2021): T1/2 ~27.9 min (0.46 h), Vd 2.95 L/kg, CL 91 mL/min/kg"
+      },
+      {
+        "name": "Setmelanotide",
+        "fda_approval_year": 2020,
+        "route": "SC",
+        "obs_half_life_h": 11.0,
+        "blind_pred_half_life_h": 7.37,
+        "obs_ppb": 0.791,
+        "blind_pred_ppb": 0.475,
+        "blind_pred_hemolysis_prob": 0.003,
+        "fda_label_note": "FDA Imcivree NDA 213793 (Nov 2020): T1/2 ~11 h, PPB 79.1%, Vd 75.2 L, CL 7.15 L/h"
+      },
+      {
+        "name": "Bremelanotide",
+        "fda_approval_year": 2019,
+        "route": "SC",
+        "obs_half_life_h": 2.7,
+        "blind_pred_half_life_h": 5.04,
+        "obs_ppb": 0.21,
+        "blind_pred_ppb": 0.473,
+        "blind_pred_hemolysis_prob": 0.064,
+        "fda_label_note": "FDA Vyleesi NDA 210557 (Jun 2019): T1/2 ~2.7 h, PPB 21%, F ~100% SC, Vd 25 L, CL 6.5 L/h"
+      },
+      {
+        "name": "Terlipressin",
+        "fda_approval_year": 2022,
+        "route": "IV",
+        "obs_half_life_h": 0.9,
+        "blind_pred_half_life_h": 0.86,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.451,
+        "blind_pred_hemolysis_prob": 0.023,
+        "fda_label_note": "FDA Terlivaz NDA 022231 (Sep 2022): terminal T1/2 ~0.9 h, Vd ~6.3 L, CL ~27.4 L/h"
+      }
+    ]
+  }
+}

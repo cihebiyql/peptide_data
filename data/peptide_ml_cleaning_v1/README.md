@@ -1,16 +1,5 @@
-# Peptide ML Cleaning v1
+﻿# Aggregate Metadata Only (Raw Third-Party TSVs Excluded)
 
-This release implements cleaning steps 1-6 over the V15 training-deduplicated candidate table: semantic tasks, normalized observation deduplication, safe identity/model representations, unit normalization, censoring sidecars, and binary evidence lanes. It does not create splits and does not promote literature staging.
+Row-level third-party observation tables previously generated during cleaning (`normalized_observations.tsv`, `strict_numeric.tsv`, `censored_observations.tsv`, `binary_evidence_catalog.tsv`, `condition_conflicts.tsv`, `exact_duplicates.tsv`, `literature_review_cleaned.tsv`, `positive_unlabeled.tsv`, `review_observations.tsv`) are intentionally excluded from this public repository and purged from git history to respect upstream third-party dataset licenses (see `DATA_LICENSES.md` and `NOTICE`).
 
-## Counts
-
-- Input in-scope rows: 20,052
-- Normalized representative rows: 19,979
-- Strict numeric research candidates: 11,591
-- Censored numeric sidecar: 230
-- Binary evidence catalog: 3,930
-- Positive-unlabeled: 920
-- Identity/normalization/semantic review: 3,308
-- Literature review retained: 1,560; direct training rows: 0
-
-`strict_numeric.tsv` is the only point-regression candidate table. Binary rows remain physically separated by evidence lane. `task_registry.tsv` declares one semantic signature per task. Future split work must use identity and source groups; no split is fabricated here.
+Only aggregate metadata (`exclusion_summary.tsv`, `task_registry.tsv`, `manifest.json`) and aggregate corpus statistics in `data/peptide_ml_cleaning_v1_statistics_v1/` are distributed here.

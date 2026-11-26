@@ -1,39 +1,50 @@
 # Data & Pretrained Model License Ledger (`DATA_LICENSES.md`)
 
-> **Code License**: MIT (see `LICENSE`).  
-> **Trained Model Weights & Web Inference Scope**: Strictly **Non-Commercial Academic & Preclinical Research Only** (`internal_research_only`), respecting the most restrictive upstream non-commercial academic terms among constituent public corpora.  
-> **Public Repository Redistribution Policy**: This repository distributes platform code, audited evaluation manifests, and US Federal Government public-domain regulatory PK references only. Raw third-party datasets with non-commercial or share-alike terms are NOT mirrored in this repository.
+> **Code License**: MIT (original source code only — see `LICENSE`).  
+> **Trained Model Weights & Hosted Web Service**: Strictly **Non-Commercial Academic & Early Preclinical Research Only** (`internal_research_only`), respecting the most restrictive non-commercial upstream terms among constituent corpora and foundation model encoders.  
+> **Public Repository Redistribution Policy**: This public repository redistributes **zero row-level third-party observation tables**. Only original code, audited evaluation manifests, aggregate corpus statistics, and factual FDA/DailyMed numeric PK pointers are hosted here.
 
 ---
 
-## 1. Upstream Experimental Datasets
+## 1. Upstream Experimental Datasets (Training-Only — NOT Redistributed in Public Repo)
 
-| Dataset / Source | Endpoints Covered | Upstream License / Terms | Redistributed in Public Repo? | Primary Citation / URL |
+| Dataset / Source | Endpoints Covered | Verified Upstream License / Terms | Redistributed in Public Repo? | Primary Citation / Portal |
 | :--- | :--- | :--- | :---: | :--- |
-| **CycPeptMPDB (v1.2)** | PAMPA, Caco-2, MDCK, RRCK, LogD7.4 | Academic / CC-BY-4.0 (verify latest portal terms) | No (training-only) | Li et al., *J. Chem. Inf. Model.* 2023; https://cycpeptmpdb.com/ |
-| **SweMacrocycleDB** | PAMPA, Efflux Ratio | CC-BY 4.0 (Figshare) | No (training-only) | Figshare v1 (2024–2025) |
-| **Naylor LPE 2018 / JMC 2024 Macrocycle Lipophilicity** | LogD7.4 (octanol/water), LogD_decadiene (1,9-decadiene/water) | Published literature factual measurements (ACS JMC SI) | No (training-only) | Naylor et al., *J. Med. Chem.* 2018; *J. Med. Chem.* 2024 |
-| **DBAASP v4.0.1** | Hemolysis (cls/HC50/MHC), Cytotoxicity, ESKAPE MIC/MBC/LC | Academic / Non-Commercial | No (training-only) | Pirtskhalava et al., *Nucleic Acids Res.* 2021; https://dbaasp.org/ |
-| **DRAMP / Hemolytik2 / HemoPI2** | Hemolysis, Cytotoxicity, AMP MIC | Academic / Non-Commercial | No (training-only) | Shi et al., *NAR* 2022; HemoPI2 (2025); Hemolytik2 (2026) |
-| **PEPlife2 / THPdb / PepTherDia** | Half-life (`half_life_reg/cls`), PPB, CL, Vd, F, Cmax | Academic / Non-Commercial | No (training-only) | Mathur et al. (*PEPlife*); Usmani et al. (*THPdb*); D'Aloisio et al. (*PepTherDia*) |
-| **B3Pdb** | Blood-Brain Barrier (`BBB`) | Academic / Non-Commercial | No (training-only) | Kumar et al., *J. Chem. Inf. Model.* 2021 |
-| **ChEMBL (v33–v35)** | Multi-endpoint PK / Toxicity / MIC | CC-BY-SA 3.0 | No (training-only) | Zdrazil et al., *Nucleic Acids Res.* 2024 |
-| **US FDA DailyMed SPL & Drugs@FDA NDA/BLA Reviews** | Clinical & Regulatory PK Reference Panel (`clinical_evidence_index.json`) | **US Federal Government Public Domain (17 U.S.C. § 105)** | **Yes (factual PK table + direct FDA/DailyMed URLs)** | https://dailymed.nlm.nih.gov/ ; https://www.accessdata.fda.gov/ |
-| **ADMETatlas V1.0** | Outbound interoperability links only; factual JMC 2024 decadiene measurements audited independently from primary JMC SI | **CC-BY-NC 4.0** (upstream portal) | **No** (zero derivative mirroring; outbound link only) | Yi et al., *Nucleic Acids Res.* 2026, doi:10.1093/nar/gkag1147 |
+| **CycPeptMPDB (v1.2)** | PAMPA, Caco-2, MDCK, RRCK, LogD7.4 | CC BY 4.0 (as declared on official CycPeptMPDB portal; underlying source copyrights retained by original papers) | **No** (training-only; aggregate stats only) | Li et al., *J. Chem. Inf. Model.* 2023; https://cycpeptmpdb.com/ |
+| **SweMacrocycleDB** | PAMPA, Efflux Ratio | CC BY 4.0 (Figshare release) | **No** (training-only) | SweMacrocycleDB Figshare v1 (2024–2025) |
+| **Naylor LPE 2018 / JMC 2024 Macrocycle Lipophilicity** | LogD7.4 (octanol/water), LogD_decadiene (1,9-decadiene/water) | Published literature factual measurements (JMC 2024 decadiene measurements ingested via ADMETatlas V1.0 structured table, CC-BY-NC 4.0 upstream curation; strictly non-commercial training-only) | **No** (training-only) | Naylor et al., *J. Med. Chem.* 2018; *J. Med. Chem.* 2024; Yi et al., *NAR* 2026 |
+| **DBAASP v4.0.1** | Hemolysis (cls/HC50/MHC), Cytotoxicity, ESKAPE MIC/MBC/LC | Academic / Non-Commercial (DBAASP Terms of Use) | **No** (training-only) | Pirtskhalava et al., *Nucleic Acids Res.* 2021; https://dbaasp.org/ |
+| **DRAMP / Hemolytik2 / HemoPI2** | Hemolysis, Cytotoxicity, AMP MIC | Academic / Non-Commercial (Raghava Lab / DRAMP academic terms; HemoPI2 GPL-3.0 code) | **No** (training-only) | Shi et al., *NAR* 2022; Rathore et al., *Protein Sci.* 2025 (HemoPI2) |
+| **PEPlife2 / THPdb / PepTherDia** | Half-life (`half_life_reg/cls`), PPB, CL, Vd, F, Cmax | Academic / Non-Commercial (Raghava Lab / PepTherDia CC BY-NC 4.0) | **No** (training-only) | Mathur et al. (*PEPlife*); Usmani et al. (*THPdb*); D'Aloisio et al. (*PepTherDia*) |
+| **B3Pdb** | Blood-Brain Barrier (`BBB`) | Academic / Non-Commercial (Raghava Lab academic terms) | **No** (training-only) | Kumar et al., *J. Chem. Inf. Model.* 2021 |
+| **ChEMBL (v33–v35)** | Multi-endpoint PK / Toxicity / MIC | CC BY-SA 3.0 | **No** (training-only) | Zdrazil et al., *Nucleic Acids Res.* 2024 |
+| **NLM DailyMed SPL & US FDA Drugs@FDA NDA/BLA Reviews** | Clinical & Regulatory PK Reference Panel (`clinical_evidence_index.json`) | Factual numeric PK measurements (non-copyrightable facts); FDA NDA/BLA reviews are US Federal Government works (17 U.S.C. § 105); DailyMed SPL contains manufacturer-submitted prescribing text (not reproduced; official `setid` URLs linked directly) | **Yes** (factual numeric PK table + verified DailyMed `setid` & FDA URLs only) | https://dailymed.nlm.nih.gov/ ; https://www.accessdata.fda.gov/ |
+| **ADMETatlas V1.0** | Outbound portal interoperability link; non-commercial training-only source for JMC 2024 `LogD_decadiene` table (not redistributed) | CC BY-NC 4.0 | **No** (zero derivative mirroring; outbound link only) | Yi et al., *Nucleic Acids Res.* 2026, doi:10.1093/nar/gkag1147 |
 
 ---
 
-## 2. Pretrained Foundation Models (Frozen Feature Encoders)
+## 2. Pretrained Foundation Models (Frozen Feature Encoders — Weights Not Redistributed)
 
-| Model | Modality | Upstream License | Source |
+| Model | Modality | Verified Upstream License | Source / Repository |
 | :--- | :--- | :--- | :--- |
-| **ESM-C 600M** | Canonical 20-AA Sequence (4-region pooling) | EvolutionaryScale Cambrian Open License (Non-Commercial) | EvolutionaryScale (`esmc_600m`) |
-| **ncAA-RepDistill v2** | Covalent SMILES (cyclic / modified peptides) | Academic Research License | Upstream checkpoint |
-| **PeptideCLM-2** | Covalent Peptide SMILES | Academic / Apache-2.0 | Upstream checkpoint |
-| **ChemBERTa-MTR** | Small-molecule / Peptide SMILES | MIT / Academic | DeepChem / HuggingFace |
+| **ESM-C 600M (`esmc_600m`)** | Canonical 20-AA Sequence (4-region pooling) | **EvolutionaryScale Cambrian Non-Commercial License** | https://github.com/evolutionaryscale/esm |
+| **ncAA-RepDistill v2** | Covalent SMILES (cyclic / modified peptides) | Non-Commercial Academic Research (upstream distilled checkpoint; weights not redistributed) | Internal distilled checkpoint |
+| **PeptideCLM-2** | Covalent Peptide SMILES | **MIT License** (official PeptideCLM / AaronFeller GitHub release) | https://github.com/AaronFeller/PeptideCLM |
+| **ChemBERTa-MTR (`ChemBERTa-77M-MTR`)** | Small-molecule / Peptide SMILES | **MIT License** (DeepChem / Seyone Chithrananda HuggingFace release) | https://huggingface.co/DeepChem/ChemBERTa-77M-MTR |
 
 ---
 
-## 3. Compliance Notes for Journal Data Availability Review
-1. **No CC-BY-NC Redistribution**: All CC-BY-NC derivative clinical summaries, FAERS counts, and clinical trial aggregations have been stripped from the public repository and REST API. The live Clinical & Regulatory PK panel serves exclusively US Federal Public-Domain FDA/DailyMed label facts with primary `dailymed.nlm.nih.gov` and `accessdata.fda.gov` URLs.
-2. **Non-Commercial Research Scope**: Because several constituent academic corpora (DBAASP, PEPlife2, THPdb) and ESM-C 600M carry non-commercial academic terms, all trained weights and live web predictions are restricted strictly to non-commercial academic research (`internal_research_only`). Commercial deployment requires independent re-licensing of upstream data and encoders.
+## 3. External Published Benchmark Tools Evaluated (Non-Redistributed Evaluation Only)
+
+| Tool | Endpoint Benchmarked | Upstream License | Source |
+| :--- | :--- | :--- | :--- |
+| **HemoPI2 (v1.3)** | `hemolysis_cls`, `hemolysis_HC50` | GPL-3.0 (PyPI `hemopi2==1.3`) | Rathore et al., *Protein Sci.* 2025; https://github.com/raghavagps/hemopi2 |
+| **CycPeptMP** | `PAMPA` | MIT License | Li et al., *Brief. Bioinform.* 2024; https://github.com/akiyamalab/cycpeptmp |
+| **Multi_CycGT** | `PAMPA` | GPL-3.0 License | Cao et al., *J. Chem. Inf. Model.* 2024; https://github.com/hongliangduan/Multi_CycGT |
+
+---
+
+## 4. Compliance Notes for Journal Data Availability Review
+1. **Strict Separation of Code, Data, and Weights**: Original code is MIT-licensed. Because constituent training corpora (DBAASP, PEPlife2, THPdb, ADMETatlas-extracted JMC 2024 decadiene table) and ESM-C 600M carry non-commercial terms, trained model weights and hosted predictions are strictly limited to non-commercial academic research (`internal_research_only`).
+2. **Zero Third-Party Dataset Mirroring**: All row-level third-party TSVs (including previously present `data/peptide_ml_cleaning_v1/*.tsv` files) and previous CC-BY-NC clinical index commits have been permanently removed from both the working tree and public git history.
+3. **DailyMed Provenance**: All 59 marketed FDA-approved peptide drugs in `clinical_evidence_index.json` contain strictly factual numeric PK values paired with live-verified NLM DailyMed SPL `setid` links (`dailymed.nlm.nih.gov`) and Drugs@FDA NDA/BLA review links (`accessdata.fda.gov`), with zero `ATLPD*` identifiers or CC-BY-NC narrative fields.

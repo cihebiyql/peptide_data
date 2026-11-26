@@ -162,7 +162,7 @@ def test_predict_semaglutide_smiles_and_name():
     assert data["query_name"] == "Semaglutide"
     assert data["mechanism_anchor"]["detected"] is True
     assert data["mechanism_anchor"]["acylation_class"] == "weekly_diacid"
-    assert data["mechanism_anchor"]["range_h"] == [120.0, 168.0]
+    assert data["mechanism_anchor"]["range_h"] == [120.0, 195.0]
     assert data["mechanism_anchor"]["ml_baseline_h"] is not None
     assert any(b["key"] == "fatty_diacid" for b in data["modifications"])
     assert any(h["key"] == "fatty_acyl" for h in data["svg_highlights"])
@@ -459,7 +459,7 @@ def test_mondrian_conformal_manifest_and_live_atom_attribution():
 
     manifest_path = Path(__file__).resolve().parents[2] / "bundle" / "v33_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["version"] == "v33.5"
+    assert manifest["version"] == "v33.6"
     reg_eps = [ep for ep, v in manifest["endpoints"].items() if v["task_type"] == "regression"]
     assert len(reg_eps) == 41
     assert "LogD_decadiene" in manifest["endpoints"]
@@ -538,8 +538,9 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
     assert by_ep["PAMPA"]["uq_reliability"] == "calibrated"
     assert by_ep["hemolysis_cls"]["uq_reliability"] is None
     assert by_ep["PAMPA"]["evidence_grade"] == "quantitative"
+    assert by_ep["PPB"]["evidence_grade"] == "rank_only"
     assert by_ep["LogD_decadiene"]["evidence_grade"] == "rank_only"
-    assert by_ep["Vd_absolute"]["evidence_grade"] == "rank_only"
+    assert by_ep["Vd_absolute"]["evidence_grade"] == "exploratory_not_recommended"
     assert isinstance(by_ep["PAMPA"]["holdout_ci95"], list) and len(by_ep["PAMPA"]["holdout_ci95"]) == 2
 
     # N5 + CSV formula injection + error row prediction_source + anonymous session isolation
@@ -602,29 +603,42 @@ def test_audit_regressions_uq_reliability_strict_remote_422_413_and_csv_source(m
         assert len({val for _, val in outs}) == 1
 
 
-def test_v335_logd_decadiene_chameleonicity_public_domain_pk_and_noncircular_anchor():
-    """Verify V33.5 Endpoint #47 (LogD_decadiene), calibrated ΔLogD scope warning, clean-room US FDA public-domain PK index & non-circular SMARTS anchor."""
-    # 1. Catalog browse mode for /api/v1/clinical-evidence (US Federal Public Domain, zero CC-BY-NC derivative counts)
+def test_v336_logd_decadiene_chameleonicity_dailymed_pk_true_lodo_and_adversarial_smarts():
+    """Verify V33.6 Round-2 remediations:
+    - Clean NLM DailyMed / FDA factual PK index (zero ATLPD / CC-BY-NC derivative fields, live setid)
+    - Strict RDKit SMARTS (zero false positives on cosmetic Pal-KTTKS, C16-AMP, free fatty acid, branched diacid)
+    - True Dynamic LODO acylation anchor (value_h dynamically changes under exclude_drug; Insulin degludec -> None)
+    - Calibrated ΔLogD macrocycle scope gating (non-macrocycle suppresses empirical_validation & tier)
+    - CI-aware evidence grading & V33.6 audit transparency blocks exposed in /api/v1/endpoints
+    """
+    from rdkit import Chem
+    from v33_upgrade.web.chem_utils import detect_acylation_anchor
+
+    # 1. Catalog browse mode for /api/v1/clinical-evidence (zero ATLPD / CC-BY-NC derivative fields)
     r_cat = client.get("/api/v1/clinical-evidence?limit=20")
     assert r_cat.status_code == 200
     cd = r_cat.json()
     assert cd["stats"]["n_products"] >= 55
     assert cd["stats"]["n_pk_records_indexed"] >= 400
-    assert "Public Domain" in cd["source_attribution"]["license"]
+    assert cd["stats"]["n_dailymed_setid_verified"] >= 45
+    assert "17 U.S.C." in cd["source_attribution"]["license"]
+    assert "ATLPD" not in r_cat.text
     assert len(cd["products"]) == 20
 
-    # 2. Exact query for Semaglutide public-domain US FDA/DailyMed PK (route-resolved oral + SC F)
+    # 2. Exact query for Semaglutide factual DailyMed/FDA PK (route-resolved oral + SC F, verified setid)
     r_sema = client.get("/api/v1/clinical-evidence?query=Semaglutide")
     assert r_sema.status_code == 200
     sd = r_sema.json()
     assert sd["matched"] is True
     assert sd["product"]["name"] == "Semaglutide"
+    assert sd["product"]["product_id"] == "fda_semaglutide"
+    assert sd["product"]["dailymed_setid"]
     assert sd["product"]["n_pk_records"] >= 5
     assert "context_counts" not in sd["product"]
     assert any(pk["endpoint"] == "F" and pk["route"] == "subcutaneous" for pk in sd["product"]["pk_records"])
     assert any(pk["endpoint"] == "F" and pk["route"] == "oral" for pk in sd["product"]["pk_records"])
 
-    # 3. Single-molecule /api/v1/predict: 47 endpoints, calibrated ΔLogD, non-circular anchor (zero fusion protein anchors!)
+    # 3. Single-molecule /api/v1/predict: 47 endpoints, non-macrocycle ΔLogD scope gating, TRUE dynamic LODO anchor
     rp = client.post("/api/v1/predict", json={"query": "Semaglutide", "include_svg": False})
     assert rp.status_code == 200
     dp = rp.json()
@@ -633,15 +647,37 @@ def test_v335_logd_decadiene_chameleonicity_public_domain_pk_and_noncircular_anc
     assert "LogD_decadiene" in by_ep
     assert dp["chameleonicity"] is not None
     assert dp["chameleonicity"]["in_applicability_scope"] is False
+    assert dp["chameleonicity"]["empirical_validation"] is None
     assert dp["chameleonicity"]["scope_warning_en"] is not None
+    assert by_ep["LogD_decadiene"]["risk_label"] == "Out of Scope (Non-Macrocycle)"
     assert dp["chameleonicity"]["delta_logd"] == pytest.approx(
         by_ep["LogD7.4"]["value"] - by_ep["LogD_decadiene"]["value"], abs=0.01
     )
-    # Non-circular fatty-diacid anchor: no Fc/albumin fusions (Dulaglutide/Albiglutide) and Semaglutide excluded from own refs
+    # True dynamic LODO: Semaglutide excluded -> value_h recomputed from {Tirzepatide 120h, Cagrilintide 170h} = 142.8h (NOT 144h!)
     anch_refs_str = " ".join(dp["mechanism_anchor"]["anchor_drugs"])
     assert "Dulaglutide" not in anch_refs_str and "Albiglutide" not in anch_refs_str and "Semaglutide" not in anch_refs_str
+    assert dp["mechanism_anchor"]["value_h"] == pytest.approx(142.8, abs=0.2)
     assert dp["clinical_evidence"] is not None
-    assert dp["clinical_evidence"]["product_id"] == "ATLPD0000089"
+    assert dp["clinical_evidence"]["product_id"] == "fda_semaglutide"
+
+    # True dynamic LODO on Insulin degludec: no peer C14-C16 diacid remains -> value_h MUST be None (Pure-ML fallback)
+    r_deg = client.post("/api/v1/predict", json={"query": "Insulin degludec", "include_svg": False})
+    assert r_deg.status_code == 200
+    d_deg = r_deg.json()
+    assert d_deg["mechanism_anchor"]["detected"] is True
+    assert d_deg["mechanism_anchor"]["value_h"] is None
+    assert d_deg["mechanism_anchor"]["anchor_drugs"] == []
+
+    # Adversarial SMARTS negative regression tests (zero false positives!)
+    for neg_name, neg_smi in [
+        ("Free palmitic acid", "CCCCCCCCCCCCCCCC(=O)O"),
+        ("Pal-KTTKS", "CCCCCCCCCCCCCCCC(=O)NC(CCCCN)C(=O)NC(C(C)O)C(=O)NC(C(C)O)C(=O)NC(CCCCN)C(=O)NC(CO)C(=O)O"),
+        ("C16-KKKK-NH2", "CCCCCCCCCCCCCCCC(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)N"),
+        ("N-myristoyl-GAAA", "CCCCCCCCCCCCCC(=O)NCC(=O)NC(C)C(=O)NC(C)C(=O)NC(C)C(=O)O"),
+        ("Branched C18 diacid", "OC(=O)CCCCCCCC(C)CCCCCCCCC(=O)NC(CCCCN)C(=O)N"),
+    ]:
+        anc_neg = detect_acylation_anchor(Chem.MolFromSmiles(neg_smi))
+        assert anc_neg.detected is False, f"False positive SMARTS anchor on {neg_name}!"
 
     # 4. Cyclosporine A: macrocycle in applicability scope for ΔLogD
     rc = client.post("/api/v1/predict", json={"query": "Cyclosporine A", "include_svg": False})
@@ -651,3 +687,11 @@ def test_v335_logd_decadiene_chameleonicity_public_domain_pk_and_noncircular_anc
     assert dc["chameleonicity"]["is_macrocycle"] is True
     assert dc["chameleonicity"]["in_applicability_scope"] is True
     assert dc["chameleonicity"]["scope_warning_en"] is None
+    assert dc["chameleonicity"]["empirical_validation"] is not None
+
+    # 5. /api/v1/endpoints exposes V33.6 audit blocks
+    r_ep = client.get("/api/v1/endpoints")
+    assert r_ep.status_code == 200
+    ep_d = r_ep.json()
+    for blk in ("v335_protocol_audit", "egat_fidelity_audit", "external_baselines_same_split", "temporal_split_benchmarks", "recent_fda_2019_2023_blind_set"):
+        assert blk in ep_d

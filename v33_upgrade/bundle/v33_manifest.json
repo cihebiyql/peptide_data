@@ -1,7 +1,7 @@
 {
   "schema": "peptide_omnipanel_v33_authoritative_manifest_v1",
-  "version": "v33.5",
-  "generated_at": "2026-11-23 21:20:40 +0800",
+  "version": "v33.6",
+  "generated_at": "2026-11-26T05:19:59Z",
   "selection_protocol": {
     "zero_holdout_peeking": true,
     "super_ensemble_adoption_margin": 0.0005,
@@ -101,27 +101,106 @@
       "super_ensemble": 12
     },
     "statistical_significance_tests": {
-      "regression_family_holdout_mae": {
+      "regression_family_cpu_vs_fusion_only": {
+        "note": "Compares strictly independent families (`fusion` vs `cpu`; circular `champion` excluded) using SD-normalized error MAE/SD(y_holdout) to remove cross-unit scale dominance.",
         "n_endpoints": 41,
-        "mean_mae": {
-          "champion": 0.5088,
+        "mean_normalized_mae": {
+          "fusion": 0.6349,
+          "cpu": 0.6688
+        },
+        "mean_raw_mae": {
           "fusion": 0.5097,
           "cpu": 0.5372
         },
-        "friedman_chi2": 22.8921,
-        "friedman_p": 1.069e-05,
-        "wilcoxon_p_champion_vs_cpu": 0.0002255,
-        "wilcoxon_p_fusion_vs_cpu": 0.0001486,
-        "wilcoxon_p_champion_vs_fusion": 0.8519,
-        "paired_boot_cpu_minus_champion_mae_ci95": [
-          0.0124,
-          0.0483
-        ],
-        "paired_boot_cpu_minus_fusion_mae_ci95": [
-          0.0133,
-          0.0441
+        "fusion_win_rate": "32/41",
+        "wilcoxon_p_nmae_raw": 0.0003054,
+        "wilcoxon_p_nmae_holm": 0.0003054,
+        "wilcoxon_p_raw_mae_holm": 0.0002973,
+        "paired_boot_cpu_minus_fusion_nmae_ci95": [
+          0.0136,
+          0.057
         ]
+      },
+      "single_fm_4model_ablation_friedman_nemenyi": {
+        "n_endpoints": 46,
+        "endpoints_included": [
+          "BBB",
+          "CL_absolute",
+          "CL_per_kg",
+          "Caco2",
+          "Cmax",
+          "F",
+          "LogD7.4",
+          "MDCK",
+          "MIC_C_albicans",
+          "MIC_E_coli",
+          "MIC_P_aeruginosa",
+          "MIC_S_aureus",
+          "PAMPA",
+          "PPB",
+          "RRCK",
+          "Vd_per_kg",
+          "cytotoxicity_cls",
+          "half_life_cls",
+          "half_life_reg",
+          "hemolysis_HC50",
+          "hemolysis_cls",
+          "overall_peptide_toxicity",
+          "solubility_cls",
+          "solubility_reg",
+          "LC_antimicrobial",
+          "MBC_A_baumannii",
+          "MBC_E_coli",
+          "MBC_E_faecalis",
+          "MBC_P_aeruginosa",
+          "MBC_S_aureus",
+          "MBEC_biofilm",
+          "MBIC_biofilm",
+          "MFC_C_albicans",
+          "MIC_A_baumannii",
+          "MIC_B_subtilis",
+          "MIC_C_neoformans",
+          "MIC_E_faecalis",
+          "MIC_E_faecium",
+          "MIC_K_pneumoniae",
+          "MIC_L_monocytogenes",
+          "MIC_S_epidermidis",
+          "MIC_Salmonella",
+          "Vd_absolute",
+          "cytotoxicity_CC50",
+          "efflux_ratio",
+          "hemolysis_MHC"
+        ],
+        "metric": "ROC-AUC (classification) / Spearman rho (regression)",
+        "mean_primary_score": {
+          "ncaa_fusion_hf": 0.5505,
+          "esmc_multiregion": 0.5462,
+          "peptideclm2": 0.5383,
+          "chemberta_mtr": 0.5439
+        },
+        "mean_rank_1_is_best": {
+          "ncaa_fusion_hf": 2.478,
+          "esmc_multiregion": 2.478,
+          "peptideclm2": 2.413,
+          "chemberta_mtr": 2.63
+        },
+        "friedman_chi2": 0.7043,
+        "friedman_p": 0.8722,
+        "nemenyi_critical_diff_alpha_0_05": 0.692,
+        "pairwise_wilcoxon_p_holm": {
+          "peptideclm2_vs_chemberta_mtr": 1.0,
+          "ncaa_fusion_hf_vs_chemberta_mtr": 1.0,
+          "esmc_multiregion_vs_peptideclm2": 1.0,
+          "esmc_multiregion_vs_chemberta_mtr": 1.0,
+          "ncaa_fusion_hf_vs_peptideclm2": 1.0,
+          "ncaa_fusion_hf_vs_esmc_multiregion": 1.0
+        }
       }
+    },
+    "evidence_grade_counts": {
+      "quantitative": 20,
+      "rank_only": 26,
+      "exploratory_not_recommended": 1
     }
   },
   "representation_ablation_summary": {
@@ -1243,14 +1322,236 @@
       }
     ],
     "non_circular_separation": {
-      "primary_metric_policy": "Pure-ML route-matched metrics are reported as the PRIMARY benchmark; literature fatty-acylation rule overlay is reported separately under strict Leave-One-Drug-Out (excluding Insulin degludec self-anchor circularity).",
-      "pure_ml_all_16_mae_log10": 0.3185,
+      "primary_metric_policy": "Pure-ML route-matched metrics are reported as the PRIMARY Case17 headline. True Dynamic Leave-One-Drug-Out (LODO) rule overlay is computed by invoking the exact production `detect_acylation_anchor(mol, exclude_drug=drug_name)` (dynamically recomputing geometric-mean half-life from remaining peer drugs only; Insulin degludec has no remaining C16-diacid peer and falls back to Pure-ML).",
+      "n_evaluated": 16,
+      "pure_ml_all_16": {
+        "n_total": 16,
+        "n_exact": 16,
+        "n_censored": 0,
+        "mae": 0.31851,
+        "rmse": 0.42133,
+        "r2": 0.77104,
+        "spearman": 0.89412,
+        "pearson": 0.901,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.31851,
+        "censored_c_index": null,
+        "mae_ci95": [
+          0.1927,
+          0.4649
+        ],
+        "spearman_ci95": [
+          0.6567,
+          0.9792
+        ]
+      },
+      "lodo_rule_overlay_all_16": {
+        "n_total": 16,
+        "n_exact": 16,
+        "n_censored": 0,
+        "mae": 0.30824,
+        "rmse": 0.40708,
+        "r2": 0.78627,
+        "spearman": 0.87059,
+        "pearson": 0.90475,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.30824,
+        "censored_c_index": null,
+        "mae_ci95": [
+          0.1942,
+          0.447
+        ],
+        "spearman_ci95": [
+          0.5923,
+          0.9694
+        ]
+      },
+      "pure_ml_all_16_mae_log10": 0.31851,
+      "pure_ml_all_16_r2": 0.77104,
+      "pure_ml_all_16_spearman": 0.89412,
       "pure_ml_lipidated_5_mae_log10": 0.2171,
       "pure_ml_non_lipidated_11_mae_log10": 0.3646,
-      "lodo_rule_overlay_lipidated_5_mae_log10": 0.1829,
-      "lodo_rule_overlay_all_16_mae_log10": 0.3078,
+      "lodo_rule_overlay_lipidated_5_mae_log10": 0.1842,
+      "lodo_rule_overlay_all_16_mae_log10": 0.30824,
+      "lodo_rule_overlay_all_16_r2": 0.78627,
+      "lodo_rule_overlay_all_16_spearman": 0.87059,
       "insulin_degludec_circularity_removed": true,
-      "fusion_protein_anchors_removed": true
+      "fusion_protein_anchors_removed": true,
+      "computed_via_production_smarts_function": true,
+      "per_drug_lodo_audit": [
+        {
+          "drug_name": "Leuprolide",
+          "obs_h": 3.0,
+          "pure_ml_h": 3.61,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 3.61,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Bivalirudin",
+          "obs_h": 0.42,
+          "pure_ml_h": 1.24,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 1.24,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Glucagon",
+          "obs_h": 0.22,
+          "pure_ml_h": 0.19,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 0.19,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Teriparatide",
+          "obs_h": 1.0,
+          "pure_ml_h": 2.28,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 2.28,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Exenatide",
+          "obs_h": 2.4,
+          "pure_ml_h": 8.58,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 8.58,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Liraglutide",
+          "obs_h": 13.0,
+          "pure_ml_h": 15.05,
+          "smarts_detected": true,
+          "acylation_class": "daily_acyl",
+          "lodo_overlay_h": 6.0,
+          "lodo_effective_h": 6.0,
+          "lodo_remaining_refs": [
+            "Insulin detemir (C14 monoacyl-Lys, ~6 h FDA label)"
+          ]
+        },
+        {
+          "drug_name": "Semaglutide",
+          "obs_h": 168.0,
+          "pure_ml_h": 63.38,
+          "smarts_detected": true,
+          "acylation_class": "weekly_diacid",
+          "lodo_overlay_h": 142.8,
+          "lodo_effective_h": 142.8,
+          "lodo_remaining_refs": [
+            "Tirzepatide (C20 diacid, ~120 h FDA label)",
+            "Cagrilintide (C20 diacid, ~170 h clinical Ph1/2)"
+          ]
+        },
+        {
+          "drug_name": "Tirzepatide",
+          "obs_h": 125.0,
+          "pure_ml_h": 111.44,
+          "smarts_detected": true,
+          "acylation_class": "weekly_diacid",
+          "lodo_overlay_h": 169.0,
+          "lodo_effective_h": 169.0,
+          "lodo_remaining_refs": [
+            "Semaglutide (C18 diacid, ~168 h FDA label)",
+            "Cagrilintide (C20 diacid, ~170 h clinical Ph1/2)"
+          ]
+        },
+        {
+          "drug_name": "Cyclosporine_A",
+          "obs_h": 8.4,
+          "pure_ml_h": 9.52,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 9.52,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Oxytocin",
+          "obs_h": 0.067,
+          "pure_ml_h": 0.75,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 0.75,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Octreotide",
+          "obs_h": 1.8,
+          "pure_ml_h": 5.53,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 5.53,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Ziconotide",
+          "obs_h": 4.6,
+          "pure_ml_h": 1.19,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 1.19,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Daptomycin",
+          "obs_h": 8.5,
+          "pure_ml_h": 5.93,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 5.93,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Caspofungin",
+          "obs_h": 10.0,
+          "pure_ml_h": 13.87,
+          "smarts_detected": false,
+          "acylation_class": null,
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 13.87,
+          "lodo_remaining_refs": []
+        },
+        {
+          "drug_name": "Insulin_detemir",
+          "obs_h": 6.0,
+          "pure_ml_h": 19.01,
+          "smarts_detected": true,
+          "acylation_class": "daily_acyl",
+          "lodo_overlay_h": 13.0,
+          "lodo_effective_h": 13.0,
+          "lodo_remaining_refs": [
+            "Liraglutide (C16 monoacyl-γGlu-Lys, ~13 h FDA label)"
+          ]
+        },
+        {
+          "drug_name": "Insulin_degludec",
+          "obs_h": 25.0,
+          "pure_ml_h": 22.39,
+          "smarts_detected": true,
+          "acylation_class": "depot_diacid",
+          "lodo_overlay_h": null,
+          "lodo_effective_h": 22.39,
+          "lodo_remaining_refs": []
+        }
+      ]
     }
   },
   "endpoints": {
@@ -1462,13 +1763,14 @@
           "n_eval": 169,
           "n_clusters": 129,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.8454,
-            0.9456
+            0.8427,
+            0.9462
           ],
           "brier_ci95": [
-            0.0976,
-            0.1585
+            0.0951,
+            0.1634
           ]
         }
       },
@@ -1622,7 +1924,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 169,
+          "n_clusters": 129,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.7692,
+            0.8989
+          ],
+          "brier_ci95": [
+            0.1316,
+            0.1969
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -2056,22 +2372,8 @@
           "n_eval": 11,
           "n_clusters": 2,
           "n_boot": 1000,
-          "mae_ci95": [
-            1.0158,
-            2.8246
-          ],
-          "spearman_ci95": [
-            0.5793,
-            0.6575
-          ],
-          "r2_ci95": [
-            0.2548,
-            0.3099
-          ],
-          "cov80_ci95": [
-            0.0,
-            0.7
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=2 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -2274,6 +2576,13 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=11; holdout Cov80=63.6% < 65%; holdout Cov90=72.7% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.6364,
           "v332_baseline_cov90": 0.7273
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 11,
+          "n_clusters": 2,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=2 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": null,
@@ -2760,21 +3069,22 @@
           "n_eval": 41,
           "n_clusters": 17,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4084,
-            0.7479
+            0.4115,
+            0.7651
           ],
           "spearman_ci95": [
-            0.2611,
-            0.9183
+            0.2115,
+            0.9181
           ],
           "r2_ci95": [
-            -1.2723,
-            0.6995
+            -1.3478,
+            0.7025
           ],
           "cov80_ci95": [
-            0.5312,
-            0.8246
+            0.5161,
+            0.8286
           ]
         }
       },
@@ -2994,6 +3304,24 @@
           "uq_note": "Moderate UQ reliability (n=41, Cov80=70.7%, Cov90=87.8%).",
           "v332_baseline_cov80": 0.6829,
           "v332_baseline_cov90": 0.8537
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 41,
+          "n_clusters": 17,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3916,
+            0.7484
+          ],
+          "spearman_ci95": [
+            0.1391,
+            0.9164
+          ],
+          "r2_ci95": [
+            -1.561,
+            0.7197
+          ]
         }
       },
       "censored_head": {
@@ -3309,7 +3637,7 @@
           "censored_c_index": null
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "Caco2": {
       "endpoint": "Caco2",
@@ -3578,21 +3906,22 @@
           "n_eval": 311,
           "n_clusters": 59,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3158,
-            0.4491
+            0.3153,
+            0.4544
           ],
           "spearman_ci95": [
-            0.7703,
-            0.8882
+            0.7687,
+            0.8856
           ],
           "r2_ci95": [
-            0.5718,
-            0.7779
+            0.5698,
+            0.7747
           ],
           "cov80_ci95": [
-            0.7059,
-            0.839
+            0.7046,
+            0.8351
           ]
         }
       },
@@ -3804,6 +4133,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.791,
           "v332_baseline_cov90": 0.881
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 311,
+          "n_clusters": 59,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3199,
+            0.4662
+          ],
+          "spearman_ci95": [
+            0.7483,
+            0.8792
+          ],
+          "r2_ci95": [
+            0.5361,
+            0.7638
+          ]
         }
       },
       "censored_head": {
@@ -4387,22 +4734,8 @@
           "n_eval": 17,
           "n_clusters": 5,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.3849,
-            2.4631
-          ],
-          "spearman_ci95": [
-            -0.8065,
-            0.7918
-          ],
-          "r2_ci95": [
-            -3.8481,
-            0.4264
-          ],
-          "cov80_ci95": [
-            0.2493,
-            1.0
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=5 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -4611,6 +4944,13 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=17); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.8235,
           "v332_baseline_cov90": 0.8824
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 17,
+          "n_clusters": 5,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=5 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": null,
@@ -5113,22 +5453,8 @@
           "n_eval": 23,
           "n_clusters": 8,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.1187,
-            0.3823
-          ],
-          "spearman_ci95": [
-            0.2327,
-            0.9877
-          ],
-          "r2_ci95": [
-            -1.3614,
-            0.8369
-          ],
-          "cov80_ci95": [
-            0.6,
-            0.9
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=8 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -5352,6 +5678,13 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=23); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.8261,
           "v332_baseline_cov90": 0.8261
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 23,
+          "n_clusters": 8,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=8 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": {
@@ -5926,21 +6259,22 @@
           "n_eval": 125,
           "n_clusters": 25,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3707,
-            0.5714
+            0.3615,
+            0.5944
           ],
           "spearman_ci95": [
-            0.5093,
-            0.8999
+            0.4894,
+            0.9063
           ],
           "r2_ci95": [
-            0.449,
-            0.8017
+            0.4432,
+            0.8006
           ],
           "cov80_ci95": [
-            0.7432,
-            0.8812
+            0.7424,
+            0.8874
           ]
         }
       },
@@ -6152,6 +6486,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.776,
           "v332_baseline_cov90": 0.88
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 125,
+          "n_clusters": 25,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3675,
+            0.6376
+          ],
+          "spearman_ci95": [
+            0.5093,
+            0.9085
+          ],
+          "r2_ci95": [
+            0.4454,
+            0.7719
+          ]
         }
       },
       "censored_head": {
@@ -6728,22 +7080,8 @@
           "n_eval": 34,
           "n_clusters": 7,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.2338,
-            0.5998
-          ],
-          "spearman_ci95": [
-            0.1392,
-            1.0
-          ],
-          "r2_ci95": [
-            -0.7363,
-            0.8216
-          ],
-          "cov80_ci95": [
-            0.614,
-            1.0
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=7 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -6947,6 +7285,13 @@
           "uq_note": "Moderate UQ reliability (n=34, Cov80=73.5%, Cov90=91.2%).",
           "v332_baseline_cov80": 0.7353,
           "v332_baseline_cov90": 0.8529
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 34,
+          "n_clusters": 7,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=7 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": {
@@ -7514,21 +7859,22 @@
           "n_eval": 90,
           "n_clusters": 46,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3775,
-            0.5349
+            0.3742,
+            0.5369
           ],
           "spearman_ci95": [
-            0.3954,
-            0.834
+            0.3913,
+            0.8399
           ],
           "r2_ci95": [
-            0.289,
-            0.6981
+            0.285,
+            0.6974
           ],
           "cov80_ci95": [
-            0.7538,
-            0.9259
+            0.754,
+            0.9275
           ]
         }
       },
@@ -7740,6 +8086,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8,
           "v332_baseline_cov90": 0.9444
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 90,
+          "n_clusters": 46,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3736,
+            0.5443
+          ],
+          "spearman_ci95": [
+            0.3348,
+            0.8449
+          ],
+          "r2_ci95": [
+            0.2635,
+            0.7074
+          ]
         }
       },
       "censored_head": {
@@ -8323,21 +8687,22 @@
           "n_eval": 397,
           "n_clusters": 152,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.398,
-            0.4821
+            0.3997,
+            0.4764
           ],
           "spearman_ci95": [
-            0.4653,
-            0.7166
+            0.4725,
+            0.7149
           ],
           "r2_ci95": [
-            0.1914,
-            0.4775
+            0.2186,
+            0.4774
           ],
           "cov80_ci95": [
-            0.7741,
-            0.854
+            0.7695,
+            0.8553
           ]
         }
       },
@@ -8547,6 +8912,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8338,
           "v332_baseline_cov90": 0.927
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 397,
+          "n_clusters": 152,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4,
+            0.4907
+          ],
+          "spearman_ci95": [
+            0.4614,
+            0.7125
+          ],
+          "r2_ci95": [
+            0.1773,
+            0.4851
+          ]
         }
       },
       "censored_head": {
@@ -9108,21 +9491,22 @@
           "n_eval": 197,
           "n_clusters": 87,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3661,
-            1.0078
+            0.3703,
+            0.9989
           ],
           "spearman_ci95": [
-            -0.2176,
-            0.5843
+            -0.2268,
+            0.5945
           ],
           "r2_ci95": [
-            -0.554,
-            0.4319
+            -0.5522,
+            0.4458
           ],
           "cov80_ci95": [
-            0.6,
-            0.9028
+            0.6074,
+            0.9026
           ]
         }
       },
@@ -9325,6 +9709,24 @@
           "uq_note": "Moderate UQ reliability (n=197, Cov80=74.6%, Cov90=81.2%).",
           "v332_baseline_cov80": 0.7513,
           "v332_baseline_cov90": 0.8173
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 197,
+          "n_clusters": 87,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3791,
+            1.0181
+          ],
+          "spearman_ci95": [
+            -0.2643,
+            0.5682
+          ],
+          "r2_ci95": [
+            -0.6117,
+            0.4164
+          ]
         }
       },
       "censored_head": {
@@ -9893,21 +10295,22 @@
           "n_eval": 355,
           "n_clusters": 146,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.429,
-            0.521
+            0.4285,
+            0.5246
           ],
           "spearman_ci95": [
-            0.3008,
-            0.5853
+            0.2891,
+            0.567
           ],
           "r2_ci95": [
-            0.0494,
-            0.3452
+            0.0488,
+            0.3333
           ],
           "cov80_ci95": [
-            0.8193,
-            0.9157
+            0.8184,
+            0.9148
           ]
         }
       },
@@ -10117,6 +10520,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8592,
           "v332_baseline_cov90": 0.9521
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 355,
+          "n_clusters": 146,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4296,
+            0.5246
+          ],
+          "spearman_ci95": [
+            0.2876,
+            0.5609
+          ],
+          "r2_ci95": [
+            0.0515,
+            0.3333
+          ]
         }
       },
       "censored_head": {
@@ -10706,21 +11127,22 @@
           "n_eval": 1715,
           "n_clusters": 124,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3222,
-            0.4356
+            0.3193,
+            0.4344
           ],
           "spearman_ci95": [
-            0.674,
-            0.8572
+            0.6821,
+            0.855
           ],
           "r2_ci95": [
-            0.5151,
-            0.7081
+            0.5288,
+            0.7079
           ],
           "cov80_ci95": [
-            0.7092,
-            0.8581
+            0.7078,
+            0.8632
           ]
         }
       },
@@ -10932,6 +11354,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8029,
           "v332_baseline_cov90": 0.8915
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3205,
+            0.4339
+          ],
+          "spearman_ci95": [
+            0.6868,
+            0.8592
+          ],
+          "r2_ci95": [
+            0.5204,
+            0.7004
+          ]
         }
       },
       "censored_head": {
@@ -11531,21 +11971,22 @@
           "n_eval": 24,
           "n_clusters": 10,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.1502,
-            0.3196
+            0.1516,
+            0.3242
           ],
           "spearman_ci95": [
-            -0.0964,
-            0.9045
+            -0.1282,
+            0.9087
           ],
           "r2_ci95": [
-            -7.549,
-            0.4181
+            -11.9274,
+            0.428
           ],
           "cov80_ci95": [
-            0.0857,
-            0.6671
+            0.0769,
+            0.6875
           ]
         }
       },
@@ -11771,6 +12212,24 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=24; holdout Cov90=75.0% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.9167
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 24,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.15,
+            0.3057
+          ],
+          "spearman_ci95": [
+            -0.0813,
+            0.9474
+          ],
+          "r2_ci95": [
+            -14.195,
+            0.7408
+          ]
         }
       },
       "censored_head": {
@@ -12083,7 +12542,7 @@
           "censored_c_index": 0.62955
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "RRCK": {
       "endpoint": "RRCK",
@@ -12343,22 +12802,8 @@
           "n_eval": 30,
           "n_clusters": 7,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.1398,
-            0.3138
-          ],
-          "spearman_ci95": [
-            0.1341,
-            0.8751
-          ],
-          "r2_ci95": [
-            0.1448,
-            0.7006
-          ],
-          "cov80_ci95": [
-            0.8065,
-            1.0
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=7 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -12560,6 +13005,13 @@
           "uq_note": "Moderate UQ reliability (n=30, Cov80=83.3%, Cov90=86.7%).",
           "v332_baseline_cov80": 0.8333,
           "v332_baseline_cov90": 0.8333
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 30,
+          "n_clusters": 7,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=7 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": null,
@@ -12775,7 +13227,7 @@
           "censored_c_index": null
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "Vd_per_kg": {
       "endpoint": "Vd_per_kg",
@@ -13046,20 +13498,21 @@
           "n_eval": 33,
           "n_clusters": 14,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.1865,
-            0.429
+            0.1907,
+            0.4297
           ],
           "spearman_ci95": [
-            0.2033,
-            0.806
+            0.2495,
+            0.7929
           ],
           "r2_ci95": [
-            -0.4366,
-            0.5546
+            -0.297,
+            0.5395
           ],
           "cov80_ci95": [
-            0.7838,
+            0.7907,
             1.0
           ]
         }
@@ -13279,6 +13732,24 @@
           "uq_note": "Moderate UQ reliability (n=33, Cov80=87.9%, Cov90=93.9%).",
           "v332_baseline_cov80": 0.7879,
           "v332_baseline_cov90": 0.9394
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 33,
+          "n_clusters": 14,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.2704,
+            0.4408
+          ],
+          "spearman_ci95": [
+            0.1639,
+            0.8536
+          ],
+          "r2_ci95": [
+            -0.9253,
+            0.5104
+          ]
         }
       },
       "censored_head": null,
@@ -13494,7 +13965,7 @@
           "censored_c_index": null
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "cytotoxicity_cls": {
       "endpoint": "cytotoxicity_cls",
@@ -13693,13 +14164,14 @@
           "n_eval": 587,
           "n_clusters": 253,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.899,
-            0.9574
+            0.8985,
+            0.9584
           ],
           "brier_ci95": [
-            0.0702,
-            0.1253
+            0.068,
+            0.1257
           ]
         }
       },
@@ -13853,7 +14325,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 587,
+          "n_clusters": 253,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.8864,
+            0.9549
+          ],
+          "brier_ci95": [
+            0.0694,
+            0.1299
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -14288,13 +14774,14 @@
           "n_eval": 641,
           "n_clusters": 166,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.7125,
-            0.861
+            0.7105,
+            0.8609
           ],
           "brier_ci95": [
-            0.1529,
-            0.2242
+            0.1527,
+            0.2216
           ]
         }
       },
@@ -14492,7 +14979,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 641,
+          "n_clusters": 166,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.7255,
+            0.8552
+          ],
+          "brier_ci95": [
+            0.1567,
+            0.2142
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -14994,21 +15495,22 @@
           "n_eval": 567,
           "n_clusters": 159,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.576,
-            0.7362
+            0.5686,
+            0.7379
           ],
           "spearman_ci95": [
-            0.3477,
-            0.5742
+            0.3525,
+            0.5741
           ],
           "r2_ci95": [
-            0.2654,
-            0.5133
+            0.2671,
+            0.509
           ],
           "cov80_ci95": [
-            0.6915,
-            0.8184
+            0.6908,
+            0.8198
           ]
         }
       },
@@ -15277,6 +15779,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.778,
           "v332_baseline_cov90": 0.8824
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.5608,
+            0.6971
+          ],
+          "spearman_ci95": [
+            0.3642,
+            0.6232
+          ],
+          "r2_ci95": [
+            0.3113,
+            0.5384
+          ]
         }
       },
       "censored_head": {
@@ -15851,20 +16371,21 @@
           "n_eval": 820,
           "n_clusters": 224,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3355,
-            0.4235
+            0.336,
+            0.4248
           ],
           "spearman_ci95": [
-            0.5866,
-            0.743
+            0.5924,
+            0.7462
           ],
           "r2_ci95": [
-            0.2641,
-            0.5199
+            0.267,
+            0.5208
           ],
           "cov80_ci95": [
-            0.7767,
+            0.7742,
             0.8622
           ]
         }
@@ -16068,6 +16589,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8317,
           "v332_baseline_cov90": 0.9244
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 820,
+          "n_clusters": 224,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3517,
+            0.4424
+          ],
+          "spearman_ci95": [
+            0.5858,
+            0.7245
+          ],
+          "r2_ci95": [
+            0.2587,
+            0.4874
+          ]
         }
       },
       "censored_head": {
@@ -16605,13 +17144,14 @@
           "n_eval": 4101,
           "n_clusters": 1261,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.8713,
-            0.9194
+            0.8711,
+            0.9187
           ],
           "brier_ci95": [
-            0.0957,
-            0.1352
+            0.0942,
+            0.1353
           ]
         }
       },
@@ -16765,7 +17305,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 4101,
+          "n_clusters": 1261,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.8336,
+            0.8889
+          ],
+          "brier_ci95": [
+            0.1151,
+            0.1592
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -17147,13 +17701,14 @@
           "n_eval": 2208,
           "n_clusters": 1451,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.9389,
+            0.938,
             0.9621
           ],
           "brier_ci95": [
-            0.0767,
-            0.1022
+            0.0774,
+            0.1028
           ]
         }
       },
@@ -17310,7 +17865,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 2208,
+          "n_clusters": 1451,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.9235,
+            0.9527
+          ],
+          "brier_ci95": [
+            0.0871,
+            0.1141
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -17696,13 +18265,14 @@
           "n_eval": 745,
           "n_clusters": 261,
           "n_boot": 1000,
+          "ci_reliable": true,
           "roc_auc_ci95": [
-            0.8402,
-            0.8927
+            0.8391,
+            0.8926
           ],
           "brier_ci95": [
             0.126,
-            0.1536
+            0.153
           ]
         }
       },
@@ -17858,7 +18428,21 @@
           }
         },
         "conformal": null,
-        "conformal_holdout_coverage": null
+        "conformal_holdout_coverage": null,
+        "holdout_bootstrap_ci95": {
+          "n_eval": 745,
+          "n_clusters": 261,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "roc_auc_ci95": [
+            0.8385,
+            0.8914
+          ],
+          "brier_ci95": [
+            0.1249,
+            0.1536
+          ]
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {
@@ -18297,21 +18881,22 @@
           "n_eval": 48,
           "n_clusters": 17,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4336,
-            0.9066
+            0.4379,
+            0.914
           ],
           "spearman_ci95": [
-            0.021,
-            0.8266
+            -0.051,
+            0.8272
           ],
           "r2_ci95": [
-            -0.0859,
-            0.7818
+            -0.0969,
+            0.7814
           ],
           "cov80_ci95": [
-            0.5434,
-            0.853
+            0.5217,
+            0.8519
           ]
         }
       },
@@ -18521,6 +19106,24 @@
           "uq_note": "Moderate UQ reliability (n=48, Cov80=75.0%, Cov90=85.4%).",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.8958
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 48,
+          "n_clusters": 17,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4885,
+            0.9585
+          ],
+          "spearman_ci95": [
+            0.1798,
+            0.8476
+          ],
+          "r2_ci95": [
+            -0.2405,
+            0.7596
+          ]
         }
       },
       "censored_head": {
@@ -18833,7 +19436,7 @@
           "censored_c_index": 0.70849
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "LC_antimicrobial": {
       "endpoint": "LC_antimicrobial",
@@ -19067,21 +19670,22 @@
           "n_eval": 106,
           "n_clusters": 24,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3569,
-            0.6305
+            0.3521,
+            0.6144
           ],
           "spearman_ci95": [
-            0.1653,
-            0.5749
+            0.1989,
+            0.6002
           ],
           "r2_ci95": [
-            -0.1975,
-            0.3222
+            -0.1579,
+            0.3522
           ],
           "cov80_ci95": [
-            0.6091,
-            0.8652
+            0.6211,
+            0.8679
           ]
         }
       },
@@ -19271,6 +19875,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8019,
           "v332_baseline_cov90": 0.8868
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 106,
+          "n_clusters": 24,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3491,
+            0.6335
+          ],
+          "spearman_ci95": [
+            0.2141,
+            0.6541
+          ],
+          "r2_ci95": [
+            -0.2058,
+            0.365
+          ]
         }
       },
       "censored_head": {
@@ -19729,21 +20351,22 @@
           "n_eval": 24,
           "n_clusters": 12,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4216,
-            0.8941
+            0.4233,
+            0.8606
           ],
           "spearman_ci95": [
-            -0.271,
-            0.8549
+            -0.2175,
+            0.8658
           ],
           "r2_ci95": [
-            -1.2997,
-            0.4164
+            -1.3225,
+            0.4379
           ],
           "cov80_ci95": [
-            0.4346,
-            0.9355
+            0.4667,
+            0.9375
           ]
         }
       },
@@ -19926,6 +20549,24 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=24); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.7917
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 24,
+          "n_clusters": 12,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3781,
+            0.8965
+          ],
+          "spearman_ci95": [
+            -0.181,
+            0.8633
+          ],
+          "r2_ci95": [
+            -1.4909,
+            0.4624
+          ]
         }
       },
       "censored_head": {
@@ -20388,21 +21029,22 @@
           "n_eval": 108,
           "n_clusters": 59,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3433,
-            0.4898
+            0.3412,
+            0.4901
           ],
           "spearman_ci95": [
-            0.4669,
-            0.7777
+            0.4561,
+            0.7845
           ],
           "r2_ci95": [
-            0.2457,
-            0.5524
+            0.2435,
+            0.5609
           ],
           "cov80_ci95": [
-            0.7692,
-            0.9293
+            0.77,
+            0.9327
           ]
         }
       },
@@ -20592,6 +21234,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8426,
           "v332_baseline_cov90": 0.9259
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 108,
+          "n_clusters": 59,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3562,
+            0.5045
+          ],
+          "spearman_ci95": [
+            0.3926,
+            0.7529
+          ],
+          "r2_ci95": [
+            0.1888,
+            0.513
+          ]
         }
       },
       "censored_head": {
@@ -21058,20 +21718,21 @@
           "n_eval": 15,
           "n_clusters": 10,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3642,
-            0.8919
+            0.3609,
+            0.8918
           ],
           "spearman_ci95": [
-            0.1216,
-            0.8882
+            0.1383,
+            0.8759
           ],
           "r2_ci95": [
-            -1.005,
-            0.6127
+            -0.9645,
+            0.5891
           ],
           "cov80_ci95": [
-            0.2495,
+            0.2307,
             0.9091
           ]
         }
@@ -21262,6 +21923,24 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=15; holdout Cov90=66.7% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.6667,
           "v332_baseline_cov90": 0.8667
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 15,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3432,
+            0.8494
+          ],
+          "spearman_ci95": [
+            0.3308,
+            0.9688
+          ],
+          "r2_ci95": [
+            -0.9127,
+            0.6126
+          ]
         }
       },
       "censored_head": {
@@ -21724,21 +22403,22 @@
           "n_eval": 68,
           "n_clusters": 35,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3786,
-            0.5836
+            0.3674,
+            0.5862
           ],
           "spearman_ci95": [
-            0.4131,
-            0.8597
+            0.4328,
+            0.8685
           ],
           "r2_ci95": [
-            0.1278,
-            0.6126
+            0.1387,
+            0.6159
           ],
           "cov80_ci95": [
-            0.7206,
-            0.9412
+            0.7143,
+            0.9429
           ]
         }
       },
@@ -21929,6 +22609,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8971,
           "v332_baseline_cov90": 0.9412
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 68,
+          "n_clusters": 35,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3611,
+            0.5633
+          ],
+          "spearman_ci95": [
+            0.4419,
+            0.8834
+          ],
+          "r2_ci95": [
+            0.1301,
+            0.6705
+          ]
         }
       },
       "censored_head": {
@@ -22391,21 +23089,22 @@
           "n_eval": 99,
           "n_clusters": 53,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4959,
-            0.749
+            0.4972,
+            0.7449
           ],
           "spearman_ci95": [
-            0.1355,
-            0.5524
+            0.128,
+            0.5597
           ],
           "r2_ci95": [
-            -0.2357,
-            0.2894
+            -0.2419,
+            0.2799
           ],
           "cov80_ci95": [
-            0.6837,
-            0.86
+            0.6829,
+            0.8554
           ]
         }
       },
@@ -22595,6 +23294,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7677,
           "v332_baseline_cov90": 0.8081
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 99,
+          "n_clusters": 53,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.5273,
+            0.7701
+          ],
+          "spearman_ci95": [
+            0.0716,
+            0.5185
+          ],
+          "r2_ci95": [
+            -0.3314,
+            0.2563
+          ]
         }
       },
       "censored_head": {
@@ -23070,21 +23787,22 @@
           "n_eval": 23,
           "n_clusters": 10,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3122,
-            1.1095
+            0.319,
+            1.098
           ],
           "spearman_ci95": [
-            -0.4405,
-            0.5639
+            -0.4328,
+            0.5749
           ],
           "r2_ci95": [
-            -2.605,
-            -0.1691
+            -2.4228,
+            -0.2051
           ],
           "cov80_ci95": [
-            0.25,
-            0.8667
+            0.2609,
+            0.8574
           ]
         }
       },
@@ -23281,6 +23999,24 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=23; holdout Cov80=47.8% < 65%; holdout Cov90=69.6% < 78%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.4783,
           "v332_baseline_cov90": 0.6522
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 23,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.319,
+            1.098
+          ],
+          "spearman_ci95": [
+            -0.4328,
+            0.5749
+          ],
+          "r2_ci95": [
+            -2.4228,
+            -0.2051
+          ]
         }
       },
       "censored_head": {
@@ -23752,21 +24488,22 @@
           "n_eval": 53,
           "n_clusters": 22,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3773,
-            0.7749
+            0.3786,
+            0.7422
           ],
           "spearman_ci95": [
-            -0.1326,
-            0.7667
+            -0.1576,
+            0.7608
           ],
           "r2_ci95": [
-            -0.3166,
-            0.4439
+            -0.335,
+            0.4277
           ],
           "cov80_ci95": [
-            0.55,
-            0.8864
+            0.5745,
+            0.8913
           ]
         }
       },
@@ -23963,6 +24700,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7547,
           "v332_baseline_cov90": 0.8302
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 53,
+          "n_clusters": 22,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3861,
+            0.7704
+          ],
+          "spearman_ci95": [
+            -0.0766,
+            0.7647
+          ],
+          "r2_ci95": [
+            -0.2918,
+            0.3556
+          ]
         }
       },
       "censored_head": {
@@ -24423,20 +25178,21 @@
           "n_eval": 17,
           "n_clusters": 10,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.1833,
-            0.4948
+            0.1796,
+            0.4869
           ],
           "spearman_ci95": [
-            -0.3678,
-            0.8989
+            -0.3425,
+            0.8935
           ],
           "r2_ci95": [
-            -1.3117,
-            0.5112
+            -1.2539,
+            0.486
           ],
           "cov80_ci95": [
-            0.5908,
+            0.5909,
             1.0
           ]
         }
@@ -24627,6 +25383,24 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=17); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.8235,
           "v332_baseline_cov90": 1.0
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 17,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.1909,
+            0.4038
+          ],
+          "spearman_ci95": [
+            -0.2002,
+            0.8462
+          ],
+          "r2_ci95": [
+            -0.7697,
+            0.4366
+          ]
         }
       },
       "censored_head": {
@@ -25098,21 +25872,22 @@
           "n_eval": 165,
           "n_clusters": 72,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.347,
-            0.4921
+            0.3546,
+            0.493
           ],
           "spearman_ci95": [
-            0.3549,
-            0.7597
+            0.3748,
+            0.7699
           ],
           "r2_ci95": [
-            -0.1371,
-            0.5086
+            -0.0687,
+            0.5125
           ],
           "cov80_ci95": [
-            0.7586,
-            0.912
+            0.7579,
+            0.9058
           ]
         }
       },
@@ -25309,6 +26084,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8424,
           "v332_baseline_cov90": 0.9394
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 165,
+          "n_clusters": 72,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3479,
+            0.4787
+          ],
+          "spearman_ci95": [
+            0.3717,
+            0.7594
+          ],
+          "r2_ci95": [
+            0.0555,
+            0.499
+          ]
         }
       },
       "censored_head": {
@@ -25541,7 +26334,7 @@
           "censored_c_index": 0.59915
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "MIC_B_subtilis": {
       "endpoint": "MIC_B_subtilis",
@@ -25783,21 +26576,22 @@
           "n_eval": 279,
           "n_clusters": 112,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4435,
-            0.6395
+            0.4468,
+            0.6489
           ],
           "spearman_ci95": [
-            0.1686,
-            0.63
+            0.1649,
+            0.6323
           ],
           "r2_ci95": [
-            -0.0105,
-            0.408
+            -0.0173,
+            0.3921
           ],
           "cov80_ci95": [
-            0.6381,
-            0.8011
+            0.6359,
+            0.8025
           ]
         }
       },
@@ -25994,6 +26788,24 @@
           "uq_note": "Moderate UQ reliability (n=279, Cov80=72.8%, Cov90=83.5%).",
           "v332_baseline_cov80": 0.7312,
           "v332_baseline_cov90": 0.8172
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 279,
+          "n_clusters": 112,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4487,
+            0.6492
+          ],
+          "spearman_ci95": [
+            0.2476,
+            0.6162
+          ],
+          "r2_ci95": [
+            -0.0008,
+            0.3736
+          ]
         }
       },
       "censored_head": {
@@ -26463,21 +27275,22 @@
           "n_eval": 46,
           "n_clusters": 20,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3935,
-            0.6329
+            0.3838,
+            0.623
           ],
           "spearman_ci95": [
-            0.0382,
-            0.7396
+            0.0445,
+            0.7398
           ],
           "r2_ci95": [
-            -0.5097,
-            0.2872
+            -0.5802,
+            0.3114
           ],
           "cov80_ci95": [
-            0.6045,
-            0.881
+            0.6206,
+            0.8889
           ]
         }
       },
@@ -26674,6 +27487,24 @@
           "uq_note": "Moderate UQ reliability (n=46, Cov80=87.0%, Cov90=95.7%).",
           "v332_baseline_cov80": 0.7391,
           "v332_baseline_cov90": 0.8478
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 46,
+          "n_clusters": 20,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4018,
+            0.6463
+          ],
+          "spearman_ci95": [
+            0.0462,
+            0.7272
+          ],
+          "r2_ci95": [
+            -0.4986,
+            0.2972
+          ]
         }
       },
       "censored_head": {
@@ -27143,21 +27974,22 @@
           "n_eval": 98,
           "n_clusters": 48,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4225,
-            0.6319
+            0.4168,
+            0.6273
           ],
           "spearman_ci95": [
-            0.065,
-            0.5503
+            0.0993,
+            0.5577
           ],
           "r2_ci95": [
-            -0.2953,
-            0.2422
+            -0.2616,
+            0.2629
           ],
           "cov80_ci95": [
-            0.6833,
-            0.8824
+            0.6909,
+            0.891
           ]
         }
       },
@@ -27354,6 +28186,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8265,
           "v332_baseline_cov90": 0.898
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 98,
+          "n_clusters": 48,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4186,
+            0.621
+          ],
+          "spearman_ci95": [
+            0.1092,
+            0.5927
+          ],
+          "r2_ci95": [
+            -0.2253,
+            0.2544
+          ]
         }
       },
       "censored_head": {
@@ -27828,21 +28678,22 @@
           "n_eval": 55,
           "n_clusters": 31,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.2735,
-            0.4181
+            0.2812,
+            0.4267
           ],
           "spearman_ci95": [
-            0.5271,
-            0.8156
+            0.5086,
+            0.8188
           ],
           "r2_ci95": [
-            0.149,
-            0.5106
+            0.1219,
+            0.5094
           ],
           "cov80_ci95": [
-            0.8478,
-            0.9839
+            0.8462,
+            0.9836
           ]
         }
       },
@@ -28040,6 +28891,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.9273,
           "v332_baseline_cov90": 0.9636
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 55,
+          "n_clusters": 31,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.2821,
+            0.4366
+          ],
+          "spearman_ci95": [
+            0.4037,
+            0.8044
+          ],
+          "r2_ci95": [
+            0.0276,
+            0.499
+          ]
         }
       },
       "censored_head": {
@@ -28509,21 +29378,22 @@
           "n_eval": 154,
           "n_clusters": 67,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3648,
-            0.5079
+            0.3664,
+            0.5003
           ],
           "spearman_ci95": [
-            0.4162,
-            0.73
+            0.4345,
+            0.7332
           ],
           "r2_ci95": [
-            0.2019,
-            0.5704
+            0.2093,
+            0.58
           ],
           "cov80_ci95": [
-            0.8216,
-            0.9399
+            0.8268,
+            0.9402
           ]
         }
       },
@@ -28721,6 +29591,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.9091,
           "v332_baseline_cov90": 0.9545
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 154,
+          "n_clusters": 67,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3726,
+            0.5168
+          ],
+          "spearman_ci95": [
+            0.4237,
+            0.7327
+          ],
+          "r2_ci95": [
+            0.1891,
+            0.5583
+          ]
         }
       },
       "censored_head": {
@@ -29194,20 +30082,21 @@
           "n_eval": 46,
           "n_clusters": 19,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.389,
-            0.7528
+            0.3915,
+            0.766
           ],
           "spearman_ci95": [
-            0.234,
-            0.8863
+            0.184,
+            0.8944
           ],
           "r2_ci95": [
-            -0.2875,
-            0.7282
+            -0.3445,
+            0.725
           ],
           "cov80_ci95": [
-            0.5333,
+            0.5277,
             0.9388
           ]
         }
@@ -29405,6 +30294,24 @@
           "uq_note": "Moderate UQ reliability (n=46, Cov80=93.5%, Cov90=97.8%).",
           "v332_baseline_cov80": 0.8261,
           "v332_baseline_cov90": 0.9348
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 46,
+          "n_clusters": 19,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3577,
+            0.743
+          ],
+          "spearman_ci95": [
+            0.299,
+            0.893
+          ],
+          "r2_ci95": [
+            -0.0196,
+            0.7096
+          ]
         }
       },
       "censored_head": {
@@ -29633,7 +30540,7 @@
           "censored_c_index": 0.77642
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "MIC_S_epidermidis": {
       "endpoint": "MIC_S_epidermidis",
@@ -29875,21 +30782,22 @@
           "n_eval": 145,
           "n_clusters": 53,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4019,
-            0.5686
+            0.4142,
+            0.5678
           ],
           "spearman_ci95": [
-            0.3644,
-            0.673
+            0.3251,
+            0.6749
           ],
           "r2_ci95": [
-            0.0432,
-            0.3607
+            0.0326,
+            0.3652
           ],
           "cov80_ci95": [
-            0.7236,
-            0.8765
+            0.7215,
+            0.8642
           ]
         }
       },
@@ -30086,6 +30994,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8276,
           "v332_baseline_cov90": 0.9034
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 145,
+          "n_clusters": 53,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.4075,
+            0.5652
+          ],
+          "spearman_ci95": [
+            0.3008,
+            0.673
+          ],
+          "r2_ci95": [
+            0.0373,
+            0.4118
+          ]
         }
       },
       "censored_head": {
@@ -30551,21 +31477,22 @@
           "n_eval": 135,
           "n_clusters": 65,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.482,
-            0.6334
+            0.4803,
+            0.643
           ],
           "spearman_ci95": [
-            0.3663,
-            0.729
+            0.3706,
+            0.7278
           ],
           "r2_ci95": [
-            0.0187,
-            0.4607
+            0.0097,
+            0.4376
           ],
           "cov80_ci95": [
-            0.7045,
-            0.8587
+            0.7077,
+            0.8626
           ]
         }
       },
@@ -30755,6 +31682,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.7852,
           "v332_baseline_cov90": 0.9333
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 135,
+          "n_clusters": 65,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.465,
+            0.6102
+          ],
+          "spearman_ci95": [
+            0.4088,
+            0.7498
+          ],
+          "r2_ci95": [
+            0.1508,
+            0.4686
+          ]
         }
       },
       "censored_head": {
@@ -31230,22 +32175,8 @@
           "n_eval": 13,
           "n_clusters": 5,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.18,
-            1.1819
-          ],
-          "spearman_ci95": [
-            -0.8255,
-            0.9753
-          ],
-          "r2_ci95": [
-            -1.9916,
-            0.1607
-          ],
-          "cov80_ci95": [
-            0.3,
-            1.0
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=5 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -31441,6 +32372,13 @@
           "uq_note": "Low UQ reliability (small holdout calibration n=13; holdout Cov80=53.8% < 65%); interpret CI bounds cautiously.",
           "v332_baseline_cov80": 0.5385,
           "v332_baseline_cov90": 0.8462
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 13,
+          "n_clusters": 5,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=5 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": {
@@ -31669,7 +32607,7 @@
           "censored_c_index": null
         }
       },
-      "evidence_grade": "rank_only"
+      "evidence_grade": "exploratory_not_recommended"
     },
     "cytotoxicity_CC50": {
       "endpoint": "cytotoxicity_CC50",
@@ -31912,21 +32850,22 @@
           "n_eval": 478,
           "n_clusters": 178,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.3535,
-            0.4541
+            0.3564,
+            0.4534
           ],
           "spearman_ci95": [
-            0.4923,
-            0.7731
+            0.4795,
+            0.7715
           ],
           "r2_ci95": [
-            0.2912,
-            0.6755
+            0.2888,
+            0.6802
           ],
           "cov80_ci95": [
-            0.7455,
-            0.8577
+            0.7467,
+            0.8561
           ]
         }
       },
@@ -32123,6 +33062,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8251,
           "v332_baseline_cov90": 0.9058
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 446,
+          "n_clusters": 168,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.3533,
+            0.4564
+          ],
+          "spearman_ci95": [
+            0.4662,
+            0.7788
+          ],
+          "r2_ci95": [
+            0.2983,
+            0.715
+          ]
         }
       },
       "censored_head": {
@@ -32594,22 +33551,8 @@
           "n_eval": 32,
           "n_clusters": 9,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.2603,
-            0.4706
-          ],
-          "spearman_ci95": [
-            -0.2498,
-            0.8992
-          ],
-          "r2_ci95": [
-            -0.6434,
-            0.8295
-          ],
-          "cov80_ci95": [
-            0.7586,
-            0.963
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=9 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "smiles_only": {
@@ -32805,6 +33748,13 @@
           "uq_note": "Moderate UQ reliability (n=32, Cov80=87.5%, Cov90=100.0%).",
           "v332_baseline_cov80": 0.75,
           "v332_baseline_cov90": 0.9375
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 32,
+          "n_clusters": 9,
+          "n_boot": 1000,
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=9 < 10); cluster bootstrap 95% CI suppressed"
         }
       },
       "censored_head": {
@@ -33033,7 +33983,7 @@
           "censored_c_index": 0.69598
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "hemolysis_MHC": {
       "endpoint": "hemolysis_MHC",
@@ -33274,21 +34224,22 @@
           "n_eval": 55,
           "n_clusters": 12,
           "n_boot": 1000,
+          "ci_reliable": true,
           "mae_ci95": [
-            0.4311,
-            0.6463
+            0.427,
+            0.6497
           ],
           "spearman_ci95": [
-            -0.4455,
-            0.7182
+            -0.4233,
+            0.723
           ],
           "r2_ci95": [
-            -0.7159,
-            0.4514
+            -0.7131,
+            0.4466
           ],
           "cov80_ci95": [
-            0.5356,
-            0.875
+            0.5293,
+            0.8764
           ]
         }
       },
@@ -33478,6 +34429,24 @@
           "uq_note": null,
           "v332_baseline_cov80": 0.8235,
           "v332_baseline_cov90": 0.9608
+        },
+        "holdout_bootstrap_ci95": {
+          "n_eval": 51,
+          "n_clusters": 10,
+          "n_boot": 1000,
+          "ci_reliable": true,
+          "mae_ci95": [
+            0.392,
+            0.5421
+          ],
+          "spearman_ci95": [
+            -0.0231,
+            0.7441
+          ],
+          "r2_ci95": [
+            -0.3108,
+            0.451
+          ]
         }
       },
       "censored_head": {
@@ -33707,7 +34676,7 @@
           "censored_c_index": 0.76065
         }
       },
-      "evidence_grade": "quantitative"
+      "evidence_grade": "rank_only"
     },
     "LogD_decadiene": {
       "endpoint": "LogD_decadiene",
@@ -33788,18 +34757,8 @@
           "n_eval": 20,
           "n_clusters": 4,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.1651,
-            0.5375
-          ],
-          "spearman_ci95": [
-            0.8462,
-            0.997
-          ],
-          "r2_ci95": [
-            0.4733,
-            0.9269
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=4 < 10); cluster bootstrap 95% CI suppressed"
         },
         "family_cv_metrics": {
           "cpu": {
@@ -33997,18 +34956,8 @@
           "n_eval": 20,
           "n_clusters": 4,
           "n_boot": 1000,
-          "mae_ci95": [
-            0.1651,
-            0.5375
-          ],
-          "spearman_ci95": [
-            0.8462,
-            0.997
-          ],
-          "r2_ci95": [
-            0.4733,
-            0.9269
-          ]
+          "ci_reliable": false,
+          "ci_note": "insufficient_clusters (n_clusters=4 < 10); cluster bootstrap 95% CI suppressed"
         },
         "family_cv_metrics": {
           "cpu": {
@@ -34332,21 +35281,21 @@
       "method_label": "AD-stratified Empirical-Bayes shrunk interval (empirically calibrated on nested 5-fold OOF residuals; not an exact finite-sample conformal guarantee)",
       "deployment_policy": "uniform_mondrian_ad_eb_json_zero_dep",
       "deployment_policy_note": "Engineering trade-off for pure-JSON zero-dependency serving: nested-OOF selected mondrian_ad_eb on 48/80 tracks (baseline 13, studentized_cvplus 11, cqr_lgb 8); deployed uniformly across all 80 regression tracks with holdout coverage reported identically from mondrian_ad_eb. Note: cqr_lgb achieved higher overall holdout coverage (79.2%/91.0% dual, min 52.2%) at the cost of .joblib/LightGBM runtime artifacts.",
-      "n_regression_endpoints": 40,
+      "n_regression_endpoints": 41,
       "n_low_reliability_tracks_cov80_lt_70": {
         "dual_modality": 7,
         "smiles_only": 5
       },
       "uq_reliability_counts": {
         "dual_modality": {
-          "low": 7,
+          "low": 10,
           "moderate": 11,
-          "calibrated": 22
+          "calibrated": 20
         },
         "smiles_only": {
-          "low": 6,
-          "calibrated": 23,
-          "moderate": 11
+          "low": 10,
+          "moderate": 10,
+          "calibrated": 21
         }
       },
       "uq_diagnostic_scope": "post_hoc_holdout_diagnostic_flag_not_out_of_sample_guarantee",
@@ -34726,143 +35675,253 @@
       "scope_warning": "Validated exclusively on cyclic macrocycles; ΔLogD for linear non-macrocyclic peptides is extrapolated and flagged out-of-scope."
     },
     "deep_mt_note": "Deep Multi-Task checkpoints (3 legacy winners: F, CL_absolute, Cmax) were not retrained in v33.5; newly promoted endpoints use CPU/4-FM Fusion only.",
-    "clinical_pk_index_license": "US Federal Government Public Domain (FDA DailyMed SPL & Drugs@FDA NDA/BLA Reviews, 17 U.S.C. § 105) — 59 drugs, 427 PK records; zero CC-BY-NC mirroring."
+    "clinical_pk_index_license": "US Federal Government Public Domain (FDA DailyMed SPL & Drugs@FDA NDA/BLA Reviews, 17 U.S.C. § 105) — 59 drugs, 427 PK records; zero CC-BY-NC mirroring.",
+    "logd_decadiene_delta_validation": {
+      "n_matched_dual_phase_macrocycles": 27,
+      "n_clusters_represented": 5,
+      "max_inter_cluster_tanimoto": 0.8438,
+      "protocol": "Within-Series LOCO Cross-Validation (Not Prospective External Validation): LogD7.4_OOS(smiles_only) - LogD_decadiene_LOCO_OOF vs Measured (LogD_oct - LogD_dec)",
+      "octanol_source_audit": {
+        "Naylor LPE 2018 primary SI": 27
+      },
+      "same_macrocycle_literature_subset": {
+        "n": 27,
+        "sources": {
+          "Naylor LPE 2018 primary SI": 27
+        },
+        "n_total": 27,
+        "n_exact": 27,
+        "n_censored": 0,
+        "mae": 0.42018,
+        "rmse": 0.5252,
+        "r2": 0.82875,
+        "spearman": 0.89927,
+        "pearson": 0.92668,
+        "censored_concordance": null,
+        "censored_violation_mae": null,
+        "all_row_hinge_mae": 0.42018,
+        "censored_c_index": null
+      },
+      "spearman": 0.89927,
+      "spearman_cluster_boot_ci95": [
+        0.8422,
+        0.9869
+      ],
+      "cluster_boot_caveat": "Only 5 clusters represented; cluster bootstrap CI is wide and exploratory.",
+      "pearson": 0.92668,
+      "mae": 0.42018,
+      "mae_cluster_boot_ci95": [
+        0.1834,
+        0.5941
+      ],
+      "r2": 0.82875,
+      "auroc_ge_2_4_deployment_threshold": 0.9506,
+      "balanced_acc_ge_2_4": 0.8889,
+      "high_chameleonicity_ge2_auroc": 0.9716,
+      "tercile_3x3_confusion_matrix_0_7_and_2_4": [
+        [
+          4,
+          5,
+          0
+        ],
+        [
+          1,
+          6,
+          2
+        ],
+        [
+          0,
+          1,
+          8
+        ]
+      ],
+      "tercile_3class_accuracy": 0.6667,
+      "empirical_terciles_in_sample": {
+        "p33": 0.68,
+        "p67": 2.42,
+        "min": -0.37,
+        "max": 4.39
+      },
+      "scope_warning": "Validated strictly on cyclic macrocycles within-series (LOCO); ΔLogD for linear/non-macrocyclic peptides is extrapolated and badges are hidden."
+    },
+    "max_inter_cluster_tanimoto": 0.8438,
+    "evidence_grade_policy": "CI-aware grading: regression `quantitative` requires n_ho>=30, n_clusters>=10, R2>=0.15, R2_ci95_lo>0, Spearman>=0.45, and uq_reliability!=low; negative R2 & Spearman flagged `exploratory_not_recommended`."
   },
   "egat_fidelity_audit": {
     "PAMPA": {
       "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.8536,
-      "fidelity_vs_4fm_pearson": 0.8672,
-      "fidelity_vs_4fm_mae": 0.2132,
+      "fidelity_vs_4fm_spearman": 0.8292,
+      "fidelity_vs_4fm_pearson": 0.8326,
+      "fidelity_vs_4fm_mae": 0.2131,
       "ground_truth_metric": "spearman",
-      "egat_holdout_score": 0.6293,
-      "ensemble_4fm_holdout_score": 0.7912,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 5.5966,
-      "deletion_rand20_delta": 5.8021,
-      "deletion_bot20_delta": 5.7772,
-      "deletion_top_vs_rand_ratio": 0.965,
-      "deletion_top_vs_bot_ratio": 0.969,
+      "egat_holdout_score": 0.6257,
+      "ensemble_4fm_holdout_score": 0.7996,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 5.6694,
+      "deletion_rand20_delta": 5.8589,
+      "deletion_bot20_delta": 5.6815,
+      "deletion_top_vs_rand_ratio": 0.968,
+      "deletion_top_vs_rand_ci95": [
+        0.951,
+        0.984
+      ],
+      "deletion_top_vs_bot_ratio": 0.998,
       "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "Caco2": {
       "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.8848,
-      "fidelity_vs_4fm_pearson": 0.8943,
-      "fidelity_vs_4fm_mae": 0.2421,
+      "fidelity_vs_4fm_spearman": 0.9006,
+      "fidelity_vs_4fm_pearson": 0.9074,
+      "fidelity_vs_4fm_mae": 0.2286,
       "ground_truth_metric": "spearman",
-      "egat_holdout_score": 0.7617,
-      "ensemble_4fm_holdout_score": 0.8462,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 6.4939,
-      "deletion_rand20_delta": 6.0721,
-      "deletion_bot20_delta": 6.044,
-      "deletion_top_vs_rand_ratio": 1.069,
-      "deletion_top_vs_bot_ratio": 1.074,
+      "egat_holdout_score": 0.8068,
+      "ensemble_4fm_holdout_score": 0.8523,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 6.8451,
+      "deletion_rand20_delta": 6.0165,
+      "deletion_bot20_delta": 6.0917,
+      "deletion_top_vs_rand_ratio": 1.138,
+      "deletion_top_vs_rand_ci95": [
+        1.111,
+        1.162
+      ],
+      "deletion_top_vs_bot_ratio": 1.124,
       "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "hemolysis_cls": {
       "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.7544,
-      "fidelity_vs_4fm_pearson": 0.7526,
-      "fidelity_vs_4fm_mae": 0.1593,
+      "fidelity_vs_4fm_spearman": 0.6528,
+      "fidelity_vs_4fm_pearson": 0.557,
+      "fidelity_vs_4fm_mae": 0.1753,
       "ground_truth_metric": "roc_auc",
-      "egat_holdout_score": 0.8439,
-      "ensemble_4fm_holdout_score": 0.9418,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.0989,
-      "deletion_rand20_delta": 0.039,
-      "deletion_bot20_delta": 0.0521,
-      "deletion_top_vs_rand_ratio": 2.535,
-      "deletion_top_vs_bot_ratio": 1.899,
-      "interpretability_tier": "faithful_surrogate"
+      "egat_holdout_score": 0.7492,
+      "ensemble_4fm_holdout_score": 0.9156,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.1061,
+      "deletion_rand20_delta": 0.0502,
+      "deletion_bot20_delta": 0.032,
+      "deletion_top_vs_rand_ratio": 2.115,
+      "deletion_top_vs_rand_ci95": [
+        1.685,
+        2.548
+      ],
+      "deletion_top_vs_bot_ratio": 3.31,
+      "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "hemolysis_HC50": {
       "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.5906,
-      "fidelity_vs_4fm_pearson": 0.5757,
-      "fidelity_vs_4fm_mae": 0.334,
+      "fidelity_vs_4fm_spearman": 0.4835,
+      "fidelity_vs_4fm_pearson": 0.5161,
+      "fidelity_vs_4fm_mae": 0.3291,
       "ground_truth_metric": "spearman",
-      "egat_holdout_score": 0.5042,
-      "ensemble_4fm_holdout_score": 0.722,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.9046,
-      "deletion_rand20_delta": 1.7554,
-      "deletion_bot20_delta": 1.5543,
-      "deletion_top_vs_rand_ratio": 0.515,
-      "deletion_top_vs_bot_ratio": 0.582,
+      "egat_holdout_score": 0.3747,
+      "ensemble_4fm_holdout_score": 0.6072,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 1.0,
+      "deletion_rand20_delta": 1.7372,
+      "deletion_bot20_delta": 1.4835,
+      "deletion_top_vs_rand_ratio": 0.576,
+      "deletion_top_vs_rand_ci95": [
+        0.524,
+        0.632
+      ],
+      "deletion_top_vs_bot_ratio": 0.674,
       "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "overall_peptide_toxicity": {
       "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.8439,
-      "fidelity_vs_4fm_pearson": 0.853,
-      "fidelity_vs_4fm_mae": 0.1435,
+      "fidelity_vs_4fm_spearman": 0.8695,
+      "fidelity_vs_4fm_pearson": 0.8744,
+      "fidelity_vs_4fm_mae": 0.141,
       "ground_truth_metric": "roc_auc",
-      "egat_holdout_score": 0.8606,
-      "ensemble_4fm_holdout_score": 0.9351,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.1869,
-      "deletion_rand20_delta": 0.0546,
-      "deletion_bot20_delta": 0.0585,
-      "deletion_top_vs_rand_ratio": 3.421,
-      "deletion_top_vs_bot_ratio": 3.193,
+      "egat_holdout_score": 0.8977,
+      "ensemble_4fm_holdout_score": 0.9623,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.2549,
+      "deletion_rand20_delta": 0.0545,
+      "deletion_bot20_delta": 0.0646,
+      "deletion_top_vs_rand_ratio": 4.677,
+      "deletion_top_vs_rand_ci95": [
+        3.32,
+        6.499
+      ],
+      "deletion_top_vs_bot_ratio": 3.946,
       "interpretability_tier": "faithful_surrogate"
     },
     "cytotoxicity_cls": {
       "task_type": "classification",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.6487,
-      "fidelity_vs_4fm_pearson": 0.6206,
-      "fidelity_vs_4fm_mae": 0.173,
+      "fidelity_vs_4fm_spearman": 0.6691,
+      "fidelity_vs_4fm_pearson": 0.6323,
+      "fidelity_vs_4fm_mae": 0.1842,
       "ground_truth_metric": "roc_auc",
-      "egat_holdout_score": 0.8261,
-      "ensemble_4fm_holdout_score": 0.9271,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.1424,
-      "deletion_rand20_delta": 0.0626,
-      "deletion_bot20_delta": 0.0857,
-      "deletion_top_vs_rand_ratio": 2.273,
-      "deletion_top_vs_bot_ratio": 1.661,
+      "egat_holdout_score": 0.7955,
+      "ensemble_4fm_holdout_score": 0.9289,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.1237,
+      "deletion_rand20_delta": 0.0636,
+      "deletion_bot20_delta": 0.0738,
+      "deletion_top_vs_rand_ratio": 1.944,
+      "deletion_top_vs_rand_ci95": [
+        1.532,
+        2.452
+      ],
+      "deletion_top_vs_bot_ratio": 1.677,
       "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "cytotoxicity_CC50": {
       "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.6037,
-      "fidelity_vs_4fm_pearson": 0.8419,
-      "fidelity_vs_4fm_mae": 0.3328,
+      "fidelity_vs_4fm_spearman": 0.5994,
+      "fidelity_vs_4fm_pearson": 0.8386,
+      "fidelity_vs_4fm_mae": 0.3271,
       "ground_truth_metric": "spearman",
-      "egat_holdout_score": 0.3769,
-      "ensemble_4fm_holdout_score": 0.6962,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.9351,
-      "deletion_rand20_delta": 1.3829,
-      "deletion_bot20_delta": 1.2277,
-      "deletion_top_vs_rand_ratio": 0.676,
-      "deletion_top_vs_bot_ratio": 0.762,
+      "egat_holdout_score": 0.404,
+      "ensemble_4fm_holdout_score": 0.6341,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.9911,
+      "deletion_rand20_delta": 1.3912,
+      "deletion_bot20_delta": 1.2414,
+      "deletion_top_vs_rand_ratio": 0.712,
+      "deletion_top_vs_rand_ci95": [
+        0.659,
+        0.768
+      ],
+      "deletion_top_vs_bot_ratio": 0.798,
       "interpretability_tier": "qualitative_saliency_heuristic"
     },
     "half_life_reg": {
       "task_type": "regression",
+      "deletion_protocol": "True graph atom + incident-edge removal (re-indexed subgraph, top-20% vs random-20% vs bottom-20%)",
       "n_holdout_evaluated": 200,
-      "fidelity_vs_4fm_spearman": 0.6267,
-      "fidelity_vs_4fm_pearson": 0.6134,
-      "fidelity_vs_4fm_mae": 0.3872,
+      "fidelity_vs_4fm_spearman": 0.4683,
+      "fidelity_vs_4fm_pearson": 0.4992,
+      "fidelity_vs_4fm_mae": 0.4456,
       "ground_truth_metric": "spearman",
-      "egat_holdout_score": 0.4625,
-      "ensemble_4fm_holdout_score": 0.599,
-      "deletion_faithfulness_n": 30,
-      "deletion_top20_delta": 0.3312,
-      "deletion_rand20_delta": 0.1517,
-      "deletion_bot20_delta": 0.3066,
-      "deletion_top_vs_rand_ratio": 2.184,
-      "deletion_top_vs_bot_ratio": 1.08,
+      "egat_holdout_score": 0.3875,
+      "ensemble_4fm_holdout_score": 0.4934,
+      "deletion_faithfulness_n": 80,
+      "deletion_top20_delta": 0.3113,
+      "deletion_rand20_delta": 0.1601,
+      "deletion_bot20_delta": 0.3812,
+      "deletion_top_vs_rand_ratio": 1.944,
+      "deletion_top_vs_rand_ci95": [
+        1.584,
+        2.477
+      ],
+      "deletion_top_vs_bot_ratio": 0.816,
       "interpretability_tier": "qualitative_saliency_heuristic"
     }
   },
@@ -34874,94 +35933,167 @@
         "mae": 0.37375,
         "r2": 0.62512
       },
-      "QSAR_Morgan_RDKit2D_RF": {
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
         "n": 1715,
-        "spearman": 0.75381,
-        "mae": 0.39623,
-        "r2": 0.59001,
+        "spearman": 0.7537,
+        "mae": 0.39625,
+        "r2": 0.58998,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 1715,
           "n_clusters": 124,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.0227,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0229,
           "ci95": [
-            -0.0023,
-            0.0407
+            0.0034,
+            0.04
           ],
-          "p_value": 0.064
+          "p_value": 0.03,
+          "p_value_display": "0.0300",
+          "p_value_holm": 0.12
         }
       },
-      "QSAR_Morgan_RDKit2D_LGBM": {
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
         "n": 1715,
         "spearman": 0.79607,
         "mae": 0.37284,
         "r2": 0.64653,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 1715,
           "n_clusters": 124,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": -0.0003,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": -0.0004,
           "ci95": [
-            -0.0165,
-            0.0153
+            -0.0157,
+            0.0166
           ],
-          "p_value": 0.958
+          "p_value": 0.94,
+          "p_value_display": "0.9400",
+          "p_value_holm": 0.94
         }
       },
-      "Pure2D_Graph_EGAT_5fold": {
-        "n": 200,
-        "spearman": 0.6293,
-        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
-      },
-      "ChemBERTa-MTR_only": {
+      "Internal_SingleFM_ChemBERTa_MTR": {
         "n": 1715,
         "spearman": 0.62536,
         "mae": 0.4727,
         "r2": 0.44642,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 1715,
           "n_clusters": 124,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.1001,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1002,
           "ci95": [
-            0.0648,
-            0.1451
+            0.0639,
+            0.1404
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
         }
       },
-      "PeptideCLM2_only": {
+      "Internal_SingleFM_PeptideCLM2": {
         "n": 1715,
         "spearman": 0.65829,
         "mae": 0.45724,
         "r2": 0.45638,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 1715,
           "n_clusters": 124,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.0838,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0832,
           "ci95": [
-            0.0517,
-            0.1196
+            0.0484,
+            0.1162
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
         }
       },
-      "ESM-C_600M_seq_only": {
+      "Internal_SingleFM_ESMC_600M": {
         "n": 1524,
         "spearman": 0.42841,
         "mae": 0.5377,
         "r2": 0.22316,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 1524,
           "n_clusters": 81,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
           "mean_delta": 0.1673,
           "ci95": [
-            0.1032,
-            0.2151
+            0.1042,
+            0.2137
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_CycPeptMP_RF750_SameSplit": {
+        "n": 1715,
+        "spearman": 0.75955,
+        "mae": 0.39257,
+        "r2": 0.59596,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "CycPeptMP / CycPeptMPDB RF baseline (Li et al., Brief. Bioinform. 2024, config/baselines.json: n_estimators=750, max_depth=20)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0196,
+          "ci95": [
+            -0.0014,
+            0.0399
+          ],
+          "p_value": 0.072,
+          "p_value_display": "0.0720",
+          "p_value_holm": 0.216
+        }
+      },
+      "Published_CycPeptMP_2DSVM_SameSplit": {
+        "n": 1715,
+        "spearman": 0.72469,
+        "mae": 0.41319,
+        "r2": 0.53897,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "CycPeptMP 2D-descriptor SVR baseline (Li et al., Brief. Bioinform. 2024, config/baselines.json: C=8)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0401,
+          "ci95": [
+            -0.0055,
+            0.0774
+          ],
+          "p_value": 0.076,
+          "p_value_display": "0.0760",
+          "p_value_holm": 0.216
+        }
+      },
+      "Published_MultiCycGT_SVM_Tanimoto_SameSplit": {
+        "n": 1715,
+        "spearman": 0.71119,
+        "mae": 0.42228,
+        "r2": 0.51066,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "Multi_CycGT Tanimoto-Kernel SVR (Cao et al., JCIM 2024; github.com/hongliangduan/Multi_CycGT svm_tanimoto)",
+        "paired_boot_vs_omni": {
+          "n_eval": 1715,
+          "n_clusters": 124,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0468,
+          "ci95": [
+            0.0133,
+            0.0766
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
         }
       }
     },
@@ -34971,89 +36103,144 @@
         "roc_auc": 0.8973,
         "brier": 0.1126
       },
-      "QSAR_Morgan_RDKit2D_RF": {
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
         "n": 4101,
-        "roc_auc": 0.8727,
+        "roc_auc": 0.872,
         "brier": 0.1342,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 4101,
           "n_clusters": 1261,
-          "metric": "delta_roc_auc (A - B)",
-          "mean_delta": 0.025,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0255,
           "ci95": [
-            0.007,
-            0.042
+            0.0074,
+            0.043
           ],
-          "p_value": 0.008
+          "p_value": 0.006,
+          "p_value_display": "0.0060",
+          "p_value_holm": 0.048
         }
       },
-      "QSAR_Morgan_RDKit2D_LGBM": {
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
         "n": 4101,
         "roc_auc": 0.8727,
         "brier": 0.1283,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 4101,
           "n_clusters": 1261,
-          "metric": "delta_roc_auc (A - B)",
-          "mean_delta": 0.0249,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0247,
           "ci95": [
-            0.0083,
-            0.0409
+            0.0065,
+            0.042
           ],
-          "p_value": 0.006
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "p_value_holm": 0.044
         }
       },
-      "Pure2D_Graph_EGAT_5fold": {
-        "n": 200,
-        "roc_auc": 0.8439,
-        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
-      },
-      "ChemBERTa-MTR_only": {
+      "Internal_SingleFM_ChemBERTa_MTR": {
         "n": 3629,
         "roc_auc": 0.847,
         "brier": 0.1372,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 3629,
           "n_clusters": 1233,
-          "metric": "delta_roc_auc (A - B)",
-          "mean_delta": 0.0503,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0501,
           "ci95": [
-            0.0366,
-            0.0658
+            0.0363,
+            0.066
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
         }
       },
-      "PeptideCLM2_only": {
+      "Internal_SingleFM_PeptideCLM2": {
         "n": 3629,
         "roc_auc": 0.8505,
         "brier": 0.1335,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 3629,
           "n_clusters": 1233,
-          "metric": "delta_roc_auc (A - B)",
-          "mean_delta": 0.0465,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0463,
           "ci95": [
-            0.035,
-            0.0592
+            0.0347,
+            0.0595
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
         }
       },
-      "ESM-C_600M_seq_only": {
+      "Internal_SingleFM_ESMC_600M": {
         "n": 4025,
         "roc_auc": 0.8305,
         "brier": 0.1408,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 4025,
           "n_clusters": 1255,
-          "metric": "delta_roc_auc (A - B)",
-          "mean_delta": 0.0671,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "mean_delta": 0.0676,
           "ci95": [
-            0.045,
-            0.0953
+            0.0434,
+            0.0966
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_HemoPI2_v1_3_Benchmark": {
+        "tool_citation": "HemoPI2 v1.3 (Rathore et al., Protein Science 2025; PyPI hemopi2==1.3)",
+        "n_holdout_canonical_seq": 3230,
+        "n_holdout_strictly_novel_vs_hemopi2_corpus": 2334,
+        "HemoPI2_v1_3_Pretrained_ESM2t6_AllCanonical": {
+          "n": 3230,
+          "roc_auc": 0.8305,
+          "brier": 0.1754,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "mean_delta": 0.0651,
+            "ci95": [
+              0.0229,
+              0.105
+            ],
+            "p_value": 0.001,
+            "p_value_display": "<=0.001",
+            "p_value_holm": 0.021
+          },
+          "note": "Off-the-shelf HemoPI2 ESM2-t6 fine-tuned classifier (all canonical holdout)"
+        },
+        "HemoPI2_v1_3_Pretrained_ESM2t6_ZeroOverlapNovel": {
+          "n": 2334,
+          "roc_auc": 0.8317,
+          "brier": 0.1764,
+          "omni_same_subset_roc_auc": 0.8867,
+          "paired_boot_vs_omni": {
+            "n_eval": 2334,
+            "n_clusters": 1071,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "mean_delta": 0.0562,
+            "ci95": [
+              0.0148,
+              0.1039
+            ],
+            "p_value": 0.004,
+            "p_value_display": "0.0040",
+            "p_value_holm": 0.044
+          },
+          "note": "Off-the-shelf HemoPI2 ESM2-t6 evaluated strictly on novel peptides absent from HemoPI2 corpus"
         }
       }
     },
@@ -35064,225 +36251,371 @@
         "mae": 0.66401,
         "r2": 0.39689
       },
-      "QSAR_Morgan_RDKit2D_RF": {
+      "Internal_QSAR_Morgan_RDKit2D_RF": {
         "n": 567,
-        "spearman": 0.3448,
-        "mae": 0.75065,
-        "r2": 0.22312,
+        "spearman": 0.34683,
+        "mae": 0.74987,
+        "r2": 0.22445,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 567,
           "n_clusters": 159,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.0837,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0826,
           "ci95": [
-            0.0302,
-            0.1288
+            0.0316,
+            0.1319
           ],
-          "p_value": 0.001
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "p_value_holm": 0.044
         }
       },
-      "QSAR_Morgan_RDKit2D_LGBM": {
+      "Internal_QSAR_Morgan_RDKit2D_LGBM": {
         "n": 567,
         "spearman": 0.44105,
         "mae": 0.70492,
         "r2": 0.32484,
+        "category": "internal_qsar",
         "paired_boot_vs_omni": {
           "n_eval": 567,
           "n_clusters": 159,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.0417,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0412,
           "ci95": [
-            0.0055,
-            0.0835
+            0.0063,
+            0.0811
           ],
-          "p_value": 0.03
+          "p_value": 0.024,
+          "p_value_display": "0.0240",
+          "p_value_holm": 0.12
         }
       },
-      "Pure2D_Graph_EGAT_5fold": {
-        "n": 200,
-        "spearman": 0.4625,
-        "note": "Evaluated on SMILES-valid holdout subset (n<=200)"
-      },
-      "ChemBERTa-MTR_only": {
+      "Internal_SingleFM_ChemBERTa_MTR": {
         "n": 527,
         "spearman": 0.33621,
         "mae": 0.78803,
         "r2": 0.23151,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 527,
           "n_clusters": 153,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.119,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1172,
           "ci95": [
-            0.0623,
-            0.1689
+            0.0591,
+            0.1673
           ],
-          "p_value": 0.001
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "p_value_holm": 0.024
         }
       },
-      "PeptideCLM2_only": {
+      "Internal_SingleFM_PeptideCLM2": {
         "n": 527,
         "spearman": 0.45363,
         "mae": 0.74812,
         "r2": 0.26314,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 527,
           "n_clusters": 153,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.0782,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0758,
           "ci95": [
-            0.0199,
-            0.1288
+            0.0136,
+            0.1273
           ],
-          "p_value": 0.008
+          "p_value": 0.012,
+          "p_value_display": "0.0120",
+          "p_value_holm": 0.072
         }
       },
-      "ESM-C_600M_seq_only": {
+      "Internal_SingleFM_ESMC_600M": {
         "n": 544,
         "spearman": 0.24579,
         "mae": 0.82054,
         "r2": 0.06227,
+        "category": "internal_single_fm",
         "paired_boot_vs_omni": {
           "n_eval": 544,
           "n_clusters": 149,
-          "metric": "mae_reduction (MAE_B - MAE_A)",
-          "mean_delta": 0.1475,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.1467,
           "ci95": [
-            0.0665,
-            0.2259
+            0.0645,
+            0.2287
           ],
-          "p_value": 0.001
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "p_value_holm": 0.021
+        }
+      },
+      "Published_PLifePred_AAC_DPC_SVR_SameSplit": {
+        "n": 567,
+        "spearman": 0.35987,
+        "mae": 0.76183,
+        "r2": 0.15704,
+        "category": "published_peptide_tool_retrained_same_split",
+        "citation": "PLifePred-style AAC + DPC + PhysChem RBF-SVR architecture (Mathur et al., Sci. Rep. 2018) retrained on identical half_life_reg CV split",
+        "paired_boot_vs_omni": {
+          "n_eval": 567,
+          "n_clusters": 159,
+          "metric": "mae_reduction (MAE_Base - MAE_Omni)",
+          "mean_delta": 0.0954,
+          "ci95": [
+            0.0242,
+            0.1536
+          ],
+          "p_value": 0.01,
+          "p_value_display": "0.0100",
+          "p_value_holm": 0.07
         }
       }
+    },
+    "_multiplicity_correction": {
+      "method": "Holm-Bonferroni step-down across all paired cluster-bootstrap comparisons",
+      "n_comparisons": 21,
+      "p_floor_note": "With 1,000 bootstrap replicates, p_value=0.001 denotes p <= 0.001."
     }
   },
   "temporal_split_benchmarks": {
     "PAMPA": {
-      "description": "Train: Naylor 2018 + CycPeptMPDB (<=2023) -> Blind Test: SweMacrocycleDB (2024-2025) + 2025-2026 JMC/ACSMCL",
+      "description": "Release-cohort split (non-SweMacrocycleDB historical train -> SweMacrocycleDB 2024-2025 + 2025-2026 JMC/ACSMCL test; exact compound dedup)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "super_ensemble",
+      "weights": {
+        "cpu": 0.255,
+        "fusion": 0.745
+      },
       "task_type": "regression",
       "n_train_historical": 7395,
       "n_test_future_novel": 1177,
-      "qsar_morgan_lgbm": {
+      "cpu_qsar_track": {
         "n_total": 1177,
         "n_exact": 1177,
         "n_censored": 0,
-        "mae": 0.90996,
-        "rmse": 1.07042,
-        "r2": -0.56708,
-        "spearman": 0.19749,
-        "pearson": 0.22927,
+        "mae": 1.04919,
+        "rmse": 1.23041,
+        "r2": -1.07055,
+        "spearman": -0.12064,
+        "pearson": -0.07809,
         "censored_concordance": null,
         "censored_violation_mae": null,
-        "all_row_hinge_mae": 0.90996,
+        "all_row_hinge_mae": 1.04919,
         "censored_c_index": null
       },
-      "multimodal_4fm_lgbm": {
+      "prod_super_ensemble": {
         "n_total": 1177,
         "n_exact": 1177,
         "n_censored": 0,
-        "mae": 0.74563,
-        "rmse": 0.89602,
-        "r2": -0.09806,
-        "spearman": 0.13351,
-        "pearson": 0.19694,
+        "mae": 0.9173,
+        "rmse": 1.07647,
+        "r2": -0.58486,
+        "spearman": -0.00664,
+        "pearson": 0.05448,
         "censored_concordance": null,
         "censored_violation_mae": null,
-        "all_row_hinge_mae": 0.74563,
+        "all_row_hinge_mae": 0.9173,
         "censored_c_index": null
       }
     },
     "hemolysis_cls": {
-      "description": "Train: DBAASP / ENDL / HLPpredFuse (<=2022) -> Blind Test: HemoPI2 (2025) + Hemolytik2 (2026)",
+      "description": "Release-cohort split (historical DBAASP/ENDL/HLPpredFuse train -> HemoPI2 2025 + Hemolytik2 2026 release cohorts; note: 2025-2026 compendia include some earlier literature)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "super_ensemble",
+      "weights": {
+        "cpu": 0.45,
+        "fusion": 0.55
+      },
       "task_type": "classification",
       "n_train_historical": 15247,
       "n_test_future_novel": 4300,
-      "qsar_morgan_lgbm": {
-        "roc_auc": 0.7872,
-        "brier": 0.1828
+      "train_n_pos": 4015,
+      "train_n_neg": 11232,
+      "train_pos_rate": 0.2633,
+      "test_n_pos": 1757,
+      "test_n_neg": 2543,
+      "test_pos_rate": 0.4086,
+      "cpu_qsar_track": {
+        "roc_auc": 0.7902,
+        "brier": 0.1795
       },
-      "multimodal_4fm_lgbm": {
-        "roc_auc": 0.8544,
-        "brier": 0.1508
+      "prod_super_ensemble": {
+        "roc_auc": 0.8316,
+        "brier": 0.1591
       }
     },
     "LogD7.4": {
-      "description": "Train: Naylor 2018 + PEGASUS + ChEMBL (<=2024) -> Blind Test: Chloroalkene 2026 + JMC 2025",
+      "description": "Release-cohort split (historical Naylor/PEGASUS/ChEMBL train -> 2025-2026 Chloroalkene/JMC test; exact compound dedup)",
+      "architecture": "Production V33 CPU + 4-FM Fusion Super-Ensemble (5-fold cluster-OOF simplex stacking; matched hyperparameters)",
+      "winning_family": "fusion",
+      "weights": {
+        "fusion": 1.0
+      },
       "task_type": "regression",
       "n_train_historical": 653,
       "n_test_future_novel": 22,
-      "qsar_morgan_lgbm": {
+      "cpu_qsar_track": {
         "n_total": 22,
         "n_exact": 22,
         "n_censored": 0,
-        "mae": 1.23114,
-        "rmse": 1.66147,
-        "r2": -0.41679,
-        "spearman": -0.12429,
-        "pearson": -0.06841,
+        "mae": 1.18955,
+        "rmse": 1.57572,
+        "r2": -0.27431,
+        "spearman": 0.58006,
+        "pearson": 0.68291,
         "censored_concordance": null,
         "censored_violation_mae": null,
-        "all_row_hinge_mae": 1.23114,
+        "all_row_hinge_mae": 1.18955,
         "censored_c_index": null
       },
-      "multimodal_4fm_lgbm": {
+      "prod_super_ensemble": {
         "n_total": 22,
         "n_exact": 22,
         "n_censored": 0,
-        "mae": 1.13741,
-        "rmse": 1.50905,
-        "r2": -0.16877,
-        "spearman": 0.34567,
-        "pearson": 0.33701,
+        "mae": 1.10824,
+        "rmse": 1.52634,
+        "r2": -0.1957,
+        "spearman": 0.55973,
+        "pearson": 0.63384,
         "censored_concordance": null,
         "censored_violation_mae": null,
-        "all_row_hinge_mae": 1.13741,
+        "all_row_hinge_mae": 1.10824,
         "censored_c_index": null
       }
     }
   },
   "recent_fda_2019_2023_blind_set": {
-    "protocol": "Strict Full-Cluster Leave-Recent-FDA-Out (all training compounds & clusters with Tc >= 0.40 to any 2019-2023 FDA drug excluded)",
-    "n_drugs": 8,
+    "protocol": "Production V33 CPU + 4-FM Fusion Super-Ensemble under direct query-to-train structural/sequence isolation (excludes every training compound with InChIKey14 match, Morgan-2048 radius-2 Tc >= 0.40, or canonical 3-mer sequence Jaccard >= 0.40 to any of the 11 FDA 2019-2023 peptides; exact counts logged).",
+    "n_drugs": 11,
     "approval_years": "2019-2023",
+    "exclusion_ledger": {
+      "half_life_reg": {
+        "n_train_before": 2901,
+        "n_excluded_total": 1976,
+        "n_excluded_exact_ik_or_ck": 40,
+        "n_excluded_morgan2048_tc_ge_0_40": 1935,
+        "n_excluded_seq_3mer_ge_0_40": 1,
+        "n_clusters_touched": 498,
+        "n_train_after": 925,
+        "n_clusters_after": 429,
+        "pct_training_retained": 31.9,
+        "prod_stack_winning_family": "fusion",
+        "prod_stack_weights": {
+          "fusion": 1.0
+        }
+      },
+      "PPB": {
+        "n_train_before": 132,
+        "n_excluded_total": 55,
+        "n_excluded_exact_ik_or_ck": 9,
+        "n_excluded_morgan2048_tc_ge_0_40": 46,
+        "n_excluded_seq_3mer_ge_0_40": 0,
+        "n_clusters_touched": 25,
+        "n_train_after": 77,
+        "n_clusters_after": 28,
+        "pct_training_retained": 58.3,
+        "prod_stack_winning_family": "fusion",
+        "prod_stack_weights": {
+          "fusion": 1.0
+        }
+      },
+      "hemolysis_cls": {
+        "n_train_before": 20506,
+        "n_excluded_total": 13613,
+        "n_excluded_exact_ik_or_ck": 0,
+        "n_excluded_morgan2048_tc_ge_0_40": 13613,
+        "n_excluded_seq_3mer_ge_0_40": 0,
+        "n_clusters_touched": 5304,
+        "n_train_after": 6893,
+        "n_clusters_after": 2099,
+        "pct_training_retained": 33.6,
+        "prod_stack_winning_family": "super_ensemble",
+        "prod_stack_weights": {
+          "cpu": 0.55,
+          "fusion": 0.45
+        }
+      }
+    },
     "half_life_log10_metrics": {
+      "n_total": 11,
+      "n_exact": 11,
+      "n_censored": 0,
+      "mae": 0.42794,
+      "rmse": 0.52164,
+      "r2": 0.6404,
+      "spearman": 0.8,
+      "pearson": 0.87758,
+      "censored_concordance": null,
+      "censored_violation_mae": null,
+      "all_row_hinge_mae": 0.42794,
+      "censored_c_index": null,
+      "n_evaluated": 11,
+      "spearman_fisher_ci95": [
+        0.3848,
+        0.9459
+      ],
+      "mae_boot_ci95": [
+        0.2649,
+        0.6172
+      ],
+      "constant_median_baseline_mae": 0.6833,
+      "mae_improvement_vs_constant_pct": 37.4
+    },
+    "ppb_metrics": {
       "n_total": 8,
       "n_exact": 8,
       "n_censored": 0,
-      "mae": 0.51385,
-      "rmse": 0.61559,
-      "r2": 0.30089,
-      "spearman": 0.7619,
-      "pearson": 0.73655,
+      "mae": 0.29671,
+      "rmse": 0.31438,
+      "r2": 0.31602,
+      "spearman": 0.73055,
+      "pearson": 0.66194,
       "censored_concordance": null,
       "censored_violation_mae": null,
-      "all_row_hinge_mae": 0.51385,
-      "censored_c_index": null
+      "all_row_hinge_mae": 0.29671,
+      "censored_c_index": null,
+      "n_evaluated": 8,
+      "spearman_fisher_ci95": [
+        0.0533,
+        0.9475
+      ],
+      "mae_boot_ci95": [
+        0.2345,
+        0.3726
+      ],
+      "constant_median_baseline_mae": 0.326,
+      "mae_improvement_vs_constant_pct": 9.0
     },
-    "ppb_metrics": {
-      "n_total": 7,
-      "n_exact": 7,
-      "n_censored": 0,
-      "mae": 0.3322,
-      "rmse": 0.3689,
-      "r2": 0.07307,
-      "spearman": 0.10714,
-      "pearson": 0.32303,
-      "censored_concordance": null,
-      "censored_violation_mae": null,
-      "all_row_hinge_mae": 0.3322,
-      "censored_c_index": null
+    "hemolysis_predicted_probability_summary": {
+      "n_gt_0_50": 1,
+      "n_total": 11,
+      "max_pred_prob": 0.5548,
+      "median_pred_prob": 0.0562,
+      "caveat": "Approved clinical peptides lack uniform in vitro RBC HC50 labels; reported strictly as predicted-probability sanity check, NOT as a ground-truth false-positive rate."
     },
-    "hemolysis_false_positive_gt_0_50": "0/8",
     "drugs": [
+      {
+        "name": "Zilucoplan",
+        "fda_approval_year": 2023,
+        "route": "SC",
+        "obs_half_life_h": 172.0,
+        "blind_pred_half_life_h": 19.89,
+        "obs_ppb": 0.99,
+        "blind_pred_ppb": 0.791,
+        "blind_pred_hemolysis_prob": 0.555,
+        "fda_label_note": "FDA Zilbrysq NDA 216834 (Oct 2023): T1/2 ~172 h (~7 days), PPB >99%"
+      },
       {
         "name": "Motixafortide",
         "fda_approval_year": 2023,
         "route": "SC",
         "obs_half_life_h": 2.0,
-        "blind_pred_half_life_h": 2.84,
+        "blind_pred_half_life_h": 2.76,
         "obs_ppb": 0.99,
-        "blind_pred_ppb": 0.411,
-        "blind_pred_hemolysis_prob": 0.054,
+        "blind_pred_ppb": 0.595,
+        "blind_pred_hemolysis_prob": 0.032,
         "fda_label_note": "FDA Aphexda NDA 217159 (Sep 2023): T1/2 ~2 h, PPB >99%, Vd 27 L, CL 46.5 L/h"
       },
       {
@@ -35290,10 +36623,10 @@
         "fda_approval_year": 2023,
         "route": "IV",
         "obs_half_life_h": 133.0,
-        "blind_pred_half_life_h": 13.94,
+        "blind_pred_half_life_h": 13.1,
         "obs_ppb": 0.974,
-        "blind_pred_ppb": 1.0,
-        "blind_pred_hemolysis_prob": 0.016,
+        "blind_pred_ppb": 0.771,
+        "blind_pred_hemolysis_prob": 0.312,
         "fda_label_note": "FDA Rezzayo NDA 217417 (Mar 2023): T1/2 ~133 h, PPB 97.4%, Vd 67 L, CL 0.35 L/h"
       },
       {
@@ -35301,10 +36634,10 @@
         "fda_approval_year": 2023,
         "route": "PO",
         "obs_half_life_h": 1.5,
-        "blind_pred_half_life_h": 0.78,
+        "blind_pred_half_life_h": 0.58,
         "obs_ppb": 0.06,
-        "blind_pred_ppb": 0.49,
-        "blind_pred_hemolysis_prob": 0.0,
+        "blind_pred_ppb": 0.58,
+        "blind_pred_hemolysis_prob": 0.001,
         "fda_label_note": "FDA Daybue NDA 217026 (Mar 2023): T1/2 ~1.5 h, PPB <6%, Vd 80 L"
       },
       {
@@ -35312,10 +36645,10 @@
         "fda_approval_year": 2021,
         "route": "PO",
         "obs_half_life_h": 30.0,
-        "blind_pred_half_life_h": 7.95,
+        "blind_pred_half_life_h": 11.06,
         "obs_ppb": 0.97,
-        "blind_pred_ppb": 0.547,
-        "blind_pred_hemolysis_prob": 0.092,
+        "blind_pred_ppb": 0.735,
+        "blind_pred_hemolysis_prob": 0.388,
         "fda_label_note": "FDA Lupkynis NDA 213716 (Jan 2021): T1/2 ~30 h, PPB 97%, Vd 2154 L"
       },
       {
@@ -35323,10 +36656,10 @@
         "fda_approval_year": 2021,
         "route": "IV",
         "obs_half_life_h": 2.6,
-        "blind_pred_half_life_h": 0.26,
+        "blind_pred_half_life_h": 0.67,
         "obs_ppb": 0.255,
-        "blind_pred_ppb": 0.512,
-        "blind_pred_hemolysis_prob": 0.017,
+        "blind_pred_ppb": 0.498,
+        "blind_pred_hemolysis_prob": 0.064,
         "fda_label_note": "FDA Korsuva NDA 214916 (Aug 2021): T1/2 ~2-3 h (healthy) / 23-31 h (HD), PPB 23-28%, Vd 0.238 L/kg"
       },
       {
@@ -35334,21 +36667,32 @@
         "fda_approval_year": 2021,
         "route": "SC",
         "obs_half_life_h": 0.5,
-        "blind_pred_half_life_h": 0.51,
+        "blind_pred_half_life_h": 1.37,
         "obs_ppb": null,
-        "blind_pred_ppb": 0.437,
-        "blind_pred_hemolysis_prob": 0.069,
+        "blind_pred_ppb": 0.678,
+        "blind_pred_hemolysis_prob": 0.056,
         "fda_label_note": "FDA Zegalogue NDA 214231 (Mar 2021): T1/2 ~0.5 h, Vd 47-57 L"
+      },
+      {
+        "name": "Vosoritide",
+        "fda_approval_year": 2021,
+        "route": "SC",
+        "obs_half_life_h": 0.46,
+        "blind_pred_half_life_h": 0.88,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.684,
+        "blind_pred_hemolysis_prob": 0.033,
+        "fda_label_note": "FDA Voxzogo NDA 214938 (Nov 2021): T1/2 ~27.9 min (0.46 h), Vd 2.95 L/kg, CL 91 mL/min/kg"
       },
       {
         "name": "Setmelanotide",
         "fda_approval_year": 2020,
         "route": "SC",
         "obs_half_life_h": 11.0,
-        "blind_pred_half_life_h": 2.45,
+        "blind_pred_half_life_h": 7.37,
         "obs_ppb": 0.791,
-        "blind_pred_ppb": 0.499,
-        "blind_pred_hemolysis_prob": 0.006,
+        "blind_pred_ppb": 0.475,
+        "blind_pred_hemolysis_prob": 0.003,
         "fda_label_note": "FDA Imcivree NDA 213793 (Nov 2020): T1/2 ~11 h, PPB 79.1%, Vd 75.2 L, CL 7.15 L/h"
       },
       {
@@ -35356,11 +36700,22 @@
         "fda_approval_year": 2019,
         "route": "SC",
         "obs_half_life_h": 2.7,
-        "blind_pred_half_life_h": 7.76,
+        "blind_pred_half_life_h": 5.04,
         "obs_ppb": 0.21,
-        "blind_pred_ppb": 0.528,
-        "blind_pred_hemolysis_prob": 0.037,
+        "blind_pred_ppb": 0.473,
+        "blind_pred_hemolysis_prob": 0.064,
         "fda_label_note": "FDA Vyleesi NDA 210557 (Jun 2019): T1/2 ~2.7 h, PPB 21%, F ~100% SC, Vd 25 L, CL 6.5 L/h"
+      },
+      {
+        "name": "Terlipressin",
+        "fda_approval_year": 2022,
+        "route": "IV",
+        "obs_half_life_h": 0.9,
+        "blind_pred_half_life_h": 0.86,
+        "obs_ppb": null,
+        "blind_pred_ppb": 0.451,
+        "blind_pred_hemolysis_prob": 0.023,
+        "fda_label_note": "FDA Terlivaz NDA 022231 (Sep 2022): terminal T1/2 ~0.9 h, Vd ~6.3 L, CL ~27.4 L/h"
       }
     ]
   }

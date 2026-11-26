@@ -173,6 +173,10 @@ class AtomAttributionResponse(BaseModel):
     gnn_prediction: Optional[dict[str, Any]] = None
     top_atoms: list[TopAtomContribution] = Field(default_factory=list)
     available_endpoints: list[str] = Field(default_factory=list)
+    interpretability_tier: Optional[Literal["faithful_surrogate", "qualitative_saliency_heuristic"]] = None
+    fidelity_vs_4fm_spearman: Optional[float] = None
+    deletion_top_vs_rand_ratio: Optional[float] = None
+    deletion_top_vs_rand_ci95: Optional[list[float]] = None
 
 
 class PhysChemSummary(BaseModel):
@@ -249,7 +253,8 @@ class EndpointPrediction(BaseModel):
     cv_score: Optional[float] = None
     holdout_score: Optional[float] = None
     holdout_ci95: Optional[list[float]] = None
-    evidence_grade: Optional[Literal["quantitative", "rank_only"]] = None
+    evidence_grade: Optional[Literal["quantitative", "rank_only", "exploratory_not_recommended"]] = None
+    not_recommended_warning: Optional[str] = None
     v32_cv_score: Optional[float] = None
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
@@ -444,7 +449,7 @@ class EndpointCatalogItem(BaseModel):
     cv_score_v33: Optional[float] = None
     holdout_score_v33: Optional[float] = None
     holdout_ci95: Optional[list[float]] = None
-    evidence_grade: Optional[Literal["quantitative", "rank_only"]] = None
+    evidence_grade: Optional[Literal["quantitative", "rank_only", "exploratory_not_recommended"]] = None
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
     uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
@@ -468,6 +473,11 @@ class EndpointsResponse(BaseModel):
     representation_ablation_summary: dict[str, Any] = Field(default_factory=dict)
     case17_scorecard: dict[str, Any] = Field(default_factory=dict)
     selection_protocol: dict[str, Any] = Field(default_factory=dict)
+    v335_protocol_audit: dict[str, Any] = Field(default_factory=dict)
+    egat_fidelity_audit: dict[str, Any] = Field(default_factory=dict)
+    external_baselines_same_split: dict[str, Any] = Field(default_factory=dict)
+    temporal_split_benchmarks: dict[str, Any] = Field(default_factory=dict)
+    recent_fda_2019_2023_blind_set: dict[str, Any] = Field(default_factory=dict)
     endpoints: list[EndpointCatalogItem]
 
 

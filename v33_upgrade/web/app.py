@@ -93,8 +93,8 @@ app = FastAPI(
         "Publication-grade peptide & cyclic-peptide ADMET, pharmacokinetics, safety, and antimicrobial "
         "prediction platform powered by a 4-foundation-model super-ensemble (47 tiered endpoints incl. "
         "macrocycle chameleonicity LogD_decadiene, calibrated probabilities, AD-stratified empirical uncertainty "
-        "intervals, exact Tanimoto AD, 110-product clinical/regulatory evidence layer, and async task tracking). "
-        "Scope: internal_research_only."
+        "intervals, exact Tanimoto AD, 59-product NLM DailyMed / US FDA factual regulatory PK reference layer, "
+        "and async task tracking). Scope: internal_research_only."
     ),
     version=__version__,
     root_path=ROOT_PATH,
@@ -161,6 +161,11 @@ def get_endpoints() -> EndpointsResponse:
         representation_ablation_summary=tp["representation_ablation_summary"],
         case17_scorecard=tp["case17_scorecard"],
         selection_protocol=tp["selection_protocol"],
+        v335_protocol_audit=tp["v335_protocol_audit"],
+        egat_fidelity_audit=tp["egat_fidelity_audit"],
+        external_baselines_same_split=tp["external_baselines_same_split"],
+        temporal_split_benchmarks=tp["temporal_split_benchmarks"],
+        recent_fda_2019_2023_blind_set=tp["recent_fda_2019_2023_blind_set"],
         endpoints=adapter.get_catalog(),
     )
 
@@ -202,7 +207,7 @@ def get_clinical_evidence(
     sequence: Optional[str] = Query(default=None, description="Optional explicit canonical 20-AA sequence."),
     limit: int = Query(default=30, ge=1, le=120),
 ) -> JSONResponse:
-    """Query curated FDA/EMA/DailyMed clinical PK records and regulatory context signals across 110 peptide products (attributed to ADMETatlas V1.0, CC-BY-NC 4.0)."""
+    """Query factual human clinical PK records across 59 FDA-approved peptide drugs (verified against NLM DailyMed SPL setids and US FDA Drugs@FDA reviews; zero CC-BY-NC derivative fields)."""
     return JSONResponse(
         adapter.query_clinical_evidence(
             query=query,
@@ -272,6 +277,10 @@ def post_atom_attribution(req: AtomAttributionRequest) -> AtomAttributionRespons
         gnn_prediction=res["gnn_prediction"],
         top_atoms=[TopAtomContribution(**a) for a in res["top_atoms"]],
         available_endpoints=res["available_endpoints"],
+        interpretability_tier=res.get("interpretability_tier"),
+        fidelity_vs_4fm_spearman=res.get("fidelity_vs_4fm_spearman"),
+        deletion_top_vs_rand_ratio=res.get("deletion_top_vs_rand_ratio"),
+        deletion_top_vs_rand_ci95=res.get("deletion_top_vs_rand_ci95"),
     )
 
 

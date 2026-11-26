@@ -10,23 +10,43 @@ saliency maps, and linked regulatory label records MUST NOT be used for
 clinical diagnosis, patient dosing, medical decision-making, or regulatory
 submissions.
 
-2. US Federal Government Public-Domain Regulatory PK Records
-------------------------------------------------------------
-Regulatory pharmacokinetic reference values displayed in the Clinical &
-Regulatory PK panel (`web/clinical_evidence_index.json`) are restricted
-exclusively to factual observations extracted from US Federal Government
-public-domain sources — specifically FDA DailyMed Structured Product
-Labeling (SPL) XML documents (`https://dailymed.nlm.nih.gov/`) and US FDA
-Drugs@FDA NDA/BLA Clinical Pharmacology Reviews (`https://www.accessdata.fda.gov/`),
-which are public domain under 17 U.S.C. § 105.
+2. Regulatory Clinical PK Reference Panel (`web/clinical_evidence_index.json`)
+------------------------------------------------------------------------------
+The Clinical & Regulatory PK panel displays factual numeric/range human PK
+parameters for marketed FDA-approved peptide drugs paired with direct links
+to official NLM DailyMed SPL documents (`setid` resolved directly via the
+public NLM DailyMed v2 REST API, https://dailymed.nlm.nih.gov/) and US FDA
+Drugs@FDA NDA/BLA Clinical Pharmacology Reviews (https://www.accessdata.fda.gov/).
 
-3. Interoperability & Attribution to External Resources
--------------------------------------------------------
+Legal & provenance distinction:
+- Scientific numeric PK measurements are factual data.
+- US FDA NDA/BLA Clinical Pharmacology Reviews authored by FDA staff are US
+  Federal Government works (17 U.S.C. § 105).
+- DailyMed SPL documents contain manufacturer-submitted prescribing
+  information distributed via NLM DailyMed; no narrative label text is
+  reproduced.
+- Initial drug-list cross-check for marketed FDA peptide coverage was informed
+  by public FDA peptide approval records (including cross-referencing published
+  lists such as ADMETatlas V1.0). All CC-BY-NC derivative fields (FAERS
+  summaries, clinical trial aggregations, narrative annotations, and `ATLPD*`
+  identifiers) have been completely stripped and purged from repository history.
+
+3. Public Repository Data Redistribution Policy
+-----------------------------------------------
+This public repository distributes original source code, audited evaluation
+manifests, aggregate corpus statistics (`data/peptide_ml_cleaning_v1_statistics_v1/`
+and `data/peptide_pk_literature_round1/audit_report.json`), and the factual
+FDA regulatory PK lookup table above. Raw row-level third-party observation
+tables (e.g., CycPeptMPDB, DBAASP, PEPlife2, THPdb, ChEMBL, SweMacrocycleDB)
+are NOT redistributed in this repository; researchers must obtain raw datasets
+directly from their respective primary portals under upstream license terms
+documented in `DATA_LICENSES.md`.
+
+4. External Interoperability Attribution
+----------------------------------------
 - ADMETatlas V1.0 (Yi et al., Nucleic Acids Research 2026,
-  doi:10.1093/nar/gkag1147, CC-BY-NC 4.0): This repository does NOT mirror
-  or redistribute ADMETatlas CC-BY-NC derivative tables, clinical trial
-  aggregations, or FAERS narrative annotations. Where applicable, the web
-  interface provides outbound reference links to https://admetatlas.scbdd.com/
-  for users wishing to browse external pharmacovigilance context directly.
-- See DATA_LICENSES.md for the complete source-by-source license ledger for
+  doi:10.1093/nar/gkag1147, CC-BY-NC 4.0): Referenced strictly via outbound
+  portal hyperlink (https://admetatlas.scbdd.com/) and literature citation.
+  No CC-BY-NC derivative tables are redistributed in this repository.
+- See `DATA_LICENSES.md` for the complete source-by-source license ledger for
   every upstream dataset and pretrained foundation model.

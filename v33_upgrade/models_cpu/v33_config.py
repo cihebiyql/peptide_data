@@ -381,20 +381,19 @@ CASE17_FDA_NUMERIC: Dict[str, Dict[str, Optional[float]]] = {
 }
 
 
-def compute_halflife_mechanism_anchor(smiles: str) -> Dict[str, Any]:
-    """Audited literature-anchored fatty-acylation half-life mechanism rule.
+def compute_halflife_mechanism_anchor(smiles: str, exclude_drug: Optional[str] = None) -> Dict[str, Any]:
+    """Audited literature-anchored fatty-acylation half-life mechanism rule (strictly fatty-acylated classes only).
 
-    Identical to V32 audited `node23_anchor_halflife_v3.py` (Semaglutide & Tirzepatide
-    are strictly held out from anchor derivation):
-      - diacid internal C-chain >= 16 (C18/C20 fatty diacid): weekly 120-168 h (mid 144 h)
-        [anchors: dulaglutide 120 h, efpeglenatide 160 h, albiglutide 168 h]
-      - diacid internal C-chain 12..15 (C14-C17 fatty diacid): ultralong depot ~25 h
-        [anchor: insulin degludec 25 h]
-      - linear monoacyl C-run >= 14: daily 5-13 h (mid 9 h)
-        [anchors: insulin detemir 5-7 h, liraglutide 13 h]
-      - non-acylated: None (use ML prediction)
+    Delegates to strict unbranched saturated RDKit SMARTS (no SMILES regex, no Fc/albumin
+    fusion proteins) with true dynamic Leave-One-Drug-Out (`exclude_drug`):
+      - unbranched C18/C20 fatty-diacid amide on therapeutic peptide (MW>=1500, >=8 amides):
+        weekly albumin-binding class (Semaglutide 168 h, Tirzepatide 120 h, Cagrilintide 170 h)
+      - unbranched C14-C16 fatty-diacid amide: depot class (Insulin degludec 25 h; None if excluded)
+      - unbranched C14-C16 monoacyl-Lys/gammaGlu: daily class (Insulin detemir 6 h, Liraglutide 13 h)
+      - non-acylated: None (use Pure-ML prediction)
     """
     from rdkit import Chem
+    from v33_upgrade.web.chem_utils import detect_acylation_anchor
 
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
@@ -405,29 +404,22 @@ def compute_halflife_mechanism_anchor(smiles: str) -> Dict[str, Any]:
             "anchor_mid_h": None,
             "anchor_range_h": None,
         }
-    diacid = 0
-    for length in range(22, 10, -1):
-        patt = Chem.MolFromSmarts("C(=O)" + "C" * length + "C(=O)")
-        if patt is not None and mol.HasSubstructMatch(patt):
-            diacid = length
-            break
-    can = Chem.MolToSmiles(mol)
-    runs = re.findall(r"C{10,}", can)
-    mono = max((len(r) for r in runs), default=0)
-
-    if diacid >= 16:
+    anc = detect_acylation_anchor(mol, exclude_drug=exclude_drug)
+    if not anc.detected:
         return {
-            "anchor_class": "weekly_diacid",
-            "diacid_internal_c": diacid,
-            "monoacyl_linear_c": mono,
-            "anchor_mid_h": 144.0,
-            "anchor_range_h": [120.0, 168.0],
+            "anchor_class": "none",
+            "diacid_internal_c": 0,
+            "monoacyl_linear_c": 0,
+            "anchor_mid_h": None,
+            "anchor_range_h": None,
         }
-    if diacid >= 12:
-        return {
-            "anchor_class": "ultralong_depot_diacid",
-            "diacid_internal_c": diacid,
-            "monoacyl_linear_c": mono,
+    return {
+        "anchor_class": anc.acylation_class or "none",
+        "diacid_internal_c": (anc.chain_carbons or 0) - 2 if "diacid" in (anc.acylation_class or "") else 0,
+        "monoacyl_linear_c": (anc.chain_carbons or 0) if "acyl" in (anc.acylation_class or "") else 0,
+        "anchor_mid_h": anc.value_h,
+        "anchor_range_h": anc.range_h,
+    }
             "anchor_mid_h": 25.0,
             "anchor_range_h": [25.0, 25.0],
         }

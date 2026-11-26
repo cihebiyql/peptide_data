@@ -1,4 +1,4 @@
-MIT License
+MIT License (Source Code Only)
 
 Copyright (c) 2026 Peptide OmniPanel Contributors
 
@@ -20,11 +20,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
-IMPORTANT NOTICE REGARDING DATA AND PRETRAINED MODEL WEIGHTS:
-The MIT License above applies exclusively to the source code, web platform,
-inference orchestration scripts, and evaluation pipelines in this repository.
-Underlying training datasets, foundation model weights, and curated external
-benchmark records are governed by their respective upstream licenses listed
-in DATA_LICENSES.md and NOTICE. All model predictions are strictly scoped to
-non-commercial academic and early preclinical research (`internal_research_only`).
+================================================================================
+SEPARATE TERMS FOR MODEL WEIGHTS, TRAINING DATA, AND HOSTED WEB SERVICE
+================================================================================
+The MIT License above applies EXCLUSIVELY to the original source code, web
+application, inference orchestration scripts, and evaluation pipelines authored
+for Peptide OmniPanel.
+
+It does NOT grant any commercial license to:
+1. Third-party upstream datasets used during offline training (not redistributed
+   in this repository; see DATA_LICENSES.md for per-source upstream terms);
+2. Pretrained foundation model weights (including ESM-C 600M under the
+   EvolutionaryScale Cambrian Non-Commercial License, ncAA-RepDistill v2,
+   PeptideCLM-2, and ChemBERTa-MTR); or
+3. Trained Peptide OmniPanel model weights and hosted web service outputs,
+   which are provided strictly for Non-Commercial Academic & Early Preclinical
+   Research (`internal_research_only`). Commercial use requires independent
+   re-licensing of all non-commercial upstream datasets and encoders.

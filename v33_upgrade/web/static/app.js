@@ -342,17 +342,25 @@ async function initInlineScientificSvgs() {
 function renderAllCase17Charts() {
   const drugs = state.catalogData?.case17_scorecard?.drugs || [];
   const c17 = state.catalogData?.case17_scorecard || {};
-  const hlPure = c17.half_life_pure_ml_route_matched_log10 || {};
-  const hlAnch = c17.half_life_with_mechanism_anchor_log10 || {};
+  const nc = c17.non_circular_separation || {};
+  const hlPure = nc.pure_ml_all_16 || c17.half_life_pure_ml_route_matched_log10 || {};
+  const hlLodo = nc.lodo_rule_overlay_all_16 || {};
   const hem = c17.hemolysis_false_positive_check || {};
 
   const elRho = document.getElementById("lc17-rho");
   const elR2 = document.getElementById("lc17-r2");
   const elMae = document.getElementById("lc17-mae");
   const elFp = document.getElementById("lc17-fp");
+  // Strictly report non-circular Pure-ML / True-LODO metrics as primary headlines (never circular anchor!)
   if (elRho && hlPure.spearman != null) elRho.textContent = Number(hlPure.spearman).toFixed(3);
-  if (elR2 && hlAnch.r2 != null) elR2.textContent = Number(hlAnch.r2).toFixed(3);
-  if (elMae && hlAnch.mae != null) elMae.textContent = Number(hlAnch.mae).toFixed(3);
+  if (elR2) {
+    const r2v = hlPure.r2 != null ? hlPure.r2 : hlLodo.r2;
+    if (r2v != null) elR2.textContent = Number(r2v).toFixed(3);
+  }
+  if (elMae) {
+    const maev = hlPure.mae != null ? hlPure.mae : hlLodo.mae;
+    if (maev != null) elMae.textContent = Number(maev).toFixed(3);
+  }
   if (elFp) elFp.textContent = `${hem.n_drugs_gt_0_50 ?? 0} / 17`;
 
   const onSelectDrug = (drugName) => {
@@ -1216,7 +1224,19 @@ function renderSvgCard(data) {
 
   const legendEl = document.getElementById("mol-svg-legend");
   if (state.svgViewMode === "attribution" && hasAttrReady) {
-    legendEl.innerHTML = `<span class="legend-item" style="color:var(--teal)">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`;
+    const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
+    const egatAudit = (state.catalogData?.egat_fidelity_audit || {})[activeEp] || null;
+    const isFaithful = egatAudit?.interpretability_tier === "faithful_surrogate";
+    const tierBadge = egatAudit
+      ? `<span class="mod-badge ${isFaithful ? "tone-emerald" : "tone-slate"}" style="font-size:10px;margin-right:6px;">${
+          isFaithful
+            ? (state.lang === "zh" ? "✓ 高保真代理 (Faithful Surrogate)" : "✓ Faithful Surrogate")
+            : (state.lang === "zh" ? "定性启发式归因 (Qualitative Heuristic)" : "Qualitative Saliency Heuristic")
+        }${egatAudit.fidelity_vs_4fm_spearman != null ? ` · Fid ρ=${Number(egatAudit.fidelity_vs_4fm_spearman).toFixed(2)}` : ""}${
+          egatAudit.deletion_top_vs_rand_ratio != null ? ` · Del ${Number(egatAudit.deletion_top_vs_rand_ratio).toFixed(2)}×` : ""
+        }</span>`
+      : "";
+    legendEl.innerHTML = `${tierBadge}<span class="legend-item" style="color:var(--teal)">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`;
   } else if (data.svg_highlights && data.svg_highlights.length) {
     legendEl.innerHTML = data.svg_highlights
       .map(
@@ -1478,19 +1498,30 @@ function renderClinicalEvidence(data) {
 
 function buildChameleonicityCalloutHtml(cham) {
   if (!cham || cham.delta_logd == null) return "";
+  const inScope = cham.in_applicability_scope !== false;
   const lbl = state.lang === "zh" ? cham.label_zh : cham.label_en;
   const note = state.lang === "zh" ? cham.note_zh : cham.note_en;
-  const warn = cham.in_applicability_scope === false ? (state.lang === "zh" ? cham.scope_warning_zh : cham.scope_warning_en) : "";
+  const warn = !inScope ? (state.lang === "zh" ? cham.scope_warning_zh : cham.scope_warning_en) : "";
   const dStr = cham.delta_logd >= 0 ? `+${cham.delta_logd.toFixed(2)}` : cham.delta_logd.toFixed(2);
   const octStr = cham.logd_octanol >= 0 ? `+${cham.logd_octanol.toFixed(2)}` : cham.logd_octanol.toFixed(2);
   const decStr = cham.logd_decadiene >= 0 ? `+${cham.logd_decadiene.toFixed(2)}` : cham.logd_decadiene.toFixed(2);
-  const valBadge = `<span class="mod-badge tone-slate mono" style="font-size:10px;" title="Out-of-sample experimental dual-phase validation (n=27 macrocycles): Spearman ρ=0.915, R²=0.816, AUROC(Δ≥2.0)=0.955">OOS ρ=0.915 (n=27)</span>`;
+  const ev = cham.empirical_validation || {};
+  const locoRho = ev.loco_spearman != null ? Number(ev.loco_spearman).toFixed(3) : null;
+  const nMatch = ev.n_matched_macrocycles || 27;
+  // Strictly hide tier classification & LOCO validation badge for non-macrocycles!
+  const tierBadgeHtml = inScope
+    ? `<span class="mod-badge tone-${escapeHtml(cham.tone || "slate")}" style="font-size:10.5px;">${escapeHtml(lbl)}</span>`
+    : `<span class="mod-badge tone-amber" style="font-size:10.5px;">${escapeHtml(state.lang === "zh" ? "适用域外 (非大环)" : "Out of Scope (Non-Macrocycle)")}</span>`;
+  const valBadge =
+    inScope && locoRho
+      ? `<span class="mod-badge tone-slate mono" style="font-size:10px;" title="Within-series LOCO dual-phase macrocycle validation (n=${nMatch}, Naylor LPE 2018): Spearman ρ=${locoRho}">LOCO ρ=${locoRho} (n=${nMatch})</span>`
+      : "";
   return `
     <div class="cham-callout">
       <div class="cham-top">
         <div class="cham-title-wrap">
           <span class="cham-title">${escapeHtml(t(state.lang, "cham_title"))}</span>
-          <span class="mod-badge tone-${escapeHtml(cham.tone || "slate")}" style="font-size:10.5px;">${escapeHtml(lbl)}</span>
+          ${tierBadgeHtml}
           ${valBadge}
         </div>
         <div class="cham-metrics mono">
@@ -1498,7 +1529,7 @@ function buildChameleonicityCalloutHtml(cham) {
           <strong class="cham-val">${escapeHtml(dStr)}</strong>
         </div>
       </div>
-      <p class="cham-note">${escapeHtml(note)}</p>
+      ${inScope ? `<p class="cham-note">${escapeHtml(note)}</p>` : ""}
       ${warn ? `<p class="cham-note" style="color:var(--amber);font-weight:600;margin-top:4px;">⚠ ${escapeHtml(warn)}</p>` : ""}
     </div>`;
 }
@@ -1688,7 +1719,14 @@ function buildEndpointItemHtml(p) {
     .join("");
 
   const cvDisplay = p.cv_score != null ? `${p.cv_metric_name} ${p.cv_score.toFixed(3)}` : "—";
-  const holdDisplay = p.holdout_score != null ? `${p.holdout_score.toFixed(3)}` : "—";
+  const hoCiTxt = Array.isArray(p.holdout_ci95) && p.holdout_ci95.length === 2 ? ` [${p.holdout_ci95[0].toFixed(2)}, ${p.holdout_ci95[1].toFixed(2)}]` : "";
+  const holdDisplay = p.holdout_score != null ? `${p.holdout_score.toFixed(3)}${hoCiTxt}` : "—";
+  const gradePillHtml =
+    p.evidence_grade === "exploratory_not_recommended"
+      ? ` <span class="mod-badge tone-amber" style="font-size:9.5px;padding:1px 5px;" title="${escapeHtml(p.not_recommended_warning || "Negative holdout correlation; exploratory only")}">⚠ ${escapeHtml(state.lang === "zh" ? "不推荐定量" : "Not Recommended")}</span>`
+      : p.evidence_grade === "rank_only"
+        ? ` <span class="mod-badge tone-slate" style="font-size:9.5px;padding:1px 5px;" title="CI-aware evidence grade: rank-ordering guidance only">${escapeHtml(state.lang === "zh" ? "仅排序参考" : "Rank-Only")}</span>`
+        : "";
   const calOrCovLabel = t(state.lang, p.kind === "classification" ? "dm_brier_ece" : "dm_cov80");
   const uqLowPill =
     p.kind !== "classification" && p.uq_reliability === "low"
@@ -1719,7 +1757,7 @@ function buildEndpointItemHtml(p) {
     <div class="ep-item" data-endpoint="${escapeHtml(p.endpoint)}">
       <div class="ep-row" role="button" tabindex="0" aria-expanded="false">
         <div class="ep-name-col">
-          <span class="ep-en">${escapeHtml(epPrimary)}</span>
+          <span class="ep-en">${escapeHtml(epPrimary)}${gradePillHtml}</span>
           <span class="ep-zh">${escapeHtml(epSecondary)}</span>
         </div>
         <div class="ep-val-col">
@@ -2655,8 +2693,9 @@ function renderValidationKpis(data) {
 
 function renderValidationHighlights(data) {
   const c17 = data.case17_scorecard || {};
-  const hlPure = c17.half_life_pure_ml_route_matched_log10 || {};
-  const hlAnch = c17.half_life_with_mechanism_anchor_log10 || {};
+  const nc = c17.non_circular_separation || {};
+  const hlPure = nc.pure_ml_all_16 || c17.half_life_pure_ml_route_matched_log10 || {};
+  const hlLodo = nc.lodo_rule_overlay_all_16 || {};
   const ppb = c17.ppb_dual || {};
   const hem = c17.hemolysis_false_positive_check || {};
 
@@ -2671,13 +2710,13 @@ function renderValidationHighlights(data) {
     <div class="c17-metrics-grid">
       <div class="c17-stat">
         <span class="dm-lbl">${escapeHtml(t(state.lang, "val_c17_hl_pure"))}</span>
-        <span class="c17-val">ρ = ${hlPure.spearman != null ? Number(hlPure.spearman).toFixed(3) : "—"}</span>
-        <span class="c17-sub">R² = ${hlPure.r2 != null ? Number(hlPure.r2).toFixed(3) : "—"} · MAE ${hlPure.mae != null ? Number(hlPure.mae).toFixed(3) : "—"} log₁₀ h</span>
+        <span class="c17-val" style="color:var(--emerald)">ρ = ${hlPure.spearman != null ? Number(hlPure.spearman).toFixed(3) : "—"}</span>
+        <span class="c17-sub">R² = ${hlPure.r2 != null ? Number(hlPure.r2).toFixed(3) : "—"} · MAE ${hlPure.mae != null ? Number(hlPure.mae).toFixed(3) : "—"} log₁₀ h (n=${hlPure.n_exact ?? nc.n_evaluated ?? 16})</span>
       </div>
       <div class="c17-stat">
-        <span class="dm-lbl">${escapeHtml(t(state.lang, "val_c17_hl_anch"))}</span>
-        <span class="c17-val" style="color:var(--emerald)">MAE ${hlAnch.mae != null ? Number(hlAnch.mae).toFixed(3) : "—"}</span>
-        <span class="c17-sub">R² = ${hlAnch.r2 != null ? Number(hlAnch.r2).toFixed(3) : "—"} · ρ = ${hlAnch.spearman != null ? Number(hlAnch.spearman).toFixed(3) : "—"} (n=${hlAnch.n ?? 16})</span>
+        <span class="dm-lbl">${escapeHtml(state.lang === "zh" ? "真留一药 SMARTS 规则叠加 (非循环 LODO)" : "True LODO SMARTS Overlay (Non-Circular)")}</span>
+        <span class="c17-val">MAE ${hlLodo.mae != null ? Number(hlLodo.mae).toFixed(3) : "—"}</span>
+        <span class="c17-sub">R² = ${hlLodo.r2 != null ? Number(hlLodo.r2).toFixed(3) : "—"} · ρ = ${hlLodo.spearman != null ? Number(hlLodo.spearman).toFixed(3) : "—"} (lip5 MAE ${nc.lodo_rule_overlay_lipidated_5_mae_log10 ?? "—"})</span>
       </div>
       <div class="c17-stat">
         <span class="dm-lbl">${escapeHtml(t(state.lang, "val_c17_ppb"))}</span>
@@ -2686,7 +2725,7 @@ function renderValidationHighlights(data) {
       </div>
       <div class="c17-stat">
         <span class="dm-lbl">${escapeHtml(t(state.lang, "val_c17_hem"))}</span>
-        <span class="c17-val" style="color:var(--emerald)">${hem.n_drugs_gt_0_50 ?? 0} / 17 FP</span>
+        <span class="c17-val" style="color:var(--emerald)">${hem.n_drugs_gt_0_50 ?? 0} / 17 &gt;0.5</span>
         <span class="c17-sub">Max P = ${hem.max_prob_across_17_fda_drugs != null ? (Number(hem.max_prob_across_17_fda_drugs) * 100).toFixed(1) + "%" : "—"}</span>
       </div>
     </div>`;
@@ -2800,7 +2839,11 @@ function renderValidationTable() {
           <td class="num">
             <strong style="color:var(--cobalt)">${e.holdout_score_v33 != null ? e.holdout_score_v33.toFixed(3) : "—"}</strong>
             ${Array.isArray(e.holdout_ci95) && e.holdout_ci95.length === 2 ? `<div class="val-sub-row mono" style="font-size:10px;">[${e.holdout_ci95[0].toFixed(2)}, ${e.holdout_ci95[1].toFixed(2)}]</div>` : ""}
-            ${e.evidence_grade === "rank_only" ? `<div style="margin-top:2px;"><span class="mod-badge tone-slate" style="font-size:9.5px;padding:1px 5px;" title="Small-N or low-R² endpoint: research rank-ordering only">${state.lang === "zh" ? "仅排序参考" : "Rank-Only"}</span></div>` : ""}
+            ${e.evidence_grade === "exploratory_not_recommended"
+              ? `<div style="margin-top:2px;"><span class="mod-badge tone-amber" style="font-size:9.5px;padding:1px 5px;" title="Negative holdout correlation/R²: exploratory only, not recommended">⚠ ${state.lang === "zh" ? "不推荐定量" : "Not Recommended"}</span></div>`
+              : e.evidence_grade === "rank_only"
+                ? `<div style="margin-top:2px;"><span class="mod-badge tone-slate" style="font-size:9.5px;padding:1px 5px;" title="CI-aware evidence grade: rank-ordering guidance only">${state.lang === "zh" ? "仅排序参考" : "Rank-Only"}</span></div>`
+                : ""}
           </td>
           <td class="num">${covOrCal}</td>
         </tr>`;
@@ -2905,7 +2948,7 @@ curl -sS -X POST "${baseFull}/api/v1/predict" \\
   -H "Content-Type: application/json" \\
   -d '{"query":"Semaglutide","include_tier2":true,"conditions":{"rbc_species":"human","pk_context":"human_sc"}}'
 
-# 2) Query FDA/EMA/DailyMed clinical PK evidence (110 peptide products)
+# 2) Query factual FDA/DailyMed human clinical PK references (59 approved peptide drugs)
 curl -sS "${baseFull}/api/v1/clinical-evidence?query=Semaglutide"`;
   } else {
     el.textContent = `import httpx
