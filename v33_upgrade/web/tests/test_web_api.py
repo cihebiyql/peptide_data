@@ -668,13 +668,15 @@ def test_v336_logd_decadiene_chameleonicity_dailymed_pk_true_lodo_and_adversaria
     assert d_deg["mechanism_anchor"]["value_h"] is None
     assert d_deg["mechanism_anchor"]["anchor_drugs"] == []
 
-    # Adversarial SMARTS negative regression tests (zero false positives!)
+    # Adversarial SMARTS negative regression tests (incl. MW > 1500 Da controls above the peptide-size gate!)
     for neg_name, neg_smi in [
         ("Free palmitic acid", "CCCCCCCCCCCCCCCC(=O)O"),
         ("Pal-KTTKS", "CCCCCCCCCCCCCCCC(=O)NC(CCCCN)C(=O)NC(C(C)O)C(=O)NC(C(C)O)C(=O)NC(CCCCN)C(=O)NC(CO)C(=O)O"),
         ("C16-KKKK-NH2", "CCCCCCCCCCCCCCCC(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)NC(CCCCN)C(=O)N"),
         ("N-myristoyl-GAAA", "CCCCCCCCCCCCCC(=O)NCC(=O)NC(C)C(=O)NC(C)C(=O)NC(C)C(=O)O"),
         ("Branched C18 diacid", "OC(=O)CCCCCCCC(C)CCCCCCCCC(=O)NC(CCCCN)C(=O)N"),
+        ("MW>1500 N-term C16-(Lys)12-NH2", "CCCCCCCCCCCCCCCC(=O)" + "NC(CCCCN)C(=O)" * 12 + "N"),
+        ("MW>1500 Branched C18-diacid-(Ala)15", "OC(=O)CCCCCCCC(C)CCCCCCCCC(=O)" + "NC(C)C(=O)" * 15 + "O"),
     ]:
         anc_neg = detect_acylation_anchor(Chem.MolFromSmiles(neg_smi))
         assert anc_neg.detected is False, f"False positive SMARTS anchor on {neg_name}!"

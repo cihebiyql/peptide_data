@@ -340,7 +340,7 @@
               <span class="landing-kicker" data-i18n="sec_arch_kicker">ARCHITECTURE & CLINICAL BENCHMARK</span>
               <h2 class="landing-sec-title" data-i18n="sec_arch_title">4 基座模型超集成架构与 17 临床药实证</h2>
             </div>
-            <span class="landing-sec-sub" data-i18n="sec_arch_sub">严格零泄漏分组交叉验证 · 17 临床多肽半衰期 Spearman 0.903 · 0/17 溶血误报</span>
+            <span class="landing-sec-sub" data-i18n="sec_arch_sub">严格零泄漏分组交叉验证 · 16 临床多肽纯 ML 半衰期 Spearman 0.894（LODO 叠加 MAE 0.308）· 0/17 溶血误报</span>
           </div>
 
           <div class="card arch-flow-card">
@@ -368,19 +368,19 @@
               <div class="c17-stats-col">
                 <div class="c17-kpi-stack" id="landing-c17-kpis">
                   <div class="c17-mini-kpi">
-                    <span class="c17-mini-lbl" data-i18n="c17_kpi_rho">16 药半衰期 Spearman</span>
-                    <strong class="c17-mini-val mono" id="lc17-rho">0.903</strong>
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_rho">16 药纯 ML Spearman</span>
+                    <strong class="c17-mini-val mono" id="lc17-rho">0.894</strong>
                   </div>
                   <div class="c17-mini-kpi">
-                    <span class="c17-mini-lbl" data-i18n="c17_kpi_r2">锚定后对数 R²</span>
-                    <strong class="c17-mini-val mono" id="lc17-r2">0.781</strong>
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_r2">纯 ML 对数 R²</span>
+                    <strong class="c17-mini-val mono" id="lc17-r2">0.771</strong>
                   </div>
                   <div class="c17-mini-kpi">
-                    <span class="c17-mini-lbl" data-i18n="c17_kpi_mae">锚定后 MAE (log₁₀ h)</span>
-                    <strong class="c17-mini-val mono" id="lc17-mae">0.299</strong>
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_mae">纯 ML MAE (log₁₀ h)</span>
+                    <strong class="c17-mini-val mono" id="lc17-mae">0.319</strong>
                   </div>
                   <div class="c17-mini-kpi">
-                    <span class="c17-mini-lbl" data-i18n="c17_kpi_fp">临床药溶血误报</span>
+                    <span class="c17-mini-lbl" data-i18n="c17_kpi_fp">临床药溶血概率 >0.5</span>
                     <strong class="c17-mini-val mono" id="lc17-fp" style="color:var(--emerald)">0 / 17</strong>
                   </div>
                 </div>

@@ -1226,13 +1226,21 @@ function renderSvgCard(data) {
   if (state.svgViewMode === "attribution" && hasAttrReady) {
     const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
     const egatAudit = (state.catalogData?.egat_fidelity_audit || {})[activeEp] || null;
-    const isFaithful = egatAudit?.interpretability_tier === "faithful_surrogate";
+    const delCi = egatAudit?.deletion_top_vs_rand_ci95;
+    const isBelowRand =
+      egatAudit?.interpretability_tier === "below_random_unreliable" ||
+      (Array.isArray(delCi) && delCi.length === 2 && Number(delCi[1]) < 1.0);
+    const isFaithful = !isBelowRand && egatAudit?.interpretability_tier === "faithful_surrogate";
+    const badgeTone = isFaithful ? "tone-emerald" : isBelowRand ? "tone-amber" : "tone-slate";
+    const badgeLbl = isFaithful
+      ? (state.lang === "zh" ? "✓ 高保真代理 (Faithful Surrogate)" : "✓ Faithful Surrogate")
+      : isBelowRand
+        ? (state.lang === "zh" ? "⚠ 归因弱于随机删除 (不可靠)" : "⚠ Unreliable Attribution (< Random)")
+        : (state.lang === "zh" ? "定性启发式归因 (Qualitative Heuristic)" : "Qualitative Saliency Heuristic");
     const tierBadge = egatAudit
-      ? `<span class="mod-badge ${isFaithful ? "tone-emerald" : "tone-slate"}" style="font-size:10px;margin-right:6px;">${
-          isFaithful
-            ? (state.lang === "zh" ? "✓ 高保真代理 (Faithful Surrogate)" : "✓ Faithful Surrogate")
-            : (state.lang === "zh" ? "定性启发式归因 (Qualitative Heuristic)" : "Qualitative Saliency Heuristic")
-        }${egatAudit.fidelity_vs_4fm_spearman != null ? ` · Fid ρ=${Number(egatAudit.fidelity_vs_4fm_spearman).toFixed(2)}` : ""}${
+      ? `<span class="mod-badge ${badgeTone}" style="font-size:10px;margin-right:6px;">${badgeLbl}${
+          egatAudit.fidelity_vs_4fm_spearman != null ? ` · Fid ρ=${Number(egatAudit.fidelity_vs_4fm_spearman).toFixed(2)}` : ""
+        }${
           egatAudit.deletion_top_vs_rand_ratio != null ? ` · Del ${Number(egatAudit.deletion_top_vs_rand_ratio).toFixed(2)}×` : ""
         }</span>`
       : "";
@@ -1761,10 +1769,11 @@ function buildEndpointItemHtml(p) {
           <span class="ep-zh">${escapeHtml(epSecondary)}</span>
         </div>
         <div class="ep-val-col">
-          <div class="ep-val-main">${escapeHtml(p.value_display)}<span class="ep-unit">${escapeHtml(unitClean)}</span></div>
+          <div class="ep-val-main"${p.evidence_grade === "exploratory_not_recommended" ? ' style="opacity:0.55;"' : ""}>${escapeHtml(p.value_display)}<span class="ep-unit">${escapeHtml(unitClean)}</span></div>
           <span class="ep-risk risk-${escapeHtml(p.risk_level)}">
             <span class="risk-dot"></span>${escapeHtml(trRisk(state.lang, p.risk_label))}
           </span>
+          ${p.evidence_grade === "exploratory_not_recommended" ? `<span style="font-size:10px;color:var(--amber);font-weight:600;display:block;margin-top:2px;">⚠ ${escapeHtml(state.lang === "zh" ? "仅供探索（留出相关性为负）" : "Exploratory only (negative holdout ρ)")}</span>` : ""}
         </div>
         <div class="ep-ci-col">${buildIntervalBarHtml(p, state.lang)}</div>
         <span class="ad-pill ad-${escapeHtml(p.ad_status)}">${escapeHtml(adTxt)}${tcTxt}</span>
@@ -1773,7 +1782,7 @@ function buildEndpointItemHtml(p) {
       <div class="ep-drawer hidden">
         <div class="drawer-meta-grid">
           <div class="dm-box"><span class="dm-lbl">${escapeHtml(t(state.lang, "dm_champion"))}</span><span class="dm-val">${escapeHtml(p.model_family)}</span></div>
-          <div class="dm-box"><span class="dm-lbl">${escapeHtml(t(state.lang, "dm_cv_ho"))}</span><span class="dm-val">${cvDisplay} / ${holdDisplay}</span></div>
+          <div class="dm-box"><span class="dm-lbl">${escapeHtml(t(state.lang, "dm_cv_ho"))}${state.lastPrediction?.modality_track ? ` (${escapeHtml(state.lastPrediction.modality_track)})` : ""}</span><span class="dm-val">${cvDisplay} / ${holdDisplay}</span></div>
           <div class="dm-box"><span class="dm-lbl">${escapeHtml(calOrCovLabel)}</span><span class="dm-val">${calOrCovVal}</span></div>
           <div class="dm-box"><span class="dm-lbl">${escapeHtml(t(state.lang, "dm_corpus"))}</span><span class="dm-val">${trainDisplay}</span></div>
         </div>

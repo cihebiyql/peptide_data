@@ -173,7 +173,7 @@ class AtomAttributionResponse(BaseModel):
     gnn_prediction: Optional[dict[str, Any]] = None
     top_atoms: list[TopAtomContribution] = Field(default_factory=list)
     available_endpoints: list[str] = Field(default_factory=list)
-    interpretability_tier: Optional[Literal["faithful_surrogate", "qualitative_saliency_heuristic"]] = None
+    interpretability_tier: Optional[Literal["faithful_surrogate", "qualitative_saliency_heuristic", "below_random_unreliable"]] = None
     fidelity_vs_4fm_spearman: Optional[float] = None
     deletion_top_vs_rand_ratio: Optional[float] = None
     deletion_top_vs_rand_ci95: Optional[list[float]] = None

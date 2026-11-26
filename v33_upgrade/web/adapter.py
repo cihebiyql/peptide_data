@@ -1143,7 +1143,13 @@ class OmniPanelAdapter:
         ]
         egat_ep = (self.manifest.get("egat_fidelity_audit") or {}).get(ep) or {}
         tier_raw = egat_ep.get("interpretability_tier")
-        tier_val = tier_raw if tier_raw in ("faithful_surrogate", "qualitative_saliency_heuristic") else "qualitative_saliency_heuristic"
+        del_ci = egat_ep.get("deletion_top_vs_rand_ci95")
+        if tier_raw == "below_random_unreliable" or (isinstance(del_ci, list) and len(del_ci) == 2 and float(del_ci[1]) < 1.0):
+            tier_val = "below_random_unreliable"
+        elif tier_raw == "faithful_surrogate":
+            tier_val = "faithful_surrogate"
+        else:
+            tier_val = "qualitative_saliency_heuristic"
         return {
             "svg": svg_str,
             "endpoint": ep,

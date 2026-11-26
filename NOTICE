@@ -25,22 +25,29 @@ Legal & provenance distinction:
 - DailyMed SPL documents contain manufacturer-submitted prescribing
   information distributed via NLM DailyMed; no narrative label text is
   reproduced.
-- Initial drug-list cross-check for marketed FDA peptide coverage was informed
-  by public FDA peptide approval records (including cross-referencing published
-  lists such as ADMETatlas V1.0). All CC-BY-NC derivative fields (FAERS
-  summaries, clinical trial aggregations, narrative annotations, and `ATLPD*`
-  identifiers) have been completely stripped and purged from repository history.
+- Initial drug-list and numeric PK pre-selection drew from public FDA label
+  extractions (including ADMETatlas V1.0), after which ALL CC-BY-NC derivative
+  fields (FAERS summaries, clinical trial aggregations, narrative annotations,
+  and `ATLPD*` identifiers) were stripped from the working tree and `main`
+  branch history via `git-filter-repo`, legacy remote branches were deleted,
+  and 53/59 products were verified live against official NLM DailyMed v2 REST
+  API `setid` records (87.3% exact numeric match in live SPL text). A fresh
+  zero-history release archive will be minted for final manuscript submission
+  to ensure zero residual GitHub orphan-commit cache.
 
-3. Public Repository Data Redistribution Policy
------------------------------------------------
+3. Public Repository Data Redistribution Policy & Live Analog Notice
+--------------------------------------------------------------------
 This public repository distributes original source code, audited evaluation
-manifests, aggregate corpus statistics (`data/peptide_ml_cleaning_v1_statistics_v1/`
-and `data/peptide_pk_literature_round1/audit_report.json`), and the factual
-FDA regulatory PK lookup table above. Raw row-level third-party observation
-tables (e.g., CycPeptMPDB, DBAASP, PEPlife2, THPdb, ChEMBL, SweMacrocycleDB)
-are NOT redistributed in this repository; researchers must obtain raw datasets
-directly from their respective primary portals under upstream license terms
-documented in `DATA_LICENSES.md`.
+manifests, reproducible audit scripts, aggregate corpus statistics
+(`data/peptide_ml_cleaning_v1_statistics_v1/` and
+`data/peptide_pk_literature_round1/audit_report.json`), and the factual FDA
+regulatory PK lookup table above. Raw row-level third-party observation tables
+(e.g., CycPeptMPDB, DBAASP, PEPlife2, THPdb, ChEMBL, SweMacrocycleDB) are NOT
+redistributed in this repository; researchers must obtain raw datasets directly
+from their respective primary portals under upstream terms documented in
+`DATA_LICENSES.md`. The hosted web API's `nearest_analogs` readout displays
+up to 3 nearest training compounds solely for non-commercial academic
+applicability-domain inspection.
 
 4. External Interoperability Attribution
 ----------------------------------------

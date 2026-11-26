@@ -34888,14 +34888,17 @@
           "n_total": 87,
           "n_exact": 87,
           "n_censored": 0,
-          "mae": 0.87557,
-          "rmse": 1.1107,
-          "r2": 0.40159,
-          "spearman": 0.73458,
-          "pearson": 0.72542,
+          "mae": 0.56518,
+          "rmse": 0.70235,
+          "r2": 0.76072,
+          "spearman": 0.86668,
+          "pearson": 0.87766,
+          "learner": "train_cpu_track (production CPU multi-family suite)",
+          "max_inter_cluster_tanimoto": 0.8438,
+          "protocol": "Cluster-grouped LOCO CV (complete-linkage Tc>=0.55; max_inter_cluster_tanimoto=0.8438; not strict series isolation)",
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.87557,
+          "all_row_hinge_mae": 0.56518,
           "censored_c_index": null
         },
         "stacker_weights": {
@@ -34912,7 +34915,18 @@
           7,
           6,
           2
-        ]
+        ],
+        "legacy_single_krr_loco_cv": {
+          "n_total": 87,
+          "n_exact": 87,
+          "n_censored": 0,
+          "mae": 0.87557,
+          "rmse": 1.1107,
+          "r2": 0.40159,
+          "spearman": 0.73458,
+          "pearson": 0.72542,
+          "learner": "TanimotoRBF_KRR (single-kernel v33.5 legacy reference)"
+        }
       },
       "smiles_only": {
         "winning_family": "cpu",
@@ -35087,14 +35101,17 @@
           "n_total": 87,
           "n_exact": 87,
           "n_censored": 0,
-          "mae": 0.87557,
-          "rmse": 1.1107,
-          "r2": 0.40159,
-          "spearman": 0.73458,
-          "pearson": 0.72542,
+          "mae": 0.56518,
+          "rmse": 0.70235,
+          "r2": 0.76072,
+          "spearman": 0.86668,
+          "pearson": 0.87766,
+          "learner": "train_cpu_track (production CPU multi-family suite)",
+          "max_inter_cluster_tanimoto": 0.8438,
+          "protocol": "Cluster-grouped LOCO CV (complete-linkage Tc>=0.55; max_inter_cluster_tanimoto=0.8438; not strict series isolation)",
           "censored_concordance": null,
           "censored_violation_mae": null,
-          "all_row_hinge_mae": 0.87557,
+          "all_row_hinge_mae": 0.56518,
           "censored_c_index": null
         },
         "stacker_weights": {
@@ -35111,7 +35128,18 @@
           7,
           6,
           2
-        ]
+        ],
+        "legacy_single_krr_loco_cv": {
+          "n_total": 87,
+          "n_exact": 87,
+          "n_censored": 0,
+          "mae": 0.87557,
+          "rmse": 1.1107,
+          "r2": 0.40159,
+          "spearman": 0.73458,
+          "pearson": 0.72542,
+          "learner": "TanimotoRBF_KRR (single-kernel v33.5 legacy reference)"
+        }
       },
       "censored_head": null,
       "representation_ablation_holdout": {}
@@ -35680,7 +35708,7 @@
       "n_matched_dual_phase_macrocycles": 27,
       "n_clusters_represented": 5,
       "max_inter_cluster_tanimoto": 0.8438,
-      "protocol": "Within-Series LOCO Cross-Validation (Not Prospective External Validation): LogD7.4_OOS(smiles_only) - LogD_decadiene_LOCO_OOF vs Measured (LogD_oct - LogD_dec)",
+      "protocol": "Cluster-grouped LOCO CV (max_inter_cluster_tanimoto=0.8438, not strict series isolation; train_cpu_track LOCO MAE=0.5652, Spearman=0.8667, R2=0.7607; Naylor LPE 2018 primary SI octanol values; 5 clusters, exploratory CI)",
       "octanol_source_audit": {
         "Naylor LPE 2018 primary SI": 27
       },
@@ -35742,7 +35770,13 @@
         "min": -0.37,
         "max": 4.39
       },
-      "scope_warning": "Validated strictly on cyclic macrocycles within-series (LOCO); ΔLogD for linear/non-macrocyclic peptides is extrapolated and badges are hidden."
+      "scope_warning": "Validated strictly on cyclic macrocycles within-series (LOCO); ΔLogD for linear/non-macrocyclic peptides is extrapolated and badges are hidden.",
+      "logd_decadiene_loco_learner": "train_cpu_track",
+      "logd_decadiene_loco_mae": 0.56518,
+      "logd_decadiene_loco_spearman": 0.86668,
+      "logd_decadiene_loco_r2": 0.76072,
+      "logd_decadiene_loco_rmse": 0.70235,
+      "logd_decadiene_loco_pearson": 0.87766
     },
     "max_inter_cluster_tanimoto": 0.8438,
     "evidence_grade_policy": "CI-aware grading: regression `quantitative` requires n_ho>=30, n_clusters>=10, R2>=0.15, R2_ci95_lo>0, Spearman>=0.45, and uq_reliability!=low; negative R2 & Spearman flagged `exploratory_not_recommended`."
@@ -35768,7 +35802,8 @@
         0.984
       ],
       "deletion_top_vs_bot_ratio": 0.998,
-      "interpretability_tier": "qualitative_saliency_heuristic"
+      "interpretability_tier": "below_random_unreliable",
+      "tier_note": "Top-20% attributed atom deletion shifts E-GAT predictions significantly LESS than random atom deletion (95% CI upper bound < 1.0x); do not rely on atom heatmap for mechanistic interpretation."
     },
     "Caco2": {
       "task_type": "regression",
@@ -35834,7 +35869,8 @@
         0.632
       ],
       "deletion_top_vs_bot_ratio": 0.674,
-      "interpretability_tier": "qualitative_saliency_heuristic"
+      "interpretability_tier": "below_random_unreliable",
+      "tier_note": "Top-20% attributed atom deletion shifts E-GAT predictions significantly LESS than random atom deletion (95% CI upper bound < 1.0x); do not rely on atom heatmap for mechanistic interpretation."
     },
     "overall_peptide_toxicity": {
       "task_type": "classification",
@@ -35900,7 +35936,8 @@
         0.768
       ],
       "deletion_top_vs_bot_ratio": 0.798,
-      "interpretability_tier": "qualitative_saliency_heuristic"
+      "interpretability_tier": "below_random_unreliable",
+      "tier_note": "Top-20% attributed atom deletion shifts E-GAT predictions significantly LESS than random atom deletion (95% CI upper bound < 1.0x); do not rely on atom heatmap for mechanistic interpretation."
     },
     "half_life_reg": {
       "task_type": "regression",
