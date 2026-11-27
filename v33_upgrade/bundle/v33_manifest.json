@@ -89,13 +89,13 @@
       "mean_conformal_cov90": 0.88022
     },
     "all_46_dual_modality_winning_family_counts": {
-      "cpu": 3,
+      "cpu": 4,
       "deep": 3,
       "fusion": 22,
       "super_ensemble": 18
     },
     "all_46_smiles_only_winning_family_counts": {
-      "cpu": 7,
+      "cpu": 8,
       "deep": 2,
       "fusion": 25,
       "super_ensemble": 12
@@ -201,7 +201,20 @@
       "quantitative": 20,
       "rank_only": 26,
       "exploratory_not_recommended": 1
-    }
+    },
+    "all_47_dual_modality_winning_family_counts": {
+      "cpu": 4,
+      "deep": 3,
+      "fusion": 22,
+      "super_ensemble": 18
+    },
+    "all_47_smiles_only_winning_family_counts": {
+      "cpu": 8,
+      "deep": 2,
+      "fusion": 25,
+      "super_ensemble": 12
+    },
+    "legacy_key_note": "alias of all_47_*"
   },
   "representation_ablation_summary": {
     "single_foundation_model_holdout_wins_out_of_24": {
@@ -36755,5 +36768,1001 @@
         "fda_label_note": "FDA Terlivaz NDA 022231 (Sep 2022): terminal T1/2 ~0.9 h, Vd ~6.3 L, CL ~27.4 L/h"
       }
     ]
+  },
+  "v34_release": "Peptide OmniPanel 1.4 / v34.0",
+  "v34_upgraded_at": "2026-11-27T07:10:00Z",
+  "v34_upgrade_summary": "v1.4/v34 integration: 57 deduplicated FDA clinical PK products + approved-peptide clinical percentiles across 47 endpoints, PeptideOpt Pareto workbench, Batch-MPO screening, Direct Ensemble Perturbation Attribution, HemoPI2-ML sklearn 1.3.1 recovery & <=40 aa sensitivity, 3D-IMHB temporal PAMPA ranking (rho=+0.351) + honest 0/6 in-domain gate, Domain-MTL 13/23 OOF gate + dual-protocol 11-drug FDA blind evaluation, and pepADMET/PeptiVerse comparison.",
+  "v34_upgrades": {
+    "hemopi2_ml": {
+      "tool_citation": "HemoPI2 v1.3 (Rathore et al., Protein Science 2025; PyPI hemopi2==1.3; GPL-3.0)",
+      "v336_failure_diagnosis_and_fix": {
+        "root_cause": "In v33.6 (`02_v336_prod_blind_temporal_published_tools.py:275-277`), `from sklearn.base import clone` imported conda's `scikit-learn==1.4.2` BEFORE `sys.path.insert(0, runtime_sklearn)` (`scikit-learn==1.3.1`). Unpickling `hemopi2_ml_clf.sav` (trained in sklearn 1.3.1) under sklearn 1.4.2 crashed at `predict_proba` with `AttributeError: 'DecisionTreeClassifier' object has no attribute 'monotonic_cst'`.",
+        "v336_silent_drop_audit": "v33.6 caught the non-zero helper exit code and printed stderr without persisting a failure record into the JSON receipt. v34 fixes the import ordering so native scikit-learn 1.3.1 loads cleanly, verifies zero missing feature columns, and raises on any subprocess failure.",
+        "recovered_pretrained_estimator": {
+          "sklearn_runtime_version": "1.3.1",
+          "estimator_class": "RandomForestClassifier",
+          "estimator_params": {
+            "bootstrap": true,
+            "ccp_alpha": 0.0,
+            "class_weight": null,
+            "criterion": "gini",
+            "max_depth": null,
+            "max_features": "sqrt",
+            "max_leaf_nodes": null,
+            "max_samples": null,
+            "min_impurity_decrease": 0.0,
+            "min_samples_leaf": 1,
+            "min_samples_split": 2,
+            "min_weight_fraction_leaf": 0.0,
+            "n_estimators": 200,
+            "n_jobs": 8,
+            "oob_score": false,
+            "random_state": 42,
+            "verbose": 0,
+            "warm_start": false
+          },
+          "n_features": 1190,
+          "first_10_features": [
+            "Molecular Weight (kDa)",
+            "length",
+            "AAC_A",
+            "AAC_C",
+            "AAC_D",
+            "AAC_E",
+            "AAC_F",
+            "AAC_G",
+            "AAC_H",
+            "AAC_I"
+          ],
+          "n_missing_cols_ho": 0,
+          "n_missing_cols_cv": 0
+        }
+      },
+      "evaluation_counts": {
+        "hemolysis_cls_cv_canonical": 13316,
+        "hemolysis_cls_holdout_total_exact": 4101,
+        "hemolysis_cls_holdout_all_canonical": 3230,
+        "hemolysis_cls_holdout_zero_overlap_novel": 2334,
+        "hemopi2_published_corpus_unique_seqs": 1926,
+        "omni_full_holdout_roc_auc": 0.8973,
+        "omni_all_canonical_roc_auc": 0.8958,
+        "omni_all_canonical_pr_auc": 0.8257,
+        "omni_zero_overlap_roc_auc": 0.8867,
+        "omni_zero_overlap_pr_auc": 0.762
+      },
+      "entries": [
+        {
+          "label": "HemoPI2 v1.3 Pretrained ML (RF-200, trunc40, All Canonical)",
+          "category": "published",
+          "citation": "HemoPI2 v1.3 official pretrained hemopi2_ml_clf.sav (RF-200, sklearn 1.3.1, 1,190 features, seq[:40])",
+          "n": 3230,
+          "roc_auc": 0.8298,
+          "pr_auc": 0.7592,
+          "mcc": 0.4605,
+          "brier": 0.1727,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0661,
+            "mean_delta": 0.0674,
+            "ci95": [
+              0.0254,
+              0.1111
+            ],
+            "p_value": 0.002,
+            "p_value_display": "0.0020",
+            "point_delta_pr_auc": 0.0665,
+            "pr_auc_mean_delta": 0.067,
+            "pr_auc_ci95": [
+              0.0145,
+              0.1181
+            ],
+            "pr_auc_p_value": 0.014,
+            "pr_auc_p_value_display": "0.0140",
+            "p_value_holm_hemopi2_family": 0.044,
+            "p_value_holm_global_updated": 0.036,
+            "p_value_holm": 0.036
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Pretrained ML (RF-200, trunc40, Zero-Overlap Novel)",
+          "category": "published",
+          "citation": "HemoPI2 v1.3 official pretrained hemopi2_ml_clf.sav evaluated strictly on zero-exact-overlap novel holdout",
+          "n": 2334,
+          "roc_auc": 0.8052,
+          "pr_auc": 0.6162,
+          "mcc": 0.3956,
+          "brier": 0.1882,
+          "omni_same_subset_roc_auc": 0.8867,
+          "paired_boot_vs_omni": {
+            "n_eval": 2334,
+            "n_clusters": 1071,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0814,
+            "mean_delta": 0.0827,
+            "ci95": [
+              0.0448,
+              0.1202
+            ],
+            "p_value": 0.001,
+            "p_value_display": "<=0.001",
+            "point_delta_pr_auc": 0.1458,
+            "pr_auc_mean_delta": 0.1471,
+            "pr_auc_ci95": [
+              0.0684,
+              0.2278
+            ],
+            "pr_auc_p_value": 0.001,
+            "pr_auc_p_value_display": "<=0.001",
+            "p_value_holm_hemopi2_family": 0.024,
+            "p_value_holm_global_updated": 0.028,
+            "p_value_holm": 0.028
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Same-Split Retrained RF-200 (trunc40)",
+          "category": "published",
+          "citation": "Exact cloned HemoPI2 RF-200 on 1,190 official features (seq[:40]), trained strictly on our hemolysis_cls CV split",
+          "n": 3230,
+          "roc_auc": 0.858,
+          "pr_auc": 0.7523,
+          "mcc": 0.4956,
+          "brier": 0.1451,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0379,
+            "mean_delta": 0.0377,
+            "ci95": [
+              0.0113,
+              0.0603
+            ],
+            "p_value": 0.01,
+            "p_value_display": "0.0100",
+            "point_delta_pr_auc": 0.0734,
+            "pr_auc_mean_delta": 0.0723,
+            "pr_auc_ci95": [
+              0.0335,
+              0.1105
+            ],
+            "pr_auc_p_value": 0.001,
+            "pr_auc_p_value_display": "<=0.001",
+            "p_value_holm_hemopi2_family": 0.1,
+            "p_value_holm_global_updated": 0.09,
+            "p_value_holm": 0.09
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Same-Split Retrained RF-200 (Full Length)",
+          "category": "published",
+          "citation": "Exact cloned HemoPI2 RF-200 on 1,190 official features (full length), trained strictly on our hemolysis_cls CV split",
+          "n": 3230,
+          "roc_auc": 0.8564,
+          "pr_auc": 0.7454,
+          "mcc": 0.4761,
+          "brier": 0.1457,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0394,
+            "mean_delta": 0.0392,
+            "ci95": [
+              0.0151,
+              0.06
+            ],
+            "p_value": 0.004,
+            "p_value_display": "0.0040",
+            "point_delta_pr_auc": 0.0803,
+            "pr_auc_mean_delta": 0.079,
+            "pr_auc_ci95": [
+              0.0417,
+              0.1146
+            ],
+            "pr_auc_p_value": 0.001,
+            "pr_auc_p_value_display": "<=0.001",
+            "p_value_holm_hemopi2_family": 0.064,
+            "p_value_holm_global_updated": 0.056,
+            "p_value_holm": 0.056
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Same-Split Retrained ExtraTrees (Full Length)",
+          "category": "published",
+          "citation": "ExtraTrees on 1,190 official HemoPI2 features, trained strictly on our hemolysis_cls CV split",
+          "n": 3230,
+          "roc_auc": 0.855,
+          "pr_auc": 0.7411,
+          "mcc": 0.48,
+          "brier": 0.1481,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0409,
+            "mean_delta": 0.0405,
+            "ci95": [
+              0.0097,
+              0.0666
+            ],
+            "p_value": 0.016,
+            "p_value_display": "0.0160",
+            "point_delta_pr_auc": 0.0846,
+            "pr_auc_mean_delta": 0.083,
+            "pr_auc_ci95": [
+              0.0338,
+              0.1336
+            ],
+            "pr_auc_p_value": 0.001,
+            "pr_auc_p_value_display": "<=0.001",
+            "p_value_holm_hemopi2_family": 0.112,
+            "p_value_holm_global_updated": 0.096,
+            "p_value_holm": 0.096
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Same-Split Retrained LightGBM (Full Length)",
+          "category": "published",
+          "citation": "LightGBM on 1,190 official HemoPI2 features, trained strictly on our hemolysis_cls CV split",
+          "n": 3230,
+          "roc_auc": 0.8502,
+          "pr_auc": 0.7484,
+          "mcc": 0.4905,
+          "brier": 0.1466,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0457,
+            "mean_delta": 0.0455,
+            "ci95": [
+              0.0189,
+              0.0695
+            ],
+            "p_value": 0.002,
+            "p_value_display": "0.0020",
+            "point_delta_pr_auc": 0.0773,
+            "pr_auc_mean_delta": 0.076,
+            "pr_auc_ci95": [
+              0.0326,
+              0.1204
+            ],
+            "pr_auc_p_value": 0.002,
+            "pr_auc_p_value_display": "0.0020",
+            "p_value_holm_hemopi2_family": 0.044,
+            "p_value_holm_global_updated": 0.036,
+            "p_value_holm": 0.036
+          }
+        },
+        {
+          "label": "HemoPI2 v1.3 Same-Split Retrained XGBoost (Full Length)",
+          "category": "published",
+          "citation": "XGBoost-400 on 1,190 official HemoPI2 features, trained strictly on our hemolysis_cls CV split",
+          "n": 3230,
+          "roc_auc": 0.8516,
+          "pr_auc": 0.7459,
+          "mcc": 0.5114,
+          "brier": 0.1462,
+          "omni_same_subset_roc_auc": 0.8958,
+          "paired_boot_vs_omni": {
+            "n_eval": 3230,
+            "n_clusters": 1164,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0442,
+            "mean_delta": 0.0441,
+            "ci95": [
+              0.0195,
+              0.0679
+            ],
+            "p_value": 0.002,
+            "p_value_display": "0.0020",
+            "point_delta_pr_auc": 0.0798,
+            "pr_auc_mean_delta": 0.078,
+            "pr_auc_ci95": [
+              0.037,
+              0.1224
+            ],
+            "pr_auc_p_value": 0.002,
+            "pr_auc_p_value_display": "0.0020",
+            "p_value_holm_hemopi2_family": 0.044,
+            "p_value_holm_global_updated": 0.036,
+            "p_value_holm": 0.036
+          }
+        },
+        {
+          "label": "Length-Matched <=40 aa: HemoPI2 Pretrained ML (RF-200)",
+          "category": "published",
+          "citation": "Length-sensitivity stratum <=40 aa (97.24% of canonical holdout, n=3,141; OmniPanel AUC 0.9015)",
+          "n": 3141,
+          "roc_auc": 0.833,
+          "pr_auc": 0.7642,
+          "mcc": 0.465,
+          "brier": 0.1705,
+          "omni_same_subset_roc_auc": 0.9015,
+          "paired_boot_vs_omni": {
+            "n_eval": 3141,
+            "n_clusters": 1127,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0685,
+            "mean_delta": 0.0693,
+            "ci95": [
+              0.0275,
+              0.1149
+            ],
+            "p_value": 0.002,
+            "p_value_display": "0.0020",
+            "point_delta_pr_auc": 0.0667,
+            "pr_auc_mean_delta": 0.0677,
+            "pr_auc_ci95": [
+              0.0142,
+              0.1184
+            ],
+            "pr_auc_p_value": 0.014,
+            "pr_auc_p_value_display": "0.0140",
+            "p_value_holm_within_strata_family": 0.084,
+            "p_value_holm": 0.084
+          }
+        },
+        {
+          "label": "Length-Matched <=40 aa: HemoPI2 Same-Split RF-200",
+          "category": "published",
+          "citation": "Length-sensitivity stratum <=40 aa (n=3,141; OmniPanel AUC 0.9015 vs Same-Split RF 0.8629)",
+          "n": 3141,
+          "roc_auc": 0.8629,
+          "pr_auc": 0.7569,
+          "mcc": 0.5124,
+          "brier": 0.1413,
+          "omni_same_subset_roc_auc": 0.9015,
+          "paired_boot_vs_omni": {
+            "n_eval": 3141,
+            "n_clusters": 1127,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0386,
+            "mean_delta": 0.0394,
+            "ci95": [
+              0.0146,
+              0.0627
+            ],
+            "p_value": 0.008,
+            "p_value_display": "0.0080",
+            "point_delta_pr_auc": 0.074,
+            "pr_auc_mean_delta": 0.0748,
+            "pr_auc_ci95": [
+              0.0366,
+              0.1159
+            ],
+            "pr_auc_p_value": 0.002,
+            "pr_auc_p_value_display": "0.0020",
+            "p_value_holm_within_strata_family": 0.264,
+            "p_value_holm": 0.264
+          }
+        },
+        {
+          "label": "Length-Matched >40 aa: HemoPI2 Same-Split RF-200 (n=89, 100% Novel)",
+          "category": "published",
+          "citation": "Small >40 aa stratum (n=89, 2.76%, 41 clusters; Same-Split RF 0.6969 vs OmniPanel 0.6769, p=0.854 n.s.; Pretrained ESM2-t6 collapses to 0.4285/0.4472)",
+          "n": 89,
+          "roc_auc": 0.6476,
+          "pr_auc": 0.6741,
+          "mcc": 0.277,
+          "brier": 0.2608,
+          "omni_same_subset_roc_auc": 0.6769,
+          "paired_boot_vs_omni": {
+            "n_eval": 89,
+            "n_clusters": 41,
+            "n_boot_valid": 1000,
+            "metric": "delta_roc_auc (Omni - Base)",
+            "point_delta_roc_auc": 0.0293,
+            "mean_delta": 0.0373,
+            "ci95": [
+              -0.0741,
+              0.1357
+            ],
+            "p_value": 0.452,
+            "p_value_display": "0.4520",
+            "point_delta_pr_auc": 0.0477,
+            "pr_auc_mean_delta": 0.0465,
+            "pr_auc_ci95": [
+              -0.0413,
+              0.1526
+            ],
+            "pr_auc_p_value": 0.306,
+            "pr_auc_p_value_display": "0.3060",
+            "p_value_holm_within_strata_family": 1.0,
+            "p_value_holm": 1.0
+          }
+        }
+      ],
+      "length_truncation_sensitivity_summary": {
+        "le40_all_canonical": {
+          "n": 3141,
+          "pct_of_holdout": 97.24,
+          "n_clusters": 1127,
+          "omni_roc_auc": 0.9015,
+          "hemopi2_pretrained_esm2_auc": 0.8334,
+          "hemopi2_pretrained_ml_auc": 0.833,
+          "hemopi2_samesplit_rf_auc": 0.8629,
+          "hemopi2_samesplit_lgbm_auc": 0.8564
+        },
+        "le40_zero_overlap_novel": {
+          "n": 2245,
+          "n_clusters": 1033,
+          "omni_roc_auc": 0.8948,
+          "hemopi2_pretrained_esm2_auc": 0.8348,
+          "hemopi2_pretrained_ml_auc": 0.8101,
+          "hemopi2_samesplit_rf_auc": 0.8715
+        },
+        "gt40_all_canonical": {
+          "n": 89,
+          "pct_of_holdout": 2.76,
+          "n_clusters": 41,
+          "omni_roc_auc": 0.6769,
+          "hemopi2_pretrained_esm2_trunc40_auc": 0.4285,
+          "hemopi2_pretrained_esm2_full_auc": 0.4472,
+          "hemopi2_pretrained_ml_trunc40_auc": 0.5685,
+          "hemopi2_samesplit_rf_full_auc": 0.6476,
+          "note": "Honest small-N (>40 aa) finding: Same-Split RF edges OmniPanel numerically (+0.020, p=0.854 n.s.), while pretrained ESM2-t6 collapses even without truncation."
+        }
+      },
+      "updated_global_holm_28": {
+        "n_comparisons_total": 28,
+        "method": "Holm-Bonferroni step-down across v33.6 external baseline comparisons (21) + newly recovered HemoPI2-ML comparisons",
+        "hemopi2_ml_holm_adjusted_pvalues": {
+          "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_AllCanonical": 0.028,
+          "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_ZeroOverlapNovel": 0.056,
+          "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_AllCanonical": 0.036,
+          "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_ZeroOverlapNovel": 0.028,
+          "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_ExtraTrees": 0.096,
+          "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_LightGBM": 0.036,
+          "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF": 0.09,
+          "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF_FullLength": 0.056,
+          "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_XGBoost": 0.036
+        }
+      },
+      "methodological_caveats": [
+        "Off-the-shelf pretrained HemoPI2 models (ML and ESM2-t6) were trained on HemoPI2's own hemolytic threshold definition, whereas Peptide OmniPanel was trained on our hemolysis_cls definition; the same-split retrained HemoPI2-ML models (RF/ET/LGBM/XGB on exact 1,190 HemoPI2 features) eliminate both label-definition and training-corpus discrepancies.",
+        "The zero-overlap novel filter (n=2,334) excludes exact canonical sequence matches to HemoPI2's published cross_val_dataset.csv and independent_dataset.csv; homologous near-neighbors from shared DBAASP/Hemolytik literature may still favor off-the-shelf pretrained HemoPI2.",
+        "Official HemoPI2 (hemopi2_classification.py:lenchk) truncates input sequences >40 aa to the first 40 residues; both official truncated (<=40 aa) and full-length untruncated evaluations are reported alongside <=40 aa vs >40 aa stratified sensitivity analyses."
+      ]
+    },
+    "conformer_3d_imhb": {
+      "conformer_pipeline": {
+        "embedding_method": "RDKit ETKDGv3 (useMacrocycleTorsions=True, useSmallRingTorsions=True, enforceChirality=True, heavy-atom embedding -> AddHs(addCoords=True))",
+        "conformer_budget": "numConfs=8 for MW < 1800 Da; numConfs=4 for MW >= 1800 Da",
+        "force_field_relaxation": "MMFF94s (maxIters=65 for n_heavy<=110 / 50 for >110) with UFF (maxIters=65 for n_heavy<=110 / 50 for >110) fallback",
+        "n_unique_target_compounds": 9114,
+        "conformer_success_rate_pct": 100.0,
+        "force_field_breakdown": {
+          "MMFF94s": 9107,
+          "UFF_fallback": 7,
+          "unrelaxed_ETKDGv3": 0,
+          "failed_2d_fallback": 0
+        },
+        "n_features": 31
+      },
+      "temporal_pampa_n1177": {
+        "n_train_historical": 7395,
+        "n_test_future_novel": 1177,
+        "n_test_clusters": 275,
+        "standalone_3d_imhb_only": {
+          "learner": "SVR_3D_c2",
+          "spearman": 0.35121,
+          "pearson": 0.34451,
+          "r2": -0.88212,
+          "mae": 1.00904,
+          "top_univariate_spearman": {
+            "imhb_max": -0.4507,
+            "imhb_span": -0.4268,
+            "psa3d_min": -0.326
+          }
+        },
+        "cpu_2d_vs_2d_plus_3d": {
+          "spearman_2d": -0.02518,
+          "spearman_2d_plus_3d": 0.10323,
+          "mae_2d": 1.05449,
+          "mae_2d_plus_3d": 0.98968,
+          "r2_2d": -1.04652,
+          "r2_2d_plus_3d": -0.80646,
+          "p_value_mae": "<=0.001",
+          "p_value_spearman": "<=0.001"
+        },
+        "super_ensemble_2d_vs_2d_plus_3d": {
+          "spearman_2d": 0.09737,
+          "spearman_2d_plus_3d": 0.16704,
+          "spearman_gain_ci95": [
+            0.01306,
+            0.13004
+          ],
+          "p_value_spearman": "0.0060",
+          "mae_2d": 0.82617,
+          "mae_2d_plus_3d": 0.82487,
+          "p_value_mae": "0.9540",
+          "r2_2d": -0.31351,
+          "r2_2d_plus_3d": -0.30722
+        }
+      },
+      "temporal_logd74_n22_honest_negative": {
+        "n_train": 653,
+        "n_test": 22,
+        "standalone_3d_spearman": -0.48743,
+        "se_mae_2d": 1.10821,
+        "se_mae_2d_plus_3d": 1.17968,
+        "se_spearman_2d": 0.55973,
+        "se_spearman_2d_plus_3d": 0.45185,
+        "p_value_mae": "0.0860"
+      },
+      "six_endpoint_cluster_cv_oof_gate": {
+        "oof_gate_pass_count_super_ensemble": "0/6",
+        "oof_gate_pass_count_cpu": "1/6",
+        "honest_conclusion": "Strict zero-holdout-peeking OOF gate retains 2D_Baseline in-distribution (0/6 SE pass; appending 31 conformer features dilutes 2D/4-FM kernel distances in-domain), while standalone 3D-IMHB delivers strong OOD/temporal PAMPA ranking (Spearman rho=+0.3512).",
+        "per_endpoint": {
+          "PAMPA": {
+            "n_cv": 6857,
+            "n_holdout": 1715,
+            "cpu_oof_gate_passed": false,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 0.38511,
+            "se_oof_mae_2d_plus_3d": 0.39554,
+            "se_holdout_mae_2d": 0.39542,
+            "se_holdout_mae_2d_plus_3d": 0.41305,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          },
+          "Caco2": {
+            "n_cv": 1256,
+            "n_holdout": 311,
+            "cpu_oof_gate_passed": false,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 0.38855,
+            "se_oof_mae_2d_plus_3d": 0.39019,
+            "se_holdout_mae_2d": 0.35882,
+            "se_holdout_mae_2d_plus_3d": 0.35303,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          },
+          "MDCK": {
+            "n_cv": 118,
+            "n_holdout": 34,
+            "cpu_oof_gate_passed": false,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 0.45012,
+            "se_oof_mae_2d_plus_3d": 0.48219,
+            "se_holdout_mae_2d": 0.495,
+            "se_holdout_mae_2d_plus_3d": 0.44931,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          },
+          "RRCK": {
+            "n_cv": 137,
+            "n_holdout": 30,
+            "cpu_oof_gate_passed": false,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 0.37783,
+            "se_oof_mae_2d_plus_3d": 0.413,
+            "se_holdout_mae_2d": 0.26824,
+            "se_holdout_mae_2d_plus_3d": 0.28985,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          },
+          "LogD7.4": {
+            "n_cv": 550,
+            "n_holdout": 125,
+            "cpu_oof_gate_passed": true,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 0.44719,
+            "se_oof_mae_2d_plus_3d": 0.45795,
+            "se_holdout_mae_2d": 0.46404,
+            "se_holdout_mae_2d_plus_3d": 0.49715,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          },
+          "LogD_decadiene": {
+            "n_cv": 67,
+            "n_holdout": 20,
+            "cpu_oof_gate_passed": false,
+            "se_oof_gate_passed": false,
+            "se_oof_mae_2d": 1.07098,
+            "se_oof_mae_2d_plus_3d": 1.07212,
+            "se_holdout_mae_2d": 0.42429,
+            "se_holdout_mae_2d_plus_3d": 0.49747,
+            "zero_peeking_deployed_choice": "2D_Baseline"
+          }
+        }
+      }
+    },
+    "domain_mtl": {
+      "architecture": "DomainMTLNet: Modality-gated 4-FM + Physchem projections (774D -> 384D) + 2x LayerNorm Residual Bottleneck MLP blocks (384->192->384) + Task-Specific Condition Heads + Homoscedastic Uncertainty Task Weighting (Kendall et al. 2018) + Native Censored-Aware Huber Hinge Loss",
+      "zero_leakage_audit": "0 leaked clusters & 0 leaked compounds across all 115/115 folds (runtime-asserted)",
+      "zero_peeking_promotion_rule": "Decided STRICTLY on nested 5-fold cluster-grouped OOF CV (holdout NEVER inspected for selection). Regression: rel MAE imp >= 0.5% AND abs MAE imp >= 0.002 AND w_mtl >= 0.05 AND OOF Spearman delta >= -0.01. Classification: (Brier imp >= 0.0005 OR (AUC imp >= 0.001 AND Brier imp >= -0.001)) AND w_mtl >= 0.05.",
+      "n_domains": 4,
+      "n_endpoints": 23,
+      "n_promoted_by_oof_gate": 13,
+      "promoted_endpoints": [
+        "PAMPA",
+        "Caco2",
+        "MDCK",
+        "RRCK",
+        "cytotoxicity_cls",
+        "overall_peptide_toxicity",
+        "MIC_S_aureus",
+        "MIC_K_pneumoniae",
+        "MIC_A_baumannii",
+        "CL_absolute",
+        "Vd_absolute",
+        "PPB",
+        "F"
+      ],
+      "held_endpoints": [
+        "LogD7.4",
+        "LogD_decadiene",
+        "hemolysis_cls",
+        "hemolysis_HC50",
+        "cytotoxicity_CC50",
+        "MIC_E_coli",
+        "MIC_P_aeruginosa",
+        "MIC_C_albicans",
+        "half_life_reg",
+        "Cmax"
+      ],
+      "holdout_audit_summary": {
+        "n_3fam_improves_over_2fam_on_holdout": 11,
+        "n_oof_selected_improves_over_2fam_on_holdout": 8,
+        "n_total_endpoints": 23
+      },
+      "domains": {
+        "domain_permeability_lipophilicity": {
+          "n_promoted": 4,
+          "promoted_list": [
+            "PAMPA",
+            "Caco2",
+            "MDCK",
+            "RRCK"
+          ]
+        },
+        "domain_toxicity_hemolysis": {
+          "n_promoted": 2,
+          "promoted_list": [
+            "cytotoxicity_cls",
+            "overall_peptide_toxicity"
+          ]
+        },
+        "domain_antimicrobial_mic": {
+          "n_promoted": 3,
+          "promoted_list": [
+            "MIC_S_aureus",
+            "MIC_K_pneumoniae",
+            "MIC_A_baumannii"
+          ]
+        },
+        "domain_systemic_pk": {
+          "n_promoted": 4,
+          "promoted_list": [
+            "CL_absolute",
+            "Vd_absolute",
+            "PPB",
+            "F"
+          ]
+        }
+      },
+      "sparse_permeability_and_pk_highlights": {
+        "MDCK": {
+          "domain": "domain_permeability_lipophilicity",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.53356,
+          "ho_3fam_mae": 0.42174,
+          "ho_2fam_spearman": 0.40263,
+          "ho_3fam_spearman": 0.57687
+        },
+        "RRCK": {
+          "domain": "domain_permeability_lipophilicity",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.28718,
+          "ho_3fam_mae": 0.27521,
+          "ho_2fam_spearman": 0.56396,
+          "ho_3fam_spearman": 0.64761
+        },
+        "Caco2": {
+          "domain": "domain_permeability_lipophilicity",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.36559,
+          "ho_3fam_mae": 0.35831,
+          "ho_2fam_spearman": 0.86267,
+          "ho_3fam_spearman": 0.85748
+        },
+        "F": {
+          "domain": "domain_systemic_pk",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.23896,
+          "ho_3fam_mae": 0.21752,
+          "ho_2fam_spearman": 0.54838,
+          "ho_3fam_spearman": 0.76268
+        },
+        "CL_absolute": {
+          "domain": "domain_systemic_pk",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 1.47832,
+          "ho_3fam_mae": 1.29488,
+          "ho_2fam_spearman": 0.44749,
+          "ho_3fam_spearman": 0.66211
+        },
+        "PPB": {
+          "domain": "domain_systemic_pk",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.2608,
+          "ho_3fam_mae": 0.25235,
+          "ho_2fam_spearman": 0.67828,
+          "ho_3fam_spearman": 0.61907
+        },
+        "Vd_absolute": {
+          "domain": "domain_systemic_pk",
+          "promoted_by_oof_gate": true,
+          "ho_2fam_mae": 0.73693,
+          "ho_3fam_mae": 0.59212,
+          "ho_2fam_spearman": -0.16112,
+          "ho_3fam_spearman": -0.52781
+        }
+      },
+      "honest_vd_absolute_note": "Vd_absolute holdout MAE drops 0.7369->0.5921 but Spearman remains negative (-0.161->-0.528); remains exploratory_not_recommended.",
+      "censored_hinge_loss_audit": {
+        "hemolysis_HC50": {
+          "n_holdout_censored": 292,
+          "stack_2fam_censored_concordance": 0.30822,
+          "domain_mtl_censored_concordance": 0.39726,
+          "stack_2fam_violation_mae": 0.26352,
+          "domain_mtl_violation_mae": 0.22438
+        },
+        "cytotoxicity_CC50": {
+          "n_holdout_censored": 191,
+          "stack_2fam_censored_concordance": 0.18848,
+          "domain_mtl_censored_concordance": 0.35602,
+          "stack_2fam_violation_mae": 0.31305,
+          "domain_mtl_violation_mae": 0.2269
+        },
+        "MIC_S_aureus": {
+          "n_holdout_censored": 71,
+          "stack_2fam_censored_concordance": 0.05634,
+          "domain_mtl_censored_concordance": 0.11268,
+          "stack_2fam_violation_mae": 0.66838,
+          "domain_mtl_violation_mae": 0.57111
+        }
+      }
+    },
+    "sequence_scaffold_blind": {
+      "n_drugs": 11,
+      "approval_years": "2019-2023",
+      "stack_architecture": "Full Reproducible 3-Family Stack: CPU + 4-FM Modality-Aware Fusion + Domain-MTL (both regression AND classification)",
+      "side_by_side_comparison": {
+        "training_retention_pct": {
+          "half_life_reg": {
+            "strict_morgan_v336": 31.5,
+            "peptide_structural_v34": 68.6,
+            "rows_strict_morgan": "914/2901",
+            "rows_peptide_structural": "1990/2901"
+          },
+          "PPB": {
+            "strict_morgan_v336": 56.8,
+            "peptide_structural_v34": 58.3,
+            "rows_strict_morgan": "75/132",
+            "rows_peptide_structural": "77/132"
+          },
+          "hemolysis_cls": {
+            "strict_morgan_v336": 32.9,
+            "peptide_structural_v34": 88.5,
+            "rows_strict_morgan": "6751/20506",
+            "rows_peptide_structural": "18145/20506"
+          }
+        },
+        "half_life_reg_n11": {
+          "strict_morgan_v336": {
+            "spearman": 0.79091,
+            "fisher_ci95": [
+              0.3635,
+              0.9433
+            ],
+            "mae": 0.46753,
+            "perm_p_two_sided": 0.00557,
+            "n_within_2fold": 4,
+            "n_within_3fold": 6
+          },
+          "peptide_structural_v34": {
+            "spearman": 0.82727,
+            "fisher_ci95": [
+              0.4514,
+              0.9538
+            ],
+            "mae": 0.46364,
+            "perm_p_two_sided": 0.00259,
+            "n_within_2fold": 3,
+            "n_within_3fold": 6
+          }
+        },
+        "ppb_n8": {
+          "strict_morgan_v336": {
+            "spearman": 0.16767,
+            "fisher_ci95": [
+              -0.609,
+              0.7802
+            ],
+            "mae": 0.2931,
+            "exact_perm_p_two_sided": 0.693155
+          },
+          "peptide_structural_v34": {
+            "spearman": 0.08383,
+            "fisher_ci95": [
+              -0.6598,
+              0.7445
+            ],
+            "mae": 0.33816,
+            "exact_perm_p_two_sided": 0.849306
+          }
+        },
+        "hemolysis_cls_n11": {
+          "strict_morgan_v336": {
+            "n_gt_0_50": 0,
+            "n_total": 11,
+            "max_pred_prob": 0.4335,
+            "median_pred_prob": 0.0959,
+            "mean_pred_prob": 0.1532
+          },
+          "peptide_structural_v34": {
+            "n_gt_0_50": 0,
+            "n_total": 11,
+            "max_pred_prob": 0.4914,
+            "median_pred_prob": 0.0895,
+            "mean_pred_prob": 0.1666
+          }
+        }
+      },
+      "half_life_domain_mtl_standalone_peptide_structural": {
+        "spearman": 0.89091,
+        "mae": 0.50136,
+        "perm_p_two_sided": 0.00045
+      },
+      "ppb_honest_negative_by_family": {
+        "note": "OOF simplex collapsed onto Domain-MTL (w=1.0) on small n=75-77 PPB, degrading blind PPB ranking; 4-FM Fusion and 2-fam retain strong significant ranking.",
+        "strict_morgan_v336": {
+          "fusion": {
+            "spearman": 0.73055,
+            "mae": 0.29577,
+            "exact_p_two": 0.048512
+          },
+          "stack_2fam": {
+            "spearman": 0.68265,
+            "mae": 0.29837,
+            "exact_p_two": 0.072917
+          },
+          "full_3fam_stack": {
+            "spearman": 0.16767,
+            "mae": 0.2931,
+            "exact_p_two": 0.693155
+          }
+        },
+        "peptide_structural_v34": {
+          "fusion": {
+            "spearman": 0.77846,
+            "mae": 0.29699,
+            "exact_p_two": 0.03006
+          },
+          "stack_2fam": {
+            "spearman": 0.73055,
+            "mae": 0.30734,
+            "exact_p_two": 0.048512
+          },
+          "full_3fam_stack": {
+            "spearman": 0.08383,
+            "mae": 0.33816,
+            "exact_p_two": 0.849306
+          }
+        }
+      }
+    },
+    "published_platform_comparison": {
+      "disclaimer": "Architectural and capability ledger compiled from published papers and public repositories. No fabricated cross-platform benchmark scores are reported where identical splits or public pretrained inference weights are unavailable; same-split empirical benchmarks are reported separately for HemoPI2 v1.3, CycPeptMP, Multi_CycGT, and PLifePred.",
+      "platforms": {
+        "Peptide_OmniPanel_v3_4": {
+          "citation": "Peptide OmniPanel 1.4 / Engine v34 (This Work, 2026)",
+          "input_modalities": [
+            "Canonical 1-letter linear peptide sequence",
+            "Arbitrary SMILES (cyclic/macrocyclic, N-methylated, D-amino acids, disulfide, stapled, lipidated/PEGylated NCAAs)",
+            "HELM / name lookup with automatic sequence-to-SMILES canonicalization"
+          ],
+          "model_architecture": "4-Foundation-Model Multimodal Super-Ensemble (NCAA-RepDistill-v2 + PeptideCLM-2 + ChemBERTa-MTR + ESM-C 600M) + CPU Tanimoto-KRR/SVR/LGBM/ET + Domain-MTL / Deep branches with strictly nested OOF simplex stacking and zero-holdout-peeking promotion",
+          "n_endpoints": 47,
+          "endpoint_domains": {
+            "permeability_lipophilicity": [
+              "PAMPA",
+              "Caco2",
+              "MDCK",
+              "RRCK",
+              "efflux_ratio",
+              "BBB",
+              "LogD7.4",
+              "LogD_decadiene"
+            ],
+            "systemic_clinical_pk": [
+              "half_life_reg",
+              "half_life_cls",
+              "CL_absolute",
+              "CL_per_kg",
+              "Vd_absolute",
+              "Vd_per_kg",
+              "PPB",
+              "F",
+              "Cmax"
+            ],
+            "toxicity_hemolysis": [
+              "hemolysis_cls",
+              "hemolysis_HC50",
+              "hemolysis_MHC",
+              "cytotoxicity_cls",
+              "cytotoxicity_CC50",
+              "overall_peptide_toxicity"
+            ],
+            "solubility": [
+              "solubility_cls",
+              "solubility_reg"
+            ],
+            "antimicrobial_biofilm_mic_mbc": "22 pathogen-specific MIC / MBC / MBIC / MBEC / MFC / LC endpoints"
+          },
+          "uncertainty_and_ad": "Mondrian Tanimoto AD tiers + cluster-weighted split-conformal 80%/90% intervals + Platt probability calibration + 3-tier CI-aware evidence grading (20 quantitative / 26 rank_only / 1 exploratory_not_recommended)",
+          "interpretability": "Direct production-ensemble perturbation attribution across all 47 endpoints (residue Ala/Gly masking + RDKit-valid chemical substituent pruning) + fidelity-audited E-GAT on 8 endpoints",
+          "design_and_decision_tools": "PeptideOpt multi-objective Pareto analog generator (5 strategies) + Batch Screening with 4-pillar Peptide-MPO [0-100] + 57-product FDA/DailyMed clinical PK reference & approved-peptide percentile context",
+          "public_web_server_and_api": "Live web server + FastAPI REST API + open-source code"
+        },
+        "pepADMET": {
+          "citation": "pepADMET (J. Chem. Inf. Model., 2024/2025)",
+          "input_modalities": [
+            "Peptide SMILES / molecular graph (supports modified and cyclic peptides where SMILES provided)"
+          ],
+          "model_architecture": "Graph neural network / molecular fingerprint ML predictors trained per ADMET property",
+          "n_endpoints": "Focused multi-endpoint peptide ADMET panel (primarily membrane permeability such as PAMPA/Caco-2, lipophilicity/solubility, toxicity/hemolysis, and selected PK/stability properties; narrower than 47 endpoints and without 22 pathogen-specific antimicrobial/biofilm endpoints)",
+          "endpoint_domains": {
+            "permeability_lipophilicity": "Core focus (e.g., PAMPA / Caco-2 / lipophilicity)",
+            "systemic_clinical_pk": "Limited coverage (typically lacks full human clinical CL/Vd/F/Cmax/PPB regulatory panel)",
+            "toxicity_hemolysis": "Selected hemolytic/toxicity classification tasks",
+            "antimicrobial_biofilm_mic_mbc": "Not a primary antimicrobial MIC/MBC/biofilm suite"
+          },
+          "uncertainty_and_ad": "Standard point predictions; lacks Mondrian cluster-weighted conformal intervals and CI-aware 3-tier evidence grading",
+          "interpretability": "Substructure/attention visualization where supported; no production-ensemble perturbation across 47 endpoints",
+          "design_and_decision_tools": "ADMET prediction focus; does not bundle FDA DailyMed regulatory PK percentile lookup + 5-strategy Pareto PeptideOpt + 4-pillar Peptide-MPO batch screening",
+          "public_web_server_and_api": "Published web/tool platform; pretrained weights/endpoints not directly drop-in runnable on our frozen 47-endpoint cluster-split benchmark without re-implementation"
+        },
+        "PeptiVerse": {
+          "citation": "PeptiVerse (Nature Communications, 2025)",
+          "input_modalities": [
+            "Canonical and modified peptide sequence / SMILES representations (unified peptide foundation/representation framework)"
+          ],
+          "model_architecture": "Peptide foundation / multi-property deep learning framework covering therapeutic peptide property prediction and discovery",
+          "n_endpoints": "Broad therapeutic peptide property & bioactivity benchmarks (permeability, toxicity/hemolysis, half-life/stability, antimicrobial/therapeutic activity)",
+          "endpoint_domains": {
+            "permeability_lipophilicity": "Included (macrocycle permeability benchmarks such as CycPeptMPDB)",
+            "systemic_clinical_pk": "Half-life / stability emphasis; lacks dedicated human FDA/DailyMed clinical CL/Vd/PPB/F/Cmax PK panel with approved-peptide percentile context",
+            "toxicity_hemolysis": "Included (hemolysis / toxicity classification)",
+            "antimicrobial_biofilm_mic_mbc": "General antimicrobial activity rather than 22 quantitative pathogen-stratified MIC/MBC/biofilm regression endpoints"
+          },
+          "uncertainty_and_ad": "Point-estimate benchmarking; lacks Mondrian Tanimoto AD-stratified conformal UQ and explicit failure-mode grading (`exploratory_not_recommended`)",
+          "interpretability": "Representation/embedding analysis; lacks unified direct ensemble perturbation attribution across all 47 ADMET/PK/MIC endpoints",
+          "design_and_decision_tools": "Property prediction & peptide representation learning; lacks integrated clinical PK evidence index + approved-peptide percentiles + interactive Pareto PeptideOpt web workbench",
+          "public_web_server_and_api": "Published benchmark/codebase; separate task definitions and splits prevent zero-leakage off-the-shelf scoring on our frozen cluster-grouped holdouts without retraining"
+        }
+      },
+      "same_split_published_tools_evaluated_empirically": [
+        "HemoPI2 v1.3 (Rathore et al., Protein Sci. 2025; GPL-3.0) — pretrained ML (fixed sk1.3.1), same-split retrained ML family (RF/ET/LGBM/XGB on exact 1,190 HemoPI2 features), and pretrained ESM2-t6 (truncated <=40 aa & untruncated)",
+        "CycPeptMP / CycPeptMPDB baseline configs (Li et al., Brief. Bioinform. 2024; MIT) — RF-750 & 2D-SVM retrained on identical PAMPA split",
+        "Multi_CycGT baseline config (Cao et al., JCIM 2024; GPL-3.0) — Tanimoto-kernel SVR retrained on identical PAMPA split",
+        "PLifePred-style AAC+DPC+PhysChem RBF-SVR (Mathur et al., Sci. Rep. 2018) — retrained on identical half_life_reg split"
+      ]
+    }
   }
 }

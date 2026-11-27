@@ -68,6 +68,32 @@ from .schemas import (
 WEB_DIR = Path(__file__).resolve().parent
 UPGRADE_DIR = WEB_DIR.parent
 
+_CLINICAL_PERCENTILE_FN: Optional[Any] = None
+
+
+def _safe_clinical_percentile(
+    endpoint: str,
+    value: Optional[float],
+    log10_space: bool = False,
+) -> Optional[dict[str, Any]]:
+    """Call `clinical_percentile_engine.compute_clinical_percentile` with graceful fallback."""
+    global _CLINICAL_PERCENTILE_FN
+    if value is None:
+        return None
+    fn = _CLINICAL_PERCENTILE_FN
+    if fn is None:
+        try:
+            from .clinical_percentile_engine import compute_clinical_percentile
+
+            _CLINICAL_PERCENTILE_FN = compute_clinical_percentile
+            fn = compute_clinical_percentile
+        except Exception:
+            return None
+    try:
+        return fn(endpoint, float(value), log10_space=log10_space)
+    except Exception:
+        return None
+
 # Exact unified V33 / V33.1 presentation order (Tier-1 Core ADMET/PK/Safety + Tier-2 Antimicrobial/Biofilm)
 V33_ENDPOINT_ORDER: tuple[str, ...] = (
     # Tier 1 — Pharmacokinetics & PK
@@ -1375,8 +1401,7 @@ class OmniPanelAdapter:
                                 "route": p.get("route", ""),
                                 "atc": p.get("atc") or [],
                                 "n_pk_records": p.get("n_pk_records", 0),
-                                "context_total": p.get("context_total", 0),
-                                "context_counts": p.get("context_counts") or {},
+                                "dailymed_setid": p.get("dailymed_setid"),
                             }
                         )
                 hits.sort(key=lambda x: (-x["n_pk_records"], x["name"]))
@@ -1404,12 +1429,11 @@ class OmniPanelAdapter:
                 "route": p.get("route", ""),
                 "atc": p.get("atc") or [],
                 "n_pk_records": p.get("n_pk_records", 0),
-                "context_total": p.get("context_total", 0),
-                "context_counts": p.get("context_counts") or {},
+                "dailymed_setid": p.get("dailymed_setid"),
             }
             for p in products.values()
         ]
-        catalog.sort(key=lambda x: (-x["n_pk_records"], -x["context_total"], x["name"]))
+        catalog.sort(key=lambda x: (-x["n_pk_records"], x["name"]))
         return {
             "stats": stats,
             "source_attribution": attr,
@@ -1592,6 +1616,7 @@ class OmniPanelAdapter:
             "external_baselines_same_split": self.manifest.get("external_baselines_same_split") or {},
             "temporal_split_benchmarks": self.manifest.get("temporal_split_benchmarks") or {},
             "recent_fda_2019_2023_blind_set": self.manifest.get("recent_fda_2019_2023_blind_set") or {},
+            "v34_upgrades": self.manifest.get("v34_upgrades") or {},
         }
 
     # -----------------------------------------------------------------------
@@ -2103,6 +2128,7 @@ class OmniPanelAdapter:
                 evidence_grade=ev_g,  # type: ignore[arg-type]
                 not_recommended_warning=not_rec_warn,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
+                clinical_percentile=_safe_clinical_percentile(ep, val, log10_space=False),
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
                 uq_reliability=None if is_cls else (
@@ -2456,6 +2482,7 @@ class OmniPanelAdapter:
                 evidence_grade=ev_g_off,  # type: ignore[arg-type]
                 not_recommended_warning=not_rec_off,
                 v32_cv_score=round(float(v32_cv), 4) if v32_cv is not None else None,
+                clinical_percentile=_safe_clinical_percentile(ep, val, log10_space=False),
                 conformal_coverage_80=round(float(cov["cov80"]), 4) if cov.get("cov80") is not None else None,
                 conformal_coverage_90=round(float(cov["cov90"]), 4) if cov.get("cov90") is not None else None,
                 uq_reliability=None if is_cls else self._resolve_uq_reliability(cov, conf),

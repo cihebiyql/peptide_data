@@ -19,8 +19,10 @@ from rdkit import rdBase
 
 from . import __version__
 from .adapter import EngineBusyError, EngineUnavailableError, OmniPanelAdapter
+from .batch_mpo import run_batch_screen
 from .batch_parser import MAX_BATCH_SIZE, items_from_batch_request, parse_batch_text
 from .chem_utils import InputValidationError, compute_physchem, render_molecule_svg
+from .direct_attribution import run_direct_attribution
 from .drug_library import (
     BATCH_DEMO_SAMPLE,
     BATCH_PRESETS,
@@ -30,6 +32,7 @@ from .drug_library import (
     lookup_drug,
 )
 from .job_store import JobManager
+from .peptide_opt import run_peptide_opt
 from .schemas import (
     AssayConditions,
     AtomAttributionRequest,
@@ -37,9 +40,15 @@ from .schemas import (
     BatchParseResponse,
     BatchPredictRequest,
     BatchPredictResponse,
+    BatchScreenRequest,
+    BatchScreenResponse,
+    DirectAttributionRequest,
+    DirectAttributionResponse,
     EndpointsResponse,
     HealthResponse,
     JobCreateRequest,
+    PeptideOptRequest,
+    PeptideOptResponse,
     PredictRequest,
     PredictResponse,
     RenderSvgRequest,
@@ -93,7 +102,7 @@ app = FastAPI(
         "Publication-grade peptide & cyclic-peptide ADMET, pharmacokinetics, safety, and antimicrobial "
         "prediction platform powered by a 4-foundation-model super-ensemble (47 tiered endpoints incl. "
         "macrocycle chameleonicity LogD_decadiene, calibrated probabilities, AD-stratified empirical uncertainty "
-        "intervals, exact Tanimoto AD, 59-product NLM DailyMed / US FDA factual regulatory PK reference layer, "
+        "intervals, exact Tanimoto AD, 57-product NLM DailyMed / US FDA factual regulatory PK reference layer, "
         "and async task tracking). Scope: internal_research_only."
     ),
     version=__version__,
@@ -166,6 +175,7 @@ def get_endpoints() -> EndpointsResponse:
         external_baselines_same_split=tp["external_baselines_same_split"],
         temporal_split_benchmarks=tp["temporal_split_benchmarks"],
         recent_fda_2019_2023_blind_set=tp["recent_fda_2019_2023_blind_set"],
+        v34_upgrades=tp["v34_upgrades"],
         endpoints=adapter.get_catalog(),
     )
 
@@ -207,7 +217,7 @@ def get_clinical_evidence(
     sequence: Optional[str] = Query(default=None, description="Optional explicit canonical 20-AA sequence."),
     limit: int = Query(default=30, ge=1, le=120),
 ) -> JSONResponse:
-    """Query factual human clinical PK records across 59 FDA-approved peptide drugs (verified against NLM DailyMed SPL setids and US FDA Drugs@FDA reviews; zero CC-BY-NC derivative fields)."""
+    """Query factual human clinical PK records across 57 deduplicated FDA-approved peptide drugs (verified against NLM DailyMed SPL setids and US FDA Drugs@FDA reviews; zero CC-BY-NC derivative fields)."""
     return JSONResponse(
         adapter.query_clinical_evidence(
             query=query,
@@ -282,6 +292,51 @@ def post_atom_attribution(req: AtomAttributionRequest) -> AtomAttributionRespons
         deletion_top_vs_rand_ratio=res.get("deletion_top_vs_rand_ratio"),
         deletion_top_vs_rand_ci95=res.get("deletion_top_vs_rand_ci95"),
     )
+
+
+@app.post("/api/v1/direct-attribution", response_model=DirectAttributionResponse, tags=["Interpretability"])
+def post_direct_attribution(req: DirectAttributionRequest) -> DirectAttributionResponse:
+    """Compute 100% production-ensemble-faithful perturbation attribution across any of the 47 endpoints."""
+    try:
+        return run_direct_attribution(adapter=adapter, req=req)
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/peptide-opt", response_model=PeptideOptResponse, tags=["Optimization"])
+def post_peptide_opt(req: PeptideOptRequest) -> PeptideOptResponse:
+    """Enumerate RDKit-sanitized peptide modifications (Ala-scan, point mutations, N-methylation, cyclization, C16/C18 lipidation) and compute 2D Pareto frontier."""
+    try:
+        return run_peptide_opt(adapter=adapter, req=req)
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/batch-screen", response_model=BatchScreenResponse, tags=["Batch"])
+def post_batch_screen(req: BatchScreenRequest) -> BatchScreenResponse:
+    """Screen up to 100 peptides with customizable Peptide-MPO desirability curves, evidence-grade weighting, OOD penalty, ranking, and CSV export."""
+    try:
+        return run_batch_screen(adapter=adapter, req=req)
+    except InputValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 @app.post("/api/v1/predict", response_model=PredictResponse, tags=["Inference"])

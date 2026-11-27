@@ -1,0 +1,3347 @@
+{
+  "schema": "v34_hemopi2_ml_receipt_v1",
+  "elapsed_sec": 1301.1,
+  "tool_citation": "HemoPI2 v1.3 (Rathore et al., Protein Science 2025; PyPI hemopi2==1.3; GPL-3.0)",
+  "v336_failure_diagnosis_and_fix": {
+    "root_cause": "In v33.6 (`02_v336_prod_blind_temporal_published_tools.py:275-277`), `from sklearn.base import clone` imported conda's `scikit-learn==1.4.2` BEFORE `sys.path.insert(0, runtime_sklearn)` (`scikit-learn==1.3.1`). Unpickling `hemopi2_ml_clf.sav` (trained in sklearn 1.3.1) under sklearn 1.4.2 crashed at `predict_proba` with `AttributeError: 'DecisionTreeClassifier' object has no attribute 'monotonic_cst'`.",
+    "v336_silent_drop_audit": "v33.6 caught the non-zero helper exit code and printed stderr without persisting a failure record into the JSON receipt. v34 fixes the import ordering so native scikit-learn 1.3.1 loads cleanly, verifies zero missing feature columns, and raises on any subprocess failure.",
+    "recovered_pretrained_estimator": {
+      "sklearn_runtime_version": "1.3.1",
+      "estimator_class": "RandomForestClassifier",
+      "estimator_params": {
+        "bootstrap": true,
+        "ccp_alpha": 0.0,
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": null,
+        "max_features": "sqrt",
+        "max_leaf_nodes": null,
+        "max_samples": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 1,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "n_estimators": 200,
+        "n_jobs": 8,
+        "oob_score": false,
+        "random_state": 42,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "n_features": 1190,
+      "first_10_features": [
+        "Molecular Weight (kDa)",
+        "length",
+        "AAC_A",
+        "AAC_C",
+        "AAC_D",
+        "AAC_E",
+        "AAC_F",
+        "AAC_G",
+        "AAC_H",
+        "AAC_I"
+      ],
+      "n_missing_cols_ho": 0,
+      "n_missing_cols_cv": 0
+    }
+  },
+  "evaluation_counts": {
+    "hemolysis_cls_cv_canonical": 13316,
+    "hemolysis_cls_holdout_total_exact": 4101,
+    "hemolysis_cls_holdout_all_canonical": 3230,
+    "hemolysis_cls_holdout_zero_overlap_novel": 2334,
+    "hemopi2_published_corpus_unique_seqs": 1926,
+    "omni_full_holdout_roc_auc": 0.8973,
+    "omni_all_canonical_roc_auc": 0.8958,
+    "omni_all_canonical_pr_auc": 0.8257,
+    "omni_zero_overlap_roc_auc": 0.8867,
+    "omni_zero_overlap_pr_auc": 0.762
+  },
+  "methodological_caveats": [
+    "Off-the-shelf pretrained HemoPI2 models (ML and ESM2-t6) were trained on HemoPI2's own hemolytic threshold definition, whereas Peptide OmniPanel was trained on our hemolysis_cls definition; the same-split retrained HemoPI2-ML models (RF/ET/LGBM/XGB on exact 1,190 HemoPI2 features) eliminate both label-definition and training-corpus discrepancies.",
+    "The zero-overlap novel filter (n=2,334) excludes exact canonical sequence matches to HemoPI2's published cross_val_dataset.csv and independent_dataset.csv; homologous near-neighbors from shared DBAASP/Hemolytik literature may still favor off-the-shelf pretrained HemoPI2.",
+    "Official HemoPI2 (hemopi2_classification.py:lenchk) truncates input sequences >40 aa to the first 40 residues; both official truncated (<=40 aa) and full-length untruncated evaluations are reported alongside <=40 aa vs >40 aa stratified sensitivity analyses."
+  ],
+  "primary_benchmarks": {
+    "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+      "mode": "pretrained_official_trunc40",
+      "threshold_for_mcc": 0.46,
+      "note": "Official pretrained hemopi2_ml_clf.sav (RF-200, sklearn 1.3.1, 1,190 features) with official HemoPI2 seq[:40] truncation",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8298,
+        "pr_auc": 0.7592,
+        "brier": 0.1727,
+        "mcc": 0.4605,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0661,
+          "mean_delta": 0.0674,
+          "ci95": [
+            0.0254,
+            0.1111
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0665,
+          "pr_auc_mean_delta": 0.067,
+          "pr_auc_ci95": [
+            0.0145,
+            0.1181
+          ],
+          "pr_auc_p_value": 0.014,
+          "pr_auc_p_value_display": "0.0140",
+          "p_value_holm_hemopi2_family": 0.044,
+          "p_value_holm_global_updated": 0.036
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8052,
+        "pr_auc": 0.6162,
+        "brier": 0.1882,
+        "mcc": 0.3956,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0814,
+          "mean_delta": 0.0827,
+          "ci95": [
+            0.0448,
+            0.1202
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "point_delta_pr_auc": 0.1458,
+          "pr_auc_mean_delta": 0.1471,
+          "pr_auc_ci95": [
+            0.0684,
+            0.2278
+          ],
+          "pr_auc_p_value": 0.001,
+          "pr_auc_p_value_display": "<=0.001",
+          "p_value_holm_hemopi2_family": 0.024,
+          "p_value_holm_global_updated": 0.028
+        }
+      }
+    },
+    "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+      "mode": "pretrained_untruncated",
+      "threshold_for_mcc": 0.46,
+      "note": "Official pretrained hemopi2_ml_clf.sav (RF-200, sklearn 1.3.1, 1,190 features) evaluated on full untruncated sequences",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8303,
+        "pr_auc": 0.76,
+        "brier": 0.1727,
+        "mcc": 0.4618,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0655,
+          "mean_delta": 0.0669,
+          "ci95": [
+            0.0249,
+            0.1108
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0658,
+          "pr_auc_mean_delta": 0.0663,
+          "pr_auc_ci95": [
+            0.014,
+            0.1172
+          ],
+          "pr_auc_p_value": 0.016,
+          "pr_auc_p_value_display": "0.0160",
+          "p_value_holm_hemopi2_family": 0.044
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8065,
+        "pr_auc": 0.6183,
+        "brier": 0.1882,
+        "mcc": 0.3996,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0801,
+          "mean_delta": 0.0814,
+          "ci95": [
+            0.0435,
+            0.119
+          ],
+          "p_value": 0.001,
+          "p_value_display": "<=0.001",
+          "point_delta_pr_auc": 0.1437,
+          "pr_auc_mean_delta": 0.145,
+          "pr_auc_ci95": [
+            0.0671,
+            0.2255
+          ],
+          "pr_auc_p_value": 0.001,
+          "pr_auc_p_value_display": "<=0.001",
+          "p_value_holm_hemopi2_family": 0.024
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+      "mode": "same_split_retrained_trunc40",
+      "threshold_for_mcc": 0.5,
+      "note": "Exact cloned hemopi2_ml_clf.sav (RF-200) on 1,190 HemoPI2 features (seq[:40]), trained strictly on our hemolysis_cls CV split (ZERO leakage)",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.858,
+        "pr_auc": 0.7523,
+        "brier": 0.1451,
+        "mcc": 0.4956,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0379,
+          "mean_delta": 0.0377,
+          "ci95": [
+            0.0113,
+            0.0603
+          ],
+          "p_value": 0.01,
+          "p_value_display": "0.0100",
+          "point_delta_pr_auc": 0.0734,
+          "pr_auc_mean_delta": 0.0723,
+          "pr_auc_ci95": [
+            0.0335,
+            0.1105
+          ],
+          "pr_auc_p_value": 0.001,
+          "pr_auc_p_value_display": "<=0.001",
+          "p_value_holm_hemopi2_family": 0.1,
+          "p_value_holm_global_updated": 0.09
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8642,
+        "pr_auc": 0.7089,
+        "brier": 0.121,
+        "mcc": 0.5143,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0224,
+          "mean_delta": 0.0234,
+          "ci95": [
+            -0.0024,
+            0.0461
+          ],
+          "p_value": 0.07,
+          "p_value_display": "0.0700",
+          "point_delta_pr_auc": 0.053,
+          "pr_auc_mean_delta": 0.055,
+          "pr_auc_ci95": [
+            0.0068,
+            0.1019
+          ],
+          "pr_auc_p_value": 0.034,
+          "pr_auc_p_value_display": "0.0340",
+          "p_value_holm_hemopi2_family": 0.19
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+      "mode": "same_split_retrained_full",
+      "threshold_for_mcc": 0.5,
+      "note": "Exact cloned hemopi2_ml_clf.sav (RF-200) on 1,190 HemoPI2 features (full sequence), trained strictly on our hemolysis_cls CV split (ZERO leakage)",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8564,
+        "pr_auc": 0.7454,
+        "brier": 0.1457,
+        "mcc": 0.4761,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0394,
+          "mean_delta": 0.0392,
+          "ci95": [
+            0.0151,
+            0.06
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "point_delta_pr_auc": 0.0803,
+          "pr_auc_mean_delta": 0.079,
+          "pr_auc_ci95": [
+            0.0417,
+            0.1146
+          ],
+          "pr_auc_p_value": 0.001,
+          "pr_auc_p_value_display": "<=0.001",
+          "p_value_holm_hemopi2_family": 0.064,
+          "p_value_holm_global_updated": 0.056
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8631,
+        "pr_auc": 0.7027,
+        "brier": 0.1213,
+        "mcc": 0.5094,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0236,
+          "mean_delta": 0.0243,
+          "ci95": [
+            0.0012,
+            0.0461
+          ],
+          "p_value": 0.042,
+          "p_value_display": "0.0420",
+          "point_delta_pr_auc": 0.0593,
+          "pr_auc_mean_delta": 0.0608,
+          "pr_auc_ci95": [
+            0.0207,
+            0.1043
+          ],
+          "pr_auc_p_value": 0.01,
+          "pr_auc_p_value_display": "0.0100",
+          "p_value_holm_hemopi2_family": 0.19
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+      "mode": "same_split_retrained_full",
+      "threshold_for_mcc": 0.5,
+      "note": "ExtraTrees-200 on exact 1,190 HemoPI2 composition/physicochemical features, trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.855,
+        "pr_auc": 0.7411,
+        "brier": 0.1481,
+        "mcc": 0.48,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0409,
+          "mean_delta": 0.0405,
+          "ci95": [
+            0.0097,
+            0.0666
+          ],
+          "p_value": 0.016,
+          "p_value_display": "0.0160",
+          "point_delta_pr_auc": 0.0846,
+          "pr_auc_mean_delta": 0.083,
+          "pr_auc_ci95": [
+            0.0338,
+            0.1336
+          ],
+          "pr_auc_p_value": 0.001,
+          "pr_auc_p_value_display": "<=0.001",
+          "p_value_holm_hemopi2_family": 0.112,
+          "p_value_holm_global_updated": 0.096
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.86,
+        "pr_auc": 0.7005,
+        "brier": 0.1229,
+        "mcc": 0.5106,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0267,
+          "mean_delta": 0.0275,
+          "ci95": [
+            -0.0012,
+            0.0543
+          ],
+          "p_value": 0.062,
+          "p_value_display": "0.0620",
+          "point_delta_pr_auc": 0.0614,
+          "pr_auc_mean_delta": 0.0635,
+          "pr_auc_ci95": [
+            0.0052,
+            0.1197
+          ],
+          "pr_auc_p_value": 0.044,
+          "pr_auc_p_value_display": "0.0440",
+          "p_value_holm_hemopi2_family": 0.19
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_ExtraTrees_OfficialTrunc40": {
+      "mode": "same_split_retrained_trunc40",
+      "threshold_for_mcc": 0.5,
+      "note": "ExtraTrees-200 on exact 1,190 HemoPI2 features (seq[:40]), trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8561,
+        "pr_auc": 0.7462,
+        "brier": 0.1466,
+        "mcc": 0.4964,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0397,
+          "mean_delta": 0.0396,
+          "ci95": [
+            0.009,
+            0.0653
+          ],
+          "p_value": 0.018,
+          "p_value_display": "0.0180",
+          "point_delta_pr_auc": 0.0796,
+          "pr_auc_mean_delta": 0.0783,
+          "pr_auc_ci95": [
+            0.0297,
+            0.1276
+          ],
+          "pr_auc_p_value": 0.006,
+          "pr_auc_p_value_display": "0.0060",
+          "p_value_holm_hemopi2_family": 0.112
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8576,
+        "pr_auc": 0.6971,
+        "brier": 0.1231,
+        "mcc": 0.5204,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0291,
+          "mean_delta": 0.0301,
+          "ci95": [
+            0.0006,
+            0.0551
+          ],
+          "p_value": 0.044,
+          "p_value_display": "0.0440",
+          "point_delta_pr_auc": 0.0649,
+          "pr_auc_mean_delta": 0.0665,
+          "pr_auc_ci95": [
+            0.0061,
+            0.1233
+          ],
+          "pr_auc_p_value": 0.036,
+          "pr_auc_p_value_display": "0.0360",
+          "p_value_holm_hemopi2_family": 0.19
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+      "mode": "same_split_retrained_full",
+      "threshold_for_mcc": 0.5,
+      "note": "LightGBM-400 on exact 1,190 HemoPI2 composition/physicochemical features, trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8502,
+        "pr_auc": 0.7484,
+        "brier": 0.1466,
+        "mcc": 0.4905,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0457,
+          "mean_delta": 0.0455,
+          "ci95": [
+            0.0189,
+            0.0695
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0773,
+          "pr_auc_mean_delta": 0.076,
+          "pr_auc_ci95": [
+            0.0326,
+            0.1204
+          ],
+          "pr_auc_p_value": 0.002,
+          "pr_auc_p_value_display": "0.0020",
+          "p_value_holm_hemopi2_family": 0.044,
+          "p_value_holm_global_updated": 0.036
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8572,
+        "pr_auc": 0.7084,
+        "brier": 0.1197,
+        "mcc": 0.5176,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0295,
+          "mean_delta": 0.0305,
+          "ci95": [
+            0.0056,
+            0.052
+          ],
+          "p_value": 0.014,
+          "p_value_display": "0.0140",
+          "point_delta_pr_auc": 0.0536,
+          "pr_auc_mean_delta": 0.0557,
+          "pr_auc_ci95": [
+            0.007,
+            0.1016
+          ],
+          "pr_auc_p_value": 0.024,
+          "pr_auc_p_value_display": "0.0240",
+          "p_value_holm_hemopi2_family": 0.112
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_LightGBM_OfficialTrunc40": {
+      "mode": "same_split_retrained_trunc40",
+      "threshold_for_mcc": 0.5,
+      "note": "LightGBM-400 on exact 1,190 HemoPI2 features (seq[:40]), trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.849,
+        "pr_auc": 0.7515,
+        "brier": 0.1474,
+        "mcc": 0.4832,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0469,
+          "mean_delta": 0.0465,
+          "ci95": [
+            0.0237,
+            0.0687
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0742,
+          "pr_auc_mean_delta": 0.0733,
+          "pr_auc_ci95": [
+            0.0357,
+            0.1108
+          ],
+          "pr_auc_p_value": 0.002,
+          "pr_auc_p_value_display": "0.0020",
+          "p_value_holm_hemopi2_family": 0.044
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8526,
+        "pr_auc": 0.7002,
+        "brier": 0.1218,
+        "mcc": 0.4998,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0341,
+          "mean_delta": 0.035,
+          "ci95": [
+            0.0129,
+            0.0565
+          ],
+          "p_value": 0.006,
+          "p_value_display": "0.0060",
+          "point_delta_pr_auc": 0.0618,
+          "pr_auc_mean_delta": 0.0637,
+          "pr_auc_ci95": [
+            0.02,
+            0.111
+          ],
+          "pr_auc_p_value": 0.004,
+          "pr_auc_p_value_display": "0.0040",
+          "p_value_holm_hemopi2_family": 0.072
+        }
+      }
+    },
+    "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+      "mode": "pretrained_official_trunc40",
+      "threshold_for_mcc": 0.55,
+      "note": "Official pretrained HemoPI2 ESM2-t6 classifier (Model 3) with official seq[:40] truncation (max_length=42)",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8305,
+        "pr_auc": 0.7447,
+        "brier": 0.1754,
+        "mcc": 0.4831,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0653,
+          "mean_delta": 0.0665,
+          "ci95": [
+            0.0254,
+            0.109
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "point_delta_pr_auc": 0.081,
+          "pr_auc_mean_delta": 0.0828,
+          "pr_auc_ci95": [
+            0.0277,
+            0.1396
+          ],
+          "pr_auc_p_value": 0.002,
+          "pr_auc_p_value_display": "0.0020",
+          "p_value_holm_hemopi2_family": 0.064
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8317,
+        "pr_auc": 0.6723,
+        "brier": 0.1764,
+        "mcc": 0.4425,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.055,
+          "mean_delta": 0.0561,
+          "ci95": [
+            0.0163,
+            0.0985
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "point_delta_pr_auc": 0.0896,
+          "pr_auc_mean_delta": 0.0917,
+          "pr_auc_ci95": [
+            0.0255,
+            0.1624
+          ],
+          "pr_auc_p_value": 0.012,
+          "pr_auc_p_value_display": "0.0120",
+          "p_value_holm_hemopi2_family": 0.064
+        }
+      }
+    },
+    "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+      "mode": "pretrained_untruncated",
+      "threshold_for_mcc": 0.55,
+      "note": "Official pretrained HemoPI2 ESM2-t6 classifier (Model 3) evaluated WITHOUT 40-aa truncation (max_length=512)",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8313,
+        "pr_auc": 0.7455,
+        "brier": 0.1756,
+        "mcc": 0.484,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0645,
+          "mean_delta": 0.0657,
+          "ci95": [
+            0.0243,
+            0.1081
+          ],
+          "p_value": 0.004,
+          "p_value_display": "0.0040",
+          "point_delta_pr_auc": 0.0802,
+          "pr_auc_mean_delta": 0.0821,
+          "pr_auc_ci95": [
+            0.0271,
+            0.138
+          ],
+          "pr_auc_p_value": 0.004,
+          "pr_auc_p_value_display": "0.0040",
+          "p_value_holm_hemopi2_family": 0.064
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8337,
+        "pr_auc": 0.6746,
+        "brier": 0.1767,
+        "mcc": 0.4456,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.053,
+          "mean_delta": 0.054,
+          "ci95": [
+            0.0141,
+            0.0968
+          ],
+          "p_value": 0.008,
+          "p_value_display": "0.0080",
+          "point_delta_pr_auc": 0.0874,
+          "pr_auc_mean_delta": 0.0894,
+          "pr_auc_ci95": [
+            0.0234,
+            0.1599
+          ],
+          "pr_auc_p_value": 0.014,
+          "pr_auc_p_value_display": "0.0140",
+          "p_value_holm_hemopi2_family": 0.088
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+      "mode": "same_split_retrained_full",
+      "threshold_for_mcc": 0.5,
+      "note": "XGBoost-400 on exact 1,190 HemoPI2 composition/physicochemical features, trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8516,
+        "pr_auc": 0.7459,
+        "brier": 0.1462,
+        "mcc": 0.5114,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0442,
+          "mean_delta": 0.0441,
+          "ci95": [
+            0.0195,
+            0.0679
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0798,
+          "pr_auc_mean_delta": 0.078,
+          "pr_auc_ci95": [
+            0.037,
+            0.1224
+          ],
+          "pr_auc_p_value": 0.002,
+          "pr_auc_p_value_display": "0.0020",
+          "p_value_holm_hemopi2_family": 0.044,
+          "p_value_holm_global_updated": 0.036
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8634,
+        "pr_auc": 0.7082,
+        "brier": 0.1183,
+        "mcc": 0.5503,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0233,
+          "mean_delta": 0.0243,
+          "ci95": [
+            0.0028,
+            0.045
+          ],
+          "p_value": 0.038,
+          "p_value_display": "0.0380",
+          "point_delta_pr_auc": 0.0537,
+          "pr_auc_mean_delta": 0.0552,
+          "pr_auc_ci95": [
+            0.0085,
+            0.1028
+          ],
+          "pr_auc_p_value": 0.026,
+          "pr_auc_p_value_display": "0.0260",
+          "p_value_holm_hemopi2_family": 0.19
+        }
+      }
+    },
+    "HemoPI2_v1_3_SameSplit_XGBoost_OfficialTrunc40": {
+      "mode": "same_split_retrained_trunc40",
+      "threshold_for_mcc": 0.5,
+      "note": "XGBoost-400 on exact 1,190 HemoPI2 features (seq[:40]), trained strictly on our hemolysis_cls CV split",
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "roc_auc": 0.8507,
+        "pr_auc": 0.7469,
+        "brier": 0.147,
+        "mcc": 0.4719,
+        "omni_same_subset_roc_auc": 0.8958,
+        "omni_same_subset_pr_auc": 0.8257,
+        "omni_same_subset_brier": 0.1176,
+        "paired_boot_vs_omni": {
+          "n_eval": 3230,
+          "n_clusters": 1164,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0452,
+          "mean_delta": 0.045,
+          "ci95": [
+            0.022,
+            0.0677
+          ],
+          "p_value": 0.002,
+          "p_value_display": "0.0020",
+          "point_delta_pr_auc": 0.0789,
+          "pr_auc_mean_delta": 0.0774,
+          "pr_auc_ci95": [
+            0.0387,
+            0.1181
+          ],
+          "pr_auc_p_value": 0.002,
+          "pr_auc_p_value_display": "0.0020",
+          "p_value_holm_hemopi2_family": 0.044
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "roc_auc": 0.8583,
+        "pr_auc": 0.702,
+        "brier": 0.1199,
+        "mcc": 0.492,
+        "omni_same_subset_roc_auc": 0.8867,
+        "omni_same_subset_pr_auc": 0.762,
+        "omni_same_subset_brier": 0.106,
+        "paired_boot_vs_omni": {
+          "n_eval": 2334,
+          "n_clusters": 1071,
+          "n_boot_valid": 1000,
+          "metric": "delta_roc_auc (Omni - Base)",
+          "point_delta_roc_auc": 0.0284,
+          "mean_delta": 0.0292,
+          "ci95": [
+            0.0072,
+            0.0497
+          ],
+          "p_value": 0.012,
+          "p_value_display": "0.0120",
+          "point_delta_pr_auc": 0.06,
+          "pr_auc_mean_delta": 0.0608,
+          "pr_auc_ci95": [
+            0.015,
+            0.1102
+          ],
+          "pr_auc_p_value": 0.008,
+          "pr_auc_p_value_display": "0.0080",
+          "p_value_holm_hemopi2_family": 0.108
+        }
+      }
+    }
+  },
+  "length_truncation_sensitivity": {
+    "length_distributions": {
+      "cv_canonical": {
+        "n_total": 13316,
+        "n_le40": 13017,
+        "pct_le40": 97.75,
+        "n_gt40": 299,
+        "pct_gt40": 2.25,
+        "min": 4,
+        "p10": 10.0,
+        "median": 17.0,
+        "mean": 19.68,
+        "p90": 31.0,
+        "max": 565,
+        "length_bins": {
+          "4_to_10": 1565,
+          "11_to_20": 7204,
+          "21_to_30": 3162,
+          "31_to_40": 1086,
+          "41_to_60": 220,
+          "61_to_100": 43,
+          "gt_100": 36
+        },
+        "pos_rate_overall": 0.3272,
+        "pos_rate_le40": 0.325,
+        "pos_rate_gt40": 0.4247
+      },
+      "holdout_all_canonical": {
+        "n_total": 3230,
+        "n_le40": 3141,
+        "pct_le40": 97.24,
+        "n_gt40": 89,
+        "pct_gt40": 2.76,
+        "min": 4,
+        "p10": 11.0,
+        "median": 18.0,
+        "mean": 20.5,
+        "p90": 32.0,
+        "max": 305,
+        "length_bins": {
+          "4_to_10": 315,
+          "11_to_20": 1627,
+          "21_to_30": 893,
+          "31_to_40": 306,
+          "41_to_60": 63,
+          "61_to_100": 17,
+          "gt_100": 9
+        },
+        "pos_rate_overall": 0.3291,
+        "pos_rate_le40": 0.3238,
+        "pos_rate_gt40": 0.5169
+      },
+      "holdout_zero_overlap_novel": {
+        "n_total": 2334,
+        "n_le40": 2245,
+        "pct_le40": 96.19,
+        "n_gt40": 89,
+        "pct_gt40": 3.81,
+        "min": 4,
+        "p10": 10.0,
+        "median": 19.0,
+        "mean": 21.45,
+        "p90": 34.0,
+        "max": 305,
+        "length_bins": {
+          "4_to_10": 256,
+          "11_to_20": 1072,
+          "21_to_30": 651,
+          "31_to_40": 266,
+          "41_to_60": 63,
+          "61_to_100": 17,
+          "gt_100": 9
+        },
+        "pos_rate_overall": 0.2455,
+        "pos_rate_le40": 0.2347,
+        "pos_rate_gt40": 0.5169
+      }
+    },
+    "strata": {
+      "all_canonical": {
+        "n": 3230,
+        "n_pos": 1063,
+        "n_neg": 2167,
+        "pos_rate": 0.3291,
+        "n_clusters": 1164,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.8958,
+          "pr_auc": 0.8257,
+          "brier": 0.1176
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8305,
+            "pr_auc": 0.7447,
+            "brier": 0.1754,
+            "mcc": 0.4831,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0653,
+              "mean_delta": 0.0658,
+              "ci95": [
+                0.0256,
+                0.106
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.081,
+              "pr_auc_mean_delta": 0.0828,
+              "pr_auc_ci95": [
+                0.0292,
+                0.138
+              ],
+              "pr_auc_p_value": 0.008,
+              "pr_auc_p_value_display": "0.0080",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8313,
+            "pr_auc": 0.7455,
+            "brier": 0.1756,
+            "mcc": 0.484,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0645,
+              "mean_delta": 0.0649,
+              "ci95": [
+                0.0247,
+                0.1055
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0802,
+              "pr_auc_mean_delta": 0.082,
+              "pr_auc_ci95": [
+                0.0281,
+                0.1371
+              ],
+              "pr_auc_p_value": 0.008,
+              "pr_auc_p_value_display": "0.0080",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8298,
+            "pr_auc": 0.7592,
+            "brier": 0.1727,
+            "mcc": 0.4605,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0661,
+              "mean_delta": 0.0666,
+              "ci95": [
+                0.0271,
+                0.1091
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0665,
+              "pr_auc_mean_delta": 0.0673,
+              "pr_auc_ci95": [
+                0.0144,
+                0.1184
+              ],
+              "pr_auc_p_value": 0.016,
+              "pr_auc_p_value_display": "0.0160",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8303,
+            "pr_auc": 0.76,
+            "brier": 0.1727,
+            "mcc": 0.4618,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0655,
+              "mean_delta": 0.0661,
+              "ci95": [
+                0.0268,
+                0.1089
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0658,
+              "pr_auc_mean_delta": 0.0665,
+              "pr_auc_ci95": [
+                0.0146,
+                0.1159
+              ],
+              "pr_auc_p_value": 0.016,
+              "pr_auc_p_value_display": "0.0160",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.858,
+            "pr_auc": 0.7523,
+            "brier": 0.1451,
+            "mcc": 0.4956,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0379,
+              "mean_delta": 0.0383,
+              "ci95": [
+                0.0127,
+                0.0599
+              ],
+              "p_value": 0.004,
+              "p_value_display": "0.0040",
+              "point_delta_pr_auc": 0.0734,
+              "pr_auc_mean_delta": 0.0736,
+              "pr_auc_ci95": [
+                0.0361,
+                0.1118
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.14
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8564,
+            "pr_auc": 0.7454,
+            "brier": 0.1457,
+            "mcc": 0.4761,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0394,
+              "mean_delta": 0.0397,
+              "ci95": [
+                0.0157,
+                0.0613
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0803,
+              "pr_auc_mean_delta": 0.08,
+              "pr_auc_ci95": [
+                0.0448,
+                0.115
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.855,
+            "pr_auc": 0.7411,
+            "brier": 0.1481,
+            "mcc": 0.48,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0409,
+              "mean_delta": 0.0415,
+              "ci95": [
+                0.012,
+                0.0671
+              ],
+              "p_value": 0.008,
+              "p_value_display": "0.0080",
+              "point_delta_pr_auc": 0.0846,
+              "pr_auc_mean_delta": 0.0849,
+              "pr_auc_ci95": [
+                0.0373,
+                0.1366
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.264
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8502,
+            "pr_auc": 0.7484,
+            "brier": 0.1466,
+            "mcc": 0.4905,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0457,
+              "mean_delta": 0.046,
+              "ci95": [
+                0.0212,
+                0.0708
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0773,
+              "pr_auc_mean_delta": 0.0772,
+              "pr_auc_ci95": [
+                0.037,
+                0.1238
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 3230,
+            "n_pos": 1063,
+            "n_neg": 2167,
+            "pos_rate": 0.3291,
+            "n_clusters": 1164,
+            "roc_auc": 0.8516,
+            "pr_auc": 0.7459,
+            "brier": 0.1462,
+            "mcc": 0.5114,
+            "omni_same_subset_roc_auc": 0.8958,
+            "omni_same_subset_pr_auc": 0.8257,
+            "omni_same_subset_brier": 0.1176,
+            "paired_boot_vs_omni": {
+              "n_eval": 3230,
+              "n_clusters": 1164,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0442,
+              "mean_delta": 0.0443,
+              "ci95": [
+                0.0201,
+                0.0681
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0798,
+              "pr_auc_mean_delta": 0.0789,
+              "pr_auc_ci95": [
+                0.0405,
+                0.1227
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          }
+        }
+      },
+      "le40_all_canonical": {
+        "n": 3141,
+        "n_pos": 1017,
+        "n_neg": 2124,
+        "pos_rate": 0.3238,
+        "n_clusters": 1127,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.9015,
+          "pr_auc": 0.8309,
+          "brier": 0.1135
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8334,
+            "pr_auc": 0.7485,
+            "brier": 0.1726,
+            "mcc": 0.4884,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0681,
+              "mean_delta": 0.0689,
+              "ci95": [
+                0.0288,
+                0.108
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0824,
+              "pr_auc_mean_delta": 0.0844,
+              "pr_auc_ci95": [
+                0.0283,
+                0.1423
+              ],
+              "pr_auc_p_value": 0.006,
+              "pr_auc_p_value_display": "0.0060",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8334,
+            "pr_auc": 0.7485,
+            "brier": 0.1726,
+            "mcc": 0.4884,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0681,
+              "mean_delta": 0.0689,
+              "ci95": [
+                0.0288,
+                0.108
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0824,
+              "pr_auc_mean_delta": 0.0844,
+              "pr_auc_ci95": [
+                0.0283,
+                0.1423
+              ],
+              "pr_auc_p_value": 0.006,
+              "pr_auc_p_value_display": "0.0060",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.833,
+            "pr_auc": 0.7642,
+            "brier": 0.1705,
+            "mcc": 0.465,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0685,
+              "mean_delta": 0.0693,
+              "ci95": [
+                0.0275,
+                0.1149
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0667,
+              "pr_auc_mean_delta": 0.0677,
+              "pr_auc_ci95": [
+                0.0142,
+                0.1184
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.833,
+            "pr_auc": 0.7642,
+            "brier": 0.1705,
+            "mcc": 0.465,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0685,
+              "mean_delta": 0.0693,
+              "ci95": [
+                0.0275,
+                0.1149
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0667,
+              "pr_auc_mean_delta": 0.0677,
+              "pr_auc_ci95": [
+                0.0142,
+                0.1184
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8629,
+            "pr_auc": 0.7569,
+            "brier": 0.1413,
+            "mcc": 0.5124,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0386,
+              "mean_delta": 0.0394,
+              "ci95": [
+                0.0146,
+                0.0627
+              ],
+              "p_value": 0.008,
+              "p_value_display": "0.0080",
+              "point_delta_pr_auc": 0.074,
+              "pr_auc_mean_delta": 0.0748,
+              "pr_auc_ci95": [
+                0.0366,
+                0.1159
+              ],
+              "pr_auc_p_value": 0.002,
+              "pr_auc_p_value_display": "0.0020",
+              "p_value_holm_within_strata_family": 0.264
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8605,
+            "pr_auc": 0.7487,
+            "brier": 0.1425,
+            "mcc": 0.4838,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.041,
+              "mean_delta": 0.0417,
+              "ci95": [
+                0.0169,
+                0.0641
+              ],
+              "p_value": 0.006,
+              "p_value_display": "0.0060",
+              "point_delta_pr_auc": 0.0822,
+              "pr_auc_mean_delta": 0.0826,
+              "pr_auc_ci95": [
+                0.0471,
+                0.1219
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.204
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8598,
+            "pr_auc": 0.7444,
+            "brier": 0.1447,
+            "mcc": 0.4902,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0417,
+              "mean_delta": 0.0427,
+              "ci95": [
+                0.0124,
+                0.0694
+              ],
+              "p_value": 0.012,
+              "p_value_display": "0.0120",
+              "point_delta_pr_auc": 0.0866,
+              "pr_auc_mean_delta": 0.0876,
+              "pr_auc_ci95": [
+                0.0374,
+                0.1436
+              ],
+              "pr_auc_p_value": 0.002,
+              "pr_auc_p_value_display": "0.0020",
+              "p_value_holm_within_strata_family": 0.36
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8564,
+            "pr_auc": 0.7521,
+            "brier": 0.1425,
+            "mcc": 0.496,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0451,
+              "mean_delta": 0.0461,
+              "ci95": [
+                0.0213,
+                0.071
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0788,
+              "pr_auc_mean_delta": 0.0797,
+              "pr_auc_ci95": [
+                0.0383,
+                0.1291
+              ],
+              "pr_auc_p_value": 0.002,
+              "pr_auc_p_value_display": "0.0020",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 3141,
+            "n_pos": 1017,
+            "n_neg": 2124,
+            "pos_rate": 0.3238,
+            "n_clusters": 1127,
+            "roc_auc": 0.8575,
+            "pr_auc": 0.7499,
+            "brier": 0.1421,
+            "mcc": 0.5183,
+            "omni_same_subset_roc_auc": 0.9015,
+            "omni_same_subset_pr_auc": 0.8309,
+            "omni_same_subset_brier": 0.1135,
+            "paired_boot_vs_omni": {
+              "n_eval": 3141,
+              "n_clusters": 1127,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.044,
+              "mean_delta": 0.0446,
+              "ci95": [
+                0.0192,
+                0.0706
+              ],
+              "p_value": 0.002,
+              "p_value_display": "0.0020",
+              "point_delta_pr_auc": 0.0811,
+              "pr_auc_mean_delta": 0.081,
+              "pr_auc_ci95": [
+                0.0397,
+                0.1298
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.084
+            }
+          }
+        }
+      },
+      "gt40_all_canonical": {
+        "n": 89,
+        "n_pos": 46,
+        "n_neg": 43,
+        "pos_rate": 0.5169,
+        "n_clusters": 41,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.6769,
+          "pr_auc": 0.7218,
+          "brier": 0.2615
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.4285,
+            "pr_auc": 0.5173,
+            "brier": 0.2731,
+            "mcc": 0.1094,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.2485,
+              "mean_delta": 0.2357,
+              "ci95": [
+                0.0052,
+                0.4521
+              ],
+              "p_value": 0.04,
+              "p_value_display": "0.0400",
+              "point_delta_pr_auc": 0.2045,
+              "pr_auc_mean_delta": 0.192,
+              "pr_auc_ci95": [
+                0.0344,
+                0.3668
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.4472,
+            "pr_auc": 0.5194,
+            "brier": 0.2803,
+            "mcc": 0.1103,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.2298,
+              "mean_delta": 0.2158,
+              "ci95": [
+                0.0074,
+                0.4164
+              ],
+              "p_value": 0.044,
+              "p_value_display": "0.0440",
+              "point_delta_pr_auc": 0.2024,
+              "pr_auc_mean_delta": 0.1882,
+              "pr_auc_ci95": [
+                0.0285,
+                0.3749
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.5685,
+            "pr_auc": 0.5768,
+            "brier": 0.248,
+            "mcc": 0.1094,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.1084,
+              "mean_delta": 0.117,
+              "ci95": [
+                -0.0147,
+                0.2752
+              ],
+              "p_value": 0.072,
+              "p_value_display": "0.0720",
+              "point_delta_pr_auc": 0.145,
+              "pr_auc_mean_delta": 0.1395,
+              "pr_auc_ci95": [
+                -0.0185,
+                0.2929
+              ],
+              "pr_auc_p_value": 0.072,
+              "pr_auc_p_value_display": "0.0720",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.5508,
+            "pr_auc": 0.5809,
+            "brier": 0.2496,
+            "mcc": 0.1103,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.1261,
+              "mean_delta": 0.1484,
+              "ci95": [
+                -0.045,
+                0.3647
+              ],
+              "p_value": 0.158,
+              "p_value_display": "0.1580",
+              "point_delta_pr_auc": 0.1409,
+              "pr_auc_mean_delta": 0.1407,
+              "pr_auc_ci95": [
+                -0.0239,
+                0.3158
+              ],
+              "pr_auc_p_value": 0.102,
+              "pr_auc_p_value_display": "0.1020",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6969,
+            "pr_auc": 0.731,
+            "brier": 0.2785,
+            "mcc": -0.0051,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": -0.02,
+              "mean_delta": -0.011,
+              "ci95": [
+                -0.1301,
+                0.1037
+              ],
+              "p_value": 0.854,
+              "p_value_display": "0.8540",
+              "point_delta_pr_auc": -0.0092,
+              "pr_auc_mean_delta": 0.0008,
+              "pr_auc_ci95": [
+                -0.0999,
+                0.1074
+              ],
+              "pr_auc_p_value": 0.98,
+              "pr_auc_p_value_display": "0.9800",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6476,
+            "pr_auc": 0.6741,
+            "brier": 0.2608,
+            "mcc": 0.277,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0293,
+              "mean_delta": 0.0373,
+              "ci95": [
+                -0.0741,
+                0.1357
+              ],
+              "p_value": 0.452,
+              "p_value_display": "0.4520",
+              "point_delta_pr_auc": 0.0477,
+              "pr_auc_mean_delta": 0.0465,
+              "pr_auc_ci95": [
+                -0.0413,
+                0.1526
+              ],
+              "pr_auc_p_value": 0.306,
+              "pr_auc_p_value_display": "0.3060",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6413,
+            "pr_auc": 0.6911,
+            "brier": 0.2693,
+            "mcc": 0.2497,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0356,
+              "mean_delta": 0.039,
+              "ci95": [
+                -0.0262,
+                0.1015
+              ],
+              "p_value": 0.226,
+              "p_value_display": "0.2260",
+              "point_delta_pr_auc": 0.0307,
+              "pr_auc_mean_delta": 0.0292,
+              "pr_auc_ci95": [
+                -0.047,
+                0.1076
+              ],
+              "pr_auc_p_value": 0.42,
+              "pr_auc_p_value_display": "0.4200",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6615,
+            "pr_auc": 0.7347,
+            "brier": 0.2914,
+            "mcc": 0.3749,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0154,
+              "mean_delta": 0.0082,
+              "ci95": [
+                -0.1368,
+                0.117
+              ],
+              "p_value": 0.832,
+              "p_value_display": "0.8320",
+              "point_delta_pr_auc": -0.0128,
+              "pr_auc_mean_delta": -0.0103,
+              "pr_auc_ci95": [
+                -0.1121,
+                0.1052
+              ],
+              "pr_auc_p_value": 0.83,
+              "pr_auc_p_value_display": "0.8300",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.661,
+            "pr_auc": 0.6808,
+            "brier": 0.291,
+            "mcc": 0.3391,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0159,
+              "mean_delta": 0.0265,
+              "ci95": [
+                -0.0997,
+                0.1361
+              ],
+              "p_value": 0.622,
+              "p_value_display": "0.6220",
+              "point_delta_pr_auc": 0.041,
+              "pr_auc_mean_delta": 0.0397,
+              "pr_auc_ci95": [
+                -0.0346,
+                0.114
+              ],
+              "pr_auc_p_value": 0.258,
+              "pr_auc_p_value_display": "0.2580",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          }
+        }
+      },
+      "zero_overlap_novel": {
+        "n": 2334,
+        "n_pos": 573,
+        "n_neg": 1761,
+        "pos_rate": 0.2455,
+        "n_clusters": 1071,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.8867,
+          "pr_auc": 0.762,
+          "brier": 0.106
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8317,
+            "pr_auc": 0.6723,
+            "brier": 0.1764,
+            "mcc": 0.4425,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.055,
+              "mean_delta": 0.0554,
+              "ci95": [
+                0.0153,
+                0.0988
+              ],
+              "p_value": 0.01,
+              "p_value_display": "0.0100",
+              "point_delta_pr_auc": 0.0896,
+              "pr_auc_mean_delta": 0.0904,
+              "pr_auc_ci95": [
+                0.0202,
+                0.1581
+              ],
+              "pr_auc_p_value": 0.01,
+              "pr_auc_p_value_display": "0.0100",
+              "p_value_holm_within_strata_family": 0.31
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8337,
+            "pr_auc": 0.6746,
+            "brier": 0.1767,
+            "mcc": 0.4456,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.053,
+              "mean_delta": 0.0534,
+              "ci95": [
+                0.0143,
+                0.0973
+              ],
+              "p_value": 0.014,
+              "p_value_display": "0.0140",
+              "point_delta_pr_auc": 0.0874,
+              "pr_auc_mean_delta": 0.0881,
+              "pr_auc_ci95": [
+                0.0177,
+                0.1553
+              ],
+              "pr_auc_p_value": 0.01,
+              "pr_auc_p_value_display": "0.0100",
+              "p_value_holm_within_strata_family": 0.406
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8052,
+            "pr_auc": 0.6162,
+            "brier": 0.1882,
+            "mcc": 0.3956,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0814,
+              "mean_delta": 0.0822,
+              "ci95": [
+                0.0471,
+                0.1202
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.1458,
+              "pr_auc_mean_delta": 0.1461,
+              "pr_auc_ci95": [
+                0.0747,
+                0.2197
+              ],
+              "pr_auc_p_value": 0.002,
+              "pr_auc_p_value_display": "0.0020",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8065,
+            "pr_auc": 0.6183,
+            "brier": 0.1882,
+            "mcc": 0.3996,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0801,
+              "mean_delta": 0.0809,
+              "ci95": [
+                0.0452,
+                0.1177
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.1437,
+              "pr_auc_mean_delta": 0.1439,
+              "pr_auc_ci95": [
+                0.0725,
+                0.2168
+              ],
+              "pr_auc_p_value": 0.002,
+              "pr_auc_p_value_display": "0.0020",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8642,
+            "pr_auc": 0.7089,
+            "brier": 0.121,
+            "mcc": 0.5143,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0224,
+              "mean_delta": 0.0232,
+              "ci95": [
+                -0.0025,
+                0.0451
+              ],
+              "p_value": 0.08,
+              "p_value_display": "0.0800",
+              "point_delta_pr_auc": 0.053,
+              "pr_auc_mean_delta": 0.0541,
+              "pr_auc_ci95": [
+                0.0063,
+                0.1002
+              ],
+              "pr_auc_p_value": 0.032,
+              "pr_auc_p_value_display": "0.0320",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8631,
+            "pr_auc": 0.7027,
+            "brier": 0.1213,
+            "mcc": 0.5094,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0236,
+              "mean_delta": 0.0242,
+              "ci95": [
+                0.0013,
+                0.0451
+              ],
+              "p_value": 0.042,
+              "p_value_display": "0.0420",
+              "point_delta_pr_auc": 0.0593,
+              "pr_auc_mean_delta": 0.0594,
+              "pr_auc_ci95": [
+                0.0186,
+                0.101
+              ],
+              "pr_auc_p_value": 0.012,
+              "pr_auc_p_value_display": "0.0120",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.86,
+            "pr_auc": 0.7005,
+            "brier": 0.1229,
+            "mcc": 0.5106,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0267,
+              "mean_delta": 0.0273,
+              "ci95": [
+                -0.0036,
+                0.0531
+              ],
+              "p_value": 0.068,
+              "p_value_display": "0.0680",
+              "point_delta_pr_auc": 0.0614,
+              "pr_auc_mean_delta": 0.0623,
+              "pr_auc_ci95": [
+                0.0019,
+                0.1203
+              ],
+              "pr_auc_p_value": 0.046,
+              "pr_auc_p_value_display": "0.0460",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8572,
+            "pr_auc": 0.7084,
+            "brier": 0.1197,
+            "mcc": 0.5176,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0295,
+              "mean_delta": 0.0302,
+              "ci95": [
+                0.006,
+                0.052
+              ],
+              "p_value": 0.018,
+              "p_value_display": "0.0180",
+              "point_delta_pr_auc": 0.0536,
+              "pr_auc_mean_delta": 0.0546,
+              "pr_auc_ci95": [
+                0.0057,
+                0.1038
+              ],
+              "pr_auc_p_value": 0.036,
+              "pr_auc_p_value_display": "0.0360",
+              "p_value_holm_within_strata_family": 0.504
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 2334,
+            "n_pos": 573,
+            "n_neg": 1761,
+            "pos_rate": 0.2455,
+            "n_clusters": 1071,
+            "roc_auc": 0.8634,
+            "pr_auc": 0.7082,
+            "brier": 0.1183,
+            "mcc": 0.5503,
+            "omni_same_subset_roc_auc": 0.8867,
+            "omni_same_subset_pr_auc": 0.762,
+            "omni_same_subset_brier": 0.106,
+            "paired_boot_vs_omni": {
+              "n_eval": 2334,
+              "n_clusters": 1071,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0233,
+              "mean_delta": 0.024,
+              "ci95": [
+                0.0016,
+                0.0435
+              ],
+              "p_value": 0.038,
+              "p_value_display": "0.0380",
+              "point_delta_pr_auc": 0.0537,
+              "pr_auc_mean_delta": 0.0538,
+              "pr_auc_ci95": [
+                0.0062,
+                0.1027
+              ],
+              "pr_auc_p_value": 0.036,
+              "pr_auc_p_value_display": "0.0360",
+              "p_value_holm_within_strata_family": 0.988
+            }
+          }
+        }
+      },
+      "le40_zero_overlap_novel": {
+        "n": 2245,
+        "n_pos": 527,
+        "n_neg": 1718,
+        "pos_rate": 0.2347,
+        "n_clusters": 1033,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.8948,
+          "pr_auc": 0.7696,
+          "brier": 0.0999
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8348,
+            "pr_auc": 0.6773,
+            "brier": 0.1726,
+            "mcc": 0.4423,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.06,
+              "mean_delta": 0.0615,
+              "ci95": [
+                0.0184,
+                0.1104
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0923,
+              "pr_auc_mean_delta": 0.0941,
+              "pr_auc_ci95": [
+                0.017,
+                0.1717
+              ],
+              "pr_auc_p_value": 0.012,
+              "pr_auc_p_value_display": "0.0120",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8348,
+            "pr_auc": 0.6773,
+            "brier": 0.1726,
+            "mcc": 0.4423,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.06,
+              "mean_delta": 0.0615,
+              "ci95": [
+                0.0184,
+                0.1104
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.0923,
+              "pr_auc_mean_delta": 0.0941,
+              "pr_auc_ci95": [
+                0.017,
+                0.1717
+              ],
+              "pr_auc_p_value": 0.012,
+              "pr_auc_p_value_display": "0.0120",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8101,
+            "pr_auc": 0.6225,
+            "brier": 0.1858,
+            "mcc": 0.3951,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0847,
+              "mean_delta": 0.0863,
+              "ci95": [
+                0.0445,
+                0.1296
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.1471,
+              "pr_auc_mean_delta": 0.1484,
+              "pr_auc_ci95": [
+                0.0675,
+                0.2298
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8101,
+            "pr_auc": 0.6225,
+            "brier": 0.1858,
+            "mcc": 0.3951,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0847,
+              "mean_delta": 0.0863,
+              "ci95": [
+                0.0445,
+                0.1296
+              ],
+              "p_value": 0.001,
+              "p_value_display": "<=0.001",
+              "point_delta_pr_auc": 0.1471,
+              "pr_auc_mean_delta": 0.1484,
+              "pr_auc_ci95": [
+                0.0675,
+                0.2298
+              ],
+              "pr_auc_p_value": 0.001,
+              "pr_auc_p_value_display": "<=0.001",
+              "p_value_holm_within_strata_family": 0.054
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8715,
+            "pr_auc": 0.7178,
+            "brier": 0.1148,
+            "mcc": 0.545,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0234,
+              "mean_delta": 0.0237,
+              "ci95": [
+                -0.0036,
+                0.0477
+              ],
+              "p_value": 0.082,
+              "p_value_display": "0.0820",
+              "point_delta_pr_auc": 0.0518,
+              "pr_auc_mean_delta": 0.0526,
+              "pr_auc_ci95": [
+                0.0036,
+                0.1014
+              ],
+              "pr_auc_p_value": 0.036,
+              "pr_auc_p_value_display": "0.0360",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8681,
+            "pr_auc": 0.707,
+            "brier": 0.1157,
+            "mcc": 0.5236,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0267,
+              "mean_delta": 0.0268,
+              "ci95": [
+                0.0018,
+                0.0504
+              ],
+              "p_value": 0.04,
+              "p_value_display": "0.0400",
+              "point_delta_pr_auc": 0.0626,
+              "pr_auc_mean_delta": 0.0627,
+              "pr_auc_ci95": [
+                0.018,
+                0.1094
+              ],
+              "pr_auc_p_value": 0.004,
+              "pr_auc_p_value_display": "0.0040",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8665,
+            "pr_auc": 0.7053,
+            "brier": 0.1171,
+            "mcc": 0.5296,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0283,
+              "mean_delta": 0.0285,
+              "ci95": [
+                -0.0042,
+                0.0586
+              ],
+              "p_value": 0.086,
+              "p_value_display": "0.0860",
+              "point_delta_pr_auc": 0.0643,
+              "pr_auc_mean_delta": 0.0652,
+              "pr_auc_ci95": [
+                0.0017,
+                0.1261
+              ],
+              "pr_auc_p_value": 0.046,
+              "pr_auc_p_value_display": "0.0460",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.8672,
+            "pr_auc": 0.7151,
+            "brier": 0.1129,
+            "mcc": 0.5277,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0276,
+              "mean_delta": 0.0282,
+              "ci95": [
+                0.0036,
+                0.05
+              ],
+              "p_value": 0.03,
+              "p_value_display": "0.0300",
+              "point_delta_pr_auc": 0.0545,
+              "pr_auc_mean_delta": 0.0556,
+              "pr_auc_ci95": [
+                0.0061,
+                0.1063
+              ],
+              "pr_auc_p_value": 0.03,
+              "pr_auc_p_value_display": "0.0300",
+              "p_value_holm_within_strata_family": 0.81
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 2245,
+            "n_pos": 527,
+            "n_neg": 1718,
+            "pos_rate": 0.2347,
+            "n_clusters": 1033,
+            "roc_auc": 0.873,
+            "pr_auc": 0.7152,
+            "brier": 0.1114,
+            "mcc": 0.5631,
+            "omni_same_subset_roc_auc": 0.8948,
+            "omni_same_subset_pr_auc": 0.7696,
+            "omni_same_subset_brier": 0.0999,
+            "paired_boot_vs_omni": {
+              "n_eval": 2245,
+              "n_clusters": 1033,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0219,
+              "mean_delta": 0.0224,
+              "ci95": [
+                0.0008,
+                0.0434
+              ],
+              "p_value": 0.048,
+              "p_value_display": "0.0480",
+              "point_delta_pr_auc": 0.0544,
+              "pr_auc_mean_delta": 0.0544,
+              "pr_auc_ci95": [
+                0.0066,
+                0.1055
+              ],
+              "pr_auc_p_value": 0.028,
+              "pr_auc_p_value_display": "0.0280",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          }
+        }
+      },
+      "gt40_zero_overlap_novel": {
+        "n": 89,
+        "n_pos": 46,
+        "n_neg": 43,
+        "pos_rate": 0.5169,
+        "n_clusters": 41,
+        "Peptide_OmniPanel": {
+          "roc_auc": 0.6769,
+          "pr_auc": 0.7218,
+          "brier": 0.2615
+        },
+        "models": {
+          "HemoPI2_v1_3_Pretrained_ESM2t6_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.4285,
+            "pr_auc": 0.5173,
+            "brier": 0.2731,
+            "mcc": 0.1094,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.2485,
+              "mean_delta": 0.2357,
+              "ci95": [
+                0.0052,
+                0.4521
+              ],
+              "p_value": 0.04,
+              "p_value_display": "0.0400",
+              "point_delta_pr_auc": 0.2045,
+              "pr_auc_mean_delta": 0.192,
+              "pr_auc_ci95": [
+                0.0344,
+                0.3668
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ESM2t6_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.4472,
+            "pr_auc": 0.5194,
+            "brier": 0.2803,
+            "mcc": 0.1103,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.2298,
+              "mean_delta": 0.2158,
+              "ci95": [
+                0.0074,
+                0.4164
+              ],
+              "p_value": 0.044,
+              "p_value_display": "0.0440",
+              "point_delta_pr_auc": 0.2024,
+              "pr_auc_mean_delta": 0.1882,
+              "pr_auc_ci95": [
+                0.0285,
+                0.3749
+              ],
+              "pr_auc_p_value": 0.014,
+              "pr_auc_p_value_display": "0.0140",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.5685,
+            "pr_auc": 0.5768,
+            "brier": 0.248,
+            "mcc": 0.1094,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.1084,
+              "mean_delta": 0.117,
+              "ci95": [
+                -0.0147,
+                0.2752
+              ],
+              "p_value": 0.072,
+              "p_value_display": "0.0720",
+              "point_delta_pr_auc": 0.145,
+              "pr_auc_mean_delta": 0.1395,
+              "pr_auc_ci95": [
+                -0.0185,
+                0.2929
+              ],
+              "pr_auc_p_value": 0.072,
+              "pr_auc_p_value_display": "0.0720",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_Pretrained_ML_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.5508,
+            "pr_auc": 0.5809,
+            "brier": 0.2496,
+            "mcc": 0.1103,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.1261,
+              "mean_delta": 0.1484,
+              "ci95": [
+                -0.045,
+                0.3647
+              ],
+              "p_value": 0.158,
+              "p_value_display": "0.1580",
+              "point_delta_pr_auc": 0.1409,
+              "pr_auc_mean_delta": 0.1407,
+              "pr_auc_ci95": [
+                -0.0239,
+                0.3158
+              ],
+              "pr_auc_p_value": 0.102,
+              "pr_auc_p_value_display": "0.1020",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_OfficialTrunc40": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6969,
+            "pr_auc": 0.731,
+            "brier": 0.2785,
+            "mcc": -0.0051,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": -0.02,
+              "mean_delta": -0.011,
+              "ci95": [
+                -0.1301,
+                0.1037
+              ],
+              "p_value": 0.854,
+              "p_value_display": "0.8540",
+              "point_delta_pr_auc": -0.0092,
+              "pr_auc_mean_delta": 0.0008,
+              "pr_auc_ci95": [
+                -0.0999,
+                0.1074
+              ],
+              "pr_auc_p_value": 0.98,
+              "pr_auc_p_value_display": "0.9800",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_Retrained_RF_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6476,
+            "pr_auc": 0.6741,
+            "brier": 0.2608,
+            "mcc": 0.277,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0293,
+              "mean_delta": 0.0373,
+              "ci95": [
+                -0.0741,
+                0.1357
+              ],
+              "p_value": 0.452,
+              "p_value_display": "0.4520",
+              "point_delta_pr_auc": 0.0477,
+              "pr_auc_mean_delta": 0.0465,
+              "pr_auc_ci95": [
+                -0.0413,
+                0.1526
+              ],
+              "pr_auc_p_value": 0.306,
+              "pr_auc_p_value_display": "0.3060",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_ExtraTrees_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6413,
+            "pr_auc": 0.6911,
+            "brier": 0.2693,
+            "mcc": 0.2497,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0356,
+              "mean_delta": 0.039,
+              "ci95": [
+                -0.0262,
+                0.1015
+              ],
+              "p_value": 0.226,
+              "p_value_display": "0.2260",
+              "point_delta_pr_auc": 0.0307,
+              "pr_auc_mean_delta": 0.0292,
+              "pr_auc_ci95": [
+                -0.047,
+                0.1076
+              ],
+              "pr_auc_p_value": 0.42,
+              "pr_auc_p_value_display": "0.4200",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_LightGBM_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.6615,
+            "pr_auc": 0.7347,
+            "brier": 0.2914,
+            "mcc": 0.3749,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0154,
+              "mean_delta": 0.0082,
+              "ci95": [
+                -0.1368,
+                0.117
+              ],
+              "p_value": 0.832,
+              "p_value_display": "0.8320",
+              "point_delta_pr_auc": -0.0128,
+              "pr_auc_mean_delta": -0.0103,
+              "pr_auc_ci95": [
+                -0.1121,
+                0.1052
+              ],
+              "pr_auc_p_value": 0.83,
+              "pr_auc_p_value_display": "0.8300",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          },
+          "HemoPI2_v1_3_SameSplit_XGBoost_FullLength": {
+            "n": 89,
+            "n_pos": 46,
+            "n_neg": 43,
+            "pos_rate": 0.5169,
+            "n_clusters": 41,
+            "roc_auc": 0.661,
+            "pr_auc": 0.6808,
+            "brier": 0.291,
+            "mcc": 0.3391,
+            "omni_same_subset_roc_auc": 0.6769,
+            "omni_same_subset_pr_auc": 0.7218,
+            "omni_same_subset_brier": 0.2615,
+            "paired_boot_vs_omni": {
+              "n_eval": 89,
+              "n_clusters": 41,
+              "n_boot_valid": 1000,
+              "metric": "delta_roc_auc (Omni - Base)",
+              "point_delta_roc_auc": 0.0159,
+              "mean_delta": 0.0265,
+              "ci95": [
+                -0.0997,
+                0.1361
+              ],
+              "p_value": 0.622,
+              "p_value_display": "0.6220",
+              "point_delta_pr_auc": 0.041,
+              "pr_auc_mean_delta": 0.0397,
+              "pr_auc_ci95": [
+                -0.0346,
+                0.114
+              ],
+              "pr_auc_p_value": 0.258,
+              "pr_auc_p_value_display": "0.2580",
+              "p_value_holm_within_strata_family": 1.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "updated_global_holm_bonferroni_ledger": {
+    "method": "Holm-Bonferroni step-down across v33.6 external baseline comparisons (21) + newly recovered HemoPI2-ML comparisons",
+    "n_comparisons_total": 28,
+    "p_floor_note": "With 1,000 paired cluster-bootstrap replicates, p_value=0.001 denotes p <= 0.001.",
+    "raw_pvalues": {
+      "PAMPA::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.94,
+      "PAMPA::Internal_QSAR_Morgan_RDKit2D_RF": 0.03,
+      "PAMPA::Internal_SingleFM_ChemBERTa_MTR": 0.001,
+      "PAMPA::Internal_SingleFM_ESMC_600M": 0.001,
+      "PAMPA::Internal_SingleFM_PeptideCLM2": 0.001,
+      "PAMPA::Published_CycPeptMP_2DSVM_SameSplit": 0.076,
+      "PAMPA::Published_CycPeptMP_RF750_SameSplit": 0.072,
+      "PAMPA::Published_MultiCycGT_SVM_Tanimoto_SameSplit": 0.001,
+      "half_life_reg::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.024,
+      "half_life_reg::Internal_QSAR_Morgan_RDKit2D_RF": 0.004,
+      "half_life_reg::Internal_SingleFM_ChemBERTa_MTR": 0.002,
+      "half_life_reg::Internal_SingleFM_ESMC_600M": 0.001,
+      "half_life_reg::Internal_SingleFM_PeptideCLM2": 0.012,
+      "half_life_reg::Published_PLifePred_AAC_DPC_SVR_SameSplit": 0.01,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_AllCanonical": 0.001,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_ZeroOverlapNovel": 0.004,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_AllCanonical": 0.002,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_ZeroOverlapNovel": 0.001,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_ExtraTrees": 0.016,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_LightGBM": 0.002,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF": 0.01,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF_FullLength": 0.004,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_XGBoost": 0.002,
+      "hemolysis_cls::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.004,
+      "hemolysis_cls::Internal_QSAR_Morgan_RDKit2D_RF": 0.006,
+      "hemolysis_cls::Internal_SingleFM_ChemBERTa_MTR": 0.001,
+      "hemolysis_cls::Internal_SingleFM_ESMC_600M": 0.001,
+      "hemolysis_cls::Internal_SingleFM_PeptideCLM2": 0.001
+    },
+    "holm_adjusted_pvalues": {
+      "PAMPA::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.94,
+      "PAMPA::Internal_QSAR_Morgan_RDKit2D_RF": 0.12,
+      "PAMPA::Internal_SingleFM_ChemBERTa_MTR": 0.028,
+      "PAMPA::Internal_SingleFM_ESMC_600M": 0.028,
+      "PAMPA::Internal_SingleFM_PeptideCLM2": 0.028,
+      "PAMPA::Published_CycPeptMP_2DSVM_SameSplit": 0.216,
+      "PAMPA::Published_CycPeptMP_RF750_SameSplit": 0.216,
+      "PAMPA::Published_MultiCycGT_SVM_Tanimoto_SameSplit": 0.028,
+      "half_life_reg::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.12,
+      "half_life_reg::Internal_QSAR_Morgan_RDKit2D_RF": 0.056,
+      "half_life_reg::Internal_SingleFM_ChemBERTa_MTR": 0.036,
+      "half_life_reg::Internal_SingleFM_ESMC_600M": 0.028,
+      "half_life_reg::Internal_SingleFM_PeptideCLM2": 0.09,
+      "half_life_reg::Published_PLifePred_AAC_DPC_SVR_SameSplit": 0.09,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_AllCanonical": 0.028,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ESM2t6_ZeroOverlapNovel": 0.056,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_AllCanonical": 0.036,
+      "hemolysis_cls::HemoPI2_v1_3_Pretrained_ML_ZeroOverlapNovel": 0.028,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_ExtraTrees": 0.096,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_LightGBM": 0.036,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF": 0.09,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_RF_FullLength": 0.056,
+      "hemolysis_cls::HemoPI2_v1_3_SameSplit_Retrained_ML_XGBoost": 0.036,
+      "hemolysis_cls::Internal_QSAR_Morgan_RDKit2D_LGBM": 0.056,
+      "hemolysis_cls::Internal_QSAR_Morgan_RDKit2D_RF": 0.06,
+      "hemolysis_cls::Internal_SingleFM_ChemBERTa_MTR": 0.028,
+      "hemolysis_cls::Internal_SingleFM_ESMC_600M": 0.028,
+      "hemolysis_cls::Internal_SingleFM_PeptideCLM2": 0.028
+    }
+  },
+  "published_platform_comparison": {
+    "disclaimer": "Architectural and capability ledger compiled from published papers and public repositories. No fabricated cross-platform benchmark scores are reported where identical splits or public pretrained inference weights are unavailable; same-split empirical benchmarks are reported separately for HemoPI2 v1.3, CycPeptMP, Multi_CycGT, and PLifePred.",
+    "platforms": {
+      "Peptide_OmniPanel_v3_4": {
+        "citation": "Peptide OmniPanel 1.4 / Engine v34 (This Work, 2026)",
+        "input_modalities": [
+          "Canonical 1-letter linear peptide sequence",
+          "Arbitrary SMILES (cyclic/macrocyclic, N-methylated, D-amino acids, disulfide, stapled, lipidated/PEGylated NCAAs)",
+          "HELM / name lookup with automatic sequence-to-SMILES canonicalization"
+        ],
+        "model_architecture": "4-Foundation-Model Multimodal Super-Ensemble (NCAA-RepDistill-v2 + PeptideCLM-2 + ChemBERTa-MTR + ESM-C 600M) + CPU Tanimoto-KRR/SVR/LGBM/ET + Domain-MTL / Deep branches with strictly nested OOF simplex stacking and zero-holdout-peeking promotion",
+        "n_endpoints": 47,
+        "endpoint_domains": {
+          "permeability_lipophilicity": [
+            "PAMPA",
+            "Caco2",
+            "MDCK",
+            "RRCK",
+            "efflux_ratio",
+            "BBB",
+            "LogD7.4",
+            "LogD_decadiene"
+          ],
+          "systemic_clinical_pk": [
+            "half_life_reg",
+            "half_life_cls",
+            "CL_absolute",
+            "CL_per_kg",
+            "Vd_absolute",
+            "Vd_per_kg",
+            "PPB",
+            "F",
+            "Cmax"
+          ],
+          "toxicity_hemolysis": [
+            "hemolysis_cls",
+            "hemolysis_HC50",
+            "hemolysis_MHC",
+            "cytotoxicity_cls",
+            "cytotoxicity_CC50",
+            "overall_peptide_toxicity"
+          ],
+          "solubility": [
+            "solubility_cls",
+            "solubility_reg"
+          ],
+          "antimicrobial_biofilm_mic_mbc": "22 pathogen-specific MIC / MBC / MBIC / MBEC / MFC / LC endpoints"
+        },
+        "uncertainty_and_ad": "Mondrian Tanimoto AD tiers + cluster-weighted split-conformal 80%/90% intervals + Platt probability calibration + 3-tier CI-aware evidence grading (20 quantitative / 26 rank_only / 1 exploratory_not_recommended)",
+        "interpretability": "Direct production-ensemble perturbation attribution across all 47 endpoints (residue Ala/Gly masking + RDKit-valid chemical substituent pruning) + fidelity-audited E-GAT on 8 endpoints",
+        "design_and_decision_tools": "PeptideOpt multi-objective Pareto analog generator (5 strategies) + Batch Screening with 4-pillar Peptide-MPO [0-100] + 57-product FDA/DailyMed clinical PK reference & approved-peptide percentile context",
+        "public_web_server_and_api": "Live web server + FastAPI REST API + open-source code"
+      },
+      "pepADMET": {
+        "citation": "pepADMET (J. Chem. Inf. Model., 2024/2025)",
+        "input_modalities": [
+          "Peptide SMILES / molecular graph (supports modified and cyclic peptides where SMILES provided)"
+        ],
+        "model_architecture": "Graph neural network / molecular fingerprint ML predictors trained per ADMET property",
+        "n_endpoints": "Focused multi-endpoint peptide ADMET panel (primarily membrane permeability such as PAMPA/Caco-2, lipophilicity/solubility, toxicity/hemolysis, and selected PK/stability properties; narrower than 47 endpoints and without 22 pathogen-specific antimicrobial/biofilm endpoints)",
+        "endpoint_domains": {
+          "permeability_lipophilicity": "Core focus (e.g., PAMPA / Caco-2 / lipophilicity)",
+          "systemic_clinical_pk": "Limited coverage (typically lacks full human clinical CL/Vd/F/Cmax/PPB regulatory panel)",
+          "toxicity_hemolysis": "Selected hemolytic/toxicity classification tasks",
+          "antimicrobial_biofilm_mic_mbc": "Not a primary antimicrobial MIC/MBC/biofilm suite"
+        },
+        "uncertainty_and_ad": "Standard point predictions; lacks Mondrian cluster-weighted conformal intervals and CI-aware 3-tier evidence grading",
+        "interpretability": "Substructure/attention visualization where supported; no production-ensemble perturbation across 47 endpoints",
+        "design_and_decision_tools": "ADMET prediction focus; does not bundle FDA DailyMed regulatory PK percentile lookup + 5-strategy Pareto PeptideOpt + 4-pillar Peptide-MPO batch screening",
+        "public_web_server_and_api": "Published web/tool platform; pretrained weights/endpoints not directly drop-in runnable on our frozen 47-endpoint cluster-split benchmark without re-implementation"
+      },
+      "PeptiVerse": {
+        "citation": "PeptiVerse (Nature Communications, 2025)",
+        "input_modalities": [
+          "Canonical and modified peptide sequence / SMILES representations (unified peptide foundation/representation framework)"
+        ],
+        "model_architecture": "Peptide foundation / multi-property deep learning framework covering therapeutic peptide property prediction and discovery",
+        "n_endpoints": "Broad therapeutic peptide property & bioactivity benchmarks (permeability, toxicity/hemolysis, half-life/stability, antimicrobial/therapeutic activity)",
+        "endpoint_domains": {
+          "permeability_lipophilicity": "Included (macrocycle permeability benchmarks such as CycPeptMPDB)",
+          "systemic_clinical_pk": "Half-life / stability emphasis; lacks dedicated human FDA/DailyMed clinical CL/Vd/PPB/F/Cmax PK panel with approved-peptide percentile context",
+          "toxicity_hemolysis": "Included (hemolysis / toxicity classification)",
+          "antimicrobial_biofilm_mic_mbc": "General antimicrobial activity rather than 22 quantitative pathogen-stratified MIC/MBC/biofilm regression endpoints"
+        },
+        "uncertainty_and_ad": "Point-estimate benchmarking; lacks Mondrian Tanimoto AD-stratified conformal UQ and explicit failure-mode grading (`exploratory_not_recommended`)",
+        "interpretability": "Representation/embedding analysis; lacks unified direct ensemble perturbation attribution across all 47 ADMET/PK/MIC endpoints",
+        "design_and_decision_tools": "Property prediction & peptide representation learning; lacks integrated clinical PK evidence index + approved-peptide percentiles + interactive Pareto PeptideOpt web workbench",
+        "public_web_server_and_api": "Published benchmark/codebase; separate task definitions and splits prevent zero-leakage off-the-shelf scoring on our frozen cluster-grouped holdouts without retraining"
+      }
+    },
+    "same_split_published_tools_evaluated_empirically": [
+      "HemoPI2 v1.3 (Rathore et al., Protein Sci. 2025; GPL-3.0) — pretrained ML (fixed sk1.3.1), same-split retrained ML family (RF/ET/LGBM/XGB on exact 1,190 HemoPI2 features), and pretrained ESM2-t6 (truncated <=40 aa & untruncated)",
+      "CycPeptMP / CycPeptMPDB baseline configs (Li et al., Brief. Bioinform. 2024; MIT) — RF-750 & 2D-SVM retrained on identical PAMPA split",
+      "Multi_CycGT baseline config (Cao et al., JCIM 2024; GPL-3.0) — Tanimoto-kernel SVR retrained on identical PAMPA split",
+      "PLifePred-style AAC+DPC+PhysChem RBF-SVR (Mathur et al., Sci. Rep. 2018) — retrained on identical half_life_reg split"
+    ]
+  }
+}

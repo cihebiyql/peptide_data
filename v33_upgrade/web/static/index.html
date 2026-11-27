@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Peptide OmniPanel · 多肽全端点性质预测平台</title>
-  <link rel="stylesheet" href="static/styles.css?v=1.4" />
+  <link rel="stylesheet" href="static/styles.css?v=1.4.5" />
 </head>
 <body>
   <!-- Clean Top Navigation Bar (56px) -->
@@ -20,12 +20,13 @@
           <circle cx="14" cy="14" r="2.1" fill="var(--cobalt)"/>
         </svg>
         <span class="brand-name">Omni<strong>Panel</strong></span>
-        <span class="brand-ver">v1.3</span>
+        <span class="brand-ver">v1.4</span>
       </a>
 
       <nav class="main-nav" role="tablist" aria-label="Primary Workspace">
         <button class="nav-tab active" data-tab="predict" role="tab" aria-selected="true" data-i18n="nav_predict">单分子预测</button>
-        <button class="nav-tab" data-tab="batch" role="tab" aria-selected="false" data-i18n="nav_batch">批量筛选</button>
+        <button class="nav-tab" data-tab="opt" role="tab" aria-selected="false" data-i18n="nav_opt">改构优化</button>
+        <button class="nav-tab" data-tab="batch" role="tab" aria-selected="false" data-i18n="nav_batch">批量与 MPO</button>
         <button class="nav-tab" data-tab="tasks" role="tab" aria-selected="false">
           <span data-i18n="nav_tasks">任务中心</span>
           <span id="nav-tasks-badge" class="nav-badge hidden">0</span>
@@ -420,9 +421,11 @@
                 </button>
               </div>
             </div>
+            <div class="svg-attr-mode-bar hidden" id="svg-attr-mode-bar" role="group" aria-label="Attribution Method"></div>
             <div class="svg-attr-bar hidden" id="svg-attr-bar" role="group" aria-label="Atom Attribution Endpoint"></div>
             <div class="svg-stage" id="mol-svg-stage"></div>
             <div class="svg-legend" id="mol-svg-legend"></div>
+            <div class="svg-attr-impacts hidden" id="svg-attr-impacts"></div>
           </div>
 
           <div class="card profile-card">
@@ -480,7 +483,85 @@
       </div>
     </section>
 
-    <!-- ==================== VIEW 2: BATCH SCREENING ==================== -->
+    <!-- ==================== VIEW 1B: PEPTIDE-OPT WORKBENCH ==================== -->
+    <section id="view-opt" class="view-section">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title" data-i18n="opt_title">PeptideOpt 多目标多肽改构优化工作台</h1>
+          <p class="page-sub" data-i18n="opt_sub"></p>
+        </div>
+      </div>
+
+      <div class="card opt-config-card">
+        <div class="opt-input-row">
+          <div class="opt-input-col">
+            <label class="field-label" for="opt-query-input" data-i18n="opt_input_lbl">母体多肽（药物名 / 20AA 序列 / SMILES）</label>
+            <input type="text" id="opt-query-input" class="text-input-sm opt-query-input" data-i18n-ph="opt_input_ph" placeholder="输入药物名（如 Octreotide）、20AA 序列或共价 SMILES…" value="Octreotide" />
+            <div class="opt-quick-row">
+              <span class="examples-label" data-i18n="opt_quick_lbl">快捷母体：</span>
+              <button type="button" class="example-pill opt-quick-btn" data-opt-q="Octreotide">Octreotide <span class="pill-tag">S–S</span></button>
+              <button type="button" class="example-pill opt-quick-btn" data-opt-q="Cyclosporine A">Cyclosporine A <span class="pill-tag">Cyclic</span></button>
+              <button type="button" class="example-pill opt-quick-btn" data-opt-q="Liraglutide">Liraglutide <span class="pill-tag">GLP-1</span></button>
+              <button type="button" class="example-pill opt-quick-btn" data-opt-q="HISEAVKIFGCKWKENWKWNSNC">Classic AMP <span class="pill-tag">23AA</span></button>
+            </div>
+          </div>
+
+          <div class="opt-obj-col">
+            <div class="opt-obj-box">
+              <label class="field-label" for="opt-obj-x-ep" data-i18n="opt_obj_x_lbl">X 轴优化目标</label>
+              <div class="opt-obj-pair">
+                <select id="opt-obj-x-ep" class="select-sm opt-ep-select"></select>
+                <select id="opt-obj-x-dir" class="select-sm opt-dir-select">
+                  <option value="max" data-i18n="opt_dir_max">最大化 ↑</option>
+                  <option value="min" data-i18n="opt_dir_min">最小化 ↓</option>
+                </select>
+              </div>
+            </div>
+            <div class="opt-obj-box">
+              <label class="field-label" for="opt-obj-y-ep" data-i18n="opt_obj_y_lbl">Y 轴优化目标</label>
+              <div class="opt-obj-pair">
+                <select id="opt-obj-y-ep" class="select-sm opt-ep-select"></select>
+                <select id="opt-obj-y-dir" class="select-sm opt-dir-select">
+                  <option value="max" data-i18n="opt_dir_max">最大化 ↑</option>
+                  <option value="min" data-i18n="opt_dir_min">最小化 ↓</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="opt-strat-row">
+          <div class="opt-strat-group">
+            <span class="field-label" style="margin:0 8px 0 0;" data-i18n="opt_strat_lbl">改构策略（可多选）</span>
+            <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="ala_scan" checked /><span data-i18n="opt_strat_ala">丙氨酸扫描 (Ala Scan)</span></label>
+            <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="point_mutation" checked /><span data-i18n="opt_strat_mut">极性/电荷定点突变</span></label>
+            <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="n_methylation" checked /><span data-i18n="opt_strat_nmeth">骨架 N-甲基化</span></label>
+            <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="cyclization" checked /><span data-i18n="opt_strat_cyc">头尾/二硫键环化</span></label>
+            <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="lipidation_c16_c18" checked /><span data-i18n="opt_strat_lip">C16/C18 脂化长效</span></label>
+          </div>
+          <div class="opt-run-controls">
+            <label class="opt-max-lbl">
+              <span data-i18n="opt_max_var_lbl">最大变体数</span>:
+              <select id="opt-max-variants" class="select-sm">
+                <option value="12">12</option>
+                <option value="20" selected>20</option>
+                <option value="28">28</option>
+                <option value="32">32</option>
+              </select>
+            </label>
+            <button type="button" id="btn-run-opt" class="btn-primary">
+              <span class="btn-label" data-i18n="opt_btn_run">运行多目标改构优化</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <div id="opt-error" class="alert-error hidden" role="alert"></div>
+      </div>
+
+      <div id="opt-results-host" class="hidden"></div>
+    </section>
+
+    <!-- ==================== VIEW 2: BATCH SCREENING & PEPTIDE-MPO ==================== -->
     <section id="view-batch" class="view-section">
       <div class="section-header">
         <div>
@@ -521,6 +602,62 @@
             placeholder="name,query&#10;Semaglutide,Semaglutide&#10;Cyclosporine A,Cyclosporine A&#10;Classic AMP,HISEAVKIFGCKWKENWKWNSNC"
           ></textarea>
 
+          <!-- Peptide-MPO Interactive Weight Controls -->
+          <div class="mpo-config-box">
+            <div class="mpo-config-head">
+              <div>
+                <strong data-i18n="mpo_panel_title">Peptide-MPO 多参数成药性权重配置</strong>
+                <span class="mpo-config-sub" data-i18n="mpo_panel_sub"></span>
+              </div>
+              <div class="mpo-preset-pills">
+                <button type="button" class="filter-chip active mpo-preset-btn" data-mpo-preset="balanced" data-i18n="mpo_preset_bal">均衡默认</button>
+                <button type="button" class="filter-chip mpo-preset-btn" data-mpo-preset="oral" data-i18n="mpo_preset_oral">口服/大环渗透</button>
+                <button type="button" class="filter-chip mpo-preset-btn" data-mpo-preset="long_acting" data-i18n="mpo_preset_la">长效注射</button>
+                <button type="button" class="filter-chip mpo-preset-btn" data-mpo-preset="amp_safe" data-i18n="mpo_preset_amp">抗菌安全优先</button>
+              </div>
+            </div>
+            <div class="mpo-sliders-grid">
+              <div class="mpo-slider-item">
+                <div class="mpo-slider-top">
+                  <label for="mpo-w-perm" data-i18n="mpo_w_perm">膜渗透 (Permeability)</label>
+                  <span class="mono mpo-w-pct" id="mpo-w-perm-val">25%</span>
+                </div>
+                <input type="range" id="mpo-w-perm" class="mpo-range" min="0" max="100" step="5" value="25" />
+              </div>
+              <div class="mpo-slider-item">
+                <div class="mpo-slider-top">
+                  <label for="mpo-w-hl" data-i18n="mpo_w_hl">半衰期 (Half-Life)</label>
+                  <span class="mono mpo-w-pct" id="mpo-w-hl-val">25%</span>
+                </div>
+                <input type="range" id="mpo-w-hl" class="mpo-range" min="0" max="100" step="5" value="25" />
+              </div>
+              <div class="mpo-slider-item">
+                <div class="mpo-slider-top">
+                  <label for="mpo-w-hem" data-i18n="mpo_w_hem">低溶血 (Low Hemolysis)</label>
+                  <span class="mono mpo-w-pct" id="mpo-w-hem-val">25%</span>
+                </div>
+                <input type="range" id="mpo-w-hem" class="mpo-range" min="0" max="100" step="5" value="25" />
+              </div>
+              <div class="mpo-slider-item">
+                <div class="mpo-slider-top">
+                  <label for="mpo-w-tox" data-i18n="mpo_w_tox">低毒性 (Low Toxicity)</label>
+                  <span class="mono mpo-w-pct" id="mpo-w-tox-val">25%</span>
+                </div>
+                <input type="range" id="mpo-w-tox" class="mpo-range" min="0" max="100" step="5" value="25" />
+              </div>
+            </div>
+            <div class="mpo-toggles-row">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="mpo-penalize-ood" checked />
+                <span data-i18n="mpo_penalize_ood">适用域外 (OOD) 自动扣分</span>
+              </label>
+              <label class="checkbox-inline">
+                <input type="checkbox" id="mpo-weight-grade" checked />
+                <span data-i18n="mpo_weight_grade">按证据等级 (Evidence Grade) 加权</span>
+              </label>
+            </div>
+          </div>
+
           <div class="batch-controls">
             <div class="batch-cond-inline">
               <label><span data-i18n="batch_rbc_lbl">红细胞物种：</span>
@@ -535,7 +672,13 @@
                 <span data-i18n="batch_tier2_lbl">包含 Tier 2 抗菌与生物膜端点</span>
               </label>
             </div>
-            <button type="button" id="btn-run-batch" class="btn-primary" data-i18n="btn_submit_batch">提交批量预测任务</button>
+            <div class="batch-submit-group">
+              <button type="button" id="btn-run-batch-mpo" class="btn-primary">
+                <span class="btn-label" data-i18n="mpo_btn_run">运行 Peptide-MPO 排名筛选</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+              <button type="button" id="btn-run-batch" class="btn-ghost" data-i18n="btn_submit_batch">提交批量预测任务</button>
+            </div>
           </div>
 
           <div id="batch-active-banner" class="batch-active-banner hidden">
@@ -575,6 +718,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Peptide-MPO Ranked Leaderboard Host (POST /api/v1/batch-screen) -->
+      <div id="batch-mpo-results-host" class="hidden"></div>
 
       <!-- Live Batch Result Workspace (rendered via unified Task Inspector!) -->
       <div id="batch-results-host" class="hidden"></div>
@@ -673,6 +819,18 @@
         <div id="val-case17-readout" class="c17-readout"></div>
       </div>
 
+      <!-- Hard-Audit Benchmarks: Published Tools, FDA 2019-2023 Blind Set & Prospective Temporal Splits -->
+      <div id="val-hard-audit-section" class="val-hard-audit-section">
+        <div class="val-audit-header">
+          <span class="landing-kicker" data-i18n="val_audit_kicker">EXTERNAL & PROSPECTIVE HARD-AUDIT BENCHMARKS</span>
+          <h2 class="landing-sec-title" data-i18n="val_audit_title">外部同划分基准、FDA 2019–2023 盲测与前瞻时间切分审计</h2>
+          <p class="val-audit-sub" data-i18n="val_audit_sub"></p>
+        </div>
+        <div id="val-ext-baselines-card" class="card val-audit-card"></div>
+        <div id="val-fda-blind-card" class="card val-audit-card"></div>
+        <div id="val-temporal-card" class="card val-audit-card"></div>
+      </div>
+
       <div class="card val-table-card">
         <div class="val-toolbar">
           <div class="seg-group" id="val-tier-filter">
@@ -759,6 +917,21 @@
             </div>
             <div class="api-ep-item">
               <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/peptide-opt</code>
+              <span class="api-desc" data-i18n="api_desc_opt"></span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/batch-screen</code>
+              <span class="api-desc" data-i18n="api_desc_batch_screen"></span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/direct-attribution</code>
+              <span class="api-desc" data-i18n="api_desc_direct_attr"></span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
               <code class="api-path">api/v1/atom-attribution</code>
               <span class="api-desc" data-i18n="api_desc_attr"></span>
             </div>
@@ -800,6 +973,9 @@
             <select id="api-preset-select" class="select-sm">
               <option value="predict_sema">POST api/v1/predict — Semaglutide</option>
               <option value="predict_mica">POST api/v1/predict — Micafungin</option>
+              <option value="peptide_opt_oct">POST api/v1/peptide-opt — Octreotide (PAMPA vs T½)</option>
+              <option value="batch_screen_demo">POST api/v1/batch-screen — Peptide-MPO Ranking</option>
+              <option value="direct_attr_pampa">POST api/v1/direct-attribution — Cyclosporine A (PAMPA)</option>
               <option value="clinical_sema">GET api/v1/clinical-evidence — Semaglutide (FDA/EMA PK)</option>
               <option value="atom_attr_csa">POST api/v1/atom-attribution — Cyclosporine A (PAMPA)</option>
               <option value="render_csa">POST api/v1/render-svg — Cyclosporine A</option>
@@ -845,6 +1021,6 @@
     </div>
   </div>
 
-  <script type="module" src="static/app.js?v=1.4"></script>
+  <script type="module" src="static/app.js?v=1.4.5"></script>
 </body>
 </html>

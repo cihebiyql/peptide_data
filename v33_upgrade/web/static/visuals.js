@@ -374,15 +374,15 @@ export const ADMET_HOTSPOTS = {
     badge_en: "Albumin Binding & Circulation",
     title_zh: "长效脂化半衰期与血浆蛋白结合",
     title_en: "Albumin-Anchored Half-Life (T½) & PPB",
-    desc_zh: "融合给药途径路由与 C14–C20 脂肪酸白蛋白结合机制锚定，在 17 个经典临床多肽上达到 Spearman 0.903 与对数 R² 0.781。",
-    desc_en: "Combines route-aware PK modeling with C14–C20 fatty-acylation anchoring, achieving Spearman 0.903 and R² 0.781 across 17 clinical peptides.",
+    desc_zh: "融合给药途径路由与 C14–C20 脂肪酸白蛋白结合机制锚定，在 16 个临床多肽纯 ML 半衰期上达到 Spearman 0.894 与对数 R² 0.771。",
+    desc_en: "Combines route-aware PK modeling with C14–C20 fatty-acylation anchoring, achieving Pure-ML Spearman 0.894 and R² 0.771 across 16 clinical peptides.",
     endpoints: ["half_life_reg", "half_life_cls", "PPB"],
     sampleQuery: "Semaglutide",
     sampleLabel_zh: "司美格鲁肽 (Semaglutide)",
     sampleLabel_en: "Semaglutide (C18 Diacid)",
     highlightStat: (epMap, c17, lang) => {
-      const sp = c17?.half_life_pure_ml_route_matched_log10?.spearman;
-      return sp != null ? (lang === "zh" ? `17 药 ρ ${Number(sp).toFixed(3)}` : `17-Case ρ ${Number(sp).toFixed(3)}`) : "17-Case ρ 0.903";
+      const sp = c17?.non_circular_separation?.pure_ml_all_16?.spearman ?? c17?.half_life_pure_ml_route_matched_log10?.spearman;
+      return sp != null ? (lang === "zh" ? `16 药 ρ ${Number(sp).toFixed(3)}` : `16-Case ρ ${Number(sp).toFixed(3)}`) : "16-Case ρ 0.894";
     },
   },
   gut: {

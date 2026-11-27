@@ -1,8 +1,15 @@
 {
-  "release_version": "Peptide OmniPanel 1.3 / Engine v33.6",
-  "updated_at": "2026-11-26",
+  "release_version": "Peptide OmniPanel 1.4 / Engine v33.6 + v34",
+  "updated_at": "2026-11-27",
   "scope": "internal_research_only",
-  "data_redistribution_policy": "Zero row-level third-party observation tables redistributed. Aggregate corpus statistics and factual NLM DailyMed/FDA regulatory PK pointers only (see DATA_LICENSES.md and NOTICE).",
+  "data_redistribution_policy": "Zero row-level third-party observation tables redistributed. Aggregate corpus statistics and 57 deduplicated factual NLM DailyMed/FDA regulatory PK pointers only (see DATA_LICENSES.md and NOTICE).",
+  "v34_highlights": [
+    "57 deduplicated FDA-approved peptide products (413 unique factual PK records; 399 exact DailyMed SPL setid URLs) + approved-peptide clinical percentiles across all 47 endpoints",
+    "PeptideOpt 5-strategy Pareto analog optimization (/api/v1/peptide-opt), Batch-MPO 4-pillar screening (/api/v1/batch-screen), and model-faithful Direct Ensemble Perturbation Attribution (/api/v1/direct-attribution)",
+    "HemoPI2-ML sklearn 1.3.1 recovery, zero-leakage same-split RF/ET/LGBM/XGB benchmarks, <=40 aa vs >40 aa length sensitivity, and pepADMET/PeptiVerse comparison",
+    "3D-IMHB conformer audit (N=9,114, 100% success): temporal PAMPA ranking rho=+0.351 + honest 0/6 in-domain OOF gate retaining 2D_Baseline",
+    "Domain-MTL (4 domains, 23 endpoints, 13/23 OOF-promoted, 0/115 fold leaks) + dual-protocol 11-drug FDA 2019-2023 blind evaluation"
+  ],
   "removed_legacy_raw_tables": [
     "data/peptide_ml_cleaning_v1/normalized_observations.tsv",
     "data/peptide_ml_cleaning_v1/strict_numeric.tsv",

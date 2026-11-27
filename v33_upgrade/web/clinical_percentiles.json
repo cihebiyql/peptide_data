@@ -1,0 +1,4828 @@
+{
+  "schema_version": "omnipanel-clinical-percentiles-v1",
+  "description": "Approved-peptide clinical PK reference distributions and curated peptide panel reference ranges for ADMET-AI-style percentile contextualization across all 47 endpoints.",
+  "sources": {
+    "approved_clinical_peptides": "Factual FDA/DailyMed prescribing information (`clinical_evidence_index.json`), Case17 FDA clinical peptide benchmark, and 2019-2023 FDA blind set (`v33_manifest.json`).",
+    "curated_peptide_panel": "Case17 17-drug clinical peptide V33 reference profiles and empirical corpus bounds from `v33_manifest.json`."
+  },
+  "stats": {
+    "n_endpoints": 47,
+    "n_approved_clinical_endpoints": 8,
+    "n_curated_panel_endpoints": 39
+  },
+  "endpoints": {
+    "BBB": {
+      "endpoint": "BBB",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 17,
+      "min_compare": 0.0388,
+      "median_compare": 0.38526,
+      "max_compare": 0.90626,
+      "samples": [
+        {
+          "name": "Oxytocin",
+          "value": 0.0388,
+          "compare_value": 0.0388,
+          "value_display": "3.9%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 0.22146,
+          "compare_value": 0.22146,
+          "value_display": "22.1%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.25141,
+          "compare_value": 0.25141,
+          "value_display": "25.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 0.2609,
+          "compare_value": 0.2609,
+          "value_display": "26.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.29574,
+          "compare_value": 0.29574,
+          "value_display": "29.6%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 0.30833,
+          "compare_value": 0.30833,
+          "value_display": "30.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.32598,
+          "compare_value": 0.32598,
+          "value_display": "32.6%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 0.35126,
+          "compare_value": 0.35126,
+          "value_display": "35.1%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.38526,
+          "compare_value": 0.38526,
+          "value_display": "38.5%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.42371,
+          "compare_value": 0.42371,
+          "value_display": "42.4%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.46557,
+          "compare_value": 0.46557,
+          "value_display": "46.6%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 0.49927,
+          "compare_value": 0.49927,
+          "value_display": "49.9%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.54746,
+          "compare_value": 0.54746,
+          "value_display": "54.7%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.589,
+          "compare_value": 0.589,
+          "value_display": "58.9%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 0.6507,
+          "compare_value": 0.6507,
+          "value_display": "65.1%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 0.67602,
+          "compare_value": 0.67602,
+          "value_display": "67.6%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.90626,
+          "compare_value": 0.90626,
+          "value_display": "90.6%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "CL_absolute": {
+      "endpoint": "CL_absolute",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(L/h)",
+      "linear_unit": "L/h",
+      "log10_space": true,
+      "n_reference": 29,
+      "min_compare": -1.349485,
+      "median_compare": 0.954243,
+      "max_compare": 2.31597,
+      "samples": [
+        {
+          "name": "Semaglutide",
+          "value": 0.0447214,
+          "compare_value": -1.349485,
+          "value_display": "0.0447 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Dalbavancin",
+          "value": 0.0513,
+          "compare_value": -1.289883,
+          "value_display": "0.0513 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.0604979,
+          "compare_value": -1.218259,
+          "value_display": "0.0605 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Rezafungin",
+          "value": 0.35,
+          "compare_value": -0.455932,
+          "value_display": "0.35 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Oritavancin",
+          "value": 0.445,
+          "compare_value": -0.35164,
+          "value_display": "0.45 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.676698,
+          "compare_value": -0.169605,
+          "value_display": "0.68 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Anidulafungin",
+          "value": 0.888594,
+          "compare_value": -0.051296,
+          "value_display": "0.89 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 1.17473,
+          "compare_value": 0.06994,
+          "value_display": "1.17 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ganirelix",
+          "value": 2.81425,
+          "compare_value": 0.449363,
+          "value_display": "2.81 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 6.5,
+          "compare_value": 0.812913,
+          "value_display": "6.5 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 7.15,
+          "compare_value": 0.854306,
+          "value_display": "7.15 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Goserelin",
+          "value": 7.26,
+          "compare_value": 0.860937,
+          "value_display": "7.26 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Pasireotide",
+          "value": 7.6,
+          "compare_value": 0.880814,
+          "value_display": "7.6 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Octreotide",
+          "value": 8.3994,
+          "compare_value": 0.924249,
+          "value_display": "8.4 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Degarelix",
+          "value": 9.0,
+          "compare_value": 0.954243,
+          "value_display": "9 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Exenatide",
+          "value": 9.1,
+          "compare_value": 0.959041,
+          "value_display": "9.1 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ecallantide",
+          "value": 9.18,
+          "compare_value": 0.962843,
+          "value_display": "9.18 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teduglutide",
+          "value": 9.84124,
+          "compare_value": 0.99305,
+          "value_display": "9.84 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Triptorelin",
+          "value": 12.714,
+          "compare_value": 1.104282,
+          "value_display": "12.7 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Icatibant",
+          "value": 14.7,
+          "compare_value": 1.167317,
+          "value_display": "14.7 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 16.2,
+          "compare_value": 1.209515,
+          "value_display": "16.2 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Terlipressin",
+          "value": 27.4,
+          "compare_value": 1.437751,
+          "value_display": "27.4 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Secretin human",
+          "value": 34.854,
+          "compare_value": 1.542253,
+          "value_display": "34.9 L/h",
+          "unit": "L/h",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Lixisenatide",
+          "value": 35.0,
+          "compare_value": 1.544068,
+          "value_display": "35.0 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Motixafortide",
+          "value": 46.5,
+          "compare_value": 1.667453,
+          "value_display": "46.5 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Voclosporin",
+          "value": 63.6,
+          "compare_value": 1.803457,
+          "value_display": "63.6 L/h",
+          "unit": "L/h",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 76.3413,
+          "compare_value": 1.88276,
+          "value_display": "76.3 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Abaloparatide",
+          "value": 170.0,
+          "compare_value": 2.230449,
+          "value_display": "170 L/h",
+          "unit": "L/h",
+          "route": "SC",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Carfilzomib",
+          "value": 207.0,
+          "compare_value": 2.31597,
+          "value_display": "207 L/h",
+          "unit": "L/h",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        }
+      ]
+    },
+    "CL_per_kg": {
+      "endpoint": "CL_per_kg",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(mL/min/kg)",
+      "linear_unit": "mL/min/kg",
+      "log10_space": true,
+      "n_reference": 15,
+      "min_compare": -0.828789,
+      "median_compare": 0.10721,
+      "max_compare": 2.899825,
+      "samples": [
+        {
+          "name": "Daptomycin",
+          "value": 0.148324,
+          "compare_value": -0.828789,
+          "value_display": "0.15 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Micafungin",
+          "value": 0.218454,
+          "compare_value": -0.660641,
+          "value_display": "0.22 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Telavancin",
+          "value": 0.224901,
+          "compare_value": -0.648008,
+          "value_display": "0.22 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Enfuvirtide",
+          "value": 0.45913,
+          "compare_value": -0.338065,
+          "value_display": "0.46 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Mecasermin",
+          "value": 0.706667,
+          "compare_value": -0.150785,
+          "value_display": "0.71 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vancomycin",
+          "value": 0.879394,
+          "compare_value": -0.055817,
+          "value_display": "0.88 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Eptifibatide",
+          "value": 0.916667,
+          "compare_value": -0.037789,
+          "value_display": "0.92 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cetrorelix",
+          "value": 1.28,
+          "compare_value": 0.10721,
+          "value_display": "1.28 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teduglutide",
+          "value": 2.05,
+          "compare_value": 0.311754,
+          "value_display": "2.05 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Nesiritide",
+          "value": 9.2,
+          "compare_value": 0.963788,
+          "value_display": "9.2 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 10.5925,
+          "compare_value": 1.024996,
+          "value_display": "10.6 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Glucagon",
+          "value": 13.5,
+          "compare_value": 1.130334,
+          "value_display": "13.5 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vasopressin",
+          "value": 15.0,
+          "compare_value": 1.176091,
+          "value_display": "15.0 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vosoritide",
+          "value": 91.7,
+          "compare_value": 1.962369,
+          "value_display": "91.7 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Tesamorelin",
+          "value": 794.009,
+          "compare_value": 2.899825,
+          "value_display": "794 mL/min/kg",
+          "unit": "mL/min/kg",
+          "route": "SC",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        }
+      ]
+    },
+    "Caco2": {
+      "endpoint": "Caco2",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(cm/s)",
+      "linear_unit": "cm/s",
+      "log10_space": true,
+      "n_reference": 17,
+      "min_compare": -6.96813,
+      "median_compare": -6.77357,
+      "max_compare": -5.64243,
+      "samples": [
+        {
+          "name": "Glucagon",
+          "value": 1.07614e-07,
+          "compare_value": -6.96813,
+          "value_display": "1.08e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 1.17682e-07,
+          "compare_value": -6.92929,
+          "value_display": "1.18e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 1.31556e-07,
+          "compare_value": -6.88089,
+          "value_display": "1.32e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 1.37578e-07,
+          "compare_value": -6.86145,
+          "value_display": "1.38e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 1.39226e-07,
+          "compare_value": -6.85628,
+          "value_display": "1.39e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 1.43123e-07,
+          "compare_value": -6.84429,
+          "value_display": "1.43e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 1.54277e-07,
+          "compare_value": -6.8117,
+          "value_display": "1.54e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 1.6766e-07,
+          "compare_value": -6.77557,
+          "value_display": "1.68e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 1.68434e-07,
+          "compare_value": -6.77357,
+          "value_display": "1.68e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 1.69738e-07,
+          "compare_value": -6.77022,
+          "value_display": "1.70e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 2.22131e-07,
+          "compare_value": -6.65339,
+          "value_display": "2.22e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Oxytocin",
+          "value": 3.17037e-07,
+          "compare_value": -6.49889,
+          "value_display": "3.17e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 3.32147e-07,
+          "compare_value": -6.47867,
+          "value_display": "3.32e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 4.04445e-07,
+          "compare_value": -6.39314,
+          "value_display": "4.04e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 5.62264e-07,
+          "compare_value": -6.25006,
+          "value_display": "5.62e-07 cm/s",
+          "unit": "cm/s",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 1.656e-06,
+          "compare_value": -5.78094,
+          "value_display": "1.66e-06 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 2.27809e-06,
+          "compare_value": -5.64243,
+          "value_display": "2.28e-06 cm/s",
+          "unit": "cm/s",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "Cmax": {
+      "endpoint": "Cmax",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 18,
+      "min_compare": -4.297583,
+      "median_compare": -1.891935,
+      "max_compare": 1.910544,
+      "samples": [
+        {
+          "name": "Exenatide",
+          "value": 5.03984e-05,
+          "compare_value": -4.297583,
+          "value_display": "5.04e-05 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Pramlintide",
+          "value": 8.97664e-05,
+          "compare_value": -4.046886,
+          "value_display": "8.98e-05 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.00100053,
+          "compare_value": -2.999769,
+          "value_display": "0.001 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Dasiglucagon",
+          "value": 0.0013235,
+          "compare_value": -2.878277,
+          "value_display": "0.00132 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vosoritide",
+          "value": 0.0014483,
+          "compare_value": -2.839142,
+          "value_display": "0.00145 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Lanreotide",
+          "value": 0.00173989,
+          "compare_value": -2.759479,
+          "value_display": "0.00174 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Glucagon",
+          "value": 0.00186735,
+          "compare_value": -2.728774,
+          "value_display": "0.00187 uM",
+          "unit": "uM",
+          "route": "IM",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teduglutide",
+          "value": 0.00892824,
+          "compare_value": -2.049234,
+          "value_display": "0.00893 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.00933019,
+          "compare_value": -2.030109,
+          "value_display": "0.00933 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.0176294,
+          "compare_value": -1.753761,
+          "value_display": "0.0176 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 0.0277446,
+          "compare_value": -1.556821,
+          "value_display": "0.0277 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Mecasermin",
+          "value": 0.030569,
+          "compare_value": -1.514719,
+          "value_display": "0.0306 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Terlipressin",
+          "value": 0.0574387,
+          "compare_value": -1.240795,
+          "value_display": "0.0574 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 0.0710118,
+          "compare_value": -1.14867,
+          "value_display": "0.071 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.98373,
+          "compare_value": -0.007124,
+          "value_display": "0.98 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Anidulafungin",
+          "value": 3.38639,
+          "compare_value": 0.529737,
+          "value_display": "3.39 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Micafungin",
+          "value": 10.1035,
+          "compare_value": 1.00447,
+          "value_display": "10.1 uM",
+          "unit": "uM",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 81.385,
+          "compare_value": 1.910544,
+          "value_display": "81.4 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        }
+      ]
+    },
+    "F": {
+      "endpoint": "F",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "fraction [0,1]",
+      "linear_unit": "fraction",
+      "log10_space": false,
+      "n_reference": 24,
+      "min_compare": 0.0258,
+      "median_compare": 0.767,
+      "max_compare": 1.0,
+      "samples": [
+        {
+          "name": "Desmopressin",
+          "value": 0.0258,
+          "compare_value": 0.0258,
+          "value_display": "2.6%",
+          "unit": "fraction",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Nafarelin",
+          "value": 0.0269615,
+          "compare_value": 0.026961,
+          "value_display": "2.7%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Voclosporin",
+          "value": 0.077,
+          "compare_value": 0.077,
+          "value_display": "7.7%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Lixisenatide",
+          "value": 0.32,
+          "compare_value": 0.32,
+          "value_display": "32.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Pramlintide",
+          "value": 0.35,
+          "compare_value": 0.35,
+          "value_display": "35.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Abaloparatide",
+          "value": 0.36,
+          "compare_value": 0.36,
+          "value_display": "36.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.452071,
+          "compare_value": 0.452071,
+          "value_display": "45.2%",
+          "unit": "fraction",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Parathyroid hormone",
+          "value": 0.53,
+          "compare_value": 0.53,
+          "value_display": "53.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.55,
+          "compare_value": 0.55,
+          "value_display": "55.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.615,
+          "compare_value": 0.615,
+          "value_display": "61.5%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Salmon Calcitonin",
+          "value": 0.66,
+          "compare_value": 0.66,
+          "value_display": "66.0%",
+          "unit": "fraction",
+          "route": "IM",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Lanreotide",
+          "value": 0.734,
+          "compare_value": 0.734,
+          "value_display": "73.4%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.8,
+          "compare_value": 0.8,
+          "value_display": "80.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 0.805,
+          "compare_value": 0.805,
+          "value_display": "80.5%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Enfuvirtide",
+          "value": 0.843,
+          "compare_value": 0.843,
+          "value_display": "84.3%",
+          "unit": "fraction",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cetrorelix",
+          "value": 0.85,
+          "compare_value": 0.85,
+          "value_display": "85.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teduglutide",
+          "value": 0.88,
+          "compare_value": 0.88,
+          "value_display": "88.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ganirelix",
+          "value": 0.911,
+          "compare_value": 0.911,
+          "value_display": "91.1%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.95,
+          "compare_value": 0.95,
+          "value_display": "95.0%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Icatibant",
+          "value": 0.97,
+          "compare_value": 0.97,
+          "value_display": "97.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Afamelanotide",
+          "value": 0.984,
+          "compare_value": 0.984,
+          "value_display": "98.4%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 1.0,
+          "compare_value": 1.0,
+          "value_display": "100.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Mecasermin",
+          "value": 1.0,
+          "compare_value": 1.0,
+          "value_display": "100.0%",
+          "unit": "fraction",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Pasireotide",
+          "value": 1.0,
+          "compare_value": 1.0,
+          "value_display": "100.0%",
+          "unit": "fraction",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        }
+      ]
+    },
+    "LogD7.4": {
+      "endpoint": "LogD7.4",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "LogD7.4",
+      "linear_unit": "logD",
+      "log10_space": false,
+      "n_reference": 17,
+      "min_compare": 0.82588,
+      "median_compare": 1.15639,
+      "max_compare": 3.62666,
+      "samples": [
+        {
+          "name": "Exenatide",
+          "value": 0.82588,
+          "compare_value": 0.82588,
+          "value_display": "+0.83",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Oxytocin",
+          "value": 0.8684,
+          "compare_value": 0.8684,
+          "value_display": "+0.87",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 0.93822,
+          "compare_value": 0.93822,
+          "value_display": "+0.94",
+          "unit": "logD",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 1.00061,
+          "compare_value": 1.00061,
+          "value_display": "+1.00",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 1.00904,
+          "compare_value": 1.00904,
+          "value_display": "+1.01",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 1.03839,
+          "compare_value": 1.03839,
+          "value_display": "+1.04",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 1.10531,
+          "compare_value": 1.10531,
+          "value_display": "+1.11",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 1.15213,
+          "compare_value": 1.15213,
+          "value_display": "+1.15",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 1.15639,
+          "compare_value": 1.15639,
+          "value_display": "+1.16",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 1.16164,
+          "compare_value": 1.16164,
+          "value_display": "+1.16",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 1.20792,
+          "compare_value": 1.20792,
+          "value_display": "+1.21",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 1.29791,
+          "compare_value": 1.29791,
+          "value_display": "+1.30",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 1.31579,
+          "compare_value": 1.31579,
+          "value_display": "+1.32",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 1.73395,
+          "compare_value": 1.73395,
+          "value_display": "+1.73",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 1.83578,
+          "compare_value": 1.83578,
+          "value_display": "+1.84",
+          "unit": "logD",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 2.01853,
+          "compare_value": 2.01853,
+          "value_display": "+2.02",
+          "unit": "logD",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 3.62666,
+          "compare_value": 3.62666,
+          "value_display": "+3.63",
+          "unit": "logD",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "MDCK": {
+      "endpoint": "MDCK",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(cm/s)",
+      "linear_unit": "cm/s",
+      "log10_space": true,
+      "n_reference": 168,
+      "min_compare": -8.5,
+      "median_compare": -6.5,
+      "max_compare": -4.5,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -8.5
+        },
+        {
+          "p": 5.0,
+          "compare_value": -8.1
+        },
+        {
+          "p": 10.0,
+          "compare_value": -7.78
+        },
+        {
+          "p": 25.0,
+          "compare_value": -7.18
+        },
+        {
+          "p": 50.0,
+          "compare_value": -6.5
+        },
+        {
+          "p": 75.0,
+          "compare_value": -5.82
+        },
+        {
+          "p": 90.0,
+          "compare_value": -5.22
+        },
+        {
+          "p": 95.0,
+          "compare_value": -4.9
+        },
+        {
+          "p": 100.0,
+          "compare_value": -4.5
+        }
+      ],
+      "samples": []
+    },
+    "MIC_C_albicans": {
+      "endpoint": "MIC_C_albicans",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 468,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_E_coli": {
+      "endpoint": "MIC_E_coli",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 2210,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_P_aeruginosa": {
+      "endpoint": "MIC_P_aeruginosa",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 1161,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_S_aureus": {
+      "endpoint": "MIC_S_aureus",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 2131,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "PAMPA": {
+      "endpoint": "PAMPA",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(cm/s)",
+      "linear_unit": "cm/s",
+      "log10_space": true,
+      "n_reference": 17,
+      "min_compare": -6.46834,
+      "median_compare": -6.1855,
+      "max_compare": -5.50032,
+      "samples": [
+        {
+          "name": "Oxytocin",
+          "value": 3.40142e-07,
+          "compare_value": -6.46834,
+          "value_display": "3.40e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 3.43352e-07,
+          "compare_value": -6.46426,
+          "value_display": "3.43e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 4.02624e-07,
+          "compare_value": -6.3951,
+          "value_display": "4.03e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 4.82714e-07,
+          "compare_value": -6.31631,
+          "value_display": "4.83e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 5.24518e-07,
+          "compare_value": -6.28024,
+          "value_display": "5.25e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 5.42188e-07,
+          "compare_value": -6.26585,
+          "value_display": "5.42e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 5.52663e-07,
+          "compare_value": -6.25754,
+          "value_display": "5.53e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 5.72045e-07,
+          "compare_value": -6.24257,
+          "value_display": "5.72e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 6.52379e-07,
+          "compare_value": -6.1855,
+          "value_display": "6.52e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 6.57143e-07,
+          "compare_value": -6.18234,
+          "value_display": "6.57e-07 cm/s",
+          "unit": "cm/s",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 6.74528e-07,
+          "compare_value": -6.171,
+          "value_display": "6.75e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 6.97622e-07,
+          "compare_value": -6.15638,
+          "value_display": "6.98e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 7.21789e-07,
+          "compare_value": -6.14159,
+          "value_display": "7.22e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 8.66922e-07,
+          "compare_value": -6.06202,
+          "value_display": "8.67e-07 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 8.70603e-07,
+          "compare_value": -6.06018,
+          "value_display": "8.71e-07 cm/s",
+          "unit": "cm/s",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 1.228e-06,
+          "compare_value": -5.9108,
+          "value_display": "1.23e-06 cm/s",
+          "unit": "cm/s",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 3.15995e-06,
+          "compare_value": -5.50032,
+          "value_display": "3.16e-06 cm/s",
+          "unit": "cm/s",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "PPB": {
+      "endpoint": "PPB",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "fraction [0,1]",
+      "linear_unit": "fraction_bound",
+      "log10_space": false,
+      "n_reference": 39,
+      "min_compare": 0.0,
+      "median_compare": 0.86,
+      "max_compare": 0.995,
+      "samples": [
+        {
+          "name": "Bivalirudin",
+          "value": 0.0,
+          "compare_value": 0.0,
+          "value_display": "0.0%",
+          "unit": "fraction_bound",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.0,
+          "compare_value": 0.0,
+          "value_display": "0.0%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Trofinetide",
+          "value": 0.06,
+          "compare_value": 0.06,
+          "value_display": "6.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 0.21,
+          "compare_value": 0.21,
+          "value_display": "21.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Eptifibatide",
+          "value": 0.25,
+          "compare_value": 0.25,
+          "value_display": "25.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Difelikefalin",
+          "value": 0.255,
+          "compare_value": 0.255,
+          "value_display": "25.5%",
+          "unit": "fraction_bound",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Goserelin",
+          "value": 0.273,
+          "compare_value": 0.273,
+          "value_display": "27.3%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 0.46,
+          "compare_value": 0.46,
+          "value_display": "46.0%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.5,
+          "compare_value": 0.5,
+          "value_display": "50.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Exenatide",
+          "value": 0.53,
+          "compare_value": 0.53,
+          "value_display": "53.0%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Vancomycin",
+          "value": 0.55,
+          "compare_value": 0.55,
+          "value_display": "55.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Pramlintide",
+          "value": 0.6,
+          "compare_value": 0.6,
+          "value_display": "60.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.65,
+          "compare_value": 0.65,
+          "value_display": "65.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Abaloparatide",
+          "value": 0.7,
+          "compare_value": 0.7,
+          "value_display": "70.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Histrelin",
+          "value": 0.705,
+          "compare_value": 0.705,
+          "value_display": "70.5%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 0.791,
+          "compare_value": 0.791,
+          "value_display": "79.1%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Nafarelin",
+          "value": 0.8,
+          "compare_value": 0.8,
+          "value_display": "80.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ganirelix",
+          "value": 0.819,
+          "compare_value": 0.819,
+          "value_display": "81.9%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Oritavancin",
+          "value": 0.85,
+          "compare_value": 0.85,
+          "value_display": "85.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cetrorelix",
+          "value": 0.86,
+          "compare_value": 0.86,
+          "value_display": "86.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.88,
+          "compare_value": 0.88,
+          "value_display": "88.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.9,
+          "compare_value": 0.9,
+          "value_display": "90.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Degarelix",
+          "value": 0.9,
+          "compare_value": 0.9,
+          "value_display": "90.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Telavancin",
+          "value": 0.9,
+          "compare_value": 0.9,
+          "value_display": "90.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Enfuvirtide",
+          "value": 0.92,
+          "compare_value": 0.92,
+          "value_display": "92.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Dalbavancin",
+          "value": 0.93,
+          "compare_value": 0.93,
+          "value_display": "93.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Romidepsin",
+          "value": 0.93,
+          "compare_value": 0.93,
+          "value_display": "93.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Carfilzomib",
+          "value": 0.97,
+          "compare_value": 0.97,
+          "value_display": "97.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.97,
+          "compare_value": 0.97,
+          "value_display": "97.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Voclosporin",
+          "value": 0.97,
+          "compare_value": 0.97,
+          "value_display": "97.0%",
+          "unit": "fraction_bound",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Rezafungin",
+          "value": 0.974,
+          "compare_value": 0.974,
+          "value_display": "97.4%",
+          "unit": "fraction_bound",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Abarelix",
+          "value": 0.975,
+          "compare_value": 0.975,
+          "value_display": "97.5%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "US FDA Drugs@FDA NDA/BLA Review"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.975,
+          "compare_value": 0.975,
+          "value_display": "97.5%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.985,
+          "compare_value": 0.985,
+          "value_display": "98.5%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 0.985,
+          "compare_value": 0.985,
+          "value_display": "98.5%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Motixafortide",
+          "value": 0.99,
+          "compare_value": 0.99,
+          "value_display": "99.0%",
+          "unit": "fraction_bound",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 0.99,
+          "compare_value": 0.99,
+          "value_display": "99.0%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Zilucoplan",
+          "value": 0.99,
+          "compare_value": 0.99,
+          "value_display": "99.0%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.995,
+          "compare_value": 0.995,
+          "value_display": "99.5%",
+          "unit": "fraction_bound",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        }
+      ]
+    },
+    "RRCK": {
+      "endpoint": "RRCK",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(cm/s)",
+      "linear_unit": "cm/s",
+      "log10_space": true,
+      "n_reference": 167,
+      "min_compare": -8.5,
+      "median_compare": -6.5,
+      "max_compare": -4.5,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -8.5
+        },
+        {
+          "p": 5.0,
+          "compare_value": -8.1
+        },
+        {
+          "p": 10.0,
+          "compare_value": -7.78
+        },
+        {
+          "p": 25.0,
+          "compare_value": -7.18
+        },
+        {
+          "p": 50.0,
+          "compare_value": -6.5
+        },
+        {
+          "p": 75.0,
+          "compare_value": -5.82
+        },
+        {
+          "p": 90.0,
+          "compare_value": -5.22
+        },
+        {
+          "p": 95.0,
+          "compare_value": -4.9
+        },
+        {
+          "p": 100.0,
+          "compare_value": -4.5
+        }
+      ],
+      "samples": []
+    },
+    "Vd_per_kg": {
+      "endpoint": "Vd_per_kg",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(L/kg)",
+      "linear_unit": "L/kg",
+      "log10_space": true,
+      "n_reference": 15,
+      "min_compare": -1.154902,
+      "median_compare": -0.623423,
+      "max_compare": 0.681241,
+      "samples": [
+        {
+          "name": "Liraglutide",
+          "value": 0.07,
+          "compare_value": -1.154902,
+          "value_display": "0.07 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.0974987,
+          "compare_value": -1.011001,
+          "value_display": "0.0975 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teduglutide",
+          "value": 0.103,
+          "compare_value": -0.987163,
+          "value_display": "0.1 L/kg",
+          "unit": "L/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Nesiritide",
+          "value": 0.117771,
+          "compare_value": -0.928962,
+          "value_display": "0.12 L/kg",
+          "unit": "L/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.12,
+          "compare_value": -0.920819,
+          "value_display": "0.12 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Telavancin",
+          "value": 0.13887,
+          "compare_value": -0.85739,
+          "value_display": "0.14 L/kg",
+          "unit": "L/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vasopressin",
+          "value": 0.14,
+          "compare_value": -0.853872,
+          "value_display": "0.14 L/kg",
+          "unit": "L/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Difelikefalin",
+          "value": 0.238,
+          "compare_value": -0.623423,
+          "value_display": "0.24 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Glucagon",
+          "value": 0.25,
+          "compare_value": -0.60206,
+          "value_display": "0.25 L/kg",
+          "unit": "L/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Mecasermin",
+          "value": 0.257,
+          "compare_value": -0.590067,
+          "value_display": "0.26 L/kg",
+          "unit": "L/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Micafungin",
+          "value": 0.39,
+          "compare_value": -0.408935,
+          "value_display": "0.39 L/kg",
+          "unit": "L/kg",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cetrorelix",
+          "value": 1.07703,
+          "compare_value": 0.032229,
+          "value_display": "1.08 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Vosoritide",
+          "value": 2.95,
+          "compare_value": 0.469822,
+          "value_display": "2.95 L/kg",
+          "unit": "L/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 4.0,
+          "compare_value": 0.60206,
+          "value_display": "4 L/kg",
+          "unit": "L/kg",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Tesamorelin",
+          "value": 4.8,
+          "compare_value": 0.681241,
+          "value_display": "4.8 L/kg",
+          "unit": "L/kg",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        }
+      ]
+    },
+    "cytotoxicity_cls": {
+      "endpoint": "cytotoxicity_cls",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 2934,
+      "min_compare": 0.0,
+      "median_compare": 0.5,
+      "max_compare": 1.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": 0.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": 0.05
+        },
+        {
+          "p": 10.0,
+          "compare_value": 0.1
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.25
+        },
+        {
+          "p": 50.0,
+          "compare_value": 0.5
+        },
+        {
+          "p": 75.0,
+          "compare_value": 0.75
+        },
+        {
+          "p": 90.0,
+          "compare_value": 0.9
+        },
+        {
+          "p": 95.0,
+          "compare_value": 0.95
+        },
+        {
+          "p": 100.0,
+          "compare_value": 1.0
+        }
+      ],
+      "samples": []
+    },
+    "half_life_cls": {
+      "endpoint": "half_life_cls",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 3204,
+      "min_compare": 0.0,
+      "median_compare": 0.5,
+      "max_compare": 1.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": 0.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": 0.05
+        },
+        {
+          "p": 10.0,
+          "compare_value": 0.1
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.25
+        },
+        {
+          "p": 50.0,
+          "compare_value": 0.5
+        },
+        {
+          "p": 75.0,
+          "compare_value": 0.75
+        },
+        {
+          "p": 90.0,
+          "compare_value": 0.9
+        },
+        {
+          "p": 95.0,
+          "compare_value": 0.95
+        },
+        {
+          "p": 100.0,
+          "compare_value": 1.0
+        }
+      ],
+      "samples": []
+    },
+    "half_life_reg": {
+      "endpoint": "half_life_reg",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(h)",
+      "linear_unit": "h",
+      "log10_space": true,
+      "n_reference": 27,
+      "min_compare": -1.173925,
+      "median_compare": 0.477121,
+      "max_compare": 2.235528,
+      "samples": [
+        {
+          "name": "Oxytocin",
+          "value": 0.067,
+          "compare_value": -1.173925,
+          "value_display": "0.067 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 0.22,
+          "compare_value": -0.657577,
+          "value_display": "0.22 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 0.42,
+          "compare_value": -0.376751,
+          "value_display": "0.42 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Vosoritide",
+          "value": 0.46,
+          "compare_value": -0.337242,
+          "value_display": "0.46 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2021)"
+        },
+        {
+          "name": "Dasiglucagon",
+          "value": 0.5,
+          "compare_value": -0.30103,
+          "value_display": "0.5 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2021)"
+        },
+        {
+          "name": "Terlipressin",
+          "value": 0.9,
+          "compare_value": -0.045757,
+          "value_display": "0.9 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2022)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 1.0,
+          "compare_value": 0.0,
+          "value_display": "1 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Trofinetide",
+          "value": 1.5,
+          "compare_value": 0.176091,
+          "value_display": "1.5 h",
+          "unit": "h",
+          "route": "PO",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 1.8,
+          "compare_value": 0.255273,
+          "value_display": "1.8 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Motixafortide",
+          "value": 2.0,
+          "compare_value": 0.30103,
+          "value_display": "2 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 2.4,
+          "compare_value": 0.380211,
+          "value_display": "2.4 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Difelikefalin",
+          "value": 2.6,
+          "compare_value": 0.414973,
+          "value_display": "2.6 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2021)"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 2.7,
+          "compare_value": 0.431364,
+          "value_display": "2.7 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2019)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 3.0,
+          "compare_value": 0.477121,
+          "value_display": "3 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 4.6,
+          "compare_value": 0.662758,
+          "value_display": "4.6 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 6.0,
+          "compare_value": 0.778151,
+          "value_display": "6 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 8.4,
+          "compare_value": 0.924279,
+          "value_display": "8.4 h",
+          "unit": "h",
+          "route": "PO",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 8.5,
+          "compare_value": 0.929419,
+          "value_display": "8.5 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 10.0,
+          "compare_value": 1.0,
+          "value_display": "10.0 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 11.0,
+          "compare_value": 1.041393,
+          "value_display": "11.0 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2020)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 13.0,
+          "compare_value": 1.113943,
+          "value_display": "13.0 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 25.0,
+          "compare_value": 1.39794,
+          "value_display": "25.0 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Voclosporin",
+          "value": 30.0,
+          "compare_value": 1.477121,
+          "value_display": "30.0 h",
+          "unit": "h",
+          "route": "PO",
+          "source": "FDA Prescribing Information (2021)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 125.0,
+          "compare_value": 2.09691,
+          "value_display": "125 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Rezafungin",
+          "value": 133.0,
+          "compare_value": 2.123852,
+          "value_display": "133 h",
+          "unit": "h",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 168.0,
+          "compare_value": 2.225309,
+          "value_display": "168 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (Case17 Benchmark)"
+        },
+        {
+          "name": "Zilucoplan",
+          "value": 172.0,
+          "compare_value": 2.235528,
+          "value_display": "172 h",
+          "unit": "h",
+          "route": "SC",
+          "source": "FDA Prescribing Information (2023)"
+        }
+      ]
+    },
+    "hemolysis_HC50": {
+      "endpoint": "hemolysis_HC50",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 17,
+      "min_compare": 1.62941,
+      "median_compare": 2.006894,
+      "max_compare": 2.565612,
+      "samples": [
+        {
+          "name": "Insulin detemir",
+          "value": 42.6,
+          "compare_value": 1.62941,
+          "value_display": "42.6 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 45.5,
+          "compare_value": 1.658011,
+          "value_display": "45.5 uM",
+          "unit": "uM",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 48.5,
+          "compare_value": 1.685742,
+          "value_display": "48.5 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 58.3,
+          "compare_value": 1.765669,
+          "value_display": "58.3 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 77.4,
+          "compare_value": 1.888741,
+          "value_display": "77.4 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 82.3,
+          "compare_value": 1.9154,
+          "value_display": "82.3 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 85.9,
+          "compare_value": 1.933993,
+          "value_display": "85.9 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 86.0,
+          "compare_value": 1.934498,
+          "value_display": "86.0 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 101.6,
+          "compare_value": 2.006894,
+          "value_display": "101.6 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 102.5,
+          "compare_value": 2.010724,
+          "value_display": "102.5 uM",
+          "unit": "uM",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 131.1,
+          "compare_value": 2.117603,
+          "value_display": "131.1 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 132.4,
+          "compare_value": 2.121888,
+          "value_display": "132.4 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 141.2,
+          "compare_value": 2.149835,
+          "value_display": "141.2 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 165.6,
+          "compare_value": 2.21906,
+          "value_display": "165.6 uM",
+          "unit": "uM",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 200.1,
+          "compare_value": 2.301247,
+          "value_display": "200.1 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Oxytocin",
+          "value": 296.9,
+          "compare_value": 2.47261,
+          "value_display": "296.9 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 367.8,
+          "compare_value": 2.565612,
+          "value_display": "367.8 uM",
+          "unit": "uM",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "hemolysis_cls": {
+      "endpoint": "hemolysis_cls",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 17,
+      "min_compare": 0.03116,
+      "median_compare": 0.12096,
+      "max_compare": 0.38582,
+      "samples": [
+        {
+          "name": "Oxytocin",
+          "value": 0.03116,
+          "compare_value": 0.03116,
+          "value_display": "3.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 0.03163,
+          "compare_value": 0.03163,
+          "value_display": "3.2%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 0.03215,
+          "compare_value": 0.03215,
+          "value_display": "3.2%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Glucagon",
+          "value": 0.05539,
+          "compare_value": 0.05539,
+          "value_display": "5.5%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 0.05576,
+          "compare_value": 0.05576,
+          "value_display": "5.6%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.07295,
+          "compare_value": 0.07295,
+          "value_display": "7.3%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.07765,
+          "compare_value": 0.07765,
+          "value_display": "7.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.12079,
+          "compare_value": 0.12079,
+          "value_display": "12.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.12096,
+          "compare_value": 0.12096,
+          "value_display": "12.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.12965,
+          "compare_value": 0.12965,
+          "value_display": "13.0%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.15061,
+          "compare_value": 0.15061,
+          "value_display": "15.1%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.18011,
+          "compare_value": 0.18011,
+          "value_display": "18.0%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.22539,
+          "compare_value": 0.22539,
+          "value_display": "22.5%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 0.24144,
+          "compare_value": 0.24144,
+          "value_display": "24.1%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 0.26019,
+          "compare_value": 0.26019,
+          "value_display": "26.0%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 0.34797,
+          "compare_value": 0.34797,
+          "value_display": "34.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.38582,
+          "compare_value": 0.38582,
+          "value_display": "38.6%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "overall_peptide_toxicity": {
+      "endpoint": "overall_peptide_toxicity",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 17,
+      "min_compare": 0.0282,
+      "median_compare": 0.20858,
+      "max_compare": 0.97353,
+      "samples": [
+        {
+          "name": "Glucagon",
+          "value": 0.0282,
+          "compare_value": 0.0282,
+          "value_display": "2.8%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.05194,
+          "compare_value": 0.05194,
+          "value_display": "5.2%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.06697,
+          "compare_value": 0.06697,
+          "value_display": "6.7%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.07774,
+          "compare_value": 0.07774,
+          "value_display": "7.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 0.10721,
+          "compare_value": 0.10721,
+          "value_display": "10.7%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.11228,
+          "compare_value": 0.11228,
+          "value_display": "11.2%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 0.1571,
+          "compare_value": 0.1571,
+          "value_display": "15.7%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 0.20187,
+          "compare_value": 0.20187,
+          "value_display": "20.2%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 0.20858,
+          "compare_value": 0.20858,
+          "value_display": "20.9%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.22465,
+          "compare_value": 0.22465,
+          "value_display": "22.5%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.24512,
+          "compare_value": 0.24512,
+          "value_display": "24.5%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Oxytocin",
+          "value": 0.2808,
+          "compare_value": 0.2808,
+          "value_display": "28.1%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.43678,
+          "compare_value": 0.43678,
+          "value_display": "43.7%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 0.51849,
+          "compare_value": 0.51849,
+          "value_display": "51.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.91504,
+          "compare_value": 0.91504,
+          "value_display": "91.5%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 0.97039,
+          "compare_value": 0.97039,
+          "value_display": "97.0%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.97353,
+          "compare_value": 0.97353,
+          "value_display": "97.4%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "solubility_cls": {
+      "endpoint": "solubility_cls",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "empirical_samples",
+      "task_type": "classification",
+      "unit": "prob [0,1]",
+      "linear_unit": "probability",
+      "log10_space": false,
+      "n_reference": 17,
+      "min_compare": 0.17394,
+      "median_compare": 0.50958,
+      "max_compare": 0.92175,
+      "samples": [
+        {
+          "name": "Glucagon",
+          "value": 0.17394,
+          "compare_value": 0.17394,
+          "value_display": "17.4%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 0.19003,
+          "compare_value": 0.19003,
+          "value_display": "19.0%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Cyclosporine A",
+          "value": 0.19374,
+          "compare_value": 0.19374,
+          "value_display": "19.4%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 0.24915,
+          "compare_value": 0.24915,
+          "value_display": "24.9%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Teriparatide",
+          "value": 0.28297,
+          "compare_value": 0.28297,
+          "value_display": "28.3%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 0.44254,
+          "compare_value": 0.44254,
+          "value_display": "44.3%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Bivalirudin",
+          "value": 0.47302,
+          "compare_value": 0.47302,
+          "value_display": "47.3%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin detemir",
+          "value": 0.49847,
+          "compare_value": 0.49847,
+          "value_display": "49.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Insulin degludec",
+          "value": 0.50958,
+          "compare_value": 0.50958,
+          "value_display": "51.0%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Exenatide",
+          "value": 0.5881,
+          "compare_value": 0.5881,
+          "value_display": "58.8%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Leuprolide",
+          "value": 0.68218,
+          "compare_value": 0.68218,
+          "value_display": "68.2%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Octreotide",
+          "value": 0.70145,
+          "compare_value": 0.70145,
+          "value_display": "70.1%",
+          "unit": "probability",
+          "route": "SC",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Daptomycin",
+          "value": 0.75189,
+          "compare_value": 0.75189,
+          "value_display": "75.2%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 0.84452,
+          "compare_value": 0.84452,
+          "value_display": "84.5%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Linaclotide",
+          "value": 0.85421,
+          "compare_value": 0.85421,
+          "value_display": "85.4%",
+          "unit": "probability",
+          "route": "PO",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Oxytocin",
+          "value": 0.86465,
+          "compare_value": 0.86465,
+          "value_display": "86.5%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        },
+        {
+          "name": "Caspofungin",
+          "value": 0.92175,
+          "compare_value": 0.92175,
+          "value_display": "92.2%",
+          "unit": "probability",
+          "route": "IV",
+          "source": "Case17 Clinical Peptide Panel (V33 Reference Profile)"
+        }
+      ]
+    },
+    "solubility_reg": {
+      "endpoint": "solubility_reg",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 298,
+      "min_compare": 0.0,
+      "median_compare": 1.9,
+      "max_compare": 3.8,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": 0.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": 0.38
+        },
+        {
+          "p": 10.0,
+          "compare_value": 0.684
+        },
+        {
+          "p": 25.0,
+          "compare_value": 1.254
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.9
+        },
+        {
+          "p": 75.0,
+          "compare_value": 2.546
+        },
+        {
+          "p": 90.0,
+          "compare_value": 3.116
+        },
+        {
+          "p": 95.0,
+          "compare_value": 3.42
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.8
+        }
+      ],
+      "samples": []
+    },
+    "LC_antimicrobial": {
+      "endpoint": "LC_antimicrobial",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 544,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBC_A_baumannii": {
+      "endpoint": "MBC_A_baumannii",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 136,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBC_E_coli": {
+      "endpoint": "MBC_E_coli",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 548,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBC_E_faecalis": {
+      "endpoint": "MBC_E_faecalis",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 90,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBC_P_aeruginosa": {
+      "endpoint": "MBC_P_aeruginosa",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 392,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBC_S_aureus": {
+      "endpoint": "MBC_S_aureus",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 551,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MBEC_biofilm": {
+      "endpoint": "MBEC_biofilm",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 138,
+      "min_compare": -1.0,
+      "median_compare": 1.1,
+      "max_compare": 3.2,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.58
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.244
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.386
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.1
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.814
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.444
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.78
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.2
+        }
+      ],
+      "samples": []
+    },
+    "MBIC_biofilm": {
+      "endpoint": "MBIC_biofilm",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 296,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MFC_C_albicans": {
+      "endpoint": "MFC_C_albicans",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 110,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_A_baumannii": {
+      "endpoint": "MIC_A_baumannii",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 939,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_B_subtilis": {
+      "endpoint": "MIC_B_subtilis",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 1475,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_C_neoformans": {
+      "endpoint": "MIC_C_neoformans",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 287,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_E_faecalis": {
+      "endpoint": "MIC_E_faecalis",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 628,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_E_faecium": {
+      "endpoint": "MIC_E_faecium",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 283,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_K_pneumoniae": {
+      "endpoint": "MIC_K_pneumoniae",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 971,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_L_monocytogenes": {
+      "endpoint": "MIC_L_monocytogenes",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 248,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_S_epidermidis": {
+      "endpoint": "MIC_S_epidermidis",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 784,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "MIC_Salmonella": {
+      "endpoint": "MIC_Salmonella",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 719,
+      "min_compare": -1.0,
+      "median_compare": 1.0,
+      "max_compare": 3.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -1.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.28
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.32
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.0
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.68
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.28
+        },
+        {
+          "p": 95.0,
+          "compare_value": 2.6
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.0
+        }
+      ],
+      "samples": []
+    },
+    "Vd_absolute": {
+      "endpoint": "Vd_absolute",
+      "reference_group": "approved_clinical_peptides",
+      "distribution_mode": "empirical_samples",
+      "task_type": "regression",
+      "unit": "log10(L)",
+      "linear_unit": "L",
+      "log10_space": true,
+      "n_reference": 26,
+      "min_compare": 0.431364,
+      "median_compare": 1.469183,
+      "max_compare": 3.333246,
+      "samples": [
+        {
+          "name": "Secretin human",
+          "value": 2.7,
+          "compare_value": 0.431364,
+          "value_display": "2.7 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Enfuvirtide",
+          "value": 5.5,
+          "compare_value": 0.740363,
+          "value_display": "5.5 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Terlipressin",
+          "value": 6.3,
+          "compare_value": 0.799341,
+          "value_display": "6.3 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Tirzepatide",
+          "value": 10.3,
+          "compare_value": 1.012837,
+          "value_display": "10.3 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Semaglutide",
+          "value": 12.5,
+          "compare_value": 1.09691,
+          "value_display": "12.5 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Liraglutide",
+          "value": 17.1026,
+          "compare_value": 1.233063,
+          "value_display": "17.1 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Octreotide",
+          "value": 17.1394,
+          "compare_value": 1.233996,
+          "value_display": "17.1 L",
+          "unit": "L",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Bremelanotide",
+          "value": 25.0,
+          "compare_value": 1.39794,
+          "value_display": "25.0 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ecallantide",
+          "value": 26.4,
+          "compare_value": 1.421604,
+          "value_display": "26.4 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Motixafortide",
+          "value": 27.0,
+          "compare_value": 1.431364,
+          "value_display": "27.0 L",
+          "unit": "L",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Carfilzomib",
+          "value": 28.0,
+          "compare_value": 1.447158,
+          "value_display": "28.0 L",
+          "unit": "L",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Exenatide",
+          "value": 28.3,
+          "compare_value": 1.451786,
+          "value_display": "28.3 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Icatibant",
+          "value": 29.0,
+          "compare_value": 1.462398,
+          "value_display": "29.0 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Goserelin",
+          "value": 29.9204,
+          "compare_value": 1.475967,
+          "value_display": "29.9 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ziconotide",
+          "value": 30.46,
+          "compare_value": 1.48373,
+          "value_display": "30.5 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Anidulafungin",
+          "value": 40.0,
+          "compare_value": 1.60206,
+          "value_display": "40.0 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Ganirelix",
+          "value": 43.7,
+          "compare_value": 1.640481,
+          "value_display": "43.7 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Abaloparatide",
+          "value": 50.0,
+          "compare_value": 1.69897,
+          "value_display": "50.0 L",
+          "unit": "L",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Dasiglucagon",
+          "value": 52.0,
+          "compare_value": 1.716003,
+          "value_display": "52.0 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Rezafungin",
+          "value": 67.0,
+          "compare_value": 1.826075,
+          "value_display": "67.0 L",
+          "unit": "L",
+          "route": "IV",
+          "source": "FDA Prescribing Information (2023)"
+        },
+        {
+          "name": "Setmelanotide",
+          "value": 75.2,
+          "compare_value": 1.876218,
+          "value_display": "75.2 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Trofinetide",
+          "value": 80.0,
+          "compare_value": 1.90309,
+          "value_display": "80.0 L",
+          "unit": "L",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Oritavancin",
+          "value": 87.6,
+          "compare_value": 1.942504,
+          "value_display": "87.6 L",
+          "unit": "L",
+          "route": "unspecified",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Lixisenatide",
+          "value": 100.0,
+          "compare_value": 2.0,
+          "value_display": "100 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Glucagon",
+          "value": 714.216,
+          "compare_value": 2.85383,
+          "value_display": "714.2 L",
+          "unit": "L",
+          "route": "SC",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        },
+        {
+          "name": "Voclosporin",
+          "value": 2154.0,
+          "compare_value": 3.333246,
+          "value_display": "2154 L",
+          "unit": "L",
+          "route": "PO",
+          "source": "NLM DailyMed FDA Prescribing Information"
+        }
+      ]
+    },
+    "cytotoxicity_CC50": {
+      "endpoint": "cytotoxicity_CC50",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 3347,
+      "min_compare": -0.5,
+      "median_compare": 1.45,
+      "max_compare": 3.4,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -0.5
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.11
+        },
+        {
+          "p": 10.0,
+          "compare_value": 0.202
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.787
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.45
+        },
+        {
+          "p": 75.0,
+          "compare_value": 2.113
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.698
+        },
+        {
+          "p": 95.0,
+          "compare_value": 3.01
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.4
+        }
+      ],
+      "samples": []
+    },
+    "efflux_ratio": {
+      "endpoint": "efflux_ratio",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(ER)",
+      "linear_unit": "ratio",
+      "log10_space": true,
+      "n_reference": 171,
+      "min_compare": -0.6,
+      "median_compare": 0.7,
+      "max_compare": 2.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -0.6
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.34
+        },
+        {
+          "p": 10.0,
+          "compare_value": -0.132
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.258
+        },
+        {
+          "p": 50.0,
+          "compare_value": 0.7
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.142
+        },
+        {
+          "p": 90.0,
+          "compare_value": 1.532
+        },
+        {
+          "p": 95.0,
+          "compare_value": 1.74
+        },
+        {
+          "p": 100.0,
+          "compare_value": 2.0
+        }
+      ],
+      "samples": []
+    },
+    "hemolysis_MHC": {
+      "endpoint": "hemolysis_MHC",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "log10(uM)",
+      "linear_unit": "uM",
+      "log10_space": true,
+      "n_reference": 496,
+      "min_compare": -0.5,
+      "median_compare": 1.45,
+      "max_compare": 3.4,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -0.5
+        },
+        {
+          "p": 5.0,
+          "compare_value": -0.11
+        },
+        {
+          "p": 10.0,
+          "compare_value": 0.202
+        },
+        {
+          "p": 25.0,
+          "compare_value": 0.787
+        },
+        {
+          "p": 50.0,
+          "compare_value": 1.45
+        },
+        {
+          "p": 75.0,
+          "compare_value": 2.113
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.698
+        },
+        {
+          "p": 95.0,
+          "compare_value": 3.01
+        },
+        {
+          "p": 100.0,
+          "compare_value": 3.4
+        }
+      ],
+      "samples": []
+    },
+    "LogD_decadiene": {
+      "endpoint": "LogD_decadiene",
+      "reference_group": "curated_peptide_panel",
+      "distribution_mode": "quantile_anchors",
+      "task_type": "regression",
+      "unit": "LogD_dec",
+      "linear_unit": "logD_dec",
+      "log10_space": false,
+      "n_reference": 87,
+      "min_compare": -5.0,
+      "median_compare": -0.5,
+      "max_compare": 4.0,
+      "quantile_grid": [
+        {
+          "p": 0.0,
+          "compare_value": -5.0
+        },
+        {
+          "p": 5.0,
+          "compare_value": -4.1
+        },
+        {
+          "p": 10.0,
+          "compare_value": -3.38
+        },
+        {
+          "p": 25.0,
+          "compare_value": -2.03
+        },
+        {
+          "p": 50.0,
+          "compare_value": -0.5
+        },
+        {
+          "p": 75.0,
+          "compare_value": 1.03
+        },
+        {
+          "p": 90.0,
+          "compare_value": 2.38
+        },
+        {
+          "p": 95.0,
+          "compare_value": 3.1
+        },
+        {
+          "p": 100.0,
+          "compare_value": 4.0
+        }
+      ],
+      "samples": []
+    }
+  }
+}

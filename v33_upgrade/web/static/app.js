@@ -10,7 +10,7 @@
  */
 
 import { buildIntervalBarHtml, escapeHtml, renderAdmetRadar, renderBatchRadarOverlay, renderCase17ParityChart } from "./charts.js?v=1.2";
-import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.4";
+import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.5";
 import {
   animateKpiValue,
   initHeroMolecularCanvas,
@@ -20,7 +20,7 @@ import {
   renderModTemplateGrid,
   setHeroCanvasPaused,
   syncAdmetSvgStats,
-} from "./visuals.js?v=1.2";
+} from "./visuals.js?v=1.3";
 
 const API_BASE = (() => {
   const p = window.location.pathname || "/";
@@ -164,15 +164,66 @@ const state = {
   valTier: "all",
   valDomain: "all",
   valSearch: "",
-  // v1.2 Interactive Visuals & Live GNN Atom Attribution
+  valExtEndpoint: "hemolysis_cls",
+  valExtShowSingleFm: false,
+  valBlindDrugsExpanded: false,
+  // v1.2 / v1.4 Interactive Visuals & Live Attribution (Direct Ensemble + E-GAT)
   activeHotspot: "pk",
   c17Mode: "hybrid",
   svgViewMode: "motifs",
+  svgAttrMethod: "direct",
   attrEndpoint: "PAMPA",
   attrSvgCache: new Map(),
+  directAttrCache: new Map(),
   attrLoading: false,
+  drawerAttrModes: new Map(),
+  // v1.4 PeptideOpt state
+  optData: null,
+  optFilter: "all",
+  optSortCol: "mpo_score",
+  optSortAsc: false,
+  optHighlightId: null,
+  // v1.4 Batch Peptide-MPO state
+  batchMpoData: null,
+  batchMpoFilter: "all",
+  batchMpoSearch: "",
+  batchMpoSortCol: "rank",
+  batchMpoSortAsc: true,
   // API snippets
   codeLang: "curl",
+};
+
+const EGAT_8_ENDPOINTS = new Set([
+  "PAMPA",
+  "Caco2",
+  "hemolysis_cls",
+  "hemolysis_HC50",
+  "overall_peptide_toxicity",
+  "cytotoxicity_cls",
+  "cytotoxicity_CC50",
+  "half_life_reg",
+]);
+
+const OPT_OBJECTIVE_CHOICES = [
+  { ep: "PAMPA", zh: "PAMPA 膜渗透", en: "PAMPA Permeability", dir: "max" },
+  { ep: "Caco2", zh: "Caco-2 肠渗透", en: "Caco-2 Permeability", dir: "max" },
+  { ep: "half_life_reg", zh: "半衰期 T½", en: "Half-Life (T½)", dir: "max" },
+  { ep: "hemolysis_cls", zh: "溶血风险概率", en: "Hemolysis Risk (P)", dir: "min" },
+  { ep: "hemolysis_HC50", zh: "溶血 HC50", en: "Hemolysis HC50", dir: "max" },
+  { ep: "overall_peptide_toxicity", zh: "综合毒性概率", en: "Overall Toxicity (P)", dir: "min" },
+  { ep: "cytotoxicity_cls", zh: "细胞毒概率", en: "Cytotoxicity Risk (P)", dir: "min" },
+  { ep: "PPB", zh: "血浆蛋白结合 PPB", en: "Plasma Protein Binding", dir: "max" },
+  { ep: "LogD7.4", zh: "LogD7.4 脂水分配", en: "LogD7.4", dir: "max" },
+  { ep: "solubility", zh: "水溶性", en: "Aqueous Solubility", dir: "max" },
+  { ep: "MIC_E_coli", zh: "大肠杆菌 MIC", en: "E. coli MIC", dir: "min" },
+  { ep: "MIC_S_aureus", zh: "金葡菌 MIC", en: "S. aureus MIC", dir: "min" },
+];
+
+const MPO_WEIGHT_PRESETS = {
+  balanced: { perm: 25, hl: 25, hem: 25, tox: 25 },
+  oral: { perm: 45, hl: 20, hem: 20, tox: 15 },
+  long_acting: { perm: 10, hl: 45, hem: 25, tox: 20 },
+  amp_safe: { perm: 10, hl: 15, hem: 40, tox: 35 },
 };
 
 const ATTR_ENDPOINT_LABELS = {
@@ -192,6 +243,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   wireNavigation();
   wirePredictWorkspace();
   wireLandingVisuals();
+  wirePeptideOptWorkspace();
   wireBatchWorkspace();
   wireTasksWorkspace();
   wireValidationWorkspace();
@@ -260,15 +312,23 @@ function wireLandingVisuals() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  // Plan B Structure Card Toggle Hook (Motif Highlights <-> Live Pure-PyTorch E-GAT Atom Attribution Heatmap)
+  // Structure Card Toggle Hook (Motif Highlights <-> Direct Ensemble / E-GAT Attribution)
   document.querySelectorAll("#svg-view-toggle .seg-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       if (btn.disabled) return;
       const nextMode = btn.dataset.svgMode || "motifs";
       state.svgViewMode = nextMode;
       if (state.lastPrediction) {
-        if (nextMode === "attribution" && !getActiveAttributionSvg(state.lastPrediction)) {
-          fetchAtomAttributionForCurrent(state.lastPrediction, state.attrEndpoint || "PAMPA");
+        if (nextMode === "attribution") {
+          const ep = state.attrEndpoint || "PAMPA";
+          state.svgAttrMethod = getDefaultAttrModeForEndpoint(ep);
+          if (state.svgAttrMethod === "direct") {
+            fetchDirectAttributionForCurrent(state.lastPrediction, ep);
+          } else if (!getActiveAttributionSvg(state.lastPrediction)) {
+            fetchAtomAttributionForCurrent(state.lastPrediction, ep);
+          } else {
+            renderSvgCard(state.lastPrediction);
+          }
         } else {
           renderSvgCard(state.lastPrediction);
         }
@@ -417,6 +477,7 @@ function applyTheme(theme, reRenderCharts = true) {
     if (state.batchJobDetail) renderJobInspector("batch");
     if (state.selectedTaskDetail) renderJobInspector("tasks");
     if (state.catalogData) renderAllCase17Charts();
+    if (state.optData) renderPeptideOptResults(state.optData);
   }
 }
 
@@ -432,6 +493,9 @@ function applyLanguage(lang, reRenderDynamic = true) {
     if (state.healthData) hydrateHealthUi(state.healthData, { forceStatic: true });
     renderExamplesPillsAndLibrary();
     renderModTemplateGrid(document.getElementById("mod-template-grid"), state.lang, applyModTemplate);
+    populateOptObjectiveSelects();
+    if (state.optData) renderPeptideOptResults(state.optData);
+    if (state.batchMpoData) renderBatchMpoLeaderboard(state.batchMpoData);
     if (state.lastPrediction) renderPredictionResult(state.lastPrediction, { keepContext: true });
     if (state.batchJobDetail) renderJobInspector("batch");
     renderTasksQueue();
@@ -451,6 +515,7 @@ function applyLanguage(lang, reRenderDynamic = true) {
       renderAllCase17Charts();
       renderValidationKpis(state.catalogData);
       renderValidationHighlights(state.catalogData);
+      renderValidationHardAuditPanels(state.catalogData);
       renderValidationTable();
     }
     renderCodeSnippet(state.codeLang);
@@ -1083,6 +1148,22 @@ function clearInspectContext(hideBar = true) {
 }
 
 // ==================== RENDER SINGLE PREDICTION / COMPOUND DETAIL ====================
+function isEgatBelowRandom(endpoint) {
+  const egatAudit = (state.catalogData?.egat_fidelity_audit || {})[endpoint] || null;
+  if (!egatAudit) return false;
+  const delCi = egatAudit.deletion_top_vs_rand_ci95;
+  return (
+    egatAudit.interpretability_tier === "below_random_unreliable" ||
+    (Array.isArray(delCi) && delCi.length === 2 && Number(delCi[1]) < 1.0)
+  );
+}
+
+function getDefaultAttrModeForEndpoint(endpoint) {
+  if (!EGAT_8_ENDPOINTS.has(endpoint)) return "direct";
+  if (isEgatBelowRandom(endpoint)) return "direct";
+  return "egat";
+}
+
 function getMolAttrKey(data, endpoint) {
   const molKey = data?.canonical_smiles || data?.smiles || data?.sequence || data?.query_name || "";
   return `${molKey}::${endpoint}`;
@@ -1091,6 +1172,10 @@ function getMolAttrKey(data, endpoint) {
 function getActiveAttributionSvg(data) {
   if (!data) return null;
   const ep = state.attrEndpoint || data.atom_attribution_endpoint || "PAMPA";
+  if (state.svgAttrMethod === "direct") {
+    const dirRes = state.directAttrCache.get(getMolAttrKey(data, ep));
+    return dirRes?.svg_2d || dirRes?.svg || null;
+  }
   const cached = state.attrSvgCache.get(getMolAttrKey(data, ep));
   if (cached) return cached;
   if (data.atom_attribution_svg && (!data.atom_attribution_endpoint || data.atom_attribution_endpoint === ep)) {
@@ -1107,10 +1192,113 @@ function getActiveStructureSvg(data) {
   return data?.svg || null;
 }
 
+function buildImpactBarsHtml(impacts, { maxRows = 10 } = {}) {
+  const list = Array.isArray(impacts) ? impacts : [];
+  if (!list.length) {
+    return `<div class="empty-inline" style="font-size:11.5px;">${state.lang === "zh" ? "暂无显著残基/基团扰动变化" : "No significant residue/group perturbation delta"}</div>`;
+  }
+  const sorted = [...list]
+    .sort((a, b) => Math.abs(Number(b.normalized_weight ?? b.delta_raw ?? 0)) - Math.abs(Number(a.normalized_weight ?? a.delta_raw ?? 0)))
+    .slice(0, maxRows);
+
+  return sorted
+    .map((item) => {
+      const nw = Math.max(-1, Math.min(1, Number(item.normalized_weight ?? 0)));
+      const pct = Math.min(50, Math.abs(nw) * 50);
+      const isPos = item.direction === "increases" || nw > 0.01;
+      const isNeg = item.direction === "decreases" || nw < -0.01;
+      const barCls = isPos ? "impact-pos" : isNeg ? "impact-neg" : "impact-neu";
+      const leftStyle = isPos ? `left:50%;width:${Math.max(2, pct).toFixed(1)}%;` : isNeg ? `left:${(50 - Math.max(2, pct)).toFixed(1)}%;width:${Math.max(2, pct).toFixed(1)}%;` : `left:49%;width:2%;`;
+      const valCol = isPos ? "var(--rose)" : isNeg ? "var(--cobalt)" : "var(--ink-muted)";
+      const fmtSignedDelta = (v) => {
+        if (v == null || Number.isNaN(Number(v))) return null;
+        const n = Number(v);
+        const sign = n > 0 ? "+" : n < 0 ? "−" : "";
+        const absN = Math.abs(n);
+        if (absN === 0) return "0.000";
+        if (absN < 0.001 || absN >= 10000) return `${sign}${absN.toExponential(2)}`;
+        return `${sign}${absN.toFixed(3)}`;
+      };
+      const disp =
+        item.delta_raw != null
+          ? fmtSignedDelta(item.delta_raw)
+          : typeof item.delta_display === "string"
+            ? item.delta_display
+            : fmtSignedDelta(item.delta_display) || "—";
+      const linDisp =
+        item.delta_display != null
+          ? typeof item.delta_display === "string"
+            ? item.delta_display
+            : fmtSignedDelta(item.delta_display)
+          : null;
+      const tip = `${item.label || item.id} (${item.kind || ""}) · Δraw=${disp}${linDisp && linDisp !== disp ? ` · Δlin=${linDisp}` : ""}`;
+      return `
+        <div class="impact-bar-row" title="${escapeHtml(tip)}">
+          <span class="impact-lbl">${escapeHtml(item.label || item.id || "—")}</span>
+          <div class="impact-bidir-track">
+            <div class="impact-bidir-mid"></div>
+            <div class="impact-bidir-fill ${barCls}" style="${leftStyle}"></div>
+          </div>
+          <span class="impact-val" style="color:${valCol}">${escapeHtml(disp)}</span>
+        </div>`;
+    })
+    .join("");
+}
+
+async function fetchDirectAttributionPayload(data, endpoint) {
+  const ckey = getMolAttrKey(data, endpoint);
+  if (state.directAttrCache.has(ckey)) return state.directAttrCache.get(ckey);
+  const body = {
+    query: !data.smiles && !data.canonical_smiles && !data.sequence ? data.query_name : null,
+    smiles: data.canonical_smiles || data.smiles || null,
+    sequence: data.sequence || null,
+    endpoint,
+    width: 760,
+    height: 460,
+    max_perturbations: 24,
+    conditions: {
+      rbc_species: state.rbcSpecies,
+      pk_context: document.getElementById("pk-context-select")?.value || "human_plasma",
+    },
+  };
+  const res = await apiFetch("/api/v1/direct-attribution", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await res.json();
+  if (!res.ok) throw new Error(payload.detail || "Direct attribution request failed.");
+  state.directAttrCache.set(ckey, payload);
+  return payload;
+}
+
+async function fetchDirectAttributionForCurrent(data, endpoint) {
+  if (!data) return;
+  const targetEp = endpoint || state.attrEndpoint || "PAMPA";
+  state.attrEndpoint = targetEp;
+  state.svgAttrMethod = "direct";
+  const ckey = getMolAttrKey(data, targetEp);
+  if (state.directAttrCache.has(ckey)) {
+    renderSvgCard(data);
+    return;
+  }
+  state.attrLoading = true;
+  renderSvgCard(data);
+  try {
+    await fetchDirectAttributionPayload(data, targetEp);
+  } catch (err) {
+    console.error("Direct attribution error:", err);
+  } finally {
+    state.attrLoading = false;
+    if (state.lastPrediction === data) renderSvgCard(data);
+  }
+}
+
 async function fetchAtomAttributionForCurrent(data, endpoint) {
   if (!data) return;
   const targetEp = endpoint || data.atom_attribution_endpoint || "PAMPA";
   state.attrEndpoint = targetEp;
+  state.svgAttrMethod = "egat";
   const ckey = getMolAttrKey(data, targetEp);
   if (state.attrSvgCache.has(ckey)) {
     data.atom_attribution_svg = state.attrSvgCache.get(ckey);
@@ -1185,12 +1373,39 @@ function renderSvgCard(data) {
     b.classList.toggle("active", b.dataset.svgMode === state.svgViewMode);
   });
 
-  // Render 8-endpoint attribution selector bar when in attribution mode
+  const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
+  const modeBar = document.getElementById("svg-attr-mode-bar");
   const attrBar = document.getElementById("svg-attr-bar");
+  const impactsHost = document.getElementById("svg-attr-impacts");
+
+  if (modeBar) {
+    if (state.svgViewMode === "attribution" && hasAttrReady) {
+      const canEgat = EGAT_8_ENDPOINTS.has(activeEp);
+      modeBar.classList.remove("hidden");
+      modeBar.innerHTML = `
+        <div class="seg-group">
+          <button type="button" class="seg-btn ${state.svgAttrMethod === "direct" ? "active" : ""}" data-svg-am="direct">${escapeHtml(t(state.lang, "dir_attr_mode_direct"))}</button>
+          <button type="button" class="seg-btn ${state.svgAttrMethod === "egat" ? "active" : ""}" data-svg-am="egat" ${!canEgat ? "disabled" : ""}>${escapeHtml(t(state.lang, "dir_attr_mode_egat"))}</button>
+        </div>`;
+      modeBar.querySelectorAll("[data-svg-am]").forEach((b) => {
+        b.addEventListener("click", () => {
+          if (b.disabled) return;
+          const m = b.dataset.svgAm;
+          state.svgAttrMethod = m;
+          if (m === "direct") fetchDirectAttributionForCurrent(data, activeEp);
+          else fetchAtomAttributionForCurrent(data, activeEp);
+        });
+      });
+    } else {
+      modeBar.classList.add("hidden");
+      modeBar.innerHTML = "";
+    }
+  }
+
+  // Render endpoint attribution selector bar when in attribution mode
   if (attrBar) {
     if (state.svgViewMode === "attribution" && hasAttrReady) {
       attrBar.classList.remove("hidden");
-      const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
       attrBar.innerHTML = availEps
         .map((ep) => {
           const meta = ATTR_ENDPOINT_LABELS[ep] || { zh: ep, en: ep };
@@ -1202,7 +1417,10 @@ function renderSvgCard(data) {
         pill.addEventListener("click", () => {
           const nextEp = pill.dataset.attrEp;
           if (nextEp && state.lastPrediction) {
-            fetchAtomAttributionForCurrent(state.lastPrediction, nextEp);
+            const defM = getDefaultAttrModeForEndpoint(nextEp);
+            state.svgAttrMethod = defM;
+            if (defM === "direct") fetchDirectAttributionForCurrent(state.lastPrediction, nextEp);
+            else fetchAtomAttributionForCurrent(state.lastPrediction, nextEp);
           }
         });
       });
@@ -1215,7 +1433,8 @@ function renderSvgCard(data) {
   const activeSvg = getActiveStructureSvg(data);
   const svgStage = document.getElementById("mol-svg-stage");
   if (state.svgViewMode === "attribution" && state.attrLoading) {
-    svgStage.innerHTML = `<div class="svg-loading-hint">${escapeHtml(t(state.lang, "svg_attr_loading"))}</div>`;
+    const loadTxt = state.svgAttrMethod === "direct" ? t(state.lang, "dir_attr_loading") : t(state.lang, "svg_attr_loading");
+    svgStage.innerHTML = `<div class="svg-loading-hint">${escapeHtml(loadTxt)}</div>`;
   } else {
     svgStage.innerHTML =
       activeSvg || `<div class="svg-loading-hint">${state.lang === "zh" ? "暂无二维结构" : "Structure unavailable"}</div>`;
@@ -1224,39 +1443,65 @@ function renderSvgCard(data) {
 
   const legendEl = document.getElementById("mol-svg-legend");
   if (state.svgViewMode === "attribution" && hasAttrReady) {
-    const activeEp = state.attrEndpoint || data.atom_attribution_endpoint || availEps[0];
-    const egatAudit = (state.catalogData?.egat_fidelity_audit || {})[activeEp] || null;
-    const delCi = egatAudit?.deletion_top_vs_rand_ci95;
-    const isBelowRand =
-      egatAudit?.interpretability_tier === "below_random_unreliable" ||
-      (Array.isArray(delCi) && delCi.length === 2 && Number(delCi[1]) < 1.0);
-    const isFaithful = !isBelowRand && egatAudit?.interpretability_tier === "faithful_surrogate";
-    const badgeTone = isFaithful ? "tone-emerald" : isBelowRand ? "tone-amber" : "tone-slate";
-    const badgeLbl = isFaithful
-      ? (state.lang === "zh" ? "✓ 高保真代理 (Faithful Surrogate)" : "✓ Faithful Surrogate")
-      : isBelowRand
-        ? (state.lang === "zh" ? "⚠ 归因弱于随机删除 (不可靠)" : "⚠ Unreliable Attribution (< Random)")
-        : (state.lang === "zh" ? "定性启发式归因 (Qualitative Heuristic)" : "Qualitative Saliency Heuristic");
-    const tierBadge = egatAudit
-      ? `<span class="mod-badge ${badgeTone}" style="font-size:10px;margin-right:6px;">${badgeLbl}${
-          egatAudit.fidelity_vs_4fm_spearman != null ? ` · Fid ρ=${Number(egatAudit.fidelity_vs_4fm_spearman).toFixed(2)}` : ""
-        }${
-          egatAudit.deletion_top_vs_rand_ratio != null ? ` · Del ${Number(egatAudit.deletion_top_vs_rand_ratio).toFixed(2)}×` : ""
-        }</span>`
-      : "";
-    legendEl.innerHTML = `${tierBadge}<span class="legend-item" style="color:var(--teal)">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`;
-  } else if (data.svg_highlights && data.svg_highlights.length) {
-    legendEl.innerHTML = data.svg_highlights
-      .map(
-        (h) => `
-        <span class="legend-item" title="${escapeHtml(`${h.label_zh} / ${h.label_en} (${h.atom_count})`)}">
-          <span class="legend-swatch" style="background:${escapeHtml(h.color)}"></span>
-          ${escapeHtml(state.lang === "zh" ? h.label_zh : h.label_en)}
-        </span>`
-      )
-      .join("");
+    if (state.svgAttrMethod === "direct") {
+      const dirRes = state.directAttrCache.get(getMolAttrKey(data, activeEp));
+      const methTxt = dirRes?.method_description || dirRes?.method || "Direct Ensemble Perturbation";
+      legendEl.innerHTML = `<span class="mod-badge tone-emerald" style="font-size:10px;margin-right:6px;">${escapeHtml(t(state.lang, "dir_attr_faithful_badge"))}</span><span class="legend-item" style="color:var(--teal)">${escapeHtml(methTxt)}</span>`;
+      if (impactsHost) {
+        if (dirRes?.residue_or_group_impacts?.length) {
+          impactsHost.classList.remove("hidden");
+          impactsHost.innerHTML = `
+            <div class="impact-bars-title">
+              <span>${escapeHtml(t(state.lang, "dir_attr_impacts_title"))}</span>
+              <span class="mono">${dirRes.n_perturbations || 0} pert · ${Math.round(dirRes.latency_ms || 0)} ms</span>
+            </div>
+            ${buildImpactBarsHtml(dirRes.residue_or_group_impacts, { maxRows: 6 })}`;
+        } else {
+          impactsHost.classList.add("hidden");
+          impactsHost.innerHTML = "";
+        }
+      }
+    } else {
+      if (impactsHost) {
+        impactsHost.classList.add("hidden");
+        impactsHost.innerHTML = "";
+      }
+      const egatAudit = (state.catalogData?.egat_fidelity_audit || {})[activeEp] || null;
+      const isBelowRand = isEgatBelowRandom(activeEp);
+      const isFaithful = !isBelowRand && egatAudit?.interpretability_tier === "faithful_surrogate";
+      const badgeTone = isFaithful ? "tone-emerald" : isBelowRand ? "tone-amber" : "tone-slate";
+      const badgeLbl = isFaithful
+        ? (state.lang === "zh" ? "✓ 高保真代理 (Faithful Surrogate)" : "✓ Faithful Surrogate")
+        : isBelowRand
+          ? (state.lang === "zh" ? "⚠ 归因弱于随机删除 (不可靠)" : "⚠ Unreliable Attribution (< Random)")
+          : (state.lang === "zh" ? "定性启发式归因 (Qualitative Heuristic)" : "Qualitative Saliency Heuristic");
+      const tierBadge = egatAudit
+        ? `<span class="mod-badge ${badgeTone}" style="font-size:10px;margin-right:6px;">${badgeLbl}${
+            egatAudit.fidelity_vs_4fm_spearman != null ? ` · Fid ρ=${Number(egatAudit.fidelity_vs_4fm_spearman).toFixed(2)}` : ""
+          }${
+            egatAudit.deletion_top_vs_rand_ratio != null ? ` · Del ${Number(egatAudit.deletion_top_vs_rand_ratio).toFixed(2)}×` : ""
+          }</span>`
+        : "";
+      legendEl.innerHTML = `${tierBadge}<span class="legend-item" style="color:var(--teal)">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`;
+    }
   } else {
-    legendEl.innerHTML = `<span class="legend-item" style="color:var(--ink-faint)">${escapeHtml(t(state.lang, "svg_canonical_note"))}</span>`;
+    if (impactsHost) {
+      impactsHost.classList.add("hidden");
+      impactsHost.innerHTML = "";
+    }
+    if (data.svg_highlights && data.svg_highlights.length) {
+      legendEl.innerHTML = data.svg_highlights
+        .map(
+          (h) => `
+          <span class="legend-item" title="${escapeHtml(`${h.label_zh} / ${h.label_en} (${h.atom_count})`)}">
+            <span class="legend-swatch" style="background:${escapeHtml(h.color)}"></span>
+            ${escapeHtml(state.lang === "zh" ? h.label_zh : h.label_en)}
+          </span>`
+        )
+        .join("");
+    } else {
+      legendEl.innerHTML = `<span class="legend-item" style="color:var(--ink-faint)">${escapeHtml(t(state.lang, "svg_canonical_note"))}</span>`;
+    }
   }
 }
 
@@ -1693,6 +1938,9 @@ function wireExpandableDrawers(card) {
       const expanded = parent.classList.toggle("expanded");
       row.setAttribute("aria-expanded", String(expanded));
       drawer.classList.toggle("hidden", !expanded);
+      if (expanded) {
+        hydrateDrawerAttributionIfCached(parent);
+      }
     };
     row.addEventListener("click", toggle);
     row.addEventListener("keydown", (e) => {
@@ -1702,6 +1950,249 @@ function wireExpandableDrawers(card) {
       }
     });
   });
+
+  // P0-2: Clicking a nearest approved example chip in the percentile drawer runs prediction for that drug
+  card.querySelectorAll(".pctl-ex-chip").forEach((chip) => {
+    chip.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const q = chip.dataset.pctlQuery;
+      if (q) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        runExampleQuery(q);
+      }
+    });
+  });
+
+  // P2-8: Direct Ensemble vs E-GAT mode switcher & compute button inside every endpoint drawer
+  card.querySelectorAll(".drawer-attr-section").forEach((sec) => {
+    const ep = sec.dataset.attrEp;
+    sec.querySelectorAll("[data-da-mode]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (btn.disabled) return;
+        const mode = btn.dataset.daMode;
+        state.drawerAttrModes.set(ep, mode);
+        sec.querySelectorAll("[data-da-mode]").forEach((b) => b.classList.toggle("active", b.dataset.daMode === mode));
+        runDrawerAttribution(sec, ep, mode);
+      });
+    });
+    sec.querySelector("[data-da-run]")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const mode = state.drawerAttrModes.get(ep) || getDefaultAttrModeForEndpoint(ep);
+      runDrawerAttribution(sec, ep, mode);
+    });
+  });
+}
+
+function hydrateDrawerAttributionIfCached(epItemEl) {
+  const sec = epItemEl?.querySelector(".drawer-attr-section");
+  const data = state.lastPrediction;
+  if (!sec || !data) return;
+  const ep = sec.dataset.attrEp;
+  const mode = state.drawerAttrModes.get(ep) || getDefaultAttrModeForEndpoint(ep);
+  const ckey = getMolAttrKey(data, ep);
+  if (mode === "direct" && state.directAttrCache.has(ckey)) {
+    renderDrawerAttributionResult(sec, ep, "direct", state.directAttrCache.get(ckey));
+  } else if (mode === "egat" && state.attrSvgCache.has(ckey)) {
+    renderDrawerAttributionResult(sec, ep, "egat", { svg: state.attrSvgCache.get(ckey), endpoint: ep });
+  }
+}
+
+async function runDrawerAttribution(sec, endpoint, mode) {
+  const data = state.lastPrediction;
+  const bodyEl = sec.querySelector(".drawer-attr-body");
+  if (!data || !bodyEl) return;
+
+  const ckey = getMolAttrKey(data, endpoint);
+  if (mode === "direct" && state.directAttrCache.has(ckey)) {
+    renderDrawerAttributionResult(sec, endpoint, "direct", state.directAttrCache.get(ckey));
+    return;
+  }
+  if (mode === "egat" && state.attrSvgCache.has(ckey)) {
+    renderDrawerAttributionResult(sec, endpoint, "egat", { svg: state.attrSvgCache.get(ckey), endpoint });
+    return;
+  }
+
+  bodyEl.innerHTML = `<div class="svg-loading-hint" style="padding:18px;">${escapeHtml(
+    mode === "direct" ? t(state.lang, "dir_attr_loading") : t(state.lang, "svg_attr_loading")
+  )}</div>`;
+
+  try {
+    if (mode === "direct") {
+      const payload = await fetchDirectAttributionPayload(data, endpoint);
+      renderDrawerAttributionResult(sec, endpoint, "direct", payload);
+    } else {
+      const reqBody = {
+        query: !data.smiles && !data.canonical_smiles && !data.sequence ? data.query_name : null,
+        smiles: data.canonical_smiles || data.smiles || null,
+        sequence: !data.smiles && !data.canonical_smiles ? data.sequence : null,
+        endpoint,
+        width: 640,
+        height: 360,
+      };
+      const res = await apiFetch("/api/v1/atom-attribution", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      });
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.detail || "E-GAT attribution failed.");
+      if (payload?.svg) state.attrSvgCache.set(ckey, payload.svg);
+      renderDrawerAttributionResult(sec, endpoint, "egat", payload);
+    }
+  } catch (err) {
+    bodyEl.innerHTML = `<div class="alert-error" style="margin-top:6px;">${escapeHtml(err.message || String(err))}</div>`;
+  }
+}
+
+function renderDrawerAttributionResult(sec, endpoint, mode, payload) {
+  const bodyEl = sec.querySelector(".drawer-attr-body");
+  if (!bodyEl) return;
+
+  if (mode === "direct") {
+    const svgHtml = payload.svg_2d || payload.svg || `<div class="empty-inline">2D SVG unavailable</div>`;
+    const impactsHtml = buildImpactBarsHtml(payload.residue_or_group_impacts, { maxRows: 10 });
+    const methLabel = payload.method_description || payload.method || "direct_ensemble_faithful";
+    bodyEl.innerHTML = `
+      <div class="drawer-attr-grid">
+        <div class="drawer-attr-svg-box">${svgHtml}</div>
+        <div class="impact-bars-box">
+          <div class="impact-bars-title">
+            <span>${escapeHtml(t(state.lang, "dir_attr_impacts_title"))}</span>
+            <span class="mod-badge tone-emerald" style="font-size:9.5px;">${escapeHtml(t(state.lang, "dir_attr_faithful_badge"))}</span>
+          </div>
+          ${impactsHtml}
+          <div style="margin-top:7px;font-size:10.5px;color:var(--ink-faint);" class="mono">
+            ${escapeHtml(methLabel)} · ${payload.n_perturbations ?? 0} pert · ${Math.round(payload.latency_ms ?? 0)} ms
+          </div>
+        </div>
+      </div>`;
+  } else {
+    const belowRand = isEgatBelowRandom(endpoint);
+    const warnHtml = belowRand
+      ? `<div class="drawer-attr-warn">
+           <span>⚠ ${escapeHtml(t(state.lang, "dir_attr_egat_warn"))}</span>
+           <button type="button" class="btn-ghost btn-sm" data-switch-direct="1">${escapeHtml(t(state.lang, "dir_attr_switch_direct"))}</button>
+         </div>`
+      : "";
+    const topAtomsHtml = (payload.top_atoms || [])
+      .slice(0, 8)
+      .map(
+        (a) =>
+          `<span class="mod-badge tone-slate mono" style="font-size:10.5px;">${escapeHtml(a.symbol)}${a.atom_index}: ${Number(a.weight) >= 0 ? "+" : ""}${Number(a.weight).toFixed(2)}</span>`
+      )
+      .join(" ");
+    bodyEl.innerHTML = `
+      ${warnHtml}
+      <div class="drawer-attr-grid">
+        <div class="drawer-attr-svg-box">${payload.svg || `<div class="empty-inline">SVG unavailable</div>`}</div>
+        <div class="impact-bars-box">
+          <div class="impact-bars-title">
+            <span>E-GAT Top Attributed Heavy Atoms</span>
+            <span class="mono">${payload.latency_ms != null ? `${Math.round(payload.latency_ms)} ms` : "cached"}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">${topAtomsHtml || `<span class="empty-inline" style="font-size:11.5px;">${escapeHtml(t(state.lang, "svg_attr_caption"))}</span>`}</div>
+        </div>
+      </div>`;
+    bodyEl.querySelector("[data-switch-direct]")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.drawerAttrModes.set(endpoint, "direct");
+      sec.querySelectorAll("[data-da-mode]").forEach((b) => b.classList.toggle("active", b.dataset.daMode === "direct"));
+      runDrawerAttribution(sec, endpoint, "direct");
+    });
+  }
+}
+
+function buildClinicalPercentileMiniHtml(cp) {
+  if (!cp || cp.percentile == null || Number.isNaN(Number(cp.percentile))) return "";
+  const pct = Math.max(0, Math.min(100, Number(cp.percentile)));
+  const pctInt = Math.round(pct);
+  const isApproved = cp.reference_group === "approved_clinical_peptides";
+  const refTag = t(state.lang, isApproved ? "pctl_approved_tag" : "pctl_panel_tag");
+  const sumTxt = state.lang === "zh" ? cp.summary_zh || cp.summary_en || "" : cp.summary_en || cp.summary_zh || "";
+  const exList = Array.isArray(cp.nearest_approved_examples) ? cp.nearest_approved_examples : [];
+  const exStr = exList.length
+    ? "\n" +
+      (state.lang === "zh" ? "最接近参考：" : "Nearest: ") +
+      exList.map((ex) => `${ex.name} (${ex.value_display || ex.value}${ex.route ? `, ${ex.route}` : ""})`).join(" · ")
+    : "";
+  const tip = `${sumTxt} (n=${cp.n_reference ?? "?"})${exStr}`;
+  return `
+    <div class="pctl-mini-wrap" title="${escapeHtml(tip)}">
+      <span class="pctl-mini-tag">P${pctInt}</span>
+      <div class="pctl-mini-track">
+        <div class="pctl-mini-dot" style="left:${pct.toFixed(1)}%;"></div>
+      </div>
+      <span class="pctl-mini-ref">${escapeHtml(refTag)}</span>
+    </div>`;
+}
+
+function buildClinicalPercentileDrawerHtml(cp) {
+  if (!cp || cp.percentile == null || Number.isNaN(Number(cp.percentile))) return "";
+  const pct = Math.max(0, Math.min(100, Number(cp.percentile)));
+  const pctInt = Math.round(pct);
+  const isApproved = cp.reference_group === "approved_clinical_peptides";
+  const refTag = t(state.lang, isApproved ? "pctl_approved_tag" : "pctl_panel_tag");
+  const sumTxt = state.lang === "zh" ? cp.summary_zh || cp.summary_en || "" : cp.summary_en || cp.summary_zh || "";
+  const exList = Array.isArray(cp.nearest_approved_examples) ? cp.nearest_approved_examples : [];
+  const chipsHtml = exList.length
+    ? `<div class="pctl-examples-row">
+         <span style="font-size:11px;color:var(--ink-muted);font-weight:600;">${escapeHtml(t(state.lang, "pctl_nearest_lbl"))}</span>
+         ${exList
+           .map(
+             (ex) =>
+               `<button type="button" class="pctl-ex-chip" data-pctl-query="${escapeHtml(ex.name)}" title="${escapeHtml(ex.source || "")}">
+                  <strong>${escapeHtml(ex.name)}</strong>
+                  <span class="mono">${escapeHtml(ex.value_display || String(ex.value ?? ""))}</span>
+                  ${ex.route ? `<span style="color:var(--ink-faint)">${escapeHtml(ex.route)}</span>` : ""}
+                </button>`
+           )
+           .join("")}
+       </div>`
+    : "";
+
+  return `
+    <div class="pctl-drawer-box">
+      <div class="pctl-drawer-top">
+        <span class="pctl-drawer-title">${escapeHtml(t(state.lang, "pctl_drawer_title"))}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="mod-badge tone-teal mono" style="font-size:10.5px;">P${pctInt} (${pct.toFixed(1)}%)</span>
+          <span class="mod-badge tone-slate" style="font-size:10px;">${escapeHtml(refTag)} · n=${cp.n_reference ?? "?"}</span>
+        </div>
+      </div>
+      <div class="pctl-scale-track">
+        <div class="pctl-scale-pin" style="left:${pct.toFixed(1)}%;"></div>
+      </div>
+      <div class="pctl-scale-ticks"><span>P0</span><span>P25</span><span>P50</span><span>P75</span><span>P100</span></div>
+      ${sumTxt ? `<p class="pctl-summary-txt">${escapeHtml(sumTxt)}</p>` : ""}
+      ${chipsHtml}
+    </div>`;
+}
+
+function buildDrawerAttrSectionHtml(p) {
+  const canEgat = EGAT_8_ENDPOINTS.has(p.endpoint);
+  const belowRand = isEgatBelowRandom(p.endpoint);
+  const activeMode = state.drawerAttrModes.get(p.endpoint) || getDefaultAttrModeForEndpoint(p.endpoint);
+  const noteHtml = !canEgat
+    ? `<span style="font-size:11px;color:var(--ink-muted);">${escapeHtml(t(state.lang, "dir_attr_egat_na"))}</span>`
+    : belowRand
+      ? `<span style="font-size:11px;color:var(--amber-dark);">⚠ ${escapeHtml(t(state.lang, "dir_attr_egat_warn"))}</span>`
+      : "";
+  return `
+    <div class="drawer-attr-section" data-attr-ep="${escapeHtml(p.endpoint)}">
+      <div class="drawer-attr-head">
+        <span class="drawer-attr-title">${escapeHtml(t(state.lang, "dir_attr_title"))}</span>
+        <div class="drawer-attr-controls">
+          <div class="seg-group">
+            <button type="button" class="seg-btn ${activeMode === "direct" ? "active" : ""}" data-da-mode="direct">${escapeHtml(t(state.lang, "dir_attr_mode_direct"))}</button>
+            <button type="button" class="seg-btn ${activeMode === "egat" ? "active" : ""}" data-da-mode="egat" ${!canEgat ? "disabled" : ""} title="${escapeHtml(canEgat ? t(state.lang, "dir_attr_mode_egat") : t(state.lang, "dir_attr_egat_na"))}">${escapeHtml(t(state.lang, "dir_attr_mode_egat"))}</button>
+          </div>
+          <button type="button" class="btn-ghost btn-sm" data-da-run="1">${escapeHtml(t(state.lang, "dir_attr_run"))}</button>
+        </div>
+      </div>
+      ${noteHtml ? `<div style="margin-bottom:6px;">${noteHtml}</div>` : ""}
+      <div class="drawer-attr-body"></div>
+    </div>`;
 }
 
 function buildEndpointItemHtml(p) {
@@ -1760,6 +2251,9 @@ function buildEndpointItemHtml(p) {
        </div>`
     : "";
   const extraCiHtml = p.ci90_display ? ` · <strong>${escapeHtml(t(state.lang, "dm_ci90"))}</strong> <span class="mono">${escapeHtml(p.ci90_display)}</span>` : "";
+  const pctlMiniHtml = buildClinicalPercentileMiniHtml(p.clinical_percentile);
+  const pctlDrawerHtml = buildClinicalPercentileDrawerHtml(p.clinical_percentile);
+  const drawerAttrHtml = buildDrawerAttrSectionHtml(p);
 
   return `
     <div class="ep-item" data-endpoint="${escapeHtml(p.endpoint)}">
@@ -1775,7 +2269,7 @@ function buildEndpointItemHtml(p) {
           </span>
           ${p.evidence_grade === "exploratory_not_recommended" ? `<span style="font-size:10px;color:var(--amber);font-weight:600;display:block;margin-top:2px;">⚠ ${escapeHtml(state.lang === "zh" ? "仅供探索（留出相关性为负）" : "Exploratory only (negative holdout ρ)")}</span>` : ""}
         </div>
-        <div class="ep-ci-col">${buildIntervalBarHtml(p, state.lang)}</div>
+        <div class="ep-ci-col">${buildIntervalBarHtml(p, state.lang)}${pctlMiniHtml}</div>
         <span class="ad-pill ad-${escapeHtml(p.ad_status)}">${escapeHtml(adTxt)}${tcTxt}</span>
         <span class="ep-chevron">▾</span>
       </div>
@@ -1786,10 +2280,12 @@ function buildEndpointItemHtml(p) {
           <div class="dm-box"><span class="dm-lbl">${escapeHtml(calOrCovLabel)}</span><span class="dm-val">${calOrCovVal}</span></div>
           <div class="dm-box"><span class="dm-lbl">${escapeHtml(t(state.lang, "dm_corpus"))}</span><span class="dm-val">${trainDisplay}</span></div>
         </div>
+        ${pctlDrawerHtml}
         ${censoredHtml}
         <p class="drawer-note">${escapeHtml(p.note || "")}${extraCiHtml}${p.assay_context ? ` <strong>[${escapeHtml(p.assay_context)}]</strong>` : ""}</p>
         <div class="analogs-title">${escapeHtml(t(state.lang, "dm_analogs"))}</div>
         <div class="analog-list">${analogsHtml || `<span style="font-size:12px;color:var(--ink-faint)">${escapeHtml(t(state.lang, "dm_no_analogs"))}</span>`}</div>
+        ${drawerAttrHtml}
       </div>
     </div>`;
 }
@@ -1937,10 +2433,745 @@ function wireBatchWorkspace() {
     document.getElementById("batch-error").classList.add("hidden");
   });
 
+  document.getElementById("btn-run-batch-mpo")?.addEventListener("click", runBatchMpoScreening);
   document.getElementById("btn-run-batch")?.addEventListener("click", submitAsyncBatchTask);
   document.getElementById("btn-goto-tasks-from-batch")?.addEventListener("click", () => {
     if (state.batchJobId) selectTaskInCenter(state.batchJobId);
     switchTab("tasks");
+  });
+
+  wireBatchMpoSliders();
+}
+
+function getNormalizedMpoWeights() {
+  const perm = Number(document.getElementById("mpo-w-perm")?.value ?? 25);
+  const hl = Number(document.getElementById("mpo-w-hl")?.value ?? 25);
+  const hem = Number(document.getElementById("mpo-w-hem")?.value ?? 25);
+  const tox = Number(document.getElementById("mpo-w-tox")?.value ?? 25);
+  const sum = perm + hl + hem + tox || 100;
+  return {
+    permeability: Number((perm / sum).toFixed(4)),
+    half_life: Number((hl / sum).toFixed(4)),
+    low_hemolysis: Number((hem / sum).toFixed(4)),
+    low_toxicity: Number((tox / sum).toFixed(4)),
+    penalize_ood: Boolean(document.getElementById("mpo-penalize-ood")?.checked ?? true),
+    weight_by_evidence_grade: Boolean(document.getElementById("mpo-weight-grade")?.checked ?? true),
+  };
+}
+
+function syncMpoSliderReadouts() {
+  const w = getNormalizedMpoWeights();
+  const setPct = (id, v) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = `${Math.round(v * 100)}%`;
+  };
+  setPct("mpo-w-perm-val", w.permeability);
+  setPct("mpo-w-hl-val", w.half_life);
+  setPct("mpo-w-hem-val", w.low_hemolysis);
+  setPct("mpo-w-tox-val", w.low_toxicity);
+}
+
+function wireBatchMpoSliders() {
+  ["mpo-w-perm", "mpo-w-hl", "mpo-w-hem", "mpo-w-tox"].forEach((id) => {
+    document.getElementById(id)?.addEventListener("input", () => {
+      document.querySelectorAll(".mpo-preset-btn").forEach((b) => b.classList.remove("active"));
+      syncMpoSliderReadouts();
+    });
+  });
+
+  document.querySelectorAll(".mpo-preset-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const p = MPO_WEIGHT_PRESETS[btn.dataset.mpoPreset];
+      if (!p) return;
+      document.getElementById("mpo-w-perm").value = String(p.perm);
+      document.getElementById("mpo-w-hl").value = String(p.hl);
+      document.getElementById("mpo-w-hem").value = String(p.hem);
+      document.getElementById("mpo-w-tox").value = String(p.tox);
+      document.querySelectorAll(".mpo-preset-btn").forEach((b) => b.classList.toggle("active", b === btn));
+      syncMpoSliderReadouts();
+    });
+  });
+  syncMpoSliderReadouts();
+}
+
+async function runBatchMpoScreening() {
+  const rawText = document.getElementById("batch-paste-area")?.value.trim();
+  const errEl = document.getElementById("batch-error");
+  errEl?.classList.add("hidden");
+
+  if (!rawText) {
+    if (errEl) {
+      errEl.textContent =
+        state.lang === "zh"
+          ? "请先上传文件、粘贴分子列表，或点击上方“综合示例 (7)”/“17 个案例 (17)”按钮。"
+          : 'Please upload a file, paste molecules, or click "Mixed Demo (7)" / "17 Clinical Cases (17)" above.';
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+
+  const btn = document.getElementById("btn-run-batch-mpo");
+  btn.disabled = true;
+  btn.querySelector(".btn-label").textContent = t(state.lang, "mpo_btn_running");
+  btn.querySelector(".btn-spinner").classList.remove("hidden");
+
+  try {
+    const weights = getNormalizedMpoWeights();
+    const res = await apiFetch("/api/v1/batch-screen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        raw_text: rawText,
+        weights,
+        include_tier2: Boolean(document.getElementById("batch-tier2")?.checked),
+        conditions: {
+          rbc_species: document.getElementById("batch-rbc")?.value || "human",
+          pk_context: "human_plasma",
+        },
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Batch MPO screening failed.");
+    state.batchMpoData = data;
+    state.batchMpoFilter = "all";
+    state.batchMpoSearch = "";
+    state.batchMpoSortCol = "rank";
+    state.batchMpoSortAsc = true;
+    renderBatchMpoLeaderboard(data);
+  } catch (err) {
+    if (errEl) {
+      errEl.textContent = err.message || String(err);
+      errEl.classList.remove("hidden");
+    }
+  } finally {
+    btn.disabled = false;
+    btn.querySelector(".btn-label").textContent = t(state.lang, "mpo_btn_run");
+    btn.querySelector(".btn-spinner").classList.add("hidden");
+  }
+}
+
+function renderBatchMpoLeaderboard(data) {
+  const host = document.getElementById("batch-mpo-results-host");
+  if (!host || !data) return;
+  host.classList.remove("hidden");
+
+  const sum = data.summary || {};
+  const allRows = data.results || [];
+  let rows = [...allRows];
+  if (state.batchMpoFilter !== "all") {
+    rows = rows.filter((r) => r.mpo_tier === state.batchMpoFilter);
+  }
+  if (state.batchMpoSearch) {
+    rows = rows.filter((r) => (r.name || "").toLowerCase().includes(state.batchMpoSearch) || (r.id || "").toLowerCase().includes(state.batchMpoSearch));
+  }
+
+  const dir = state.batchMpoSortAsc ? 1 : -1;
+  rows.sort((a, b) => {
+    if (state.batchMpoSortCol === "name") return (a.name || "").localeCompare(b.name || "") * dir;
+    if (state.batchMpoSortCol === "mpo") return ((a.peptide_mpo_score ?? -1) - (b.peptide_mpo_score ?? -1)) * dir;
+    if (state.batchMpoSortCol === "mw") return ((a.mw ?? -1) - (b.mw ?? -1)) * dir;
+    return ((a.rank ?? 9999) - (b.rank ?? 9999)) * dir;
+  });
+
+  const pillarColor = (v) => (v >= 0.7 ? "var(--emerald)" : v >= 0.45 ? "var(--cobalt)" : "var(--rose)");
+  const tbodyHtml = rows.length
+    ? rows
+        .map((r) => {
+          if (r.status !== "ok") {
+            return `<tr><td class="mono">—</td><td><strong>${escapeHtml(r.name)}</strong></td><td colspan="5" style="color:var(--rose)">${escapeHtml(r.error || "Error")}</td></tr>`;
+          }
+          const mpo = Number(r.peptide_mpo_score ?? 0);
+          const tier = r.mpo_tier || (mpo >= 70 ? "top" : mpo >= 45 ? "moderate" : "caution");
+          const ps = r.pillar_scores || {};
+          const pArr = [
+            { k: "P", lbl: "Perm", v: Number(ps.permeability ?? 0) },
+            { k: "T", lbl: "Half-Life", v: Number(ps.half_life ?? 0) },
+            { k: "H", lbl: "Low Hem", v: Number(ps.low_hemolysis ?? 0) },
+            { k: "X", lbl: "Low Tox", v: Number(ps.low_toxicity ?? 0) },
+          ];
+          const pillarsHtml = `<div class="mpo-pillars-mini" title="${escapeHtml(pArr.map((x) => `${x.lbl}: ${(x.v * 100).toFixed(0)}%`).join(" · "))}">
+            ${pArr
+              .map(
+                (x) =>
+                  `<div class="mpo-pillar-col"><div class="mpo-pillar-fill" style="height:${Math.max(8, Math.round(x.v * 100))}%;background:${pillarColor(x.v)};"></div></div>`
+              )
+              .join("")}
+          </div>`;
+          const km = r.key_metrics || {};
+          const admetStr = [
+            km.half_life ? `T½ ${km.half_life}` : null,
+            km.pampa ? `PAMPA ${km.pampa}` : null,
+            km.hemolysis_risk ? `Hem ${km.hemolysis_risk}` : null,
+            km.ppb ? `PPB ${km.ppb}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+          const adStatus = r.ad_overall || "borderline";
+          const oodMult = r.ood_penalty != null ? Number(r.ood_penalty) : 1.0;
+          const oodPen =
+            Number.isFinite(oodMult) && oodMult < 0.999
+              ? `<div class="val-sub-row mono" style="color:var(--amber-dark);">×${oodMult.toFixed(2)} (−${Math.round((1 - oodMult) * 100)}%) OOD</div>`
+              : "";
+          const loadQ = r.canonical_smiles || r.smiles || r.sequence || r.name;
+
+          return `
+            <tr>
+              <td class="mono"><strong>#${r.rank}</strong></td>
+              <td>
+                <strong>${escapeHtml(r.name)}</strong>
+                <div class="val-sub-row mono">${escapeHtml(r.resolved_type || "")}${r.mw ? ` · ${Number(r.mw).toFixed(0)} Da` : ""}</div>
+              </td>
+              <td class="mpo-bar-cell">
+                <div class="mpo-score-row">
+                  <div class="mpo-bar-track"><div class="mpo-bar-fill mpo-tier-${escapeHtml(tier)}" style="width:${Math.max(3, Math.min(100, mpo)).toFixed(1)}%;"></div></div>
+                  <strong class="mono" style="min-width:34px;text-align:right;">${mpo.toFixed(1)}</strong>
+                </div>
+              </td>
+              <td>${pillarsHtml}</td>
+              <td class="mono" style="font-size:11.3px;">${escapeHtml(admetStr || "—")}</td>
+              <td class="nowrap">
+                <span class="ad-pill ad-${escapeHtml(adStatus)}">${escapeHtml(trAd(state.lang, adStatus))}</span>
+                ${oodPen}
+              </td>
+              <td class="nowrap">
+                <button type="button" class="btn-inspect mpo-load-btn" data-mpo-q="${escapeHtml(loadQ)}" data-mpo-seq="${escapeHtml(r.sequence || "")}" data-mpo-smi="${escapeHtml(r.canonical_smiles || r.smiles || "")}">${escapeHtml(t(state.lang, "opt_load_full"))}</button>
+              </td>
+            </tr>`;
+        })
+        .join("")
+    : `<tr><td colspan="7" class="empty-cell">${escapeHtml(t(state.lang, "no_ep_match"))}</td></tr>`;
+
+  const rtTxt = data.runtime_ms >= 1000 ? `${(data.runtime_ms / 1000).toFixed(1)} s` : `${Math.round(data.runtime_ms || 0)} ms`;
+  host.innerHTML = `
+    <div class="card mpo-leaderboard-card">
+      <div class="ins-header-top" style="margin-bottom:12px;">
+        <div>
+          <h2 class="card-title">${escapeHtml(t(state.lang, "mpo_board_title"))}</h2>
+          <span class="card-sub">${escapeHtml(t(state.lang, "mpo_board_sub"))} · <span class="mono">${rtTxt}</span></span>
+        </div>
+        <div class="ins-actions">
+          <button type="button" class="btn-ghost btn-sm" id="btn-mpo-export-csv">${escapeHtml(t(state.lang, "mpo_export_csv"))}</button>
+          <button type="button" class="btn-ghost btn-sm" id="btn-mpo-export-json">${escapeHtml(t(state.lang, "mpo_export_json"))}</button>
+        </div>
+      </div>
+
+      <div class="ins-kpi-strip" style="margin-bottom:12px;">
+        <div class="bkpi"><span>${state.lang === "zh" ? "评估成功" : "Evaluated"}</span><strong>${data.succeeded} / ${data.total}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "最高 MPO" : "Top MPO"}</span><strong style="color:var(--emerald)">${sum.top_mpo != null ? Number(sum.top_mpo).toFixed(1) : "—"}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "均值 MPO" : "Mean MPO"}</span><strong style="color:var(--cobalt)">${sum.mean_mpo != null ? Number(sum.mean_mpo).toFixed(1) : "—"}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "优质梯队 (Top)" : "Top Tier"}</span><strong style="color:var(--teal)">${sum.n_top_tier ?? 0}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "适用域外标记" : "OOD Flagged"}</span><strong style="color:var(--amber)">${sum.n_ood_flagged ?? 0}</strong></div>
+      </div>
+
+      <div class="ins-matrix-toolbar" style="margin-bottom:10px;">
+        <div class="ins-filter-bar">
+          <button type="button" class="filter-chip ${state.batchMpoFilter === "all" ? "active" : ""}" data-mpo-tf="all">${escapeHtml(t(state.lang, "rf_all"))}</button>
+          <button type="button" class="filter-chip ${state.batchMpoFilter === "top" ? "active" : ""}" data-mpo-tf="top">Top Tier</button>
+          <button type="button" class="filter-chip ${state.batchMpoFilter === "moderate" ? "active" : ""}" data-mpo-tf="moderate">Moderate</button>
+          <button type="button" class="filter-chip ${state.batchMpoFilter === "caution" ? "active" : ""}" data-mpo-tf="caution">Caution</button>
+        </div>
+        <input type="search" class="search-sm" id="mpo-search-input" value="${escapeHtml(state.batchMpoSearch)}" placeholder="${escapeHtml(t(state.lang, "filter_mol_ph"))}" />
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table sortable-table">
+          <thead>
+            <tr>
+              <th data-mpo-sort="rank">${escapeHtml(t(state.lang, "mpo_th_rank"))}${state.batchMpoSortCol === "rank" ? (state.batchMpoSortAsc ? " ↑" : " ↓") : ""}</th>
+              <th data-mpo-sort="name">${escapeHtml(t(state.lang, "th_name"))}${state.batchMpoSortCol === "name" ? (state.batchMpoSortAsc ? " ↑" : " ↓") : ""}</th>
+              <th data-mpo-sort="mpo">${escapeHtml(t(state.lang, "mpo_th_score"))}${state.batchMpoSortCol === "mpo" ? (state.batchMpoSortAsc ? " ↑" : " ↓") : ""}</th>
+              <th>${escapeHtml(t(state.lang, "mpo_th_pillars"))}</th>
+              <th>${escapeHtml(t(state.lang, "mpo_th_admet"))}</th>
+              <th>${escapeHtml(t(state.lang, "mpo_th_ad"))}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${tbodyHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+
+  host.querySelectorAll("[data-mpo-tf]").forEach((b) => {
+    b.addEventListener("click", () => {
+      state.batchMpoFilter = b.dataset.mpoTf;
+      renderBatchMpoLeaderboard(data);
+    });
+  });
+  host.querySelector("#mpo-search-input")?.addEventListener("input", (e) => {
+    state.batchMpoSearch = e.target.value.trim().toLowerCase();
+    renderBatchMpoLeaderboard(data);
+    const inp = host.querySelector("#mpo-search-input");
+    if (inp) {
+      inp.focus();
+      inp.setSelectionRange(inp.value.length, inp.value.length);
+    }
+  });
+  host.querySelectorAll("th[data-mpo-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const col = th.dataset.mpoSort;
+      if (state.batchMpoSortCol === col) state.batchMpoSortAsc = !state.batchMpoSortAsc;
+      else {
+        state.batchMpoSortCol = col;
+        state.batchMpoSortAsc = col === "rank" || col === "name";
+      }
+      renderBatchMpoLeaderboard(data);
+    });
+  });
+  host.querySelector("#btn-mpo-export-csv")?.addEventListener("click", () => {
+    const csvStr = data.csv_export || "";
+    if (csvStr) downloadBlob("\uFEFF" + csvStr, "omnipanel_peptide_mpo_ranking.csv", "text/csv;charset=utf-8");
+  });
+  host.querySelector("#btn-mpo-export-json")?.addEventListener("click", () => {
+    downloadBlob(JSON.stringify(data, null, 2), "omnipanel_peptide_mpo_ranking.json", "application/json");
+  });
+  host.querySelectorAll(".mpo-load-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      loadMoleculeIntoFullPanel({
+        query: btn.dataset.mpoQ,
+        sequence: btn.dataset.mpoSeq || null,
+        smiles: btn.dataset.mpoSmi || null,
+      });
+    });
+  });
+}
+
+function loadMoleculeIntoFullPanel({ query, sequence, smiles }) {
+  switchTab("predict");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  const smi = (smiles || "").trim();
+  const seq = (sequence || "").trim();
+  document.getElementById("smart-query-input").value = query || smi || seq || "";
+  document.getElementById("adv-sequence").value = seq;
+  document.getElementById("adv-smiles").value = smi;
+  updateLiveDetection(query || smi || seq || "");
+  runSinglePrediction();
+}
+
+// ==================== P1-5 PEPTIDE-OPT INTERACTIVE WORKBENCH ====================
+function populateOptObjectiveSelects() {
+  const selX = document.getElementById("opt-obj-x-ep");
+  const selY = document.getElementById("opt-obj-y-ep");
+  if (!selX || !selY) return;
+  const curX = selX.value || "PAMPA";
+  const curY = selY.value || "half_life_reg";
+  const optsHtml = OPT_OBJECTIVE_CHOICES.map(
+    (o) => `<option value="${escapeHtml(o.ep)}">${escapeHtml(state.lang === "zh" ? o.zh : o.en)}</option>`
+  ).join("");
+  selX.innerHTML = optsHtml;
+  selY.innerHTML = optsHtml;
+  selX.value = curX;
+  selY.value = curY;
+}
+
+function wirePeptideOptWorkspace() {
+  populateOptObjectiveSelects();
+
+  const syncDefaultDir = (epSelId, dirSelId) => {
+    const ep = document.getElementById(epSelId)?.value;
+    const found = OPT_OBJECTIVE_CHOICES.find((o) => o.ep === ep);
+    const dirSel = document.getElementById(dirSelId);
+    if (found && dirSel) dirSel.value = found.dir;
+  };
+  document.getElementById("opt-obj-x-ep")?.addEventListener("change", () => syncDefaultDir("opt-obj-x-ep", "opt-obj-x-dir"));
+  document.getElementById("opt-obj-y-ep")?.addEventListener("change", () => syncDefaultDir("opt-obj-y-ep", "opt-obj-y-dir"));
+
+  document.querySelectorAll(".opt-quick-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.optQ;
+      if (q) document.getElementById("opt-query-input").value = q;
+    });
+  });
+
+  document.getElementById("btn-run-opt")?.addEventListener("click", runPeptideOpt);
+}
+
+async function runPeptideOpt() {
+  const errEl = document.getElementById("opt-error");
+  errEl?.classList.add("hidden");
+  const raw = document.getElementById("opt-query-input")?.value.trim();
+  if (!raw) {
+    if (errEl) {
+      errEl.textContent = state.lang === "zh" ? "请输入母体药物名、20AA 序列或 SMILES。" : "Please enter a parent drug name, 20-AA sequence, or SMILES.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+
+  const strategies = [...document.querySelectorAll(".opt-strat-chk:checked")].map((c) => c.value);
+  if (!strategies.length) {
+    if (errEl) {
+      errEl.textContent = state.lang === "zh" ? "请至少选择一种改构策略。" : "Please select at least one modification strategy.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+
+  const btn = document.getElementById("btn-run-opt");
+  btn.disabled = true;
+  btn.querySelector(".btn-label").textContent = t(state.lang, "opt_btn_running");
+  btn.querySelector(".btn-spinner").classList.remove("hidden");
+
+  try {
+    const cleanSeq = raw.replace(/\s+/g, "").toUpperCase();
+    const isSeq = /^[ACDEFGHIKLMNPQRSTVWY]{4,1022}$/.test(cleanSeq) && !/[a-z0-9=()[\]#@\\/+.\-]/.test(raw);
+    const isSmi = !isSeq && /[=()[\]@#]/.test(raw);
+    const payload = {
+      query: !isSeq && !isSmi ? raw : null,
+      sequence: isSeq ? cleanSeq : null,
+      smiles: isSmi ? raw : null,
+      strategies,
+      max_variants: Number(document.getElementById("opt-max-variants")?.value || 20),
+      objective_x: {
+        endpoint: document.getElementById("opt-obj-x-ep")?.value || "PAMPA",
+        direction: document.getElementById("opt-obj-x-dir")?.value || "max",
+      },
+      objective_y: {
+        endpoint: document.getElementById("opt-obj-y-ep")?.value || "half_life_reg",
+        direction: document.getElementById("opt-obj-y-dir")?.value || "max",
+      },
+      conditions: {
+        rbc_species: state.rbcSpecies,
+        pk_context: "human_plasma",
+      },
+    };
+
+    const res = await apiFetch("/api/v1/peptide-opt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "PeptideOpt optimization failed.");
+    state.optData = data;
+    state.optFilter = "all";
+    state.optHighlightId = null;
+    renderPeptideOptResults(data);
+  } catch (err) {
+    if (errEl) {
+      errEl.textContent = err.message || String(err);
+      errEl.classList.remove("hidden");
+    }
+  } finally {
+    btn.disabled = false;
+    btn.querySelector(".btn-label").textContent = t(state.lang, "opt_btn_run");
+    btn.querySelector(".btn-spinner").classList.add("hidden");
+  }
+}
+
+function renderPeptideOptParetoSvg(containerEl, readoutEl, data) {
+  if (!containerEl || !data) return;
+  const parent = data.parent;
+  const variants = data.variants || [];
+  const allPts = [parent, ...variants].filter((v) => v && v.x_raw != null && v.y_raw != null);
+  if (!allPts.length) {
+    containerEl.innerHTML = `<div class="empty-inline">No numeric points to plot</div>`;
+    return;
+  }
+
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  const pal = {
+    bg: dark ? "#162033" : "#FAFBFD",
+    grid: dark ? "#2B3A54" : "#E2E8F0",
+    axis: dark ? "#3A4E6E" : "#CBD5E1",
+    lbl: dark ? "#CBD5E1" : "#334155",
+    tick: dark ? "#94A3B8" : "#64748B",
+    parentCol: dark ? "#A78BFA" : "#7C3AED",
+    paretoCol: dark ? "#34D399" : "#059669",
+    paretoGlow: dark ? "#FBBF24" : "#D97706",
+    otherCol: dark ? "#38BDF8" : "#0369A1",
+    ring: dark ? "#0F172A" : "#FFFFFF",
+  };
+
+  const xs = allPts.map((p) => Number(p.x_raw));
+  const ys = allPts.map((p) => Number(p.y_raw));
+  let xMin = Math.min(...xs);
+  let xMax = Math.max(...xs);
+  let yMin = Math.min(...ys);
+  let yMax = Math.max(...ys);
+  const xSpan = Math.max(xMax - xMin, 0.25);
+  const ySpan = Math.max(yMax - yMin, 0.25);
+  xMin -= xSpan * 0.12;
+  xMax += xSpan * 0.12;
+  yMin -= ySpan * 0.12;
+  yMax += ySpan * 0.12;
+
+  const W = 580;
+  const H = 340;
+  const pad = { l: 58, r: 22, t: 22, b: 46 };
+  const plotW = W - pad.l - pad.r;
+  const plotH = H - pad.t - pad.b;
+  const xOf = (v) => pad.l + ((v - xMin) / (xMax - xMin)) * plotW;
+  const yOf = (v) => pad.t + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+  let gridSvg = "";
+  for (let i = 0; i <= 4; i++) {
+    const xv = xMin + ((xMax - xMin) * i) / 4;
+    const yv = yMin + ((yMax - yMin) * i) / 4;
+    const xp = xOf(xv);
+    const yp = yOf(yv);
+    gridSvg += `<line x1="${xp.toFixed(1)}" y1="${pad.t}" x2="${xp.toFixed(1)}" y2="${pad.t + plotH}" stroke="${pal.grid}" stroke-width="0.9" stroke-dasharray="3 3"/>`;
+    gridSvg += `<line x1="${pad.l}" y1="${yp.toFixed(1)}" x2="${pad.l + plotW}" y2="${yp.toFixed(1)}" stroke="${pal.grid}" stroke-width="0.9" stroke-dasharray="3 3"/>`;
+    gridSvg += `<text x="${xp.toFixed(1)}" y="${pad.t + plotH + 16}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="${pal.tick}">${xv.toFixed(2)}</text>`;
+    gridSvg += `<text x="${pad.l - 7}" y="${(yp + 3).toFixed(1)}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="${pal.tick}">${yv.toFixed(2)}</text>`;
+  }
+
+  let parentCrossSvg = "";
+  if (parent && parent.x_raw != null && parent.y_raw != null) {
+    const px = xOf(Number(parent.x_raw));
+    const py = yOf(Number(parent.y_raw));
+    parentCrossSvg = `
+      <line x1="${px.toFixed(1)}" y1="${pad.t}" x2="${px.toFixed(1)}" y2="${pad.t + plotH}" stroke="${pal.parentCol}" stroke-width="1.1" stroke-dasharray="4 4" opacity="0.55"/>
+      <line x1="${pad.l}" y1="${py.toFixed(1)}" x2="${pad.l + plotW}" y2="${py.toFixed(1)}" stroke="${pal.parentCol}" stroke-width="1.1" stroke-dasharray="4 4" opacity="0.55"/>`;
+  }
+
+  // Pareto frontier curve
+  const frontierPts = (data.pareto_frontier || []).filter((p) => p.x_raw != null && p.y_raw != null);
+  let frontierSvg = "";
+  if (frontierPts.length >= 2) {
+    const poly = frontierPts.map((p) => `${xOf(Number(p.x_raw)).toFixed(1)},${yOf(Number(p.y_raw)).toFixed(1)}`).join(" ");
+    frontierSvg = `
+      <polyline points="${poly}" fill="none" stroke="${pal.paretoGlow}" stroke-width="4.2" stroke-linejoin="round" opacity="0.22"/>
+      <polyline points="${poly}" fill="none" stroke="${pal.paretoCol}" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 3"/>`;
+  }
+
+  let dotsSvg = "";
+  allPts.forEach((p) => {
+    const cx = xOf(Number(p.x_raw));
+    const cy = yOf(Number(p.y_raw));
+    const isOod = p.ad_status === "ood";
+    if (p.is_parent) {
+      const d = 7;
+      const pts = `${cx.toFixed(1)},${(cy - d).toFixed(1)} ${(cx + d).toFixed(1)},${cy.toFixed(1)} ${cx.toFixed(1)},${(cy + d).toFixed(1)} ${(cx - d).toFixed(1)},${cy.toFixed(1)}`;
+      dotsSvg += `
+        <g class="opt-dot" data-opt-id="${escapeHtml(p.id)}">
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="12" fill="transparent"/>
+          <polygon points="${pts}" fill="${pal.parentCol}" stroke="${pal.ring}" stroke-width="1.8"/>
+        </g>`;
+    } else if (p.is_pareto_optimal) {
+      dotsSvg += `
+        <g class="opt-dot" data-opt-id="${escapeHtml(p.id)}">
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="12" fill="transparent"/>
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="8.5" fill="${pal.paretoGlow}" opacity="0.25"/>
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.8" fill="${pal.paretoCol}" stroke="${pal.paretoGlow}" stroke-width="2" ${isOod ? 'stroke-dasharray="2 2"' : ""}/>
+        </g>`;
+    } else {
+      dotsSvg += `
+        <g class="opt-dot" data-opt-id="${escapeHtml(p.id)}">
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="10" fill="transparent"/>
+          <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4.3" fill="${pal.otherCol}" fill-opacity="${isOod ? "0.35" : "0.75"}" stroke="${isOod ? pal.otherCol : pal.ring}" stroke-width="1.4" ${isOod ? 'stroke-dasharray="2 2"' : ""}/>
+        </g>`;
+    }
+  });
+
+  const ox = data.objective_x || {};
+  const oy = data.objective_y || {};
+  const xLbl = `${state.lang === "zh" ? ox.display_zh || ox.endpoint : ox.display_en || ox.endpoint}${ox.log10_space ? " (log₁₀)" : ""} ${ox.direction === "min" ? "↓" : "↑"}`;
+  const yLbl = `${state.lang === "zh" ? oy.display_zh || oy.endpoint : oy.display_en || oy.endpoint}${oy.log10_space ? " (log₁₀)" : ""} ${oy.direction === "min" ? "↓" : "↑"}`;
+
+  containerEl.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" class="opt-pareto-svg" role="img" aria-label="PeptideOpt Multi-Objective Pareto Scatter Plot">
+      <rect x="${pad.l}" y="${pad.t}" width="${plotW}" height="${plotH}" rx="6" fill="${pal.bg}" stroke="${pal.axis}" stroke-width="1"/>
+      ${gridSvg}
+      ${parentCrossSvg}
+      ${frontierSvg}
+      ${dotsSvg}
+      <text x="${(pad.l + plotW / 2).toFixed(1)}" y="${H - 10}" text-anchor="middle" font-family="Inter, PingFang SC, sans-serif" font-size="11" font-weight="600" fill="${pal.lbl}">${escapeHtml(xLbl)}</text>
+      <text x="15" y="${(pad.t + plotH / 2).toFixed(1)}" text-anchor="middle" transform="rotate(-90 15 ${(pad.t + plotH / 2).toFixed(1)})" font-family="Inter, PingFang SC, sans-serif" font-size="11" font-weight="600" fill="${pal.lbl}">${escapeHtml(yLbl)}</text>
+    </svg>`;
+
+  const ptMap = new Map(allPts.map((p) => [p.id, p]));
+  const fmtReadout = (v) => {
+    const tag = v.is_parent ? "Parent" : v.is_pareto_optimal ? "★ Pareto" : v.strategy;
+    return `<strong>${escapeHtml(v.mutation_label || v.name)}</strong> [${escapeHtml(tag)}] · X: <span class="mono">${escapeHtml(v.x_display || "—")}</span> · Y: <span class="mono">${escapeHtml(v.y_display || "—")}</span> · MPO <span class="mono" style="color:var(--emerald)">${Number(v.mpo_score ?? 0).toFixed(1)}</span> · AD: <span class="mono">${escapeHtml(trAd(state.lang, v.ad_status))}</span>`;
+  };
+  if (readoutEl) {
+    const defPt = frontierPts[0] || parent;
+    if (defPt) readoutEl.innerHTML = fmtReadout(defPt);
+  }
+  containerEl.querySelectorAll(".opt-dot").forEach((dot) => {
+    const vid = dot.dataset.optId;
+    const v = ptMap.get(vid);
+    if (!v) return;
+    dot.addEventListener("mouseenter", () => {
+      if (readoutEl) readoutEl.innerHTML = fmtReadout(v);
+    });
+    dot.addEventListener("click", () => {
+      state.optHighlightId = vid;
+      if (readoutEl) readoutEl.innerHTML = fmtReadout(v);
+      document.querySelectorAll("[data-opt-row]").forEach((tr) => {
+        const hit = tr.dataset.optRow === vid;
+        tr.classList.toggle("opt-row-highlight", hit);
+        if (hit) tr.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    });
+  });
+}
+
+function renderPeptideOptResults(data) {
+  const host = document.getElementById("opt-results-host");
+  if (!host || !data) return;
+  host.classList.remove("hidden");
+
+  const parent = data.parent;
+  const variants = data.variants || [];
+  let rows = [parent, ...variants].filter(Boolean);
+  if (state.optFilter === "pareto") rows = rows.filter((v) => v.is_parent || v.is_pareto_optimal);
+  else if (state.optFilter === "safe") rows = rows.filter((v) => v.is_parent || v.safety_guardrail_pass);
+
+  const dir = state.optSortAsc ? 1 : -1;
+  rows.sort((a, b) => {
+    if (a.is_parent !== b.is_parent) return a.is_parent ? -1 : 1;
+    if (state.optSortCol === "x") return ((a.x_raw ?? -Infinity) - (b.x_raw ?? -Infinity)) * dir;
+    if (state.optSortCol === "y") return ((a.y_raw ?? -Infinity) - (b.y_raw ?? -Infinity)) * dir;
+    if (state.optSortCol === "mw") return ((a.mw ?? -Infinity) - (b.mw ?? -Infinity)) * dir;
+    return ((a.mpo_score ?? -Infinity) - (b.mpo_score ?? -Infinity)) * dir;
+  });
+
+  const bestMpo = Math.max(...[parent, ...variants].filter(Boolean).map((v) => Number(v.mpo_score ?? 0)), 0);
+  const ox = data.objective_x || {};
+  const oy = data.objective_y || {};
+  const oxTitle = state.lang === "zh" ? ox.display_zh || ox.endpoint : ox.display_en || ox.endpoint;
+  const oyTitle = state.lang === "zh" ? oy.display_zh || oy.endpoint : oy.display_en || oy.endpoint;
+  const skippedNote = (data.strategies_skipped || []).length
+    ? `<div class="val-sub-row" style="margin-top:6px;color:var(--amber-dark);">⚠ Skipped: ${data.strategies_skipped.map((s) => `${escapeHtml(s.strategy)} (${escapeHtml(s.reason)})`).join(" · ")}</div>`
+    : "";
+
+  const fmtDelta = (pct, raw) => {
+    if (pct != null && Number.isFinite(Number(pct))) {
+      const n = Number(pct);
+      return `${n >= 0 ? "+" : ""}${n.toFixed(0)}%`;
+    }
+    if (raw != null && Number.isFinite(Number(raw))) {
+      const n = Number(raw);
+      return `${n >= 0 ? "+" : ""}${n.toFixed(2)}`;
+    }
+    return "";
+  };
+
+  const tbodyHtml = rows
+    .map((v) => {
+      const badge = v.is_parent
+        ? `<span class="parent-badge">Parent</span>`
+        : v.is_pareto_optimal
+          ? `<span class="pareto-badge">★ Pareto</span>`
+          : "";
+      const dx = v.is_parent ? "" : fmtDelta(v.delta_x_pct, v.delta_x_raw);
+      const dy = v.is_parent ? "" : fmtDelta(v.delta_y_pct, v.delta_y_raw);
+      const safeHtml = v.safety_guardrail_pass
+        ? `<span class="ad-pill ad-in_domain">✓ Pass</span>`
+        : `<span class="ad-pill ad-ood" title="${escapeHtml((v.safety_flags || []).join("; "))}">⚠ ${(v.safety_flags || []).length || 1}</span>`;
+      const hlCls = state.optHighlightId === v.id ? "opt-row-highlight" : "";
+      return `
+        <tr data-opt-row="${escapeHtml(v.id)}" class="${hlCls}">
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <strong>${escapeHtml(v.mutation_label || v.name)}</strong>
+              ${badge}
+            </div>
+            ${v.description ? `<div class="val-sub-row">${escapeHtml(v.description)}</div>` : ""}
+          </td>
+          <td class="nowrap"><span class="type-pill">${escapeHtml(v.strategy || "parent")}</span></td>
+          <td class="num">
+            <strong>${escapeHtml(v.x_display || "—")}</strong>
+            ${dx ? `<div class="val-sub-row mono">${escapeHtml(dx)}</div>` : ""}
+          </td>
+          <td class="num">
+            <strong>${escapeHtml(v.y_display || "—")}</strong>
+            ${dy ? `<div class="val-sub-row mono">${escapeHtml(dy)}</div>` : ""}
+          </td>
+          <td class="num"><strong class="mono" style="color:var(--cobalt)">${Number(v.mpo_score ?? 0).toFixed(1)}</strong></td>
+          <td class="nowrap"><span class="ad-pill ad-${escapeHtml(v.ad_status || "borderline")}">${escapeHtml(trAd(state.lang, v.ad_status || "borderline"))}</span></td>
+          <td class="nowrap">${safeHtml}</td>
+          <td class="nowrap">
+            <button type="button" class="btn-inspect opt-load-btn" data-opt-smi="${escapeHtml(v.smiles || "")}" data-opt-seq="${escapeHtml(v.sequence || "")}" data-opt-name="${escapeHtml(v.name || "")}">${escapeHtml(t(state.lang, "opt_load_full"))}</button>
+          </td>
+        </tr>`;
+    })
+    .join("");
+
+  const rtTxt = data.runtime_ms >= 1000 ? `${(data.runtime_ms / 1000).toFixed(1)} s` : `${Math.round(data.runtime_ms || 0)} ms`;
+  host.innerHTML = `
+    <div class="card ins-header-card">
+      <div class="ins-kpi-strip">
+        <div class="bkpi"><span>${state.lang === "zh" ? "生成 / 评估变体" : "Generated / Evaluated"}</span><strong>${data.total_generated} / ${data.total_evaluated}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "Pareto 最优前沿" : "Pareto-Optimal"}</span><strong style="color:var(--emerald)">${data.pareto_count ?? 0}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "最佳 MPO 得分" : "Best MPO Score"}</span><strong style="color:var(--cobalt)">${bestMpo.toFixed(1)}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "启用策略" : "Strategies"}</span><strong>${(data.strategies_used || []).length}</strong></div>
+        <div class="bkpi"><span>${state.lang === "zh" ? "计算耗时" : "Runtime"}</span><strong class="mono">${rtTxt}</strong></div>
+      </div>
+      ${skippedNote}
+    </div>
+
+    <div class="opt-results-grid">
+      <div class="card opt-pareto-card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">${escapeHtml(t(state.lang, "opt_pareto_title"))}</h2>
+            <span class="card-sub">${escapeHtml(t(state.lang, "opt_pareto_sub"))}</span>
+          </div>
+        </div>
+        <div id="opt-pareto-stage"></div>
+        <div id="opt-pareto-readout" class="c17-readout"></div>
+      </div>
+
+      <div class="card opt-table-card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">${escapeHtml(t(state.lang, "opt_table_title"))}</h2>
+          </div>
+          <div class="ins-filter-bar">
+            <button type="button" class="filter-chip ${state.optFilter === "all" ? "active" : ""}" data-opt-f="all">${escapeHtml(t(state.lang, "opt_filter_all"))}</button>
+            <button type="button" class="filter-chip ${state.optFilter === "pareto" ? "active" : ""}" data-opt-f="pareto">${escapeHtml(t(state.lang, "opt_filter_pareto"))}</button>
+            <button type="button" class="filter-chip ${state.optFilter === "safe" ? "active" : ""}" data-opt-f="safe">${escapeHtml(t(state.lang, "opt_filter_safe"))}</button>
+          </div>
+        </div>
+        <div class="table-scroll" style="max-height:430px;">
+          <table class="data-table sortable-table compact-table">
+            <thead>
+              <tr>
+                <th>${escapeHtml(t(state.lang, "opt_th_var"))}</th>
+                <th>${escapeHtml(t(state.lang, "opt_th_strat"))}</th>
+                <th class="num" data-opt-sort="x">${escapeHtml(oxTitle)}${state.optSortCol === "x" ? (state.optSortAsc ? " ↑" : " ↓") : ""}</th>
+                <th class="num" data-opt-sort="y">${escapeHtml(oyTitle)}${state.optSortCol === "y" ? (state.optSortAsc ? " ↑" : " ↓") : ""}</th>
+                <th class="num" data-opt-sort="mpo_score">${escapeHtml(t(state.lang, "opt_th_mpo"))}${state.optSortCol === "mpo_score" ? (state.optSortAsc ? " ↑" : " ↓") : ""}</th>
+                <th>${escapeHtml(t(state.lang, "opt_th_ad"))}</th>
+                <th>${escapeHtml(t(state.lang, "opt_th_safe"))}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>${tbodyHtml}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  renderPeptideOptParetoSvg(document.getElementById("opt-pareto-stage"), document.getElementById("opt-pareto-readout"), data);
+
+  host.querySelectorAll("[data-opt-f]").forEach((b) => {
+    b.addEventListener("click", () => {
+      state.optFilter = b.dataset.optF;
+      renderPeptideOptResults(data);
+    });
+  });
+  host.querySelectorAll("th[data-opt-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const col = th.dataset.optSort;
+      if (state.optSortCol === col) state.optSortAsc = !state.optSortAsc;
+      else {
+        state.optSortCol = col;
+        state.optSortAsc = false;
+      }
+      renderPeptideOptResults(data);
+    });
+  });
+  host.querySelectorAll(".opt-load-btn").forEach((b) => {
+    b.addEventListener("click", () => {
+      loadMoleculeIntoFullPanel({
+        query: b.dataset.optSmi || b.dataset.optSeq || b.dataset.optName,
+        sequence: b.dataset.optSeq || null,
+        smiles: b.dataset.optSmi || null,
+      });
+    });
   });
 }
 
@@ -2638,10 +3869,417 @@ async function loadEndpointsCatalog() {
     renderAllCase17Charts();
     renderValidationKpis(data);
     renderValidationHighlights(data);
+    renderValidationHardAuditPanels(data);
     renderValidationTable();
   } catch (err) {
     console.error("Failed to load endpoints catalog:", err);
   }
+}
+
+// ==================== P0-1 VALIDATION HARD-AUDIT PANELS ====================
+function renderValidationHardAuditPanels(data) {
+  renderExtBaselinesCard(data);
+  renderFdaBlindCard(data);
+  renderTemporalBenchCard(data);
+}
+
+function formatHolmBadgeHtml(boot) {
+  if (!boot) return `<span class="holm-badge holm-ns">—</span>`;
+  const ph = boot.p_value_holm != null ? Number(boot.p_value_holm) : null;
+  const pv = boot.p_value != null ? Number(boot.p_value) : null;
+  const pUse = ph != null ? ph : pv;
+  if (pUse == null) return `<span class="holm-badge holm-ns">—</span>`;
+  const cls = pUse < 0.05 ? "holm-sig" : pUse < 0.1 ? "holm-marginal" : "holm-ns";
+  const prefix = ph != null ? "p_holm " : "p ";
+  const valStr = pUse <= 0.001 ? "≤0.001" : pUse.toFixed(3);
+  const sigMark = pUse < 0.05 ? " ★" : "";
+  return `<span class="holm-badge ${cls}" title="raw p=${boot.p_value_display ?? pv ?? "—"} · clusters=${boot.n_clusters ?? "—"}">${prefix}${valStr}${sigMark}</span>`;
+}
+
+function renderExtBaselinesCard(data) {
+  const host = document.getElementById("val-ext-baselines-card");
+  if (!host) return;
+  const ext = data.external_baselines_same_split || {};
+  const v34 = data.v34_upgrades || {};
+  const epKeys = Object.keys(ext).filter((k) => !k.startsWith("_"));
+  if (!epKeys.length) {
+    host.classList.add("hidden");
+    return;
+  }
+  host.classList.remove("hidden");
+  if (!epKeys.includes(state.valExtEndpoint)) state.valExtEndpoint = epKeys[0];
+
+  const activeEp = state.valExtEndpoint;
+  const epObj = ext[activeEp] || {};
+  const isCls = activeEp === "hemolysis_cls";
+  const omni = epObj.OmniPanel_4FM_SuperEnsemble || {};
+  const mult = ext._multiplicity_correction || {};
+
+  // Flatten baseline entries (handling nested Published_HemoPI2_v1_3_Benchmark & optional v34_upgrades.hemopi2_ml)
+  const rows = [];
+  Object.entries(epObj).forEach(([k, val]) => {
+    if (k === "OmniPanel_4FM_SuperEnsemble" || !val || typeof val !== "object") return;
+    if (k === "Published_HemoPI2_v1_3_Benchmark") {
+      const cit = val.tool_citation || "HemoPI2 v1.3";
+      Object.entries(val).forEach(([sk, sv]) => {
+        if (sv && typeof sv === "object" && (sv.roc_auc != null || sv.spearman != null)) {
+          rows.push({
+            name: sk.replace(/_/g, " "),
+            category: "published",
+            citation: `${cit} — ${sv.note || ""}`,
+            ...sv,
+          });
+        }
+      });
+      return;
+    }
+    const isPub = String(val.category || "").includes("published") || k.startsWith("Published_");
+    const isSfm = String(val.category || "").includes("single_fm") || k.includes("SingleFM");
+    rows.push({
+      name: k.replace(/^Published_/, "").replace(/^Internal_/, "").replace(/_/g, " "),
+      category: isPub ? "published" : isSfm ? "single_fm" : "internal_qsar",
+      citation: val.citation || val.note || "",
+      ...val,
+    });
+  });
+
+  // Dynamically include Phase-2 v34_upgrades HemoPI2-ML / <=40aa benchmarks when present
+  const h2ml = activeEp === "hemolysis_cls" ? v34.hemopi2_ml || v34.hemopi2_ml_benchmark : null;
+  if (h2ml && typeof h2ml === "object") {
+    const entries = Array.isArray(h2ml.entries) ? h2ml.entries : Object.entries(h2ml).map(([k, v]) => (v && typeof v === "object" ? { name: k, ...v } : null)).filter(Boolean);
+    entries.forEach((sv) => {
+      if (sv.roc_auc != null || sv.mcc != null) {
+        rows.push({
+          name: (sv.label || sv.name || "HemoPI2-ML (<=40aa)").replace(/_/g, " "),
+          category: "published",
+          citation: sv.citation || sv.note || "v3.4 HemoPI2-ML / <=40aa length-matched audit",
+          ...sv,
+        });
+      }
+    });
+  }
+
+  const visibleRows = rows.filter((r) => state.valExtShowSingleFm || r.category !== "single_fm");
+  const catLabel = (c) => {
+    if (c === "published") return `<span class="mod-badge tone-cobalt" style="font-size:10px;">${state.lang === "zh" ? "已发表工具" : "Published Tool"}</span>`;
+    if (c === "internal_qsar") return `<span class="mod-badge tone-teal" style="font-size:10px;">${state.lang === "zh" ? "内部 QSAR" : "Internal QSAR"}</span>`;
+    return `<span class="mod-badge tone-slate" style="font-size:10px;">Single FM</span>`;
+  };
+
+  const omniMetricHtml = isCls
+    ? `<strong>AUC ${Number(omni.roc_auc ?? 0).toFixed(4)}</strong> <span class="val-sub-row">Brier ${Number(omni.brier ?? 0).toFixed(4)}</span>`
+    : `<strong>MAE ${Number(omni.mae ?? 0).toFixed(4)}</strong> <span class="val-sub-row">ρ ${Number(omni.spearman ?? 0).toFixed(3)} · R² ${Number(omni.r2 ?? 0).toFixed(3)}</span>`;
+
+  const rowsHtml = visibleRows
+    .map((r) => {
+      const metHtml = isCls
+        ? `<strong>AUC ${Number(r.roc_auc ?? 0).toFixed(4)}</strong>${r.omni_same_subset_roc_auc != null ? `<div class="val-sub-row">Omni subset: ${Number(r.omni_same_subset_roc_auc).toFixed(4)}</div>` : r.brier != null ? `<div class="val-sub-row">Brier ${Number(r.brier).toFixed(4)}</div>` : ""}`
+        : `<strong>MAE ${Number(r.mae ?? 0).toFixed(4)}</strong><div class="val-sub-row">ρ ${Number(r.spearman ?? 0).toFixed(3)} · R² ${Number(r.r2 ?? 0).toFixed(3)}</div>`;
+      const b = r.paired_boot_vs_omni;
+      const deltaHtml = b
+        ? `<span class="mono" style="color:${Number(b.mean_delta) >= 0 ? "var(--emerald)" : "var(--amber-dark)"};font-weight:650;">${Number(b.mean_delta) >= 0 ? "+" : ""}${Number(b.mean_delta).toFixed(4)}</span>${
+            Array.isArray(b.ci95) && b.ci95.length === 2 ? `<div class="val-sub-row mono">[${Number(b.ci95[0]).toFixed(3)}, ${Number(b.ci95[1]).toFixed(3)}]</div>` : ""
+          }`
+        : "—";
+      return `
+        <tr>
+          <td>
+            <strong title="${escapeHtml(r.citation || "")}">${escapeHtml(r.name)}</strong>
+            ${r.citation ? `<div class="val-sub-row" style="max-width:340px;white-space:normal;">${escapeHtml(r.citation)}</div>` : ""}
+          </td>
+          <td class="nowrap">${catLabel(r.category)}</td>
+          <td class="num mono">${r.n != null ? Number(r.n).toLocaleString() : "—"}</td>
+          <td class="num mono">${metHtml}</td>
+          <td class="num">${deltaHtml}</td>
+          <td class="num">${formatHolmBadgeHtml(b)}</td>
+        </tr>`;
+    })
+    .join("");
+
+  const epBtns = epKeys
+    .map((k) => `<button type="button" class="seg-btn ${k === activeEp ? "active" : ""}" data-ext-ep="${escapeHtml(k)}">${escapeHtml(k)}</button>`)
+    .join("");
+
+  host.innerHTML = `
+    <div class="val-audit-head">
+      <div>
+        <h3 class="card-title">${escapeHtml(t(state.lang, "val_ext_title"))}</h3>
+        <span class="card-sub">${escapeHtml(t(state.lang, "val_ext_sub"))}${mult.n_comparisons ? ` (${mult.n_comparisons} comparisons)` : ""}</span>
+      </div>
+      <div class="val-audit-controls">
+        <div class="seg-group">${epBtns}</div>
+        <label class="checkbox-inline">
+          <input type="checkbox" id="chk-val-ext-sfm" ${state.valExtShowSingleFm ? "checked" : ""} />
+          <span>${escapeHtml(t(state.lang, "val_ext_show_sfm"))}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table compact-table">
+        <thead>
+          <tr>
+            <th>${escapeHtml(t(state.lang, "val_ext_th_model"))}</th>
+            <th>${escapeHtml(t(state.lang, "val_ext_th_cat"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_ext_th_n"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_ext_th_metric"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_ext_th_delta"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_ext_th_holm"))}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="val-omni-row">
+            <td><strong>★ OmniPanel 4-FM Super-Ensemble</strong></td>
+            <td><span class="mod-badge tone-emerald" style="font-size:10px;">OmniPanel</span></td>
+            <td class="num mono">${omni.n != null ? Number(omni.n).toLocaleString() : "—"}</td>
+            <td class="num mono">${omniMetricHtml}</td>
+            <td class="num mono">Reference</td>
+            <td class="num mono">—</td>
+          </tr>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="competitor-note-box">
+      <strong>${escapeHtml(t(state.lang, "val_ext_comp_title"))}</strong>
+      <span>${escapeHtml(t(state.lang, "val_ext_comp_body"))}</span>
+    </div>`;
+
+  host.querySelectorAll("[data-ext-ep]").forEach((b) => {
+    b.addEventListener("click", () => {
+      state.valExtEndpoint = b.dataset.extEp;
+      renderExtBaselinesCard(data);
+    });
+  });
+  host.querySelector("#chk-val-ext-sfm")?.addEventListener("change", (e) => {
+    state.valExtShowSingleFm = e.target.checked;
+    renderExtBaselinesCard(data);
+  });
+}
+
+function renderFdaBlindCard(data) {
+  const host = document.getElementById("val-fda-blind-card");
+  if (!host) return;
+  const bs = data.recent_fda_2019_2023_blind_set || {};
+  const v34 = data.v34_upgrades || {};
+  const drugs = bs.drugs || [];
+  if (!drugs.length) {
+    host.classList.add("hidden");
+    return;
+  }
+  host.classList.remove("hidden");
+
+  const hl = bs.half_life_log10_metrics || {};
+  const ppb = bs.ppb_metrics || {};
+  const hem = bs.hemolysis_predicted_probability_summary || {};
+  const ledger = bs.exclusion_ledger || {};
+
+  const fmtCi = (ci) => (Array.isArray(ci) && ci.length === 2 ? `95% CI [${Number(ci[0]).toFixed(3)}, ${Number(ci[1]).toFixed(3)}]` : "");
+
+  const ledgerRowsHtml = Object.entries(ledger)
+    .map(
+      ([ep, lg]) => `
+      <tr>
+        <td class="mono"><strong>${escapeHtml(ep)}</strong></td>
+        <td class="num mono">${Number(lg.n_train_before ?? 0).toLocaleString()}</td>
+        <td class="num mono">${Number(lg.n_excluded_exact_ik_or_ck ?? 0).toLocaleString()} / ${Number(lg.n_excluded_morgan2048_tc_ge_0_40 ?? 0).toLocaleString()} / ${Number(lg.n_excluded_seq_3mer_ge_0_40 ?? 0).toLocaleString()}</td>
+        <td class="num mono">${Number(lg.n_train_after ?? 0).toLocaleString()}</td>
+        <td class="num mono">${lg.pct_training_retained != null ? Number(lg.pct_training_retained).toFixed(1) + "%" : "—"}</td>
+        <td class="mono" style="font-size:11px;">${escapeHtml(lg.prod_stack_winning_family || "—")}</td>
+      </tr>`
+    )
+    .join("");
+
+  const drugRowsHtml = drugs
+    .map((d) => {
+      const obsH = Number(d.obs_half_life_h);
+      const predH = Number(d.blind_pred_half_life_h);
+      const fe = obsH > 0 && predH > 0 ? Math.max(obsH / predH, predH / obsH) : null;
+      const feCls = fe == null ? "" : fe <= 2 ? "fe-great" : fe <= 3 ? "fe-good" : fe <= 5 ? "fe-mod" : "fe-high";
+      const ppbStr = `${d.obs_ppb != null ? (Number(d.obs_ppb) * 100).toFixed(0) + "%" : "N/A"} / ${d.blind_pred_ppb != null ? (Number(d.blind_pred_ppb) * 100).toFixed(0) + "%" : "—"}`;
+      const hemP = d.blind_pred_hemolysis_prob != null ? `${(Number(d.blind_pred_hemolysis_prob) * 100).toFixed(1)}%` : "—";
+      return `
+        <tr>
+          <td>
+            <strong title="${escapeHtml(d.fda_label_note || "")}">${escapeHtml(d.name)}</strong>
+            <span class="val-sub-row mono"> (${escapeHtml(d.fda_approval_year || "")} · ${escapeHtml(d.route || "")})</span>
+            ${d.fda_label_note ? `<div class="val-sub-row">${escapeHtml(d.fda_label_note)}</div>` : ""}
+          </td>
+          <td class="num mono">${obsH ? `${obsH.toFixed(obsH < 1 ? 2 : 1)} h` : "—"}</td>
+          <td class="num mono">${predH ? `${predH.toFixed(predH < 1 ? 2 : 1)} h` : "—"}</td>
+          <td class="num">${fe != null ? `<span class="fe-badge ${feCls}">${fe.toFixed(2)}×</span>` : "—"}</td>
+          <td class="num mono">${escapeHtml(ppbStr)}</td>
+          <td class="num mono" style="color:${Number(d.blind_pred_hemolysis_prob) > 0.5 ? "var(--amber-dark)" : "var(--emerald)"}">${hemP}</td>
+        </tr>`;
+    })
+    .join("");
+
+  // Optional Phase-2 v34_upgrades.sequence_scaffold_blind side-by-side protocol comparison
+  const seqBlind = v34.sequence_scaffold_blind || v34.domain_mtl_blind || null;
+  const v34BlindHtml = seqBlind
+    ? `<div class="v34-upgrade-subcard">
+         <h4>★ v3.4 Sequence / Scaffold Blind Isolation & Domain-MTL Comparison</h4>
+         <pre class="code-block" style="max-height:180px;font-size:11px;margin:0;">${escapeHtml(JSON.stringify(seqBlind, null, 2))}</pre>
+       </div>`
+    : "";
+
+  host.innerHTML = `
+    <div class="val-audit-head">
+      <div>
+        <h3 class="card-title">${escapeHtml(t(state.lang, "val_blind_title"))}</h3>
+        <span class="card-sub">${escapeHtml(t(state.lang, "val_blind_sub"))}</span>
+      </div>
+      <span class="mod-badge tone-cobalt mono">${escapeHtml(bs.approval_years || "2019–2023")} · n=${bs.n_drugs ?? drugs.length}</span>
+    </div>
+
+    ${bs.protocol ? `<div class="blind-protocol-banner">${escapeHtml(bs.protocol)}</div>` : ""}
+
+    <div class="blind-kpi-grid">
+      <div class="blind-kpi-tile">
+        <span class="dm-lbl">Half-Life T½ (log₁₀ h · n=${hl.n_evaluated ?? 11})</span>
+        <span class="blind-kpi-val mono">ρ = ${hl.spearman != null ? Number(hl.spearman).toFixed(3) : "—"}</span>
+        <span class="blind-kpi-ci mono">Fisher ${fmtCi(hl.spearman_fisher_ci95)}</span>
+        <span class="blind-kpi-ci mono">R² = ${hl.r2 != null ? Number(hl.r2).toFixed(3) : "—"} · MAE ${hl.mae != null ? Number(hl.mae).toFixed(3) : "—"} (${hl.mae_improvement_vs_constant_pct != null ? `−${hl.mae_improvement_vs_constant_pct}% vs median` : ""})</span>
+      </div>
+      <div class="blind-kpi-tile">
+        <span class="dm-lbl">Plasma Protein Binding (PPB · n=${ppb.n_evaluated ?? 8})</span>
+        <span class="blind-kpi-val mono">ρ = ${ppb.spearman != null ? Number(ppb.spearman).toFixed(3) : "—"}</span>
+        <span class="blind-kpi-ci mono">Fisher ${fmtCi(ppb.spearman_fisher_ci95)}</span>
+        <span class="blind-kpi-ci mono">R² = ${ppb.r2 != null ? Number(ppb.r2).toFixed(3) : "—"} · MAE ${ppb.mae != null ? Number(ppb.mae).toFixed(3) : "—"}</span>
+      </div>
+      <div class="blind-kpi-tile">
+        <span class="dm-lbl">Hemolysis Sanity Check (n=${hem.n_total ?? 11})</span>
+        <span class="blind-kpi-val mono" style="color:var(--emerald)">${hem.n_gt_0_50 ?? 0} / ${hem.n_total ?? 11} &gt; 0.50</span>
+        <span class="blind-kpi-ci mono">Median P = ${hem.median_pred_prob != null ? (Number(hem.median_pred_prob) * 100).toFixed(1) + "%" : "—"} · Max P = ${hem.max_pred_prob != null ? (Number(hem.max_pred_prob) * 100).toFixed(1) + "%" : "—"}</span>
+        <span class="blind-kpi-ci">${escapeHtml(hem.caveat || "")}</span>
+      </div>
+    </div>
+
+    ${v34BlindHtml}
+
+    <div class="blind-ledger-wrap">
+      <div class="blind-ledger-title">${escapeHtml(t(state.lang, "val_blind_ledger_title"))}</div>
+      <div class="table-scroll">
+        <table class="data-table compact-table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th class="num">Train Before</th>
+              <th class="num">Excluded (Exact / Tc≥0.40 / 3-mer)</th>
+              <th class="num">Train After</th>
+              <th class="num">Retained %</th>
+              <th>Prod Stack</th>
+            </tr>
+          </thead>
+          <tbody>${ledgerRowsHtml}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <button type="button" class="btn-ghost btn-sm" id="btn-toggle-blind-drugs">
+        ${escapeHtml(t(state.lang, "val_blind_toggle_drugs"))} ${state.valBlindDrugsExpanded ? "▴" : "▾"}
+      </button>
+    </div>
+
+    <div id="blind-drugs-table-wrap" class="table-scroll ${state.valBlindDrugsExpanded ? "" : "hidden"}" style="margin-top:10px;">
+      <table class="data-table compact-table">
+        <thead>
+          <tr>
+            <th>${escapeHtml(t(state.lang, "val_blind_th_drug"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_blind_th_obs_hl"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_blind_th_pred_hl"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_blind_th_fe"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_blind_th_ppb"))}</th>
+            <th class="num">${escapeHtml(t(state.lang, "val_blind_th_hem"))}</th>
+          </tr>
+        </thead>
+        <tbody>${drugRowsHtml}</tbody>
+      </table>
+    </div>`;
+
+  host.querySelector("#btn-toggle-blind-drugs")?.addEventListener("click", () => {
+    state.valBlindDrugsExpanded = !state.valBlindDrugsExpanded;
+    renderFdaBlindCard(data);
+  });
+}
+
+function renderTemporalBenchCard(data) {
+  const host = document.getElementById("val-temporal-card");
+  if (!host) return;
+  const tb = data.temporal_split_benchmarks || {};
+  const v34 = data.v34_upgrades || {};
+  const keys = ["hemolysis_cls", "LogD7.4", "PAMPA"].filter((k) => tb[k]);
+  if (!keys.length) {
+    host.classList.add("hidden");
+    return;
+  }
+  host.classList.remove("hidden");
+
+  const tilesHtml = keys
+    .map((ep) => {
+      const item = tb[ep];
+      const prod = item.prod_super_ensemble || {};
+      const cpu = item.cpu_qsar_track || {};
+      const isCls = item.task_type === "classification";
+      const isNeg = !isCls && (Number(prod.r2 ?? 0) < -0.3 || Number(prod.spearman ?? 0) < 0.05);
+      const tileCls = isCls ? "is-positive" : isNeg ? "is-negative" : "is-mixed";
+      const badgeHtml = isCls
+        ? `<span class="mod-badge tone-emerald" style="font-size:10px;">${state.lang === "zh" ? "强时间外推" : "Strong Transfer"}</span>`
+        : isNeg
+          ? `<span class="mod-badge tone-amber" style="font-size:10px;">⚠ ${state.lang === "zh" ? "负向泛化" : "Negative Transfer"}</span>`
+          : `<span class="mod-badge tone-cobalt" style="font-size:10px;">${state.lang === "zh" ? "排序保留" : "Rank Preserved"}</span>`;
+
+      const metricsHtml = isCls
+        ? `<div class="temporal-metric-box"><span>Prod ROC-AUC</span><strong class="mono" style="color:var(--emerald)">${Number(prod.roc_auc ?? 0).toFixed(4)}</strong></div>
+           <div class="temporal-metric-box"><span>CPU QSAR AUC</span><strong class="mono">${Number(cpu.roc_auc ?? 0).toFixed(4)}</strong></div>
+           <div class="temporal-metric-box"><span>Prod Brier</span><strong class="mono">${Number(prod.brier ?? 0).toFixed(4)}</strong></div>
+           <div class="temporal-metric-box"><span>Train → Test N</span><strong class="mono">${Number(item.n_train_historical ?? 0).toLocaleString()} → ${Number(item.n_test_future_novel ?? 0).toLocaleString()}</strong></div>`
+        : `<div class="temporal-metric-box"><span>Prod R²</span><strong class="mono" style="color:${Number(prod.r2 ?? 0) < 0 ? "var(--rose)" : "var(--emerald)"}">${Number(prod.r2 ?? 0).toFixed(3)}</strong></div>
+           <div class="temporal-metric-box"><span>Prod Spearman ρ</span><strong class="mono" style="color:${Number(prod.spearman ?? 0) < 0.1 ? "var(--rose)" : "var(--cobalt)"}">${Number(prod.spearman ?? 0).toFixed(3)}</strong></div>
+           <div class="temporal-metric-box"><span>Prod MAE (vs CPU)</span><strong class="mono">${Number(prod.mae ?? 0).toFixed(3)} <span style="font-weight:400;color:var(--ink-muted)">(${Number(cpu.mae ?? 0).toFixed(3)})</span></strong></div>
+           <div class="temporal-metric-box"><span>Train → Test N</span><strong class="mono">${Number(item.n_train_historical ?? 0).toLocaleString()} → ${Number(item.n_test_future_novel ?? 0).toLocaleString()}</strong></div>`;
+
+      return `
+        <div class="temporal-tile ${tileCls}">
+          <div class="temporal-tile-top">
+            <span class="temporal-ep-name mono">${escapeHtml(ep)}</span>
+            ${badgeHtml}
+          </div>
+          <div class="temporal-metrics-row">${metricsHtml}</div>
+          <p class="temporal-desc">${escapeHtml(item.description || "")}</p>
+        </div>`;
+    })
+    .join("");
+
+  const imhb = v34.conformer_3d_imhb || null;
+  const imhbHtml = imhb
+    ? `<div class="v34-upgrade-subcard">
+         <h4>★ v3.4 3D-Conformer / Intramolecular H-Bond (IMHB) Temporal PAMPA Audit</h4>
+         <pre class="code-block" style="max-height:170px;font-size:11px;margin:0;">${escapeHtml(JSON.stringify(imhb, null, 2))}</pre>
+       </div>`
+    : "";
+
+  const dmtl = v34.domain_mtl || null;
+  const dmtlHtml = dmtl
+    ? `<div class="v34-upgrade-subcard">
+         <h4>★ v3.4 Domain-Grouped Multi-Task Learning (Domain-MTL) Audit</h4>
+         <pre class="code-block" style="max-height:170px;font-size:11px;margin:0;">${escapeHtml(JSON.stringify(dmtl, null, 2))}</pre>
+       </div>`
+    : "";
+
+  host.innerHTML = `
+    <div class="val-audit-head">
+      <div>
+        <h3 class="card-title">${escapeHtml(t(state.lang, "val_temp_title"))}</h3>
+        <span class="card-sub">${escapeHtml(t(state.lang, "val_temp_sub"))}</span>
+      </div>
+    </div>
+    <div class="temporal-grid">${tilesHtml}</div>
+    <div class="temporal-neg-callout">⚠ ${escapeHtml(t(state.lang, "val_temp_pampa_warn"))}</div>
+    ${imhbHtml}
+    ${dmtlHtml}`;
 }
 
 function renderValidationKpis(data) {
@@ -2871,6 +4509,30 @@ const API_PRESETS = {
     method: "POST",
     url: "/api/v1/predict",
     body: { query: "Micafungin", include_tier2: true, include_svg: false },
+  },
+  peptide_opt_oct: {
+    method: "POST",
+    url: "/api/v1/peptide-opt",
+    body: {
+      query: "Octreotide",
+      strategies: ["ala_scan", "point_mutation", "n_methylation", "cyclization", "lipidation_c16_c18"],
+      max_variants: 12,
+      objective_x: { endpoint: "PAMPA", direction: "max" },
+      objective_y: { endpoint: "half_life_reg", direction: "max" },
+    },
+  },
+  batch_screen_demo: {
+    method: "POST",
+    url: "/api/v1/batch-screen",
+    body: {
+      raw_text: "Semaglutide\nCyclosporine A\nOctreotide\nHISEAVKIFGCKWKENWKWNSNC",
+      weights: { permeability: 0.25, half_life: 0.25, low_hemolysis: 0.25, low_toxicity: 0.25, penalize_ood: true, weight_by_evidence_grade: true },
+    },
+  },
+  direct_attr_pampa: {
+    method: "POST",
+    url: "/api/v1/direct-attribution",
+    body: { query: "Cyclosporine A", endpoint: "PAMPA", width: 760, height: 460, max_perturbations: 16 },
   },
   clinical_sema: {
     method: "GET",

@@ -256,6 +256,14 @@ class EndpointPrediction(BaseModel):
     evidence_grade: Optional[Literal["quantitative", "rank_only", "exploratory_not_recommended"]] = None
     not_recommended_warning: Optional[str] = None
     v32_cv_score: Optional[float] = None
+    v32_cv_note: str = Field(
+        default="deprecated_legacy_unclustered_cv (historical reference only; do not use for model selection)",
+        description="Explicit methodological provenance tag for legacy v3.2 CV values.",
+    )
+    clinical_percentile: Optional[dict[str, Any]] = Field(
+        default=None,
+        description="Approved-peptide / curated-panel clinical percentile context for this predicted value.",
+    )
     conformal_coverage_80: Optional[float] = None
     conformal_coverage_90: Optional[float] = None
     uq_reliability: Optional[Literal["calibrated", "moderate", "low"]] = None
@@ -445,6 +453,10 @@ class EndpointCatalogItem(BaseModel):
     model_family: str
     cv_metric_name: str
     cv_score_v32: Optional[float] = None
+    v32_cv_note: str = Field(
+        default="deprecated_legacy_unclustered_cv (historical reference only; do not use for model selection)",
+        description="Explicit methodological provenance tag for legacy v3.2 CV values.",
+    )
     holdout_score_v32: Optional[float] = None
     cv_score_v33: Optional[float] = None
     holdout_score_v33: Optional[float] = None
@@ -478,7 +490,274 @@ class EndpointsResponse(BaseModel):
     external_baselines_same_split: dict[str, Any] = Field(default_factory=dict)
     temporal_split_benchmarks: dict[str, Any] = Field(default_factory=dict)
     recent_fda_2019_2023_blind_set: dict[str, Any] = Field(default_factory=dict)
+    v34_upgrades: dict[str, Any] = Field(default_factory=dict)
     endpoints: list[EndpointCatalogItem]
+
+
+# =============================================================================
+# V3.4 Interactive Design, Batch Screening + Peptide-MPO & Direct Attribution
+# =============================================================================
+
+
+PEPTIDE_OPT_STRATEGY = Literal[
+    "ala_scan",
+    "point_mutation",
+    "n_methylation",
+    "cyclization",
+    "lipidation_c16_c18",
+]
+
+
+class MpoWeights(BaseModel):
+    """Customizable Peptide Multi-Parameter Optimization (Peptide-MPO) weights and flags."""
+
+    permeability: float = Field(default=0.25, ge=0.0, le=10.0)
+    half_life: float = Field(default=0.25, ge=0.0, le=10.0)
+    low_hemolysis: float = Field(default=0.25, ge=0.0, le=10.0)
+    low_toxicity: float = Field(default=0.25, ge=0.0, le=10.0)
+    penalize_ood: bool = Field(default=True, description="Apply applicability-domain OOD penalty multiplier.")
+    weight_by_evidence_grade: bool = Field(
+        default=True,
+        description="Weight pillars by endpoint evidence grade (quantitative=1.0, rank_only=0.75, exploratory=0.25).",
+    )
+
+
+class PeptideOptObjective(BaseModel):
+    """Single optimization axis specification (endpoint + maximization/minimization direction)."""
+
+    endpoint: str = Field(default="PAMPA", description="Target V33 endpoint identifier.")
+    direction: Literal["max", "min"] = Field(default="max", description="Optimization direction: 'max' or 'min'.")
+
+
+class PeptideOptRequest(BaseModel):
+    """PeptideOpt structure-activity modification & Pareto optimization request."""
+
+    query: Optional[str] = Field(
+        default=None,
+        description="Optional unified peptide drug name, canonical 20-AA sequence, or SMILES.",
+    )
+    sequence: Optional[str] = Field(default=None, description="Explicit canonical 20-AA sequence.")
+    smiles: Optional[str] = Field(default=None, description="Explicit covalent SMILES string.")
+    strategies: list[PEPTIDE_OPT_STRATEGY] = Field(
+        default_factory=lambda: [
+            "ala_scan",
+            "point_mutation",
+            "n_methylation",
+            "cyclization",
+            "lipidation_c16_c18",
+        ],
+        min_length=1,
+        description="Modification strategies to enumerate chemically valid RDKit-sanitized variants.",
+    )
+    max_variants: int = Field(default=20, ge=1, le=32, description="Maximum variants to evaluate (capped at 32).")
+    objective_x: PeptideOptObjective = Field(
+        default_factory=lambda: PeptideOptObjective(endpoint="PAMPA", direction="max")
+    )
+    objective_y: PeptideOptObjective = Field(
+        default_factory=lambda: PeptideOptObjective(endpoint="half_life_reg", direction="max")
+    )
+    conditions: AssayConditions = Field(default_factory=AssayConditions)
+    mpo_weights: MpoWeights = Field(default_factory=MpoWeights)
+
+
+class PeptideOptObjectiveMeta(BaseModel):
+    """Resolved axis metadata for PeptideOpt scatter & Pareto visualization."""
+
+    endpoint: str
+    direction: Literal["max", "min"]
+    display_en: str
+    display_zh: str
+    unit: str
+    log10_space: bool = False
+
+
+class PeptideOptVariant(BaseModel):
+    """Evaluated parent or modified peptide variant with Pareto & safety annotations."""
+
+    id: str
+    name: str
+    strategy: str
+    mutation_label: str
+    description: str
+    sequence: Optional[str] = None
+    smiles: str
+    is_parent: bool = False
+    is_pareto_optimal: bool = False
+    x_value: Optional[float] = None
+    x_raw: Optional[float] = None
+    x_display: str = "N/A"
+    y_value: Optional[float] = None
+    y_raw: Optional[float] = None
+    y_display: str = "N/A"
+    delta_x: Optional[float] = None
+    delta_y: Optional[float] = None
+    delta_x_raw: Optional[float] = None
+    delta_y_raw: Optional[float] = None
+    delta_x_pct: Optional[float] = None
+    delta_y_pct: Optional[float] = None
+    ad_status: Literal["in_domain", "borderline", "ood"] = "borderline"
+    ad_status_x: Literal["in_domain", "borderline", "ood"] = "borderline"
+    ad_status_y: Literal["in_domain", "borderline", "ood"] = "borderline"
+    mpo_score: float = Field(default=0.0, ge=0.0, le=100.0)
+    safety_guardrail_pass: bool = True
+    safety_flags: list[str] = Field(default_factory=list)
+    mw: Optional[float] = None
+    logp: Optional[float] = None
+    tpsa: Optional[float] = None
+    hbd: Optional[int] = None
+    net_charge_ph74: Optional[float] = None
+    key_metrics: dict[str, Any] = Field(default_factory=dict)
+
+
+class PeptideOptResponse(BaseModel):
+    """Complete PeptideOpt multi-objective optimization & Pareto frontier response."""
+
+    parent: PeptideOptVariant
+    variants: list[PeptideOptVariant] = Field(default_factory=list)
+    pareto_frontier: list[PeptideOptVariant] = Field(default_factory=list)
+    objective_x: PeptideOptObjectiveMeta
+    objective_y: PeptideOptObjectiveMeta
+    strategies_used: list[str] = Field(default_factory=list)
+    strategies_skipped: list[dict[str, str]] = Field(default_factory=list)
+    total_generated: int = 0
+    total_evaluated: int = 0
+    pareto_count: int = 0
+    runtime_ms: float
+    adapter_mode: str
+    scope: str = "internal_research_only"
+
+
+class BatchScreenItemInput(BaseModel):
+    """Single item for Peptide-MPO batch screening (up to 100 compounds)."""
+
+    id: Optional[str] = None
+    name: Optional[str] = None
+    query: Optional[str] = None
+    sequence: Optional[str] = None
+    smiles: Optional[str] = None
+
+
+class BatchScreenRequest(BaseModel):
+    """Batch screening & Peptide-MPO ranking request (max 100 compounds)."""
+
+    items: Optional[list[BatchScreenItemInput]] = Field(default=None, max_length=100)
+    raw_text: Optional[str] = Field(default=None, max_length=500_000)
+    filename: Optional[str] = None
+    weights: MpoWeights = Field(default_factory=MpoWeights)
+    include_tier2: bool = False
+    conditions: AssayConditions = Field(default_factory=AssayConditions)
+
+
+class BatchScreenResult(BaseModel):
+    """One ranked compound row in Peptide-MPO batch screening."""
+
+    rank: Optional[int] = None
+    id: str
+    name: str
+    status: Literal["ok", "error"]
+    error: Optional[str] = None
+    resolved_type: Optional[str] = None
+    sequence: Optional[str] = None
+    smiles: Optional[str] = None
+    canonical_smiles: Optional[str] = None
+    peptide_mpo_score: Optional[float] = Field(default=None, ge=0.0, le=100.0)
+    mpo_tier: Literal["top", "moderate", "caution", "error"] = "moderate"
+    pillar_scores: dict[str, float] = Field(default_factory=dict)
+    pillar_details: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    ood_penalty: float = 1.0
+    ad_overall: Literal["in_domain", "borderline", "ood"] = "borderline"
+    ad_counts: dict[str, int] = Field(default_factory=dict)
+    mw: Optional[float] = None
+    logp: Optional[float] = None
+    net_charge_ph74: Optional[float] = None
+    key_metrics: dict[str, Any] = Field(default_factory=dict)
+    prediction_source: str = "none"
+
+
+class BatchScreenResponse(BaseModel):
+    """Sorted Peptide-MPO screening leaderboard + ready-to-download CSV string."""
+
+    total: int
+    succeeded: int
+    failed: int
+    truncated: bool = False
+    max_items: int = 100
+    weights_used: MpoWeights
+    results: list[BatchScreenResult] = Field(default_factory=list)
+    summary: dict[str, Any] = Field(default_factory=dict)
+    csv_export: str = ""
+    runtime_ms: float
+    adapter_mode: str
+    scope: str = "internal_research_only"
+
+
+class DirectAttributionRequest(BaseModel):
+    """Model-faithful direct ensemble perturbation attribution request (all 47 endpoints)."""
+
+    query: Optional[str] = Field(default=None, description="Drug name, canonical 20-AA sequence, or SMILES.")
+    sequence: Optional[str] = Field(default=None)
+    smiles: Optional[str] = Field(default=None)
+    endpoint: str = Field(
+        default="PAMPA",
+        description="Any supported V33 endpoint identifier (all 47 Tier-1 and Tier-2 endpoints).",
+    )
+    width: int = Field(default=760, ge=320, le=1600)
+    height: int = Field(default=460, ge=240, le=1200)
+    max_perturbations: int = Field(default=24, ge=4, le=40)
+    conditions: AssayConditions = Field(default_factory=AssayConditions)
+
+
+class DirectAtomWeight(BaseModel):
+    """Per-atom direct ensemble perturbation contribution."""
+
+    atom_index: int
+    symbol: str
+    weight: float = Field(ge=-1.0, le=1.0, description="Signed normalized contribution in [-1, 1].")
+    weight_01: float = Field(ge=0.0, le=1.0, description="Neutral-centered [0, 1] weight for diverging heatmap.")
+    raw_delta: float = Field(description="Raw model-space delta (pred_full - pred_masked).")
+    group_id: Optional[str] = None
+
+
+class ResidueOrGroupImpact(BaseModel):
+    """One residue masking or chemical substituent pruning impact entry."""
+
+    id: str
+    label: str
+    kind: Literal["residue", "sidechain", "n_methyl", "lipid_tail", "functional_group"]
+    position: Optional[int] = None
+    original_residue: Optional[str] = None
+    masked_to: Optional[str] = None
+    perturbed_smiles: str
+    perturbed_value: Optional[float] = None
+    perturbed_raw: Optional[float] = None
+    delta_raw: float
+    delta_display: Optional[float] = None
+    normalized_weight: float = Field(ge=-1.0, le=1.0)
+    atom_indices: list[int] = Field(default_factory=list)
+    direction: Literal["increases", "decreases", "neutral"]
+
+
+class DirectAttributionResponse(BaseModel):
+    """100% production-ensemble-faithful direct perturbation attribution response."""
+
+    endpoint: str
+    endpoint_label: str
+    endpoint_label_zh: str
+    interpretability_tier: Literal["direct_ensemble_faithful"] = "direct_ensemble_faithful"
+    method: Literal["residue_alanine_glycine_masking", "chemical_substituent_pruning"]
+    method_description: str
+    base_prediction: dict[str, Any]
+    n_atoms: int
+    n_perturbations: int
+    atom_weights: list[DirectAtomWeight] = Field(default_factory=list)
+    top_atoms: list[TopAtomContribution] = Field(default_factory=list)
+    residue_or_group_impacts: list[ResidueOrGroupImpact] = Field(default_factory=list)
+    svg_2d: str
+    svg: str
+    available_endpoints: list[str] = Field(default_factory=list)
+    latency_ms: float
+    cache_hit: bool = False
+    adapter_mode: str
 
 
 class HealthResponse(BaseModel):

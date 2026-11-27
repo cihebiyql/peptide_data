@@ -4478,3 +4478,914 @@ html, body {
   border-color: rgba(45, 212, 191, 0.22);
   border-left-color: var(--teal);
 }
+
+
+/* ==========================================================================
+   v1.4 SCIENTIFIC UPGRADES:
+   - P0-1 Hard-Audit Validation Panels (External Baselines, FDA Blind, Temporal)
+   - P0-2 Approved-Peptide Clinical Percentile Gauge (Card + Drawer)
+   - P1-5 PeptideOpt Interactive Multi-Objective Workbench & Pareto Plot
+   - P1-6 Batch Screening & Peptide-MPO Sliders + Ranked Leaderboard
+   - P2-8 Direct Ensemble Perturbation Attribution Switcher & Δy Impact Bars
+   ========================================================================== */
+
+/* ---------- P0-1: Validation Hard-Audit Panels ---------- */
+.val-hard-audit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.val-audit-header {
+  margin-bottom: 2px;
+}
+
+.val-audit-sub {
+  margin: 4px 0 0;
+  font-size: 12.8px;
+  color: var(--ink-muted);
+}
+
+.val-audit-card {
+  padding: 16px 18px;
+}
+
+.val-audit-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.val-audit-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.val-omni-row {
+  background: var(--cobalt-soft);
+}
+
+.val-omni-row td {
+  font-weight: 600;
+}
+
+.holm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 650;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.holm-sig {
+  color: var(--emerald);
+  background: var(--emerald-soft);
+  border: 1px solid rgba(5, 150, 105, 0.25);
+}
+
+.holm-marginal {
+  color: var(--amber-dark);
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-border);
+}
+
+.holm-ns {
+  color: var(--ink-muted);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+}
+
+.competitor-note-box {
+  margin-top: 12px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cobalt);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  line-height: 1.55;
+}
+
+.competitor-note-box strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 3px;
+  font-size: 12.2px;
+}
+
+.blind-protocol-banner {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.blind-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.blind-kpi-tile {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+}
+
+.blind-kpi-val {
+  display: block;
+  font-size: 18px;
+  font-weight: 750;
+  color: var(--cobalt);
+  margin: 2px 0;
+}
+
+.blind-kpi-ci {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.blind-ledger-wrap {
+  margin: 10px 0 12px;
+}
+
+.blind-ledger-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.fe-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.fe-great { color: var(--emerald); background: var(--emerald-soft); }
+.fe-good { color: var(--cobalt); background: var(--cobalt-soft); }
+.fe-mod { color: var(--amber-dark); background: var(--amber-soft); }
+.fe-high { color: var(--rose); background: var(--rose-soft); }
+
+.temporal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.temporal-tile {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.temporal-tile.is-negative {
+  border-color: var(--amber-border);
+  border-left: 3.5px solid var(--rose);
+  background: linear-gradient(180deg, rgba(225, 29, 72, 0.04) 0%, var(--surface-subtle) 100%);
+}
+
+.temporal-tile.is-positive {
+  border-left: 3.5px solid var(--emerald);
+}
+
+.temporal-tile.is-mixed {
+  border-left: 3.5px solid var(--cobalt);
+}
+
+.temporal-tile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.temporal-ep-name {
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--ink);
+}
+
+.temporal-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.temporal-metric-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 8px;
+}
+
+.temporal-metric-box span {
+  display: block;
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+
+.temporal-metric-box strong {
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.temporal-desc {
+  margin: 0;
+  font-size: 11.2px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+.temporal-neg-callout {
+  margin-top: 12px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  background: var(--rose-soft);
+  border: 1px solid rgba(225, 29, 72, 0.28);
+  color: #9F1239;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.v34-upgrade-subcard {
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  background: var(--teal-soft);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  font-size: 12px;
+  color: var(--ink-secondary);
+}
+
+.v34-upgrade-subcard h4 {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  color: var(--teal);
+}
+
+/* ---------- P0-2: Clinical Percentile Bar (Card + Drawer) ---------- */
+.pctl-mini-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--ink-muted);
+}
+
+.pctl-mini-tag {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--teal);
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.pctl-mini-track {
+  position: relative;
+  flex: 1;
+  min-width: 54px;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.28) 0%, rgba(13, 148, 136, 0.32) 50%, rgba(3, 105, 161, 0.45) 100%);
+}
+
+.pctl-mini-dot {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 1.5px solid var(--surface);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(13, 148, 136, 0.45);
+}
+
+.pctl-mini-ref {
+  font-size: 9.8px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.pctl-drawer-box {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+}
+
+.pctl-drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.pctl-drawer-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pctl-scale-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.24) 0%, rgba(13, 148, 136, 0.30) 50%, rgba(3, 105, 161, 0.48) 100%);
+  margin: 6px 0 4px;
+}
+
+.pctl-scale-pin {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid var(--surface);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 4px rgba(13, 148, 136, 0.5);
+}
+
+.pctl-scale-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+}
+
+.pctl-summary-txt {
+  margin: 6px 0 0;
+  font-size: 11.8px;
+  color: var(--ink-secondary);
+}
+
+.pctl-examples-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.pctl-ex-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pctl-ex-chip:hover {
+  border-color: var(--cobalt);
+  color: var(--cobalt);
+}
+
+/* ---------- P1-5: PeptideOpt Workbench ---------- */
+.opt-config-card {
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+
+.opt-input-row {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.opt-query-input {
+  width: 100%;
+  font-size: 13.5px;
+  padding: 8px 11px;
+}
+
+.opt-quick-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.opt-obj-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.opt-obj-pair {
+  display: flex;
+  gap: 6px;
+}
+
+.opt-ep-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.opt-dir-select {
+  width: 96px;
+  flex-shrink: 0;
+}
+
+.opt-strat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.opt-strat-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.strat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-subtle);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.strat-chip:has(input:checked) {
+  border-color: var(--cobalt);
+  background: var(--cobalt-soft);
+  color: var(--cobalt);
+  font-weight: 600;
+}
+
+.opt-run-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.opt-max-lbl {
+  font-size: 12px;
+  color: var(--ink-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.opt-results-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 1.12fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.opt-pareto-card,
+.opt-table-card {
+  padding: 16px 18px;
+}
+
+.opt-pareto-svg {
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.opt-dot {
+  cursor: pointer;
+}
+
+.opt-dot circle,
+.opt-dot polygon {
+  transition: transform 0.14s ease, filter 0.14s ease;
+}
+
+.opt-dot:hover circle,
+.opt-dot:hover polygon {
+  filter: drop-shadow(0 0 5px rgba(5, 150, 105, 0.55));
+}
+
+.pareto-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: #065F46;
+  background: linear-gradient(90deg, #D1FAE5 0%, #FEF3C7 100%);
+  border: 1px solid #34D399;
+}
+
+.parent-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: var(--violet);
+  background: var(--violet-soft);
+  border: 1px solid rgba(124, 58, 237, 0.28);
+}
+
+.opt-row-highlight {
+  background: var(--emerald-soft) !important;
+}
+
+/* ---------- P1-6: Batch Screening & Peptide-MPO ---------- */
+.mpo-config-box {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+}
+
+.mpo-config-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mpo-config-head strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.mpo-config-sub {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-muted);
+}
+
+.mpo-preset-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mpo-sliders-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 16px;
+}
+
+.mpo-slider-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.8px;
+  color: var(--ink-secondary);
+  margin-bottom: 3px;
+}
+
+.mpo-w-pct {
+  font-weight: 700;
+  color: var(--cobalt);
+}
+
+.mpo-range {
+  width: 100%;
+  accent-color: var(--cobalt);
+  cursor: pointer;
+}
+
+.mpo-toggles-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+
+.batch-submit-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mpo-leaderboard-card {
+  margin-top: 16px;
+  padding: 16px 18px;
+}
+
+.mpo-bar-cell {
+  min-width: 136px;
+}
+
+.mpo-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mpo-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.mpo-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.mpo-tier-top { background: var(--emerald); }
+.mpo-tier-moderate { background: var(--cobalt); }
+.mpo-tier-caution { background: var(--rose); }
+
+.mpo-pillars-mini {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 22px;
+}
+
+.mpo-pillar-col {
+  width: 14px;
+  height: 20px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.mpo-pillar-fill {
+  width: 100%;
+  border-radius: 2px;
+}
+
+/* ---------- P2-8: Direct Ensemble Perturbation Attribution ---------- */
+.svg-attr-mode-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.svg-attr-impacts {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+}
+
+.drawer-attr-section {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+}
+
+.drawer-attr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.drawer-attr-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-attr-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.drawer-attr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+  align-items: start;
+}
+
+.drawer-attr-svg-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-attr-svg-box svg {
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+}
+
+.impact-bars-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+
+.impact-bars-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.impact-bar-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 1.1fr) 1fr 68px;
+  align-items: center;
+  gap: 8px;
+  padding: 3.5px 0;
+  font-size: 11.3px;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.22);
+}
+
+.impact-bar-row:last-child {
+  border-bottom: none;
+}
+
+.impact-lbl {
+  font-weight: 600;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.impact-bidir-track {
+  position: relative;
+  height: 8px;
+  background: var(--surface-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.impact-bidir-mid {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-strong);
+}
+
+.impact-bidir-fill {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  border-radius: 999px;
+}
+
+.impact-pos { background: var(--rose); }
+.impact-neg { background: var(--cobalt); }
+.impact-neu { background: var(--ink-faint); }
+
+.impact-val {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.drawer-attr-warn {
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-border);
+  color: var(--amber-dark);
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Dark Theme Overrides for v1.4 ---------- */
+[data-theme="dark"] .val-omni-row {
+  background: rgba(56, 189, 248, 0.11);
+}
+
+[data-theme="dark"] .temporal-neg-callout {
+  background: rgba(225, 29, 72, 0.14);
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #FDA4AF;
+}
+
+[data-theme="dark"] .v34-upgrade-subcard {
+  background: rgba(20, 184, 166, 0.10);
+  border-color: rgba(45, 212, 191, 0.28);
+}
+
+[data-theme="dark"] .pareto-badge {
+  color: #6EE7B7;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.20) 0%, rgba(245, 158, 11, 0.20) 100%);
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+[data-theme="dark"] .opt-row-highlight {
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="dark"] .drawer-attr-warn {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: #FCD34D;
+}
+
+@media (max-width: 1120px) {
+  .blind-kpi-grid,
+  .temporal-grid,
+  .opt-input-row,
+  .opt-results-grid,
+  .drawer-attr-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .opt-obj-col,
+  .mpo-sliders-grid {
+    grid-template-columns: 1fr;
+  }
+}
