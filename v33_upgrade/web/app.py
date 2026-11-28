@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import os
 import re
 import secrets
@@ -31,7 +32,19 @@ from .drug_library import (
     QUICK_EXAMPLES,
     lookup_drug,
 )
+from .harness_jobs import (
+    HarnessClientBusyError,
+    HarnessJobManager,
+    HarnessQueueFullError,
+    is_harness_llm_enabled,
+)
 from .job_store import JobManager
+from .peptide_harness import (
+    HarnessConfig,
+    classify_all_endpoints,
+    preflight_validate_harness_request,
+    run_peptide_harness,
+)
 from .peptide_opt import run_peptide_opt
 from .schemas import (
     AssayConditions,
@@ -47,6 +60,12 @@ from .schemas import (
     EndpointsResponse,
     HealthResponse,
     JobCreateRequest,
+    PeptideHarnessCancelResponse,
+    PeptideHarnessJobListResponse,
+    PeptideHarnessJobMeta,
+    PeptideHarnessJobStatusResponse,
+    PeptideHarnessRequest,
+    PeptideHarnessSyncRequest,
     PeptideOptRequest,
     PeptideOptResponse,
     PredictRequest,
@@ -65,6 +84,8 @@ REDACT_HEALTH_PATHS = os.environ.get("V33_PUBLIC_HEALTH_REDACT", "0").strip().lo
 
 adapter = OmniPanelAdapter()
 job_manager = JobManager(adapter=adapter)
+harness_job_manager = HarnessJobManager(adapter=adapter)
+_harness_sync_sem = threading.BoundedSemaphore(1)
 
 
 def _start_background_warmup() -> None:
@@ -129,6 +150,78 @@ def _resolve_client_id(header_id: Optional[str], query_id: Optional[str] = None)
     return f"anon-{secrets.token_hex(8)}"
 
 
+def _require_strict_client_id(header_id: Optional[str]) -> str:
+    """Strictly require a valid X-Client-Id header on Peptide-Harness endpoints (no anonymous fallback)."""
+    cid = (header_id or "").strip()
+    if not cid or not CLIENT_ID_RE.fullmatch(cid):
+        raise HTTPException(
+            status_code=400,
+            detail="A valid 'X-Client-Id' header (6-64 alphanumeric/underscore/hyphen characters) is required for Peptide-Harness endpoints.",
+        )
+    return cid
+
+
+_TRUSTED_LOOPBACK_PEERS: frozenset[str] = frozenset({"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"})
+
+
+def _valid_ip_or_none(raw: str) -> Optional[str]:
+    s = (raw or "").strip()
+    if not s or len(s) > 64:
+        return None
+    try:
+        return str(ipaddress.ip_address(s))
+    except ValueError:
+        return None
+
+
+def _extract_client_ip(request: Request) -> str:
+    """Safely extract caller IP: only trust valid IP headers when direct peer is a trusted local reverse proxy."""
+    peer = (request.client.host if request.client else "") or "unknown"
+    if peer in _TRUSTED_LOOPBACK_PEERS:
+        x_real = _valid_ip_or_none(request.headers.get("x-real-ip") or "")
+        if x_real:
+            return x_real
+        xff = (request.headers.get("x-forwarded-for") or "").strip()
+        if xff and len(xff) <= 512:
+            parts = [p.strip() for p in xff.split(",") if p.strip()]
+            for raw_ip in reversed(parts):
+                parsed_ip = _valid_ip_or_none(raw_ip)
+                if parsed_ip and parsed_ip not in _TRUSTED_LOOPBACK_PEERS:
+                    return parsed_ip
+            for raw_ip in reversed(parts):
+                parsed_ip = _valid_ip_or_none(raw_ip)
+                if parsed_ip:
+                    return parsed_ip
+    return peer
+
+
+def _harness_config_from_request(req: PeptideHarnessRequest) -> HarnessConfig:
+    return HarnessConfig(
+        objective_x=req.objective_x.endpoint,
+        direction_x=req.objective_x.direction,
+        objective_y=req.objective_y.endpoint,
+        direction_y=req.objective_y.direction,
+        functional_endpoint=req.functional_endpoint,
+        functional_direction=req.functional_direction,
+        strategies=tuple(req.strategies),
+        locked_positions=tuple(req.locked_positions),
+        lock_disulfides=req.lock_disulfides,
+        locked_smarts=tuple(req.locked_smarts),
+        rounds=req.rounds,
+        population_size=req.population_size,
+        top_k=req.top_k,
+        critic_max_perturbations=req.critic_max_perturbations,
+        max_total_evals=req.max_total_evals,
+        wall_clock_budget_s=req.wall_clock_budget_s,
+        requested_max_aa_edits=req.requested_max_aa_edits,
+        requested_max_chem_edits=req.requested_max_chem_edits,
+        weights=req.mpo_weights,
+        conditions=req.conditions,
+        require_remote_oracle=adapter.strict_remote,
+        compute_elite_cross_track_audit=req.compute_elite_cross_track_audit,
+    )
+
+
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["System"])
 def get_health() -> HealthResponse:
     """Service liveness, engine readiness, RDKit version, and audited dataset KPIs."""
@@ -152,6 +245,7 @@ def get_health() -> HealthResponse:
         case17_drugs_loaded=sum(1 for d in DRUG_LIBRARY if d.get("case17")),
         dataset_summary=adapter.get_dataset_summary(),
         uptime_s=round(time.time() - adapter.start_time, 1),
+        harness_llm_enabled=is_harness_llm_enabled(),
     )
 
 
@@ -322,6 +416,194 @@ def post_peptide_opt(req: PeptideOptRequest) -> PeptideOptResponse:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+# ==================== PEPTIDE-HARNESS (V3.5) MULTI-ROUND OPTIMIZATION ====================
+
+
+@app.get("/api/v1/peptide-harness/tiers", tags=["Optimization"])
+def get_peptide_harness_tiers() -> JSONResponse:
+    """Dynamically classify all 47 manifest endpoints into Tier A/B/C per modality track."""
+    out: dict[str, dict[str, dict[str, object]]] = {}
+    for tr in ("dual_modality", "smiles_only"):
+        classified = classify_all_endpoints(adapter.manifest, track=tr)
+        out[tr] = {
+            ep: {
+                "tier": info.tier,
+                "short_tier": (
+                    "A"
+                    if info.tier == "tier_a_primary"
+                    else ("B" if info.tier in ("tier_b_soft_only", "advisory_macrocycle_only") else "C")
+                ),
+                "reason": info.reason,
+                "evidence_grade": info.evidence_grade,
+                "uq_reliability": info.uq_reliability,
+                "n_eff_clusters": info.n_eff_clusters,
+            }
+            for ep, info in classified.items()
+        }
+    return JSONResponse({"tracks": out, "harness_llm_enabled": is_harness_llm_enabled()})
+
+
+@app.post(
+    "/api/v1/peptide-harness/jobs",
+    response_model=PeptideHarnessJobMeta,
+    status_code=202,
+    tags=["Optimization"],
+)
+def post_create_harness_job(
+    req: PeptideHarnessRequest,
+    request: Request,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> PeptideHarnessJobMeta:
+    """Submit an asynchronous multi-round Peptide-Harness optimization job (returns HTTP 202 with job_id)."""
+    client_id = _require_strict_client_id(x_client_id)
+    client_ip = _extract_client_ip(request)
+    cfg = _harness_config_from_request(req)
+    try:
+        meta = harness_job_manager.submit_job(
+            client_id=client_id,
+            client_ip=client_ip,
+            query=req.query,
+            sequence=req.sequence,
+            smiles=req.smiles,
+            config=cfg,
+        )
+        return PeptideHarnessJobMeta(**meta)
+    except (InputValidationError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (HarnessQueueFullError, HarnessClientBusyError, EngineBusyError) as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "10"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+@app.get(
+    "/api/v1/peptide-harness/jobs",
+    response_model=PeptideHarnessJobListResponse,
+    tags=["Optimization"],
+)
+def get_list_harness_jobs(
+    limit: int = Query(default=20, ge=1, le=64),
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> PeptideHarnessJobListResponse:
+    """List Peptide-Harness jobs owned by the calling X-Client-Id (newest first)."""
+    client_id = _require_strict_client_id(x_client_id)
+    jobs = harness_job_manager.list_jobs(client_id=client_id, limit=limit)
+    active_count = sum(1 for j in jobs if j["status"] in ("queued", "running"))
+    return PeptideHarnessJobListResponse(
+        jobs=[PeptideHarnessJobMeta(**j) for j in jobs],
+        active_count=active_count,
+        total=len(jobs),
+    )
+
+
+@app.get(
+    "/api/v1/peptide-harness/jobs/{job_id}",
+    response_model=PeptideHarnessJobStatusResponse,
+    tags=["Optimization"],
+)
+def get_harness_job_detail(
+    job_id: str,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> PeptideHarnessJobStatusResponse:
+    """Poll live round progress and retrieve full multi-round Peptide-Harness results (strict X-Client-Id ownership)."""
+    client_id = _require_strict_client_id(x_client_id)
+    detail = harness_job_manager.get_job(job_id=job_id, client_id=client_id)
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"Peptide-Harness job '{job_id}' not found.")
+    return PeptideHarnessJobStatusResponse(**detail)
+
+
+@app.delete(
+    "/api/v1/peptide-harness/jobs/{job_id}",
+    response_model=PeptideHarnessCancelResponse,
+    tags=["Optimization"],
+)
+def delete_cancel_harness_job(
+    job_id: str,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> PeptideHarnessCancelResponse:
+    """Cooperatively cancel a queued or running Peptide-Harness job (preserving already-evaluated candidates)."""
+    client_id = _require_strict_client_id(x_client_id)
+    meta = harness_job_manager.cancel_job(job_id=job_id, client_id=client_id)
+    if meta is None:
+        raise HTTPException(status_code=404, detail=f"Peptide-Harness job '{job_id}' not found.")
+    return PeptideHarnessCancelResponse(**meta)
+
+
+@app.post("/api/v1/peptide-harness", tags=["Optimization"])
+def post_peptide_harness_sync(
+    req: PeptideHarnessSyncRequest,
+    request: Request,
+    x_client_id: Optional[str] = Header(default=None, alias="X-Client-Id"),
+) -> JSONResponse:
+    """Strictly capped 1-round fast synchronous Peptide-Harness endpoint (max_total_evals<=8, wall_clock<=20s).
+
+    For multi-round optimization (rounds 2-4), use `POST /api/v1/peptide-harness/jobs` (HTTP 202 async).
+    """
+    client_id = _require_strict_client_id(x_client_id)
+    client_ip = _extract_client_ip(request)
+    if harness_job_manager.has_active_for(client_id, client_ip):
+        raise HTTPException(
+            status_code=429,
+            detail="Client or source IP already has an active async Peptide-Harness job; wait for completion or cancel it first.",
+            headers={"Retry-After": "10"},
+        )
+    if not _harness_sync_sem.acquire(blocking=False):
+        raise HTTPException(
+            status_code=429,
+            detail="Another synchronous Peptide-Harness request is currently running; use async POST /api/v1/peptide-harness/jobs or retry shortly.",
+            headers={"Retry-After": "5"},
+        )
+    t_sync_start = time.perf_counter()
+    sync_budget = float(req.wall_clock_budget_s)
+    cfg = _harness_config_from_request(req)
+    try:
+        preflight_validate_harness_request(
+            adapter,
+            query=req.query,
+            sequence=req.sequence,
+            smiles=req.smiles,
+            config=cfg,
+        )
+
+        def _sync_yielding_eval(rows, include_tier2, conditions):
+            rem = sync_budget - (time.perf_counter() - t_sync_start)
+            if rem <= 1.0:
+                raise EngineBusyError("Synchronous Peptide-Harness wall-clock budget exhausted.")
+            adapter.wait_for_interactive_idle(max_wait_s=min(3.0, max(0.5, rem * 0.25)))
+            rem_http = max(5.0, min(15.0, sync_budget - (time.perf_counter() - t_sync_start)))
+            try:
+                return adapter.predict_batch(
+                    rows,
+                    include_tier2=include_tier2,
+                    conditions=conditions,
+                    http_timeout_s=rem_http,
+                    is_background=True,
+                )
+            except TypeError:
+                return adapter.predict_batch(rows, include_tier2=include_tier2, conditions=conditions)
+
+        res = run_peptide_harness(
+            adapter=adapter,
+            query=req.query,
+            sequence=req.sequence,
+            smiles=req.smiles,
+            config=cfg,
+            eval_batch_fn=_sync_yielding_eval,
+        )
+        return JSONResponse(res)
+    except (InputValidationError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except EngineBusyError as exc:
+        raise HTTPException(status_code=429, detail=str(exc), headers={"Retry-After": "5"}) from exc
+    except EngineUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    finally:
+        _harness_sync_sem.release()
 
 
 @app.post("/api/v1/batch-screen", response_model=BatchScreenResponse, tags=["Batch"])

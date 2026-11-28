@@ -130,14 +130,25 @@ def _evenly_spaced_indices(indices: list[int], k: int) -> list[int]:
     return chosen
 
 
-def _gen_ala_scan(sequence: Optional[str], parent_can: str, limit: int = 10) -> tuple[list[_CandidateSpec], Optional[str]]:
+def _gen_ala_scan(
+    sequence: Optional[str],
+    parent_can: str,
+    limit: int = 10,
+    locked_positions: Optional[set[int]] = None,
+    lock_disulfides: bool = False,
+) -> tuple[list[_CandidateSpec], Optional[str]]:
     if not sequence or len(sequence) < 3:
         return [], "Requires canonical 20-AA sequence (length >= 3)"
     if len(sequence) > 65:
         return [], "Canonical sequence exceeds 65 AA RDKit atomic graph limit"
-    non_ala = [i for i, aa in enumerate(sequence) if aa != "A"]
+    locked = locked_positions or set()
+    non_ala = [
+        i
+        for i, aa in enumerate(sequence)
+        if aa != "A" and (i + 1) not in locked and not (lock_disulfides and aa == "C")
+    ]
     if not non_ala:
-        return [], "Sequence is already poly-Alanine"
+        return [], "No unlocked non-Alanine positions available"
     positions = _evenly_spaced_indices(non_ala, limit)
     out: list[_CandidateSpec] = []
     for pos in positions:
@@ -160,16 +171,31 @@ def _gen_ala_scan(sequence: Optional[str], parent_can: str, limit: int = 10) -> 
     return out, (None if out else "No valid Ala-scan variants generated")
 
 
-def _gen_point_mutations(sequence: Optional[str], parent_can: str, limit: int = 10) -> tuple[list[_CandidateSpec], Optional[str]]:
+def _gen_point_mutations(
+    sequence: Optional[str],
+    parent_can: str,
+    limit: int = 10,
+    locked_positions: Optional[set[int]] = None,
+    lock_disulfides: bool = False,
+) -> tuple[list[_CandidateSpec], Optional[str]]:
     if not sequence or len(sequence) < 3:
         return [], "Requires canonical 20-AA sequence (length >= 3)"
     if len(sequence) > 65:
         return [], "Canonical sequence exceeds 65 AA RDKit atomic graph limit"
+    locked = locked_positions or set()
 
-    # Prioritize charged (K/R/E/D), aromatic (W/F/Y), and flexible (G/L/S) positions
-    priority_pos = [i for i, aa in enumerate(sequence) if aa in "KRWFYEDGLS"]
+    # Prioritize charged (K/R/E/D), aromatic (W/F/Y), and flexible (G/L/S) unlocked positions
+    priority_pos = [
+        i
+        for i, aa in enumerate(sequence)
+        if aa in "KRWFYEDGLS" and (i + 1) not in locked and not (lock_disulfides and aa == "C")
+    ]
     if not priority_pos:
-        priority_pos = list(range(len(sequence)))
+        priority_pos = [
+            i for i, aa in enumerate(sequence) if (i + 1) not in locked and not (lock_disulfides and aa == "C")
+        ]
+    if not priority_pos:
+        return [], "All sequence positions are locked"
     positions = _evenly_spaced_indices(priority_pos, min(len(priority_pos), max(limit, 8)))
 
     out: list[_CandidateSpec] = []
@@ -222,23 +248,29 @@ def _n_methylate_sites(mol: Chem.Mol, n_indices: list[int]) -> Optional[str]:
         return None
 
 
-def _gen_n_methylation(mol: Optional[Chem.Mol], parent_can: str, limit: int = 8) -> tuple[list[_CandidateSpec], Optional[str]]:
+def _gen_n_methylation(
+    mol: Optional[Chem.Mol],
+    parent_can: str,
+    limit: int = 8,
+    locked_atom_indices: Optional[set[int]] = None,
+) -> tuple[list[_CandidateSpec], Optional[str]]:
     if mol is None:
         return [], "Requires RDKit atomic structure (SMILES or <=80 AA sequence)"
+    locked_atoms = locked_atom_indices or set()
     matches = mol.GetSubstructMatches(_PAT_SEC_AMIDE)
-    # Exclude 5-membered proline ring nitrogens (already tertiary, double-check anyway)
+    # Exclude 5-membered proline ring nitrogens and locked core atoms
     candidate_n: list[int] = []
     seen_n: set[int] = set()
     for m in matches:
         n_idx = int(m[0])
-        if n_idx in seen_n:
+        if n_idx in seen_n or n_idx in locked_atoms:
             continue
         atom = mol.GetAtomWithIdx(n_idx)
         if atom.GetTotalNumHs() >= 1 and not atom.IsInRingSize(5):
             seen_n.add(n_idx)
             candidate_n.append(n_idx)
     if not candidate_n:
-        return [], "No available non-proline secondary amide NH sites for N-methylation"
+        return [], "No available unlocked non-proline secondary amide NH sites for N-methylation"
 
     selected = _evenly_spaced_indices(candidate_n, max(1, limit - 1))
     out: list[_CandidateSpec] = []
@@ -344,15 +376,21 @@ def _gen_cyclization(
     sequence: Optional[str],
     parent_can: str,
     limit: int = 4,
+    locked_positions: Optional[set[int]] = None,
+    locked_atom_indices: Optional[set[int]] = None,
+    lock_disulfides: bool = False,
 ) -> tuple[list[_CandidateSpec], Optional[str]]:
     if mol is None:
         return [], "Requires RDKit atomic structure"
 
+    locked_pos = locked_positions or set()
+    locked_atoms = locked_atom_indices or set()
     out: list[_CandidateSpec] = []
     has_macro = any(len(r) >= 12 for r in mol.GetRingInfo().AtomRings())
 
-    # 1. Head-to-tail backbone lactam cyclization (if not already macrocyclic)
-    if not has_macro:
+    # 1. Head-to-tail backbone lactam cyclization (skip if N-term or C-term is locked)
+    termini_locked = bool(sequence and (1 in locked_pos or len(sequence) in locked_pos))
+    if not has_macro and not termini_locked:
         htt_smi = _cyclize_head_to_tail(mol)
         if htt_smi and htt_smi != parent_can:
             out.append(
@@ -365,8 +403,12 @@ def _gen_cyclization(
                 )
             )
 
-    # 2. Existing free Cys-Cys disulfide bridge
-    thiol_matches = [int(m[0]) for m in mol.GetSubstructMatches(_PAT_FREE_THIOL)]
+    # 2. Existing free Cys-Cys disulfide bridge (ALWAYS respect explicitly locked sulfur atoms)
+    thiol_matches = [
+        int(m[0])
+        for m in mol.GetSubstructMatches(_PAT_FREE_THIOL)
+        if int(m[0]) not in locked_atoms
+    ]
     if len(thiol_matches) >= 2:
         dm = Chem.GetDistanceMatrix(mol)
         best_ss: Optional[tuple[int, int, int]] = None
@@ -389,8 +431,16 @@ def _gen_cyclization(
                     )
                 )
 
-    # 3. For canonical linear peptides without >=2 free Cys, synthesize a Cys-flanked disulfide macrocycle
-    if len(out) < limit and sequence and 4 <= len(sequence) <= 45 and not has_macro and len(thiol_matches) < 2:
+    # 3. For canonical linear peptides without >=2 free Cys, synthesize a Cys-flanked disulfide macrocycle (chemical leaf)
+    # BOTH branches modify N-term (pos 1) and C-term (pos L) — FORBIDDEN if either terminus is locked!
+    if (
+        len(out) < limit
+        and sequence
+        and 4 <= len(sequence) <= 45
+        and not has_macro
+        and len(thiol_matches) < 2
+        and not termini_locked
+    ):
         cys_seq = f"C{sequence}C" if len(sequence) <= 30 else ("C" + sequence[1:-1] + "C")
         cys_mol = sequence_to_mol(cys_seq)
         if cys_mol is not None:
@@ -402,14 +452,14 @@ def _gen_cyclization(
                         _CandidateSpec(
                             strategy="cyclization",
                             mutation_label="c[C-seq-C] Disulfide",
-                            description="Engineered terminal Cys-Cys disulfide-bridged cyclic analog",
+                            description="Engineered terminal Cys-Cys disulfide-bridged cyclic analog (chemical leaf)",
                             sequence=None,
                             smiles=ss_smi,
                         )
                     )
 
     if not out:
-        reason = "Parent molecule is already macrocyclic with no free thiol pairs" if has_macro else "No compatible termini or free Cys pairs found for cyclization"
+        reason = "Parent molecule is already macrocyclic with no free thiol pairs" if has_macro else "No compatible unlocked termini or free Cys pairs found for cyclization"
         return [], reason
     return out[:limit], None
 
@@ -449,21 +499,23 @@ def _gen_lipidation(
     mol: Optional[Chem.Mol],
     parent_can: str,
     limit: int = 6,
+    locked_atom_indices: Optional[set[int]] = None,
 ) -> tuple[list[_CandidateSpec], Optional[str]]:
     if mol is None:
         return [], "Requires RDKit atomic structure"
 
-    # Prefer Lysine ε-amines first (clinical standard: Semaglutide / Liraglutide / Tirzepatide)
-    lys_sites = [int(m[0]) for m in mol.GetSubstructMatches(_PAT_LYS_EPS_AMINE)]
+    locked_atoms = locked_atom_indices or set()
+    # Prefer unlocked Lysine ε-amines first (clinical standard: Semaglutide / Liraglutide / Tirzepatide)
+    lys_sites = [int(m[0]) for m in mol.GetSubstructMatches(_PAT_LYS_EPS_AMINE) if int(m[0]) not in locked_atoms]
     site_kind = "Lys-ε"
     sites = _evenly_spaced_indices(lys_sites, 2)
     if not sites:
-        prim_sites = [int(m[0]) for m in mol.GetSubstructMatches(_PAT_PRIM_AMINE)]
+        prim_sites = [int(m[0]) for m in mol.GetSubstructMatches(_PAT_PRIM_AMINE) if int(m[0]) not in locked_atoms]
         sites = _evenly_spaced_indices(prim_sites, 2)
         site_kind = "N-term/amine"
 
     if not sites:
-        return [], "No free Lys ε-amine or primary amine handle available for C16/C18 lipidation"
+        return [], "No unlocked Lys ε-amine or primary amine handle available for C16/C18 lipidation"
 
     out: list[_CandidateSpec] = []
     for s_rank, n_idx in enumerate(sites, start=1):

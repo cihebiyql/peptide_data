@@ -231,11 +231,13 @@ def _build_residue_masking_plans(
     mol: Chem.Mol,
     sequence: str,
     max_perturbations: int,
+    exclude_positions: Optional[set[int]] = None,
 ) -> list[_PerturbationPlan]:
     """Build Leave-One-Out Ala/Gly residue masking plans with exact RDKit PDB residue atom mapping."""
     res_sidechain: dict[int, list[int]] = {}
     res_backbone: dict[int, list[int]] = {}
     backbone_names = {"N", "CA", "C", "O", "OXT"}
+    excl = exclude_positions or set()
 
     for atom in mol.GetAtoms():
         info = atom.GetPDBResidueInfo()
@@ -248,8 +250,10 @@ def _build_residue_masking_plans(
         else:
             res_sidechain.setdefault(rnum, []).append(atom.GetIdx())
 
-    # Map positions 1..len(sequence)
-    positions = list(range(1, len(sequence) + 1))
+    # Map unlocked positions 1..len(sequence)
+    positions = [p for p in range(1, len(sequence) + 1) if p not in excl]
+    if not positions:
+        return []
     selected_pos = _evenly_pick(positions, max_perturbations)
 
     plans: list[_PerturbationPlan] = []
@@ -736,3 +740,171 @@ def run_direct_attribution(
     )
     _DIRECT_ATTR_CACHE.set(cache_key, resp)
     return resp
+
+
+
+def compute_headless_multi_endpoint_attribution(
+    adapter: OmniPanelAdapter,
+    mol: Chem.Mol,
+    sequence: Optional[str],
+    canonical_smiles: str,
+    target_endpoints: Sequence[str],
+    *,
+    locked_positions: Optional[set[int]] = None,
+    locked_atom_indices: Optional[set[int]] = None,
+    seen_keys: Optional[set[tuple[str, Optional[str]]]] = None,
+    max_perturbations: int = 8,
+    include_tier2: bool = False,
+    conditions: Optional[AssayConditions] = None,
+    chunk_size: int = 4,
+    base_result: Optional[Any] = None,
+    eval_batch_fn: Optional[Any] = None,
+    cancel_event: Optional[Any] = None,
+) -> dict[str, Any]:
+    """Headless multi-endpoint Critic attribution (skip_svg=True, excludes locked & already-seen sites).
+
+    Evaluates unlocked leave-one-out perturbations in chunked batches (`<= chunk_size`) and returns
+    per-endpoint `delta_raw = base_raw - perturbed_raw` across ALL `target_endpoints` simultaneously,
+    plus reusable `(plan, BatchMoleculeResult)` pairs so Round 1 can recycle Ala-scan evaluations at zero extra cost.
+    """
+    t0 = time.perf_counter()
+    cond = conditions or AssayConditions()
+    excl_pos = set(locked_positions or ())
+    excl_atoms = set(locked_atom_indices or ())
+    seen = seen_keys or set()
+
+    use_residue_mode = False
+    working_mol = mol
+    if sequence and 3 <= len(sequence) <= 80:
+        seq_mol = sequence_to_mol(sequence)
+        if seq_mol is not None and _sanitize_single_frag(seq_mol) == canonical_smiles:
+            working_mol = seq_mol
+            use_residue_mode = True
+
+    if use_residue_mode and sequence:
+        method = "residue_alanine_glycine_masking"
+        raw_plans = _build_residue_masking_plans(
+            working_mol, sequence, max(1, int(max_perturbations)) * 2, exclude_positions=excl_pos
+        )
+        plans = [
+            pl
+            for pl in raw_plans
+            if (pl.perturbed_smiles, pl.perturbed_sequence) not in seen
+            and pl.perturbed_smiles != canonical_smiles
+        ][: max(1, int(max_perturbations))]
+    else:
+        method = "chemical_substituent_pruning"
+        raw_plans = _build_substituent_pruning_plans(working_mol, max(1, int(max_perturbations)) * 2)
+        plans = [
+            pl
+            for pl in raw_plans
+            if not (set(pl.atom_indices) & excl_atoms)
+            and (pl.perturbed_smiles, None) not in seen
+            and pl.perturbed_smiles != canonical_smiles
+        ][: max(1, int(max_perturbations))]
+
+    eval_fn = eval_batch_fn or (lambda rows: adapter.predict_batch(rows, include_tier2=include_tier2, conditions=cond))
+
+    n_evals_used = 0
+    if base_result is None:
+        if cancel_event is not None and cancel_event.is_set():
+            return {
+                "method": method,
+                "n_perturbations": 0,
+                "n_evals_used": 0,
+                "base_ok": False,
+                "impacts_by_endpoint": {ep: [] for ep in target_endpoints},
+                "reusable_evals": [],
+                "latency_ms": round((time.perf_counter() - t0) * 1000.0, 2),
+            }
+        base_row = BatchParsedRow(
+            index=0,
+            name="critic_base",
+            detected_type="sequence" if use_residue_mode else "smiles",
+            sequence=sequence if use_residue_mode else None,
+            smiles=canonical_smiles,
+            valid=True,
+        )
+        base_out = eval_fn([base_row])
+        n_evals_used += len(base_out)
+        base_result = base_out[0] if base_out else None
+
+    if base_result is None or base_result.status != "ok":
+        return {
+            "method": method,
+            "n_perturbations": 0,
+            "n_evals_used": n_evals_used,
+            "base_ok": False,
+            "impacts_by_endpoint": {ep: [] for ep in target_endpoints},
+            "reusable_evals": [],
+            "latency_ms": round((time.perf_counter() - t0) * 1000.0, 2),
+        }
+
+    base_by_ep = {p.endpoint: p for p in base_result.predictions}
+    pert_results: list[Any] = []
+    if plans:
+        csize = max(1, int(chunk_size))
+        for start in range(0, len(plans), csize):
+            if cancel_event is not None and cancel_event.is_set():
+                break
+            chunk_plans = plans[start : start + csize]
+            rows = [
+                BatchParsedRow(
+                    index=start + i + 1,
+                    name=pl.label,
+                    detected_type="sequence" if pl.perturbed_sequence else "smiles",
+                    sequence=pl.perturbed_sequence,
+                    smiles=pl.perturbed_smiles,
+                    valid=True,
+                )
+                for i, pl in enumerate(chunk_plans)
+            ]
+            out_chunk = eval_fn(rows)
+            n_evals_used += len(rows)
+            pert_results.extend(out_chunk)
+
+    impacts_by_ep: dict[str, list[dict[str, Any]]] = {ep: [] for ep in target_endpoints}
+    reusable_evals: list[tuple[_PerturbationPlan, Any]] = []
+
+    for pl, bm in zip(plans, pert_results):
+        if bm is None or bm.status != "ok":
+            continue
+        reusable_evals.append((pl, bm))
+        p_by_ep = {p.endpoint: p for p in bm.predictions}
+        for ep in target_endpoints:
+            bp = base_by_ep.get(ep)
+            pp = p_by_ep.get(ep)
+            if bp is None or pp is None or bp.value is None or pp.value is None:
+                continue
+            b_raw = float(bp.raw_value) if bp.raw_value is not None else float(bp.value)
+            p_raw = float(pp.raw_value) if pp.raw_value is not None else float(pp.value)
+            delta_raw = b_raw - p_raw
+            impacts_by_ep[ep].append(
+                {
+                    "id": pl.id,
+                    "label": pl.label,
+                    "kind": pl.kind,
+                    "position": pl.position,
+                    "original_residue": pl.original_residue,
+                    "masked_to": pl.masked_to,
+                    "perturbed_smiles": pl.perturbed_smiles,
+                    "perturbed_sequence": pl.perturbed_sequence,
+                    "base_raw": round(b_raw, 5),
+                    "perturbed_raw": round(p_raw, 5),
+                    "delta_raw": round(delta_raw, 5),
+                    "direction": "increases" if delta_raw > 1e-6 else ("decreases" if delta_raw < -1e-6 else "neutral"),
+                }
+            )
+
+    for ep in target_endpoints:
+        impacts_by_ep[ep].sort(key=lambda r: abs(r["delta_raw"]), reverse=True)
+
+    return {
+        "method": method,
+        "n_perturbations": len(reusable_evals),
+        "n_evals_used": n_evals_used,
+        "base_ok": True,
+        "impacts_by_endpoint": impacts_by_ep,
+        "reusable_evals": reusable_evals,
+        "latency_ms": round((time.perf_counter() - t0) * 1000.0, 2),
+    }

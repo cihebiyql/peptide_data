@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Literal, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AssayConditions(BaseModel):
@@ -779,4 +779,134 @@ class HealthResponse(BaseModel):
     case17_drugs_loaded: int
     dataset_summary: dict[str, Any] = Field(default_factory=dict)
     uptime_s: float
+    harness_llm_enabled: bool = False
     scope: str = "internal_research_only"
+
+
+# =============================================================================
+# V3.5 Peptide-Harness Controlled Multi-Round Optimization Schemas
+# =============================================================================
+
+
+class PeptideHarnessRequest(BaseModel):
+    """Multi-round controlled evolutionary optimization request (strictly forbids unknown fields / SSRF params)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    query: Optional[str] = Field(
+        default=None,
+        max_length=2000,
+        description="Unified peptide drug name, canonical 20-AA sequence, or SMILES.",
+    )
+    sequence: Optional[str] = Field(default=None, max_length=120, description="Explicit canonical 20-AA sequence.")
+    smiles: Optional[str] = Field(default=None, max_length=4000, description="Explicit covalent SMILES string.")
+    objective_x: PeptideOptObjective = Field(
+        default_factory=lambda: PeptideOptObjective(endpoint="PAMPA", direction="max")
+    )
+    objective_y: PeptideOptObjective = Field(
+        default_factory=lambda: PeptideOptObjective(endpoint="half_life_reg", direction="max")
+    )
+    functional_endpoint: Optional[str] = Field(
+        default=None,
+        max_length=64,
+        description="Optional Tier-A functional endpoint constrained to non-worsening relative to initial seed.",
+    )
+    functional_direction: Optional[Literal["max", "min"]] = Field(
+        default=None,
+        description="Optional override for functional endpoint direction ('max' or 'min').",
+    )
+    strategies: list[PEPTIDE_OPT_STRATEGY] = Field(
+        default_factory=lambda: [
+            "ala_scan",
+            "point_mutation",
+            "n_methylation",
+            "cyclization",
+            "lipidation_c16_c18",
+        ],
+        min_length=1,
+        max_length=5,
+    )
+    locked_positions: list[int] = Field(
+        default_factory=list,
+        max_length=65,
+        description="1-based canonical residue indices locked against mutation or chemical modification.",
+    )
+    lock_disulfides: bool = Field(default=True, description="Lock native disulfide bridges (S-S) intact.")
+    locked_smarts: list[str] = Field(
+        default_factory=list,
+        max_length=8,
+        description="Optional SMARTS core motifs preserved across all proposals (<=8 patterns, <=256 chars each).",
+    )
+    rounds: int = Field(default=3, ge=1, le=4)
+    population_size: int = Field(default=6, ge=2, le=8)
+    top_k: int = Field(default=5, ge=1, le=5)
+    critic_max_perturbations: int = Field(default=8, ge=2, le=10)
+    max_total_evals: int = Field(default=36, ge=4, le=60)
+    wall_clock_budget_s: float = Field(default=120.0, ge=10.0, le=180.0)
+    requested_max_aa_edits: Optional[int] = Field(default=None, ge=0, le=3)
+    requested_max_chem_edits: Optional[int] = Field(default=None, ge=0, le=2)
+    compute_elite_cross_track_audit: bool = Field(default=True)
+    mpo_weights: MpoWeights = Field(default_factory=MpoWeights)
+    conditions: AssayConditions = Field(default_factory=AssayConditions)
+
+    @field_validator("locked_smarts")
+    @classmethod
+    def _validate_locked_smarts(cls, v: list[str]) -> list[str]:
+        out: list[str] = []
+        for s in v:
+            sc = (s or "").strip()
+            if not sc:
+                continue
+            if len(sc) > 256:
+                raise ValueError("Each locked_smarts pattern must be <= 256 characters.")
+            out.append(sc)
+        return out
+
+
+class PeptideHarnessSyncRequest(PeptideHarnessRequest):
+    """Strictly capped single-round fast synchronous Peptide-Harness request (never exceeds gateway timeout)."""
+
+    rounds: int = Field(default=1, ge=1, le=1)
+    population_size: int = Field(default=4, ge=2, le=4)
+    critic_max_perturbations: int = Field(default=4, ge=2, le=4)
+    max_total_evals: int = Field(default=6, ge=4, le=8)
+    wall_clock_budget_s: float = Field(default=15.0, ge=5.0, le=20.0)
+
+
+class PeptideHarnessJobMeta(BaseModel):
+    """Metadata and live round progress snapshot for an async Peptide-Harness job."""
+
+    job_id: str
+    status: Literal["queued", "running", "completed", "partial", "cancelled", "failed"]
+    phase: str
+    current_round: int = 0
+    total_rounds: int = 1
+    progress_pct: float = Field(default=0.0, ge=0.0, le=100.0)
+    created_at: str
+    started_at: Optional[str] = None
+    finished_at: Optional[str] = None
+    runtime_ms: float = 0.0
+    cancel_requested: bool = False
+    error: Optional[str] = None
+    preflight: dict[str, Any] = Field(default_factory=dict)
+    request_summary: dict[str, Any] = Field(default_factory=dict)
+
+
+class PeptideHarnessJobStatusResponse(PeptideHarnessJobMeta):
+    """Full status & result response for `GET /api/v1/peptide-harness/jobs/{job_id}`."""
+
+    result: Optional[dict[str, Any]] = None
+
+
+class PeptideHarnessCancelResponse(PeptideHarnessJobMeta):
+    """Cooperative cancellation response for `DELETE /api/v1/peptide-harness/jobs/{job_id}`."""
+
+    already_finished: bool = False
+
+
+class PeptideHarnessJobListResponse(BaseModel):
+    """List of Peptide-Harness jobs scoped to the calling X-Client-Id."""
+
+    jobs: list[PeptideHarnessJobMeta] = Field(default_factory=list)
+    active_count: int = 0
+    total: int = 0

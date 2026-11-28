@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Peptide OmniPanel · 多肽全端点性质预测平台</title>
-  <link rel="stylesheet" href="static/styles.css?v=1.4.5" />
+  <link rel="stylesheet" href="static/styles.css?v=1.4.7" />
 </head>
 <body>
   <!-- Clean Top Navigation Bar (56px) -->
@@ -493,6 +493,12 @@
       </div>
 
       <div class="card opt-config-card">
+        <div class="opt-mode-bar" role="tablist" aria-label="Optimization Mode">
+          <button type="button" class="opt-mode-btn active" data-opt-mode="single" role="tab" aria-selected="true" data-i18n="opt_mode_single">单轮改构扫描 (PeptideOpt)</button>
+          <button type="button" class="opt-mode-btn" data-opt-mode="harness" role="tab" aria-selected="false" data-i18n="opt_mode_harness">多轮受控演化 (Peptide-Harness)</button>
+          <span class="opt-mode-badge" id="opt-mode-desc" data-i18n="opt_mode_single_desc">单步快速枚举并绘制 2D Pareto 前沿</span>
+        </div>
+
         <div class="opt-input-row">
           <div class="opt-input-col">
             <label class="field-label" for="opt-query-input" data-i18n="opt_input_lbl">母体多肽（药物名 / 20AA 序列 / SMILES）</label>
@@ -540,21 +546,86 @@
             <label class="strat-chip"><input type="checkbox" class="opt-strat-chk" value="lipidation_c16_c18" checked /><span data-i18n="opt_strat_lip">C16/C18 脂化长效</span></label>
           </div>
           <div class="opt-run-controls">
-            <label class="opt-max-lbl">
-              <span data-i18n="opt_max_var_lbl">最大变体数</span>:
-              <select id="opt-max-variants" class="select-sm">
-                <option value="12">12</option>
-                <option value="20" selected>20</option>
-                <option value="28">28</option>
-                <option value="32">32</option>
-              </select>
-            </label>
-            <button type="button" id="btn-run-opt" class="btn-primary">
-              <span class="btn-label" data-i18n="opt_btn_run">运行多目标改构优化</span>
-              <span class="btn-spinner hidden" aria-hidden="true"></span>
-            </button>
+            <div id="opt-single-controls" class="opt-run-controls">
+              <label class="opt-max-lbl">
+                <span data-i18n="opt_max_var_lbl">最大变体数</span>:
+                <select id="opt-max-variants" class="select-sm">
+                  <option value="12">12</option>
+                  <option value="20" selected>20</option>
+                  <option value="28">28</option>
+                  <option value="32">32</option>
+                </select>
+              </label>
+              <button type="button" id="btn-run-opt" class="btn-primary">
+                <span class="btn-label" data-i18n="opt_btn_run">运行多目标改构优化</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div id="opt-harness-run-controls" class="opt-run-controls hidden">
+              <button type="button" id="btn-cancel-harness" class="btn-ghost btn-sm hidden" data-i18n="harness_btn_cancel">取消任务</button>
+              <button type="button" id="btn-run-harness" class="btn-primary">
+                <span class="btn-label" data-i18n="harness_btn_run">启动多轮受控演化</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
         </div>
+
+        <div id="opt-harness-controls" class="harness-controls-panel hidden">
+          <div class="harness-controls-grid">
+            <div class="harness-ctrl-item">
+              <label class="field-label" for="harness-func-ep" data-i18n="harness_func_lbl">功能活性保真约束（可选，Tier A 不恶化门控）</label>
+              <select id="harness-func-ep" class="select-sm">
+                <option value="" data-i18n="harness_func_none">无功能约束（developability_only · 仅限 ≤2 位点替换）</option>
+                <option value="MIC_E_coli" data-i18n="harness_func_ecoli">MIC_E_coli（大肠杆菌抗菌活性不恶化 · Tier A）</option>
+              </select>
+            </div>
+            <div class="harness-ctrl-pair">
+              <label class="opt-max-lbl">
+                <span data-i18n="harness_rounds_lbl">演化轮数</span>:
+                <select id="harness-rounds" class="select-sm">
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+              <label class="opt-max-lbl">
+                <span data-i18n="harness_budget_lbl">评估上限</span>:
+                <select id="harness-budget" class="select-sm">
+                  <option value="16">16</option>
+                  <option value="24">24</option>
+                  <option value="28" selected>28</option>
+                  <option value="36">36</option>
+                </select>
+              </label>
+              <label class="strat-chip">
+                <input type="checkbox" id="harness-lock-ss" checked />
+                <span data-i18n="harness_lock_ss_lbl">锁定天然二硫键 (S–S)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="harness-lock-box">
+            <div class="harness-lock-head">
+              <span class="field-label" style="margin:0;" data-i18n="harness_lock_title">核心药效团残基锁（点击锁定不可突变位点）</span>
+              <div class="harness-lock-actions">
+                <span id="harness-lock-count" class="badge badge-info">0 locked</span>
+                <button type="button" id="btn-harness-clear-locks" class="btn-ghost btn-xs" data-i18n="harness_clear_locks">清空锁定</button>
+              </div>
+            </div>
+            <div id="harness-lock-strip" class="harness-lock-strip"></div>
+            <div id="harness-mode-hint" class="harness-mode-hint"></div>
+          </div>
+        </div>
+
+        <div id="harness-progress-card" class="harness-progress-card hidden" role="status" aria-live="polite">
+          <div class="harness-prog-top">
+            <span id="harness-prog-label" class="harness-prog-label">Queued…</span>
+            <span id="harness-prog-meta" class="mono harness-prog-meta">0%</span>
+          </div>
+          <div class="mpo-bar-track"><div id="harness-progress-fill" class="mpo-bar-fill mpo-tier-moderate" style="width:0%"></div></div>
+        </div>
+
         <div id="opt-error" class="alert-error hidden" role="alert"></div>
       </div>
 
@@ -922,6 +993,11 @@
             </div>
             <div class="api-ep-item">
               <span class="http-method method-post">POST</span>
+              <code class="api-path">api/v1/peptide-harness/jobs</code>
+              <span class="api-desc" data-i18n="api_desc_harness"></span>
+            </div>
+            <div class="api-ep-item">
+              <span class="http-method method-post">POST</span>
               <code class="api-path">api/v1/batch-screen</code>
               <span class="api-desc" data-i18n="api_desc_batch_screen"></span>
             </div>
@@ -1021,6 +1097,6 @@
     </div>
   </div>
 
-  <script type="module" src="static/app.js?v=1.4.5"></script>
+  <script type="module" src="static/app.js?v=1.4.7"></script>
 </body>
 </html>

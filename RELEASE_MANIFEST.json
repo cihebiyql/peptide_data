@@ -1,8 +1,13 @@
 {
-  "release_version": "Peptide OmniPanel 1.4 / Engine v33.6 + v34",
-  "updated_at": "2026-11-27",
+  "release_version": "Peptide OmniPanel 1.5 / Engine v33.6 + v34 + v35 (Peptide-Harness)",
+  "updated_at": "2026-11-28",
   "scope": "internal_research_only",
   "data_redistribution_policy": "Zero row-level third-party observation tables redistributed. Aggregate corpus statistics and 57 deduplicated factual NLM DailyMed/FDA regulatory PK pointers only (see DATA_LICENSES.md and NOTICE).",
+  "v35_highlights": [
+    "Peptide-Harness multi-round controlled evolutionary peptide optimization (/api/v1/peptide-harness/jobs, /tiers, capped sync /api/v1/peptide-harness) with deterministic fail-closed Stage A/B gatekeeper, CoreLock pharmacophore & disulfide protection, track-matched Pure-ML Feas-gMPO (mechanism_anchor=None), headless multi-endpoint Critic recycling, and async interactive-yield isolation",
+    "Dual-mode #view-opt interactive workbench (?v=1.4.7 / i18n.js?v=1.7; 472==472 symmetric ZH/EN keys) supporting residue lock chips, Tier-A functional preservation, real-time async progress polling, collaborative cancel, and cross-track epistemic audit badges",
+    "16-lead x 7-method equal-budget (20 evals) real 4-FM V33 + external HemoPI2 v1.3 benchmark (8/16 verified out-of-sample novel leads): Peptide-Harness-Full outperforms fair all-operator Exhaustive-1Step-GreedyCombine on 2D delta-space Feas-cHV (+0.0312, 11W/3T/2L, p_holm=0.0290) and outperforms Random/NoLipidation/Unconstrained on selected_feasible_delta_gmpo (p_holm=0.0186-0.0384) with 0/16 unsafe Top-1 vs 1/16 NoGate and 3/16 Unconstrained, while honestly disclosing non-significant single-best ΔgMPO vs StrongBase (p_raw=0.1730) and 0/15 HemoPI2/cross-track coverage on Full chemical-leaf Top-1s"
+  ],
   "v34_highlights": [
     "57 deduplicated FDA-approved peptide products (413 unique factual PK records; 399 exact DailyMed SPL setid URLs) + approved-peptide clinical percentiles across all 47 endpoints",
     "PeptideOpt 5-strategy Pareto analog optimization (/api/v1/peptide-opt), Batch-MPO 4-pillar screening (/api/v1/batch-screen), and model-faithful Direct Ensemble Perturbation Attribution (/api/v1/direct-attribution)",

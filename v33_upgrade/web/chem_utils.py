@@ -124,14 +124,17 @@ def is_canonical_sequence(text: str) -> bool:
     return True
 
 
+MAX_HEAVY_ATOMS_FOR_PARSE = 800
+
+
 def parse_smiles_safe(smiles: str) -> Optional[Chem.Mol]:
-    """Parse SMILES safely with RDKit, returning None on invalid input."""
+    """Parse SMILES safely with RDKit, rejecting overly huge graphs before canonicalization recursion."""
     s = (smiles or "").strip()
     if not s or len(s) > 8000:
         return None
     try:
         mol = Chem.MolFromSmiles(s)
-        if mol is not None and mol.GetNumAtoms() > 0:
+        if mol is not None and 0 < mol.GetNumAtoms() <= MAX_HEAVY_ATOMS_FOR_PARSE:
             return mol
     except Exception:
         return None

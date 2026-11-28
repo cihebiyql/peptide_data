@@ -980,11 +980,15 @@ class OmniPanelAdapter:
         self.mode: str = "v33_offline_fallback"
         self.strict_remote: bool = os.environ.get("V33_STRICT_REMOTE", "0").strip().lower() in ("1", "true", "yes")
         cache_ttl = float(os.environ.get("V33_CACHE_TTL_SEC", "86400"))
-        cache_size = int(os.environ.get("V33_CACHE_MAXSIZE", "1024"))
+        cache_size = int(os.environ.get("V33_CACHE_MAXSIZE", "2048"))
         self.cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
         self._gnn_cache = _TTLCache(maxsize=cache_size, ttl_seconds=cache_ttl)
         max_conc = max(1, int(os.environ.get("V33_WEB_MAX_CONCURRENT", "2")))
+        self._predict_max_conc = max_conc
         self._predict_sem = threading.BoundedSemaphore(max_conc)
+        self._predict_idle_cond = threading.Condition(threading.Lock())
+        self._predict_active_count = 0
+        self._predict_pending_interactive = 0
         self._predict_queue_timeout = float(os.environ.get("V33_WEB_QUEUE_TIMEOUT", "10.0"))
         self._inflight_lock = threading.Lock()
         self._inflight: dict[str, dict[str, Any]] = {}
@@ -1780,6 +1784,37 @@ class OmniPanelAdapter:
             return True
         return "timed out" in str(exc).lower()
 
+    def wait_for_interactive_idle(
+        self,
+        cancel_event: Optional[threading.Event] = None,
+        max_wait_s: float = 15.0,
+    ) -> bool:
+        """Yield background Harness chunks until ALL inference slots are idle and no interactive /predict is queued.
+
+        Guarantees live interactive `/predict` users never starve behind background multi-round optimization.
+        Returns True when idle, False if `cancel_event` fired, or raises `EngineBusyError` if saturated past `max_wait_s`.
+        """
+        deadline = time.monotonic() + max(0.05, float(max_wait_s))
+        with self._predict_idle_cond:
+            while self._predict_active_count > 0 or self._predict_pending_interactive > 0:
+                if cancel_event is not None and cancel_event.is_set():
+                    return False
+                rem = deadline - time.monotonic()
+                if rem <= 0:
+                    raise EngineBusyError(
+                        "Interactive inference traffic currently occupies prediction slots; background Harness yielded."
+                    )
+                self._predict_idle_cond.wait(timeout=min(0.2, rem))
+        return not (cancel_event is not None and cancel_event.is_set())
+
+    def predict_slot_stats(self) -> dict[str, int]:
+        with self._predict_idle_cond:
+            return {
+                "max_concurrent": self._predict_max_conc,
+                "active_calls": self._predict_active_count,
+                "pending_interactive": self._predict_pending_interactive,
+            }
+
     # -----------------------------------------------------------------------
     # Remote V33 HTTP Calls (`127.0.0.1:8902`)
     # -----------------------------------------------------------------------
@@ -1842,7 +1877,17 @@ class OmniPanelAdapter:
         queue_cap = min(self._predict_queue_timeout, 18.0)
         t_req_start = time.monotonic()
         try:
-            acquired = self._predict_sem.acquire(timeout=queue_cap)
+            with self._predict_idle_cond:
+                self._predict_pending_interactive += 1
+            try:
+                acquired = self._predict_sem.acquire(timeout=queue_cap)
+            finally:
+                with self._predict_idle_cond:
+                    self._predict_pending_interactive = max(0, self._predict_pending_interactive - 1)
+                    if acquired:
+                        self._predict_active_count += 1
+                    elif self._predict_active_count == 0 and self._predict_pending_interactive == 0:
+                        self._predict_idle_cond.notify_all()
             if not acquired:
                 raise EngineBusyError("Inference server is busy handling concurrent requests; please retry in a few seconds.")
             try:
@@ -1851,6 +1896,8 @@ class OmniPanelAdapter:
                     raise EngineBusyError("Inference queue wait left insufficient request budget; please retry in a few seconds.")
                 with urllib.request.urlopen(req, timeout=remaining) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
+            except EngineBusyError:
+                raise
             except urllib.error.HTTPError as exc:
                 err_body = exc.read().decode("utf-8", errors="replace")
                 if exc.code == 400:
@@ -1872,6 +1919,10 @@ class OmniPanelAdapter:
                     raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
                 raise RuntimeError(f"V33 remote inference unavailable ({self.remote_url}): {exc}") from exc
             finally:
+                with self._predict_idle_cond:
+                    self._predict_active_count = max(0, self._predict_active_count - 1)
+                    if self._predict_active_count == 0 and self._predict_pending_interactive == 0:
+                        self._predict_idle_cond.notify_all()
                 self._predict_sem.release()
 
             if data.get("status") != "ok":
@@ -1893,12 +1944,42 @@ class OmniPanelAdapter:
         resolved_items: list[ResolvedInput],
         include_tier2: bool,
         v33_cond: dict[str, str],
+        http_timeout_s: float = 240.0,
+        is_background: bool = False,
     ) -> list[tuple[Optional[dict[str, Any]], bool, Optional[str]]]:
-        """Batch-query live V33 engine (`POST /batch`), utilizing TTL cache for any already-warm items."""
+        """Batch-query live V33 engine (`POST /batch`), utilizing TTL cache and exact-tuple intra-batch dedup."""
         out: list[tuple[Optional[dict[str, Any]], bool, Optional[str]]] = [(None, False, None)] * len(resolved_items)
-        uncached_indices: list[int] = []
+        uncached_groups: dict[str, list[int]] = {}
         uncached_payload: list[dict[str, Any]] = []
         uncached_keys: list[str] = []
+
+        tier1_ep_set: Optional[set[str]] = None
+        if not include_tier2:
+            if self.manifest.get("endpoints"):
+                tier1_ep_set = {
+                    ep_name
+                    for ep_name, meta in self.manifest["endpoints"].items()
+                    if int(meta.get("tier", 1)) == 1
+                }
+            else:
+                tier1_ep_set = set()
+
+        def _copy_for_caller(raw_item: dict[str, Any], filter_tier1: bool) -> dict[str, Any]:
+            copied = dict(raw_item)
+            eps = raw_item.get("endpoints")
+            if isinstance(eps, dict):
+                if filter_tier1 and tier1_ep_set is not None:
+                    copied["endpoints"] = {
+                        k: (dict(v) if isinstance(v, dict) else v)
+                        for k, v in eps.items()
+                        if k in tier1_ep_set
+                    }
+                else:
+                    copied["endpoints"] = {
+                        k: (dict(v) if isinstance(v, dict) else v)
+                        for k, v in eps.items()
+                    }
+            return copied
 
         for idx, res in enumerate(resolved_items):
             send_smiles = res.smiles if res.smiles else None
@@ -1907,19 +1988,28 @@ class OmniPanelAdapter:
                 send_smiles = res.canonical_smiles
             ckey = self._cache_key(res.canonical_smiles or send_smiles, send_seq, include_tier2, v33_cond)
             cached = self.cache.get(ckey)
+            reused_from_tier2 = False
+            if cached is None and not include_tier2 and tier1_ep_set:
+                # Only reuse tier2=True cache when manifest Tier-1 endpoint set is known (never silently leak Tier-2!)
+                ckey_t2 = self._cache_key(res.canonical_smiles or send_smiles, send_seq, True, v33_cond)
+                cached = self.cache.get(ckey_t2)
+                reused_from_tier2 = cached is not None
             if cached is not None:
-                out[idx] = (cached, True, None)
+                out[idx] = (_copy_for_caller(cached, reused_from_tier2), True, None)
+            elif ckey in uncached_groups:
+                # Exact-tuple intra-batch deduplication (canonical_smiles + sequence + include_tier2 + cond)
+                uncached_groups[ckey].append(idx)
             else:
                 item_obj: dict[str, Any] = {"name": res.query_name}
                 if send_smiles:
                     item_obj["smiles"] = send_smiles
                 if send_seq:
                     item_obj["sequence"] = send_seq
-                uncached_indices.append(idx)
+                uncached_groups[ckey] = [idx]
                 uncached_payload.append(item_obj)
                 uncached_keys.append(ckey)
 
-        if not uncached_indices:
+        if not uncached_keys:
             return out
 
         assert self.remote_url is not None
@@ -1935,12 +2025,26 @@ class OmniPanelAdapter:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+        if not is_background:
+            with self._predict_idle_cond:
+                self._predict_pending_interactive += 1
+        try:
+            acquired = self._predict_sem.acquire(timeout=self._predict_queue_timeout)
+        finally:
+            with self._predict_idle_cond:
+                if not is_background:
+                    self._predict_pending_interactive = max(0, self._predict_pending_interactive - 1)
+                if acquired:
+                    self._predict_active_count += 1
+                elif self._predict_active_count == 0 and self._predict_pending_interactive == 0:
+                    self._predict_idle_cond.notify_all()
         if not acquired:
             raise EngineBusyError("Inference server is busy handling concurrent requests; please retry shortly.")
         try:
-            with urllib.request.urlopen(req, timeout=240.0) as resp:
+            with urllib.request.urlopen(req, timeout=max(5.0, float(http_timeout_s))) as resp:
                 batch_data = json.loads(resp.read().decode("utf-8"))
+        except EngineBusyError:
+            raise
         except urllib.error.HTTPError as exc:
             if exc.code == 429:
                 raise EngineBusyError("Inference engine is temporarily busy; please retry shortly.") from exc
@@ -1954,17 +2058,28 @@ class OmniPanelAdapter:
                 raise EngineUnavailableError(f"Live 4-FM inference engine unavailable: {exc}") from exc
             raise RuntimeError(f"V33 remote batch unavailable ({self.remote_url}): {exc}") from exc
         finally:
+            with self._predict_idle_cond:
+                self._predict_active_count = max(0, self._predict_active_count - 1)
+                if self._predict_active_count == 0 and self._predict_pending_interactive == 0:
+                    self._predict_idle_cond.notify_all()
             self._predict_sem.release()
 
         results_list = batch_data.get("results") or []
-        for pos, item_res in enumerate(results_list):
-            orig_idx = uncached_indices[pos]
-            ckey = uncached_keys[pos]
-            if item_res.get("status") == "ok":
+        for pos, ckey in enumerate(uncached_keys):
+            group_idxs = uncached_groups[ckey]
+            if pos >= len(results_list):
+                for orig_idx in group_idxs:
+                    out[orig_idx] = (None, False, "Remote batch returned fewer results than requested")
+                continue
+            item_res = results_list[pos]
+            if isinstance(item_res, dict) and item_res.get("status") == "ok":
                 self.cache.set(ckey, item_res)
-                out[orig_idx] = (item_res, False, None)
+                for g_i, orig_idx in enumerate(group_idxs):
+                    out[orig_idx] = (_copy_for_caller(item_res, False), g_i > 0, None)
             else:
-                out[orig_idx] = (None, False, str(item_res.get("error") or "Prediction error"))
+                err_msg = str((item_res or {}).get("error") or "Prediction error") if isinstance(item_res, dict) else "Prediction error"
+                for orig_idx in group_idxs:
+                    out[orig_idx] = (None, False, err_msg)
         return out
 
     # -----------------------------------------------------------------------
@@ -2700,6 +2815,8 @@ class OmniPanelAdapter:
         parsed_rows: list[BatchParsedRow],
         include_tier2: bool = False,
         conditions: Optional[AssayConditions] = None,
+        http_timeout_s: float = 240.0,
+        is_background: bool = False,
     ) -> list[BatchMoleculeResult]:
         """Run batched inference (using single remote `/batch` call when in `v33_remote` mode)."""
         cond = conditions or AssayConditions()
@@ -2748,6 +2865,8 @@ class OmniPanelAdapter:
                 [ve[2] for ve in valid_entries],
                 include_tier2=include_tier2,
                 v33_cond=v33_cond,
+                http_timeout_s=http_timeout_s,
+                is_background=is_background,
             )
             elapsed_each = ((time.perf_counter() - t_b) * 1000.0) / max(len(valid_entries), 1)
             for (idx, row, resolved, physchem, mod_badges), (raw_v33, hit, err) in zip(valid_entries, raw_batch):

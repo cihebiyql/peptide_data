@@ -10,7 +10,7 @@
  */
 
 import { buildIntervalBarHtml, escapeHtml, renderAdmetRadar, renderBatchRadarOverlay, renderCase17ParityChart } from "./charts.js?v=1.2";
-import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.5";
+import { applyStaticI18n, applySvgI18n, getInitialLang, t, trAd, trRisk } from "./i18n.js?v=1.7";
 import {
   animateKpiValue,
   initHeroMolecularCanvas,
@@ -177,12 +177,22 @@ const state = {
   directAttrCache: new Map(),
   attrLoading: false,
   drawerAttrModes: new Map(),
-  // v1.4 PeptideOpt state
+  // v1.4 PeptideOpt & v1.5 Peptide-Harness state
+  optMode: "single",
   optData: null,
   optFilter: "all",
   optSortCol: "mpo_score",
   optSortAsc: false,
   optHighlightId: null,
+  harnessLockedPositions: new Set(),
+  harnessLastSeq: "",
+  harnessJobId: null,
+  harnessPollTimer: null,
+  harnessPollInFlight: false,
+  harnessPollErrors: 0,
+  harnessRunning: false,
+  harnessData: null,
+  harnessTierMap: null,
   // v1.4 Batch Peptide-MPO state
   batchMpoData: null,
   batchMpoFilter: "all",
@@ -217,6 +227,25 @@ const OPT_OBJECTIVE_CHOICES = [
   { ep: "solubility", zh: "水溶性", en: "Aqueous Solubility", dir: "max" },
   { ep: "MIC_E_coli", zh: "大肠杆菌 MIC", en: "E. coli MIC", dir: "min" },
   { ep: "MIC_S_aureus", zh: "金葡菌 MIC", en: "S. aureus MIC", dir: "min" },
+];
+
+const HARNESS_TIER_A_CHOICES = [
+  { ep: "PAMPA", zh: "PAMPA 膜渗透 [Tier A]", en: "PAMPA Permeability [Tier A]", dir: "max" },
+  { ep: "Caco2", zh: "Caco-2 肠渗透 [Tier A]", en: "Caco-2 Permeability [Tier A]", dir: "max" },
+  { ep: "half_life_reg", zh: "半衰期 T½ [Tier A]", en: "Half-Life (T½) [Tier A]", dir: "max" },
+  { ep: "hemolysis_cls", zh: "溶血风险概率 [Tier A]", en: "Hemolysis Risk (P) [Tier A]", dir: "min" },
+  { ep: "hemolysis_HC50", zh: "溶血 HC50 [Tier A]", en: "Hemolysis HC50 [Tier A]", dir: "max" },
+  { ep: "overall_peptide_toxicity", zh: "综合毒性概率 [Tier A]", en: "Overall Toxicity (P) [Tier A]", dir: "min" },
+  { ep: "cytotoxicity_cls", zh: "细胞毒概率 [Tier A]", en: "Cytotoxicity Risk (P) [Tier A]", dir: "min" },
+  { ep: "cytotoxicity_CC50", zh: "细胞毒 CC50 [Tier A]", en: "Cytotoxicity CC50 [Tier A]", dir: "max" },
+  { ep: "LogD7.4", zh: "LogD7.4 脂水分配 [Tier A]", en: "LogD7.4 [Tier A]", dir: "max" },
+  { ep: "MIC_E_coli", zh: "大肠杆菌 MIC [Tier A]", en: "E. coli MIC [Tier A]", dir: "min" },
+];
+
+const HARNESS_FUNC_CHOICES = [
+  { ep: "MIC_E_coli", zh: "MIC_E_coli（大肠杆菌抗菌活性不恶化 · Tier A）", en: "MIC_E_coli (E. coli antimicrobial non-worsening · Tier A)" },
+  { ep: "MIC_C_albicans", zh: "MIC_C_albicans（白念珠菌抗真菌活性不恶化 · Tier A）", en: "MIC_C_albicans (C. albicans antifungal non-worsening · Tier A)" },
+  { ep: "MIC_S_epidermidis", zh: "MIC_S_epidermidis（表皮葡萄球菌抗菌活性不恶化 · Tier A）", en: "MIC_S_epidermidis (S. epidermidis non-worsening · Tier A)" },
 ];
 
 const MPO_WEIGHT_PRESETS = {
@@ -477,7 +506,8 @@ function applyTheme(theme, reRenderCharts = true) {
     if (state.batchJobDetail) renderJobInspector("batch");
     if (state.selectedTaskDetail) renderJobInspector("tasks");
     if (state.catalogData) renderAllCase17Charts();
-    if (state.optData) renderPeptideOptResults(state.optData);
+    if (state.optMode === "harness" && state.harnessData) renderPeptideHarnessResults(state.harnessData);
+    else if (state.optData) renderPeptideOptResults(state.optData);
   }
 }
 
@@ -494,7 +524,11 @@ function applyLanguage(lang, reRenderDynamic = true) {
     renderExamplesPillsAndLibrary();
     renderModTemplateGrid(document.getElementById("mod-template-grid"), state.lang, applyModTemplate);
     populateOptObjectiveSelects();
-    if (state.optData) renderPeptideOptResults(state.optData);
+    populateHarnessFunctionalSelect();
+    syncOptModeStaticLabels();
+    renderHarnessLockStrip();
+    if (state.optMode === "harness" && state.harnessData) renderPeptideHarnessResults(state.harnessData);
+    else if (state.optMode === "single" && state.optData) renderPeptideOptResults(state.optData);
     if (state.batchMpoData) renderBatchMpoLeaderboard(state.batchMpoData);
     if (state.lastPrediction) renderPredictionResult(state.lastPrediction, { keepContext: true });
     if (state.batchJobDetail) renderJobInspector("batch");
@@ -2748,41 +2782,540 @@ function loadMoleculeIntoFullPanel({ query, sequence, smiles }) {
 }
 
 // ==================== P1-5 PEPTIDE-OPT INTERACTIVE WORKBENCH ====================
+function _safeJsonFromText(text) {
+  try {
+    return text ? JSON.parse(text) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function _formatApiError(parsed, rawText, fallback) {
+  if (parsed && parsed.detail != null) {
+    if (Array.isArray(parsed.detail)) {
+      return parsed.detail.map((d) => (typeof d === "string" ? d : `${(d.loc || []).slice(-1)[0] || "field"}: ${d.msg || JSON.stringify(d)}`)).join("; ");
+    }
+    return typeof parsed.detail === "string" ? parsed.detail : JSON.stringify(parsed.detail);
+  }
+  const clean = (rawText || "").replace(/<[^>]*>/g, " ").trim();
+  return clean ? clean.slice(0, 220) : fallback;
+}
+
+function populateHarnessFunctionalSelect() {
+  const sel = document.getElementById("harness-func-ep");
+  if (!sel) return;
+  const prev = sel.value || "";
+  let list = [HARNESS_FUNC_CHOICES[0]];
+  if (state.harnessTierMap?.tracks?.dual_modality) {
+    const dualT = state.harnessTierMap.tracks.dual_modality;
+    const smiT = state.harnessTierMap.tracks.smiles_only || dualT;
+    list = HARNESS_FUNC_CHOICES.filter((c) => dualT[c.ep]?.short_tier === "A" && smiT[c.ep]?.short_tier === "A");
+    if (!list.length) list = [HARNESS_FUNC_CHOICES[0]];
+  }
+  sel.innerHTML =
+    `<option value="">${escapeHtml(t(state.lang, "harness_func_none"))}</option>` +
+    list.map((c) => `<option value="${escapeHtml(c.ep)}">${escapeHtml(state.lang === "zh" ? c.zh : c.en)}</option>`).join("");
+  const allowed = new Set(["", ...list.map((c) => c.ep)]);
+  sel.value = allowed.has(prev) ? prev : "";
+}
+
+function syncOptModeStaticLabels() {
+  const descEl = document.getElementById("opt-mode-desc");
+  if (descEl) {
+    descEl.textContent = t(state.lang, state.optMode === "harness" ? "opt_mode_harness_desc" : "opt_mode_single_desc");
+  }
+  if (state.harnessRunning) {
+    const lbl = document.querySelector("#btn-run-harness .btn-label");
+    if (lbl) lbl.textContent = t(state.lang, "harness_btn_running");
+  }
+}
+
 function populateOptObjectiveSelects() {
   const selX = document.getElementById("opt-obj-x-ep");
   const selY = document.getElementById("opt-obj-y-ep");
+  const dirX = document.getElementById("opt-obj-x-dir");
+  const dirY = document.getElementById("opt-obj-y-dir");
   if (!selX || !selY) return;
   const curX = selX.value || "PAMPA";
   const curY = selY.value || "half_life_reg";
-  const optsHtml = OPT_OBJECTIVE_CHOICES.map(
+  let choices = state.optMode === "harness" ? HARNESS_TIER_A_CHOICES : OPT_OBJECTIVE_CHOICES;
+  if (state.optMode === "harness" && state.harnessTierMap?.tracks?.dual_modality) {
+    const dualT = state.harnessTierMap.tracks.dual_modality;
+    const smiT = state.harnessTierMap.tracks.smiles_only || dualT;
+    choices = HARNESS_TIER_A_CHOICES.filter((o) => dualT[o.ep]?.short_tier === "A" && smiT[o.ep]?.short_tier === "A");
+    if (!choices.length) choices = HARNESS_TIER_A_CHOICES;
+  }
+  const optsHtml = choices.map(
     (o) => `<option value="${escapeHtml(o.ep)}">${escapeHtml(state.lang === "zh" ? o.zh : o.en)}</option>`
   ).join("");
   selX.innerHTML = optsHtml;
   selY.innerHTML = optsHtml;
-  selX.value = curX;
-  selY.value = curY;
+  const eps = new Set(choices.map((o) => o.ep));
+  const nextX = eps.has(curX) ? curX : "PAMPA";
+  const nextY = eps.has(curY) ? curY : "half_life_reg";
+  selX.value = nextX;
+  selY.value = nextY;
+  // R4 P1-3: Always sync default direction whenever an objective fell back!
+  if (nextX !== curX && dirX) {
+    const fx = choices.find((o) => o.ep === nextX);
+    if (fx) dirX.value = fx.dir;
+  }
+  if (nextY !== curY && dirY) {
+    const fy = choices.find((o) => o.ep === nextY);
+    if (fy) dirY.value = fy.dir;
+  }
+}
+
+function setOptMode(mode) {
+  state.optMode = mode === "harness" ? "harness" : "single";
+  document.querySelectorAll(".opt-mode-btn").forEach((b) => {
+    const active = b.dataset.optMode === state.optMode;
+    b.classList.toggle("active", active);
+    b.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  syncOptModeStaticLabels();
+  document.getElementById("opt-single-controls")?.classList.toggle("hidden", state.optMode === "harness");
+  document.getElementById("opt-harness-run-controls")?.classList.toggle("hidden", state.optMode !== "harness");
+  document.getElementById("opt-harness-controls")?.classList.toggle("hidden", state.optMode !== "harness");
+  // R4 P1-1: Never show Harness progress card in Single mode, restore in Harness mode if running
+  document.getElementById("harness-progress-card")?.classList.toggle("hidden", state.optMode !== "harness" || !state.harnessRunning);
+  document.getElementById("opt-error")?.classList.add("hidden");
+  populateOptObjectiveSelects();
+  populateHarnessFunctionalSelect();
+  renderHarnessLockStrip();
+  const host = document.getElementById("opt-results-host");
+  if (state.optMode === "harness") {
+    if (!state.harnessTierMap) {
+      apiFetch("/api/v1/peptide-harness/tiers")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d) {
+            state.harnessTierMap = d;
+            populateOptObjectiveSelects();
+            populateHarnessFunctionalSelect();
+          }
+        })
+        .catch(() => {});
+    }
+    if (state.harnessData) renderPeptideHarnessResults(state.harnessData);
+    else host?.classList.add("hidden");
+  } else {
+    if (state.optData) renderPeptideOptResults(state.optData);
+    else host?.classList.add("hidden");
+  }
+}
+
+const _SMILES_OVERLAP_ATOMS = new Set(["C", "N", "S", "P", "F", "I", "H"]);
+
+function parseCanonicalSeqInput(raw) {
+  // R4 P1-4: Exact parity with backend chem_utils.is_canonical_sequence (len>=4, exclude CCC/CCN/CCCC!)
+  const s = (raw || "").trim();
+  if (!s || /[a-z0-9=()[\]#@\\/+.\->]/.test(s)) return null;
+  const clean = s.replace(/\s+/g, "").toUpperCase();
+  if (!/^[ACDEFGHIKLMNPQRSTVWY]{4,65}$/.test(clean)) return null;
+  const uniq = new Set(clean);
+  if (uniq.size <= 2 && [...uniq].every((ch) => _SMILES_OVERLAP_ATOMS.has(ch))) return null;
+  return clean;
+}
+
+function renderHarnessLockStrip() {
+  const strip = document.getElementById("harness-lock-strip");
+  const hint = document.getElementById("harness-mode-hint");
+  const cntEl = document.getElementById("harness-lock-count");
+  if (!strip || !hint) return;
+  const raw = document.getElementById("opt-query-input")?.value || "";
+  const seq = parseCanonicalSeqInput(raw);
+  if (!seq) {
+    state.harnessLockedPositions.clear();
+    state.harnessLastSeq = "";
+    strip.innerHTML = "";
+    if (cntEl) cntEl.textContent = state.lang === "zh" ? "自动判定" : "Auto-detected";
+    hint.textContent = t(state.lang, "harness_leaf_only_hint");
+    return;
+  }
+  // R4 P2: Clear stale lock indices whenever the user switches to a different sequence!
+  if (seq !== state.harnessLastSeq) {
+    state.harnessLockedPositions.clear();
+    state.harnessLastSeq = seq;
+  }
+  strip.innerHTML = [...seq]
+    .map((aa, i) => {
+      const pos = i + 1;
+      const locked = state.harnessLockedPositions.has(pos);
+      return `<button type="button" class="res-lock-chip ${locked ? "locked" : ""}" data-lock-pos="${pos}" aria-pressed="${locked ? "true" : "false"}">${escapeHtml(aa)}<span>${pos}</span></button>`;
+    })
+    .join("");
+  strip.querySelectorAll(".res-lock-chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const p = Number(btn.dataset.lockPos);
+      if (state.harnessLockedPositions.has(p)) state.harnessLockedPositions.delete(p);
+      else state.harnessLockedPositions.add(p);
+      renderHarnessLockStrip();
+    });
+  });
+  const nLock = state.harnessLockedPositions.size;
+  if (cntEl) cntEl.textContent = state.lang === "zh" ? `已锁定 ${nLock} 位` : `${nLock} locked`;
+  const funcEp = document.getElementById("harness-func-ep")?.value || "";
+  if (funcEp || nLock > 0) {
+    hint.textContent =
+      state.lang === "zh"
+        ? `当前模式：functional_guided（累计 AA 编辑 ≤3，${nLock} 个位点已锁定${funcEp ? ` + ${funcEp} 不恶化门控` : ""}）。`
+        : `Active mode: functional_guided (up to 3 AA edits, ${nLock} locked residues${funcEp ? ` + ${funcEp} non-worsening gate` : ""}).`;
+  } else {
+    hint.textContent = t(state.lang, "harness_dev_only_hint");
+  }
+}
+
+function stopHarnessPolling() {
+  if (state.harnessPollTimer) {
+    clearInterval(state.harnessPollTimer);
+    state.harnessPollTimer = null;
+  }
+  state.harnessPollInFlight = false;
+  state.harnessPollErrors = 0;
+}
+
+function setHarnessRunningUi(running, canCancel = false) {
+  state.harnessRunning = running;
+  const btn = document.getElementById("btn-run-harness");
+  const cancelBtn = document.getElementById("btn-cancel-harness");
+  if (btn) {
+    btn.disabled = running;
+    const lbl = btn.querySelector(".btn-label");
+    if (lbl) lbl.textContent = t(state.lang, running ? "harness_btn_running" : "harness_btn_run");
+    btn.querySelector(".btn-spinner")?.classList.toggle("hidden", !running);
+  }
+  if (cancelBtn) {
+    cancelBtn.classList.toggle("hidden", !running);
+    cancelBtn.disabled = !canCancel;
+  }
+}
+
+async function runPeptideHarness() {
+  const errEl = document.getElementById("opt-error");
+  errEl?.classList.add("hidden");
+  const raw = document.getElementById("opt-query-input")?.value.trim();
+  if (!raw) {
+    if (errEl) {
+      errEl.textContent = state.lang === "zh" ? "请输入母体药物名、20AA 序列或 SMILES。" : "Please enter a parent drug name, 20-AA sequence, or SMILES.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+  const strategies = [...document.querySelectorAll(".opt-strat-chk:checked")].map((c) => c.value);
+  if (!strategies.length) {
+    if (errEl) {
+      errEl.textContent = state.lang === "zh" ? "请至少选择一种改构策略。" : "Please select at least one modification strategy.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+  const epX = document.getElementById("opt-obj-x-ep")?.value || "PAMPA";
+  const epY = document.getElementById("opt-obj-y-ep")?.value || "half_life_reg";
+  if (epX === epY) {
+    if (errEl) {
+      errEl.textContent = state.lang === "zh" ? "X 轴与 Y 轴优化目标必须为两个不同的 Tier A 端点。" : "Objective X and Objective Y must be two distinct Tier-A endpoints.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+
+  // R4 P1-6: Clear stale job_id BEFORE POST and keep Cancel disabled until 202 returns a real job_id!
+  stopHarnessPolling();
+  state.harnessJobId = null;
+  setHarnessRunningUi(true, false);
+  const progCard = document.getElementById("harness-progress-card");
+  const progLbl = document.getElementById("harness-prog-label");
+  const progMeta = document.getElementById("harness-prog-meta");
+  const progFill = document.getElementById("harness-progress-fill");
+  if (state.optMode === "harness") progCard?.classList.remove("hidden");
+  if (progLbl) progLbl.textContent = state.lang === "zh" ? "正在提交多轮演化异步任务…" : "Submitting async Peptide-Harness job…";
+  if (progMeta) progMeta.textContent = "0%";
+  if (progFill) progFill.style.width = "4%";
+
+  try {
+    const seq = parseCanonicalSeqInput(raw);
+    const lockedPos = seq ? [...state.harnessLockedPositions].sort((a, b) => a - b) : [];
+    const funcEp = document.getElementById("harness-func-ep")?.value || null;
+    // R4 P1-4: Route named drugs & SMILES cleanly through `query` so backend resolves unambiguously!
+    const payload = {
+      query: seq ? null : raw,
+      sequence: seq || null,
+      smiles: null,
+      objective_x: { endpoint: epX, direction: document.getElementById("opt-obj-x-dir")?.value || "max" },
+      objective_y: { endpoint: epY, direction: document.getElementById("opt-obj-y-dir")?.value || "max" },
+      functional_endpoint: funcEp || null,
+      strategies,
+      locked_positions: lockedPos,
+      lock_disulfides: Boolean(document.getElementById("harness-lock-ss")?.checked),
+      rounds: Number(document.getElementById("harness-rounds")?.value || 3),
+      population_size: 6,
+      top_k: 5,
+      max_total_evals: Number(document.getElementById("harness-budget")?.value || 28),
+      conditions: { rbc_species: state.rbcSpecies, pk_context: "human_plasma" },
+    };
+
+    const res = await apiFetch("/api/v1/peptide-harness/jobs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const rawBody = await res.text();
+    const meta = _safeJsonFromText(rawBody);
+    if (!res.ok || !meta?.job_id) {
+      throw new Error(_formatApiError(meta, rawBody, `HTTP ${res.status}: Failed to submit Peptide-Harness job.`));
+    }
+    state.harnessJobId = meta.job_id;
+    setHarnessRunningUi(true, true);
+    if (progLbl) progLbl.textContent = `${meta.job_id} · ${meta.phase || "queued"}`;
+
+    const pollOnce = async () => {
+      if (!state.harnessJobId || state.harnessPollInFlight) return;
+      state.harnessPollInFlight = true;
+      try {
+        const r = await apiFetch(`/api/v1/peptide-harness/jobs/${encodeURIComponent(state.harnessJobId)}`);
+        const txt = await r.text();
+        const d = _safeJsonFromText(txt);
+        if (!r.ok || !d) {
+          throw new Error(_formatApiError(d, txt, `HTTP ${r.status}: Job polling failed.`));
+        }
+        state.harnessPollErrors = 0;
+        const pct = Math.max(5, Math.min(100, Number(d.progress_pct || 0)));
+        if (progFill) progFill.style.width = `${pct}%`;
+        if (progLbl) {
+          progLbl.textContent = `${d.job_id} · ${d.phase || d.status} (Round ${Number(d.current_round || 0)}/${Number(d.total_rounds || 0)})`;
+        }
+        if (progMeta) {
+          progMeta.textContent = `${pct.toFixed(0)}% · ${(Number(d.runtime_ms || 0) / 1000).toFixed(1)}s`;
+        }
+        if (["completed", "partial", "cancelled", "failed"].includes(d.status)) {
+          stopHarnessPolling();
+          setHarnessRunningUi(false, false);
+          if (d.status === "failed") {
+            progCard?.classList.add("hidden");
+            if (state.optMode === "harness" && errEl) {
+              errEl.textContent = d.error || "Peptide-Harness job failed.";
+              errEl.classList.remove("hidden");
+            }
+            return;
+          }
+          if (d.result) {
+            state.harnessData = d.result;
+            // R4 P1-1: Only render into DOM if user is still in Harness mode (never overwrite Single!)
+            if (state.optMode === "harness") renderPeptideHarnessResults(d.result);
+          } else if (d.status === "cancelled" && state.optMode === "harness" && errEl) {
+            errEl.textContent = t(state.lang, "harness_cancelled_note");
+            errEl.classList.remove("hidden");
+          }
+          progCard?.classList.add("hidden");
+        }
+      } catch (pollErr) {
+        // R4 P1-5: Tolerate up to 3 consecutive transient network/502/504 errors before aborting poll!
+        state.harnessPollErrors += 1;
+        if (state.harnessPollErrors >= 3) {
+          stopHarnessPolling();
+          setHarnessRunningUi(false, false);
+          progCard?.classList.add("hidden");
+          if (state.optMode === "harness" && errEl) {
+            errEl.textContent = pollErr.message || String(pollErr);
+            errEl.classList.remove("hidden");
+          }
+        }
+      } finally {
+        state.harnessPollInFlight = false;
+      }
+    };
+
+    state.harnessPollTimer = setInterval(pollOnce, 1500);
+    await pollOnce();
+  } catch (err) {
+    stopHarnessPolling();
+    setHarnessRunningUi(false, false);
+    progCard?.classList.add("hidden");
+    if (state.optMode === "harness" && errEl) {
+      errEl.textContent = err.message || String(err);
+      errEl.classList.remove("hidden");
+    }
+  }
+}
+
+async function cancelPeptideHarness() {
+  if (!state.harnessJobId) return;
+  const cancelBtn = document.getElementById("btn-cancel-harness");
+  if (cancelBtn) cancelBtn.disabled = true;
+  const progLbl = document.getElementById("harness-prog-label");
+  if (progLbl) progLbl.textContent = state.lang === "zh" ? "正在请求协作取消…" : "Requesting cooperative cancel…";
+  try {
+    await apiFetch(`/api/v1/peptide-harness/jobs/${encodeURIComponent(state.harnessJobId)}`, { method: "DELETE" });
+  } catch (_) {}
+}
+
+function renderPeptideHarnessResults(data) {
+  const host = document.getElementById("opt-results-host");
+  if (!host || !data) return;
+  host.classList.remove("hidden");
+
+  const m = data.metrics || {};
+  const recs = data.final_recommendations || [];
+  const rounds = data.rounds || [];
+  const negMem = data.negative_memory || [];
+  const ox = data.objective_x?.endpoint || "PAMPA";
+  const oy = data.objective_y?.endpoint || "half_life_reg";
+  const parentName = data.parent?.name || data.parent?.sequence || "Parent";
+
+  let bannersHtml = "";
+  if (data.oracle_is_surrogate_heuristic) {
+    bannersHtml += `<div class="harness-banner-warn"><strong>⚠ ${escapeHtml(state.lang === "zh" ? "离线替代预言机提示" : "Offline Surrogate Oracle Notice")}:</strong> ${escapeHtml(t(state.lang, "harness_surrogate_warn"))}</div>`;
+  }
+  if (data.activity_unmodeled) {
+    bannersHtml += `<div class="harness-banner-warn"><strong>⚠ ${escapeHtml(state.lang === "zh" ? "活性未建模提示 (activity_unmodeled)" : "Activity Unmodeled (developability_only)")}:</strong> ${escapeHtml(data.activity_warning || "")}</div>`;
+  }
+  if (data.no_editable_positions) {
+    bannersHtml += `<div class="harness-banner-info"><strong>🔒</strong> ${escapeHtml(t(state.lang, "harness_no_edit_pos_warn"))}</div>`;
+  }
+  if (data.harness_mode === "chemical_leaf_only") {
+    bannersHtml += `<div class="harness-banner-info"><strong>🛡 chemical_leaf_only:</strong> ${escapeHtml(t(state.lang, "harness_leaf_only_hint"))}</div>`;
+  }
+  if (data.status === "partial" || data.status === "cancelled") {
+    bannersHtml += `<div class="harness-banner-warn"><strong>${escapeHtml(String(data.status).toUpperCase())}:</strong> ${escapeHtml(data.partial_error || (state.lang === "zh" ? "任务已中止，以下展示已保留的评估结果。" : "Run stopped early; already-evaluated candidates are preserved below."))}</div>`;
+  }
+
+  const recsHtml = recs.length
+    ? `<div class="harness-rec-grid">${recs
+        .map((r, idx) => {
+          const xt = r.cross_track_audit;
+          const xtHtml = xt
+            ? `<div class="harness-rec-metrics"><span>${escapeHtml(t(state.lang, "harness_xtrack_lbl"))}: SMILES ΔgMPO ${Number(xt.smiles_only_delta_gmpo) >= 0 ? "+" : ""}${Number(xt.smiles_only_delta_gmpo).toFixed(2)} (${xt.smiles_only_stage_b_passed ? "PASS" : "FAIL"}${xt.winners_curse_retention_pct != null ? `, ${Number(xt.winners_curse_retention_pct).toFixed(1)}%` : ""})</span></div>`
+            : "";
+          const warnHtml = (r.soft_warnings || []).length
+            ? `<div class="harness-mode-hint">⚠ ${escapeHtml(r.soft_warnings.join(" · "))}</div>`
+            : "";
+          return `<div class="harness-rec-card ${r.is_pareto_optimal ? "pareto-top" : ""}">
+            <div class="harness-rec-head">
+              <strong>#${idx + 1} ${escapeHtml(r.mutation_label)}</strong>
+              <div>
+                ${r.is_pareto_optimal ? `<span class="pareto-badge">★ Pareto</span>` : ""}
+                <span class="badge badge-info">${escapeHtml(r.strategy)}</span>
+              </div>
+            </div>
+            <div class="harness-rec-metrics">
+              <span>ΔgMPO: <strong>${Number(r.delta_gmpo) >= 0 ? "+" : ""}${Number(r.delta_gmpo).toFixed(2)}</strong> (${Number(r.gmpo_score).toFixed(1)})</span>
+              <span>${escapeHtml(ox)}: ${escapeHtml(r.x_display || "N/A")}</span>
+              <span>${escapeHtml(oy)}: ${escapeHtml(r.y_display || "N/A")}</span>
+              <span>AD: ${escapeHtml(trAd(state.lang, r.ad_overall || "borderline"))}</span>
+            </div>
+            ${xtHtml}
+            ${warnHtml}
+            <div style="margin-top:auto;display:flex;justify-content:flex-end;">
+              <button type="button" class="btn-ghost btn-xs harness-load-btn" data-h-smi="${escapeHtml(r.smiles || "")}" data-h-seq="${escapeHtml(r.sequence || "")}" data-h-name="${escapeHtml(r.mutation_label || "")}">${escapeHtml(t(state.lang, "opt_load_full"))}</button>
+            </div>
+          </div>`;
+        })
+        .join("")}</div>`
+    : `<div class="harness-banner-info">${escapeHtml(t(state.lang, "harness_no_imp"))}</div>`;
+
+  const roundsHtml = rounds
+    .map(
+      (rd) => `<div class="harness-round-item">
+        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <strong>${escapeHtml(state.lang === "zh" ? `第 ${Number(rd.round_index)} 轮 · 母体` : `Round ${Number(rd.round_index)} · Parent`)}: ${escapeHtml(rd.elite_parent_label || "Parent")}</strong>
+          <span class="mono">ΔgMPO ${Number(rd.best_delta_gmpo_so_far || 0) >= 0 ? "+" : ""}${Number(rd.best_delta_gmpo_so_far || 0).toFixed(2)} · HV ${Number(rd.feasible_pareto_hv || 0).toFixed(3)} · Feas ${Number(rd.n_feasible || 0)}/${Number(rd.n_evaluated || 0)} · Recycled ${Number(rd.recycled_critic_evals || 0)}</span>
+        </div>
+        ${(rd.critic_reflections || []).length ? `<ul class="harness-round-reflections">${rd.critic_reflections.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}</ul>` : ""}
+      </div>`
+    )
+    .join("");
+
+  const memHtml = negMem.length
+    ? `<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(t(state.lang, "harness_th_rd"))}</th><th>${escapeHtml(t(state.lang, "harness_th_mut"))}</th><th>${escapeHtml(t(state.lang, "harness_th_codes"))}</th></tr></thead><tbody>${negMem
+        .slice(0, 20)
+        .map(
+          (e) => `<tr><td class="mono">${Number(e.round || 0)}</td><td class="mono">${escapeHtml(e.mutation_label)}</td><td>${escapeHtml((e.reject_codes || []).join(", "))}</td></tr>`
+        )
+        .join("")}</tbody></table></div>`
+    : `<div class="empty-inline">${escapeHtml(t(state.lang, "harness_memory_empty"))}</div>`;
+
+  host.innerHTML = `
+    ${bannersHtml}
+    <div class="harness-kpi-strip">
+      <div class="harness-kpi-box"><div class="harness-kpi-lbl">${escapeHtml(t(state.lang, "harness_kpi_best_dgmpo"))}</div><div class="harness-kpi-val">${Number(m.best_delta_gmpo || 0) >= 0 ? "+" : ""}${Number(m.best_delta_gmpo || 0).toFixed(2)}</div></div>
+      <div class="harness-kpi-box"><div class="harness-kpi-lbl">${escapeHtml(t(state.lang, "harness_kpi_feas"))}</div><div class="harness-kpi-val">${Number(m.total_feasible_candidates || 0)} / ${Number(m.total_evaluated_candidates || 0)}</div></div>
+      <div class="harness-kpi-box"><div class="harness-kpi-lbl">${escapeHtml(t(state.lang, "harness_kpi_hv"))}</div><div class="harness-kpi-val">${Number(m.feasible_pareto_hv || 0).toFixed(3)}</div></div>
+      <div class="harness-kpi-box"><div class="harness-kpi-lbl">${escapeHtml(t(state.lang, "harness_kpi_evals"))}</div><div class="harness-kpi-val">${Number(m.evals_used || 0)} / ${Number(m.max_total_evals || 0)}</div></div>
+      <div class="harness-kpi-box"><div class="harness-kpi-lbl">${escapeHtml(t(state.lang, "harness_kpi_mode"))}</div><div class="harness-kpi-val" style="font-size:13px;">${escapeHtml(data.harness_mode || "—")}</div></div>
+    </div>
+
+    <div class="card" style="padding:16px 18px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+        <h3 class="sub-heading" style="margin:0;">${escapeHtml(t(state.lang, "harness_top_title"))}</h3>
+        <span class="badge badge-info">${escapeHtml(state.lang === "zh" ? "母体" : "Parent")}: ${escapeHtml(parentName)}</span>
+      </div>
+      ${recsHtml}
+      ${data.audit_skipped_reason ? `<div class="harness-mode-hint">${escapeHtml(t(state.lang, "harness_xtrack_lbl"))}: ${escapeHtml(data.audit_skipped_reason)}</div>` : ""}
+    </div>
+
+    <div class="harness-two-col">
+      <div class="card" style="padding:16px 18px;">
+        <h3 class="sub-heading" style="margin-top:0;">${escapeHtml(t(state.lang, "harness_rounds_title"))}</h3>
+        ${roundsHtml || `<div class="empty-inline">—</div>`}
+      </div>
+      <div class="card" style="padding:16px 18px;">
+        <h3 class="sub-heading" style="margin-top:0;">${escapeHtml(t(state.lang, "harness_memory_title"))}</h3>
+        ${memHtml}
+      </div>
+    </div>
+  `;
+
+  host.querySelectorAll(".harness-load-btn").forEach((b) => {
+    b.addEventListener("click", () => {
+      loadMoleculeIntoFullPanel({
+        query: b.dataset.hSmi || b.dataset.hSeq || b.dataset.hName,
+        sequence: b.dataset.hSeq || null,
+        smiles: b.dataset.hSmi || null,
+      });
+    });
+  });
 }
 
 function wirePeptideOptWorkspace() {
   populateOptObjectiveSelects();
+  populateHarnessFunctionalSelect();
+  renderHarnessLockStrip();
 
   const syncDefaultDir = (epSelId, dirSelId) => {
     const ep = document.getElementById(epSelId)?.value;
-    const found = OPT_OBJECTIVE_CHOICES.find((o) => o.ep === ep);
+    const pool = state.optMode === "harness" ? HARNESS_TIER_A_CHOICES : OPT_OBJECTIVE_CHOICES;
+    const found = pool.find((o) => o.ep === ep);
     const dirSel = document.getElementById(dirSelId);
     if (found && dirSel) dirSel.value = found.dir;
   };
   document.getElementById("opt-obj-x-ep")?.addEventListener("change", () => syncDefaultDir("opt-obj-x-ep", "opt-obj-x-dir"));
   document.getElementById("opt-obj-y-ep")?.addEventListener("change", () => syncDefaultDir("opt-obj-y-ep", "opt-obj-y-dir"));
 
+  document.querySelectorAll(".opt-mode-btn").forEach((btn) => {
+    btn.addEventListener("click", () => setOptMode(btn.dataset.optMode));
+  });
+
+  document.getElementById("opt-query-input")?.addEventListener("input", renderHarnessLockStrip);
+  document.getElementById("harness-func-ep")?.addEventListener("change", renderHarnessLockStrip);
+  document.getElementById("btn-harness-clear-locks")?.addEventListener("click", () => {
+    state.harnessLockedPositions.clear();
+    renderHarnessLockStrip();
+  });
+
   document.querySelectorAll(".opt-quick-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const q = btn.dataset.optQ;
-      if (q) document.getElementById("opt-query-input").value = q;
+      if (q) {
+        document.getElementById("opt-query-input").value = q;
+        renderHarnessLockStrip();
+      }
     });
   });
 
   document.getElementById("btn-run-opt")?.addEventListener("click", runPeptideOpt);
+  document.getElementById("btn-run-harness")?.addEventListener("click", runPeptideHarness);
+  document.getElementById("btn-cancel-harness")?.addEventListener("click", cancelPeptideHarness);
 }
 
 async function runPeptideOpt() {
@@ -2845,7 +3378,7 @@ async function runPeptideOpt() {
     state.optData = data;
     state.optFilter = "all";
     state.optHighlightId = null;
-    renderPeptideOptResults(data);
+    if (state.optMode === "single") renderPeptideOptResults(data);
   } catch (err) {
     if (errEl) {
       errEl.textContent = err.message || String(err);
@@ -4624,7 +5157,7 @@ curl -sS "${baseFull}/api/v1/clinical-evidence?query=Semaglutide"`;
   } else {
     el.textContent = `import httpx
 
-headers = {"X-Client-Id": "my_lab_session"}
+headers = {"X-Client-Id": f"cli_{uuid.uuid4().hex[:16]}"}
 job = httpx.post(
     "${baseFull}/api/v1/jobs",
     headers=headers,

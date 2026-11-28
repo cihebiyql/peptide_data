@@ -1,4 +1,4 @@
-# Peptide OmniPanel 1.4 — Peptide & Cyclic-Peptide ADMET, PK & Antimicrobial Platform
+# Peptide OmniPanel 1.5 — Peptide & Cyclic-Peptide ADMET, PK, Antimicrobial & Controlled Optimization Platform
 
 > **Live Platform (Public HTTPS, CPU-Only Self-Contained Production)**: <https://lmmd.ecust.edu.cn/peptide-omnipanel/> (OpenAPI `/docs`)  
 > **Code License**: MIT (`LICENSE`) · **Trained Weights & Hosted Web Service**: Strictly Non-Commercial Academic & Preclinical Research Only (`internal_research_only`; see `DATA_LICENSES.md` & `NOTICE`).  
@@ -6,12 +6,13 @@
 
 ---
 
-## Peptide OmniPanel 1.4 / Engine v33.6 + v34 Upgrades (2026-11-27)
+## Peptide OmniPanel 1.5 / Engine v35 (`Peptide-Harness`) + v33.6 / v34 Overview (2026-11-28)
 
-**Peptide OmniPanel 1.4 (`v33.6 + v34`)** is a multi-endpoint ADMET, pharmacokinetics, safety, and antimicrobial prediction web platform spanning **47 harmonized experimental endpoints** (**25 Tier-1** Core ADMET/PK/Safety/Lipophilicity including macrocycle `LogD_decadiene` + **22 Tier-2** ESKAPE/Clinical MIC, MBC, MFC, Biofilm MBIC/MBEC & LC) across **51,007 unique peptides** (`82,414` curated observations; `4,535` censored/interval bounds), with CI-aware evidence grading, applicability-domain gating, interactive multi-objective optimization (**PeptideOpt**), customizable batch screening (**Peptide-MPO**), model-faithful **Direct Ensemble Perturbation Attribution**, and transparent disclosure of both positive and null/negative results:
+**Peptide OmniPanel 1.5 (`v33.6 + v34 + v35`)** combines a **47-endpoint** multi-modal ADMET, pharmacokinetics, safety, and antimicrobial Oracle (**25 Tier-1** + **22 Tier-2** across **51,007 unique peptides** / `82,414` curated observations / `4,535` censored bounds) with **Peptide-Harness (v35)** — a multi-round controlled evolutionary peptide optimization closed-loop workbench featuring fail-closed Stage A/B gating, pharmacophore & disulfide CoreLock protection, headless multi-endpoint Critic attribution, interactive-yield async job management, and transparent anti-circularity benchmarking:
 
-| Dimension | Audited Value (from `v33_manifest.json` & `expansion_v34/` receipts) |
+| Dimension | Audited Value (from `v33_manifest.json`, `expansion_v34/` & `expansion_v35/` receipts) |
 |---|---|
+| **Peptide-Harness Controlled Optimization (v1.5 / v35)** | **API & Engine (`/api/v1/peptide-harness/jobs`, `/tiers`, capped sync `/api/v1/peptide-harness`)**: multi-round sequence-first evolution + terminal chemical-leaf modifications under fail-closed Stage A/B gates, Pure-ML track-matched `Feas-gMPO` (`mechanism_anchor=None`), CoreLock + degree-preserving leaf scaffold verification, zero-cost Round-1 Critic Ala/Gly-masking recycling, and interactive-yield async worker isolation (`51/51 pytest`, `0 MiB` GPU VRAM on CPU-only production).<br>**16-Lead × 7-Method Live 4-FM + External `HemoPI2 v1.3` Benchmark (`max_total_evals=20`, `8/16` verified OOS novel leads)**: `Peptide-Harness-Full` significantly outperforms fair all-operator `Exhaustive-1Step-GreedyCombine` on 2D delta-space **`Feas-cHV`** (`0.63663 vs 0.60545`, `11W/3T/2L`, **`p_holm=0.0290`**; `7W/0T/1L, p_raw=0.0234` on 8 OOS novel leads) and outperforms `Unconstrained-Greedy` (`+10.737 vs +4.171`, **`p_holm=0.0186`**), `Harness-NoLipidation` (`+6.383`, **`p_holm=0.0215`**), and `Random-EqualBudget` (`+8.104`, **`p_holm=0.0384`**) on deployment `selected_feasible_delta_gmpo`, with **`0/16 (0.0%)` unsafe Top-1** (vs `1/16` `NoGate`, `3/16` `Unconstrained`).<br>**Honest Caveats**: Single-best `selected_feasible_delta_gmpo` vs fair `StrongBase` (`+10.737 vs +8.932`, `9W/3T/4L`) is **not statistically significant (`p_raw=0.1730`, `p_holm=0.5190`)**; `NegativeSampleMemory` ties `NoMemory` on `15/16` leads at 20-eval budget (`p_raw=0.3173`); and all `15/15` `Full` Top-1s are chemical leaves (`0/15` `HemoPI2`/cross-track coverage, relying on V33 `smiles_only` track; canonical subsets across `StrongBase`/`NoLip`/`Random` achieve `21/21 = 100%` external `HemoPI2` non-worsening and `100%` cross-track Stage B pass). |
 | **Unified Endpoints** | **47** (**25 Tier-1** + **22 Tier-2**; 6 classification + 41 regression; dual-modality winning families: `22 fusion`, `18 super_ensemble`, `4 cpu`, `3 deep`; SMILES-only: `25 fusion`, `12 super_ensemble`, `8 cpu`, `2 deep`) |
 | **CI-Aware Evidence Grades** | **20 `quantitative`** (`n_ho ≥ 30`, `n_clusters ≥ 10`, `R² ≥ 0.15`, **`R²_ci95_lo > 0`**, `ρ ≥ 0.45`, `UQ ≠ low`) · **26 `rank_only`** (incl. `PPB`, `CL_per_kg`, `efflux_ratio`, `LogD_decadiene`) · **1 `exploratory_not_recommended`** (`Vd_absolute`, negative holdout `R²` & `ρ`; visibly flagged in API & UI) |
 | **Interactive Decision & Design Engines (v1.4)** | **PeptideOpt (`/api/v1/peptide-opt`)**: 5 RDKit-sanitized strategies (`ala_scan`, `point_mutation`, `n_methylation`, `cyclization` [head-to-tail + Cys-Cys disulfide], `lipidation_c16_c18`) with exact 2D Pareto frontier & safety guardrails.<br>**Batch-MPO Screening (`/api/v1/batch-screen`)**: up to 100 peptides ranked by customizable 4-pillar **Peptide-MPO `[0–100]`** desirability with evidence-grade weighting, optional OOD penalty, and Excel-formula-safe CSV export.<br>**Direct Ensemble Attribution (`/api/v1/direct-attribution`)**: 100% production-ensemble-faithful residue masking / substituent pruning across all **47/47** endpoints (complementing the 8-endpoint E-GAT surrogate). |
@@ -27,10 +28,10 @@
 
 ## Reproducible Audit Scripts & Local Verification
 
-All V33.5, V33.6, and V34 evaluation and audit scripts are included (with environment-configurable `V33_BASE`) in `v33_upgrade/expansion_v335/`, `v33_upgrade/expansion_v336/`, and `v33_upgrade/expansion_v34/` alongside their JSON receipts and covered by `SHA256SUMS`.
+All V33.5, V33.6, V34, and V35 evaluation and audit scripts are included (with environment-configurable `V33_BASE`) in `v33_upgrade/expansion_v335/`, `v33_upgrade/expansion_v336/`, `v33_upgrade/expansion_v34/`, and `v33_upgrade/expansion_v35/` alongside their JSON receipts and covered by `SHA256SUMS`.
 
 ```bash
-V33_OFFLINE_ONLY=1 pytest v33_upgrade/web/tests/test_web_api.py v33_upgrade/web/tests/test_clinical_percentiles.py v33_upgrade/web/tests/test_v34_features.py -v
+V33_OFFLINE_ONLY=1 pytest v33_upgrade/web/tests/test_web_api.py v33_upgrade/web/tests/test_clinical_percentiles.py v33_upgrade/web/tests/test_v34_features.py v33_upgrade/web/tests/test_v35_harness.py -v
 ```
 
 *(Large binary model weights `.joblib`/`.pt`/`.safetensors`, precomputed `.npz` embeddings, and upstream raw third-party training tables are excluded from this public repository; see `DATA_LICENSES.md` and `NOTICE` for upstream portals and terms.)*
